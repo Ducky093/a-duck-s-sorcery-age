@@ -80,9 +80,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        cap.delayTickEvent(() -> {
-            CursedTechnique technique = cap.getTechnique();
+        CursedTechnique technique = cap.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
 
@@ -101,12 +99,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                     }
                 }
                 domain.discard();
-            }, 4);
+            }, 8);
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                 cap.addCooldown(ability);
             }
-        }, 20);
     }
 
     @Override
