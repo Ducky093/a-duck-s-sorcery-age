@@ -132,19 +132,19 @@ public class Dash extends Ability {
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
         if (owner.isShiftKeyDown()) {
-            power*=0.5f;
+            power*=0.6f;
         }
         Vec3 target = this.getTarget(owner);
         Vec3 velocity = target.subtract(owner.position()).normalize().scale(power);
-        velocity = velocity.multiply(new Vec3(1.1D, 1.0D, 1.1D));
+        velocity = velocity.multiply(new Vec3(1.0D, 1.0D, 1.0D));
         if (velocity.y > 0) {
            velocity = velocity.multiply(new Vec3(1.5D, 0.8D, 1.5D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.1D, 0.9D, 1.1D)).add(new Vec3(0.0D, 0.1D,0.0D));
+            velocity = velocity.multiply(new Vec3(1.5D, 0.9D, 1.5D)).add(new Vec3(0.0D, 0.1D,0.0D));
             if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
-              velocity = velocity.multiply(new Vec3(1.2D,1,1.2D));
+              velocity = velocity.multiply(new Vec3(0.8D,1,0.8D));
             }
         }
         velocity = velocity.add(new Vec3(0.0D,0.2D,0.0D));
@@ -208,7 +208,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 10;
     }
 
     @Override
@@ -217,11 +217,11 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 15;
+                return 10;
             }
             return 2;
         }
-        if (owner.isShiftKeyDown()) {
+        if (!owner.isShiftKeyDown()) {
             return 25;
         }
         return super.getRealCooldown(owner);

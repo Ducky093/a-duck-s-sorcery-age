@@ -68,8 +68,9 @@ public class Blitz extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Vec3 target = getTarget(owner);
         Vec3 ogPos = owner.position();
+        Vec3 oldV = owner.getDeltaMovement();
         owner.setPos(target);
-        owner.setDeltaMovement(0,0,0);
+        owner.setDeltaMovement(oldV);
 
         if (!(owner.level() instanceof ServerLevel level)) return;
         owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
@@ -89,7 +90,7 @@ public class Blitz extends Ability {
         for ( double i = 0; i < dist; i+=0.2)  {
             Vec3 cPos = ogPos.lerp(target,1/dist*i).add(0,1,0);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, cPos.x, cPos.y, cPos.z, 0, look2.x/4, look2.y/4, look2.z/4, 0D);
-            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 4, 4, 4),
+            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 5, 5, 5),
                     entity -> entity != owner)) {
                 boolean found = false;
                 for (String enemy: targets) {

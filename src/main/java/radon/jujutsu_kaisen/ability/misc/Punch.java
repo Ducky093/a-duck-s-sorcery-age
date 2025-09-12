@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 6.0D;
+    private static final double RANGE = 6.5D;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -71,6 +72,14 @@ public class Punch extends Ability implements Ability.ICharged{
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
                 Math.round(((float) Math.min(20, this.getCharge(owner)) / 20) * 100)), false);
+    }
+
+    @Override
+    public Status isStillUsable(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STUN.get())) {
+            return Status.FAILURE;
+        }
+        return super.isStillUsable(owner);
     }
 
     @Override
@@ -116,7 +125,7 @@ public class Punch extends Ability implements Ability.ICharged{
                         }
                     }
                     if (found) {
-                        return;
+                        continue;
                     }
                     targets.add(entity.getStringUUID());
                     if (level1 instanceof ServerLevel) {
@@ -159,28 +168,30 @@ public class Punch extends Ability implements Ability.ICharged{
             }, i*1);
         }
 
-        if (!(owner.level() instanceof ServerLevel level)) return false;
+        if ((owner.level() instanceof ServerLevel level)) {
+            for (int i = 0; i < 4; i++) {
+                Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                        pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        0, 0.0D, 0.0D, 0.0D, 1.0D);
+            }
+            for (int i = 0; i < 4; i++) {
+                Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                level.sendParticles(ParticleTypes.CRIT,
+                        pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        0, 0.0D, 0.0D, 0.0D, 1.0D);
+            }
 
+            Vec3 pos = owner.getEyePosition().add(look);
+            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
-        for (int i = 0; i < 4; i++) {
-            Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
-            level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
-                    pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
-        for (int i = 0; i < 4; i++) {
-            Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
-            level.sendParticles(ParticleTypes.CRIT,
-                    pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                    0, 0.0D, 0.0D, 0.0D, 1.0D);
-        }
 
-        Vec3 pos = owner.getEyePosition().add(look);
-        owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+
 
         return true;
     }
@@ -202,7 +213,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public int getCooldown() {
-        return 20;
+        return 15;
     }
 
     @Override
