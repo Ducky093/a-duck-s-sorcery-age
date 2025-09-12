@@ -60,7 +60,7 @@ public class Lightning extends Ability {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 
     @Override

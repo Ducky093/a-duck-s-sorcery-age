@@ -3,12 +3,14 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -19,6 +21,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -95,8 +98,15 @@ public class RedProjectile extends JujutsuProjectile {
         this.playSound(JJKSounds.RED_EXPLOSION.get(), 3.0F, 1.0F);
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            float radius = Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower());
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-            ExplosionHandler.spawn(this.level().dimension(), offset, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()), 1 * 20, this.getPower() * 0.33F, owner,
+            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, radius*2, radius*2, radius*2),
+                    entity -> entity != owner && owner.hasLineOfSight(entity))) {
+                if (entity instanceof LivingEntity) {
+                    ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(),30, 1, false, false, false));
+                }
+            }
+            ExplosionHandler.spawn(this.level().dimension(), offset, radius, 1 * 20, this.getPower() * 0.33F, owner,
                     JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false);
         }
         this.discard();

@@ -86,6 +86,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
+    public static RegistryObject<Ability> Blitz = ABILITIES.register("blitz", Blitz::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);

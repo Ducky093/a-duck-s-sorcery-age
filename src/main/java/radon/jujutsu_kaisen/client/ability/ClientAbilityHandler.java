@@ -183,6 +183,21 @@ public class ClientAbilityHandler {
                     }
                 }
 
+                if (JJKKeys.ACTIVATE_J2TSU.isDown()) {
+                    Ability ability = AbilityOverlay.getSelected2();
+
+                    if (ability != null) {
+                        if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
+                            channeled = ability;
+                            current = JJKKeys.ACTIVATE_J2TSU;
+                        } else {
+                            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
+                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                            }
+                        }
+                    }
+                }
+
                 if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                     Ability rct = EntityUtil.getRCTTier(mc.player);
 

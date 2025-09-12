@@ -85,6 +85,6 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 }

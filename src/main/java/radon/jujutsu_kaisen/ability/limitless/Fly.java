@@ -30,7 +30,7 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 
     @Override

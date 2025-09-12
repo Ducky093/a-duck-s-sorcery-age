@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
     private static final double RANGE = 6.0D;
-    public static int DURATION = 8;
+    public static int DURATION = 10;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -48,14 +48,19 @@ public class Barrage extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+
+        Vec3 look2 = RotationUtil.getTargetAdjustedLookAngle(owner);
+        owner.push(look2.x,look2.y,look2.z);
+
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < DURATION; i++) {
             cap.delayTickEvent(() -> {
-                
+
                 owner.swing(InteractionHand.MAIN_HAND, true);
+
 
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 

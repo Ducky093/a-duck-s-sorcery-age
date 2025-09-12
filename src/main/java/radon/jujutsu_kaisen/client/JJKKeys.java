@@ -8,6 +8,10 @@ public class JJKKeys {
     public static String KEY_CATEGORY_JUJUTSU_KAISEN = String.format("key.category.%s", JujutsuKaisen.MOD_ID);
     public static KeyMapping ACTIVATE_MELEE_MENU = createKeyMapping("activate_melee_menu",
             InputConstants.KEY_LALT);
+        public static KeyMapping ACTIVATE_J2TSU_MENU = createKeyMapping("activate_j2tsu_menu",
+            InputConstants.KEY_Z);
+    public static KeyMapping ACTIVATE_J2TSU = createKeyMapping("activate_j2tsu",
+            InputConstants.KEY_T);
     public static KeyMapping ACTIVATE_ABILITY = createKeyMapping("activate_ability",
             InputConstants.KEY_R);
     public static KeyMapping ACTIVATE_RCT_OR_HEAL = createKeyMapping("activate_rct_or_heal",

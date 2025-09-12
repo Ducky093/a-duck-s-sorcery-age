@@ -43,7 +43,7 @@ public class WaterTorrent extends Ability {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 
     @Override

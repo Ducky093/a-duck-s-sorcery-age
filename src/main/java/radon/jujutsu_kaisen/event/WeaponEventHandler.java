@@ -151,6 +151,24 @@ public class WeaponEventHandler {
             stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
                     .stream().map(ItemStack::getItem).toList());
 
+            if (HelperMethods.isMelee(source)) {
+                /* if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                   / if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()*0.15F)) {
+                        if (victim.isDeadOrDying()) {
+                            event.setCanceled(true);
+                            return;
+                        }
+                    }
+                } */
+
+                if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
+                    if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {
+                        event.setAmount(event.getAmount()*1.75f);
+                    } else {
+                        event.setAmount(event.getAmount()*1.2f);
+                    }
+                }
+            }
             if (stacks.contains(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
                     JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                 float Amount = Math.min(5.0F,event.getAmount()*0.6F);

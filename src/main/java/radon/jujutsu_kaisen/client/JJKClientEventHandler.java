@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
-import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
+import radon.jujutsu_kaisen.client.gui.screen.*;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
@@ -53,9 +53,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
-import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
-import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
-import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
@@ -243,6 +240,9 @@ public class JJKClientEventHandler {
                 if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
                     mc.setScreen(new MeleeScreen());
                 }
+                if (JJKKeys.ACTIVATE_J2TSU_MENU.isDown()) {
+                    mc.setScreen(new JutwotsuScreen());
+                }
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {
                     ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
@@ -334,7 +334,9 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(JJKKeys.ACTIVATE_MELEE_MENU);
+            event.register(JJKKeys.ACTIVATE_J2TSU_MENU);
             event.register(JJKKeys.ACTIVATE_ABILITY);
+            event.register(JJKKeys.ACTIVATE_J2TSU);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
             event.register(JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD);

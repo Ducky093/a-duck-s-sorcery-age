@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -82,6 +83,7 @@ public class SorcererData implements ISorcererData {
     private int brainDamageTimer;
 
     private long lastBlackFlashTime;
+    private boolean addBlackFlash;
 
     private @Nullable Ability channeled;
     private int charge;
@@ -136,6 +138,7 @@ public class SorcererData implements ISorcererData {
         this.output = 1.0F;
 
         this.lastBlackFlashTime = -1;
+        this.addBlackFlash = false;
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -382,9 +385,13 @@ public class SorcererData implements ISorcererData {
 
         this.updateBrainDamage();
 
+        if (Slam.TARGETS.containsKey(owner.getUUID()) && (owner.onGround() || owner.isInWater())) {
+            Slam.onHitGround(owner, 0);
+        }
+
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 0.75D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
                 
@@ -427,12 +434,14 @@ public class SorcererData implements ISorcererData {
             double speed = this.getRealPower();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.getRealPower() * 0.075D;
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            double movement = this.getRealPower() * 0.1D;
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 4,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {
                 this.owner.heal(0.5F / 20);
             }
+
+            EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         } else {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
@@ -997,6 +1006,16 @@ public class SorcererData implements ISorcererData {
     @Override
     public long getLastBlackFlashTime() {
         return this.lastBlackFlashTime;
+    }
+
+    @Override
+    public boolean addBlackFlash() {
+        return this.addBlackFlash;
+    }
+
+    @Override
+    public void moreBlackFlash(boolean bool) {
+        this.addBlackFlash = bool;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,20 +13,26 @@ import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Punch extends Ability {
+public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
     private static final double RANGE = 6.0D;
     private static final double LAUNCH_POWER = 2.5D;
@@ -33,6 +40,12 @@ public class Punch extends Ability {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
+    }
+
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.CHANNELED;
     }
 
     @Override
@@ -53,17 +66,36 @@ public class Punch extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+    public void run(LivingEntity owner) {
+        if (!(owner instanceof Player) || !owner.level().isClientSide) return;
+        ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
+                Math.round(((float) Math.min(20, this.getCharge(owner)) / 20) * 100)), false);
     }
 
     @Override
-    public void run(LivingEntity owner) {
+    public boolean onRelease(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        float power = (float) Math.min(20, this.getCharge(owner)) / 20;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        float num = 2;
+        if (power >= 0.25) {
+            float mod = 1;
+            if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
+                mod = 2.5f;
+            }
+            if (cap.getSpeedStacks() > 0) {
+                mod = 1+0.15f*cap.getSpeedStacks();
+            }
+            Vec3 look2 = look.scale(power*mod);
+            owner.push(look2.x,look2.y,look2.z);
+            num = 4;
+        }
+
+        if (!(owner.level() instanceof ServerLevel level)) return false;
+
 
         for (int i = 0; i < 4; i++) {
             Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
@@ -82,40 +114,66 @@ public class Punch extends Ability {
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
+        List<String> targets = new ArrayList<String>();
         Vec3 pos = owner.getEyePosition().add(look);
         owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
-        Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+        for (int i = 0; i < num; i++) {
+            cap.delayTickEvent(() -> {
 
-        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
-                entity -> entity != owner && owner.hasLineOfSight(entity))) {
-            Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-            level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-            if (owner instanceof Player player) {
-                player.attack(entity);
-            } else {
-                owner.doHurtTarget(entity);
-            }
-            entity.invulnerableTime = 0;
-            float newDMG;
-            newDMG = DAMAGE;
-            if (!(owner instanceof Player player)) {
-                newDMG/=1.65F;
-            }
-            if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
-                    entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
-                            .multiply(1.0D, 0.25D, 1.0D));
+                Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                        entity -> entity != owner && owner.hasLineOfSight(entity))) {
+                    boolean found = false;
+                    for (String target: targets) {
+                        if (target == entity.getStringUUID()) {
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        return;
+                    }
+                    targets.add(entity.getStringUUID());
+                    Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+                    level.sendParticles(ParticleTypes.FLASH, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+
+                    if (owner instanceof Player player) {
+                        player.attack(entity);
+                    } else {
+                        owner.doHurtTarget(entity);
+                    }
+                    entity.invulnerableTime = 0;
+                    float newDMG;
+                    newDMG = DAMAGE;
+                    if (!(owner instanceof Player player)) {
+                        newDMG/=1.65F;
+                    }
+                    float newPower = (float) (LAUNCH_POWER*(0.5+0.5*power));
+                    newDMG *= (float) (1+0.5*power);
+                    if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
+                        if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
+                            entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
+                                    .multiply(1.0D, 0.25D, 1.0D));
+                        }
+                    } else {
+                        if (power == 1) {
+                            cap.moreBlackFlash(true);
+                            cap.delayTickEvent(() -> {
+                                cap.moreBlackFlash(false);
+                            }, 2);
+                        }
+                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
+                            entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
+                                    .multiply(1.0D, 0.25D, 1.0D));
+                        }
+                    }
                 }
-            } else {
-                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
-                    entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F))
-                            .multiply(1.0D, 0.25D, 1.0D));
-                }
-            }
-        }
+                }, i*1);
+         }
+        return true;
     }
 
     @Override

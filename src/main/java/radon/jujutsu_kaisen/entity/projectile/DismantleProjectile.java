@@ -35,10 +35,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
 
-    private static final int DURATION = 10;
+    private int DURATION = 10;
     private static final int LINE_LENGTH = 2;
     public static final int MIN_LENGTH = 3;
     public static final int MAX_LENGTH = 12;
+    private boolean canHurt = true;
 
     private boolean instant;
     private boolean destroy = true;
@@ -74,6 +75,14 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         this.instant = instant;
         this.destroy = destroy;
+    }
+
+    public void setDuration(int tim) {
+       this.DURATION = tim;
+    }
+
+    public void setCanHurt(boolean bool) {
+        this.canHurt = bool;
     }
 
     protected float getDamage() {
@@ -144,6 +153,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
         if (owner == entity) return;
+        if (!this.canHurt) return;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
@@ -203,6 +213,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 }
 
                 if (!this.destroy) continue;
+                if (!this.canHurt) continue;
 
                 BlockState state = this.level().getBlockState(current);
 
@@ -236,10 +247,11 @@ public class DismantleProjectile extends JujutsuProjectile {
                     this.onHit(result);
                 }
             }
+            if (this.instant || this.destroyed >= this.getLength() * 2 || this.getTime() >= DURATION) {
+                this.discard();
+            }
         }
 
-        if (this.instant || this.destroyed >= this.getLength() * 2 || this.getTime() >= DURATION) {
-            this.discard();
-        }
+
     }
 }

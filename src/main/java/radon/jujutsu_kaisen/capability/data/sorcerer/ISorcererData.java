@@ -197,6 +197,10 @@ public interface ISorcererData {
 
     long getLastBlackFlashTime();
 
+    boolean addBlackFlash();
+
+    void moreBlackFlash(boolean bool);
+
     void resetBlackFlash();
 
     boolean isInZone();

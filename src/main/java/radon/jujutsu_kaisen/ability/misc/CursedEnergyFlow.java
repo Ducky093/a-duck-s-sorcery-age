@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,8 +50,9 @@ import java.util.UUID;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("641b629b-f7b7-4066-a486-8e1d670a7439");
+    private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
   
-    private static final double SPEED = 0.03D;
+    private static final double SPEED = 0.02D;
 
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
@@ -145,8 +147,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         double newSpeed = SPEED;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-            newSpeed*=1.125;
+            newSpeed*=1.15;
         }
+        EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION);
     }
@@ -154,6 +157,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public void removeModifiers(LivingEntity owner) {
         EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+        EntityUtil.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
     }
 
     @Override

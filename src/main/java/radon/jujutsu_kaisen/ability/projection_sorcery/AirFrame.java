@@ -64,7 +64,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 
     @Override

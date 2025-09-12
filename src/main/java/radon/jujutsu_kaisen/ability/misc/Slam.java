@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -111,7 +112,11 @@ public class Slam extends Ability implements Ability.ICharged {
         float dmgMult = 0.65F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
             dmgMult = 0.8F;
-            radius*=1.35F;
+            radius = radius*1.35f+2;
+        }
+        if (owner instanceof RabbitEscapeEntity) {
+            radius = 1f;
+            dmgMult = 0.3f;
         }
         owner.swing(InteractionHand.MAIN_HAND);
 
@@ -136,10 +141,10 @@ public class Slam extends Ability implements Ability.ICharged {
             Vec3 target = this.getTarget(owner);
             Vec3 velocity = (target.subtract(owner.position()).normalize().scale(launchPower));
             if (velocity.y > 0) {
-                velocity = velocity.multiply(1.0D, 0.6D, 1.0D);
+                velocity = velocity.multiply(1.0D, 0D, 1.0D);
             }
             else {
-                velocity = velocity.multiply(1.0D, 1.35D, 1.0D);
+                velocity = velocity.multiply(1.0D, 2D, 1.0D);
             }
             owner.setDeltaMovement(velocity);
             owner.swing(InteractionHand.MAIN_HAND);
@@ -156,29 +161,32 @@ public class Slam extends Ability implements Ability.ICharged {
                 slamCrater(owner,1);
             }
             else {
-                Vec3 direction = new Vec3(0.0D, Math.min(2.0D,launchPower*0.75D), 0.0D);
+                Vec3 direction = new Vec3(0.0D, Math.min(3.0D,launchPower*1.25D), 0.0D);
                 owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
         
-                if (!owner.level().isClientSide) {
-                    TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
-                }
+
         
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        
+
+                float power = ((float) Math.min(20, this.getCharge(owner)) / 20);
+
                 cap.delayTickEvent(() -> {
+                    if (!owner.level().isClientSide) {
+                        TARGETS.put(owner.getUUID(), power);
+                    }
                     Vec3 target = this.getTarget(owner);
                     Vec3 velocity = (target.subtract(owner.position()).normalize().scale(launchPower));
                     if (velocity.y > 0) {
-                        velocity = velocity.multiply(1.0D, 0.35D, 1.0D);
+                        velocity = velocity.multiply(1.0D, 0, 1.0D);
                     }
                     else {
-                        velocity = velocity.multiply(1.0D, 1.35D, 1.0D);
+                        velocity = velocity.multiply(1.0D, 2D, 1.0D);
                     }
                     owner.setDeltaMovement(velocity);
                     cap.delayTickEvent(() -> {
                         TARGETS.remove(owner.getUUID());
                     }, 20*3);
-                }, 20);
+                }, 5);
             }
         }
         return true;

@@ -1,5 +1,6 @@
  package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,17 +9,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -33,7 +29,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Dash extends Ability {
+public class TestDash extends Ability {
     public static final double RANGE = 80.0D;
     private static final float DASH = 2.0F;
     private static final float MAX_DASH = 3.0F;
@@ -104,10 +100,40 @@ public class Dash extends Ability {
 
    private Vec3 getTarget(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = RotationUtil.getHitResult(owner, start, end);
-        return result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+       Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        if (owner instanceof Player) {
+            Minecraft instance = Minecraft.getInstance();
+            look = instance.player.getLookAngle().multiply(80, 0, 80).normalize();
+            Vec3 forwards = new Vec3(look.x, .1, look.z);
+            Vec3 backwards = new Vec3(-look.x, .1, -look.z);
+            Vec3 left = new Vec3(look.z, .1, -look.x);
+            Vec3 right = new Vec3(-look.z, .1, look.x);
+
+            Vec3 forwardsLeft = forwards.add(left).scale(0.5);
+            Vec3 forwardsRight = forwards.add(right).scale(0.5);
+            Vec3 backwardsLeft = backwards.add(left).scale(0.5);
+            Vec3 backwardsRight = backwards.add(right).scale(0.5);
+            look = forwards;
+            if (instance.player.input.leftImpulse > 0 && instance.player.input.forwardImpulse > 0) {
+                look = forwardsLeft;
+            } else if(instance.player.input.leftImpulse < 0 && instance.player.input.forwardImpulse > 0) {
+                look = forwardsRight;
+            } else if(instance.player.input.leftImpulse > 0 && instance.player.input.forwardImpulse < 0) {
+                look = backwardsLeft;
+            } else if(instance.player.input.leftImpulse < 0 && instance.player.input.forwardImpulse < 0) {
+                look = backwardsRight;
+            }else if (instance.player.input.leftImpulse > 0) {
+                look = left;
+            } else if (instance.player.input.leftImpulse < 0) {
+                look = right;
+            } else if (instance.player.input.forwardImpulse < 0) {
+                look = backwards;
+            }
+        } else {
+
+        }
+
+       return look;
     }
 
     @Override
@@ -119,64 +145,31 @@ public class Dash extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getSpeedStacks() > 0 || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 0.5F, 1.0F);
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
-        if (!owner.isShiftKeyDown()) {
-            power*=0.5f;
-        }
         Vec3 target = this.getTarget(owner);
-        Vec3 velocity = target.subtract(owner.position()).normalize().scale(power);
-        velocity = velocity.multiply(new Vec3(1.1D, 1.0D, 1.1D));
-        if (velocity.y > 0) {
-           velocity = velocity.multiply(new Vec3(1.5D, 0.8D, 1.5D));
-        }
+        Vec3 velocity = target.normalize().scale(power);
+        Vec3 look = target;
+
+        velocity = velocity.multiply(new Vec3(0.7D, 1.0D, 0.7D));
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.1D, 0.9D, 1.1D)).add(new Vec3(0.0D, 0.1D,0.0D));
-            if (owner.isShiftKeyDown()) {
-                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
-              velocity = velocity.multiply(new Vec3(1.2D,1,1.2D));
-            }
+            velocity = velocity.multiply(new Vec3(1.2D, 1D, 1.2)).add(new Vec3(0.0D, 0.05D,0.0D));
         }
         velocity = velocity.add(new Vec3(0.0D,0.2D,0.0D));
         if (!owner.onGround() && owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
            velocity = velocity.add(new Vec3(0.0D,-0.75D,0.0D));
         }
         owner.setDeltaMovement(velocity);
-        /*if (hit.getType() == HitResult.Type.MISS) {
-            float f = owner.getYRot();
-            float f1 = owner.getXRot();
-            float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
-            float f3 = -Mth.sin(f1 * ((float) Math.PI / 180.0F));
-            float f4 = Mth.cos(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
-            float f5 = Mth.sqrt(f2 * f2 + f3 * f3 + f4 * f4);
-            f2 *= power / f5;
-            f3 *= power / f5;
-            f4 *= power / f5;
-            owner.push(f2, f3, f4);
-            owner.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
-        } else {
-            Vec3 target = hit.getLocation();
 
-            double distanceX = target.x - owner.getX();
-            double distanceY = target.y - owner.getY();
-            double distanceZ = target.z - owner.getZ();
-
-            double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
-            double motionX = distanceX / distance * power;
-            double motionY = distanceY / distance * power;
-            double motionZ = distanceZ / distance * power;
-            owner.setDeltaMovement(motionX, motionY, motionZ);
-        }*/
         owner.hurtMarked = true;
 
         Vec3 pos = owner.position();
@@ -208,7 +201,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 10;
     }
 
     @Override
@@ -216,13 +209,7 @@ public class Dash extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (owner.isShiftKeyDown()) {
-                return 15;
-            }
-            return 5;
-        }
-        if (owner.isShiftKeyDown()) {
-            return 25;
+            return 4;
         }
         return super.getRealCooldown(owner);
     }

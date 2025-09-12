@@ -110,7 +110,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 
     @Override

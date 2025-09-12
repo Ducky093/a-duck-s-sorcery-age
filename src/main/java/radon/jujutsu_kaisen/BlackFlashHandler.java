@@ -53,10 +53,21 @@ public class BlackFlashHandler {
 
             if (lastBlackFlashTime == 0 || seconds >= 1) {
                 int rng = 200;
-                if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                if (cap.addBlackFlash() ){
                     rng = 175;
                 }
-                if ((attacker instanceof Player player) && (cap.isInZone())) rng = 30;
+                if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                    rng = 175;
+                    if (cap.addBlackFlash() ){
+                        rng = 150;
+                    }
+                }
+                if ((attacker instanceof Player player) && (cap.isInZone())) {
+                    rng = 30;
+                    if (cap.addBlackFlash() ){
+                        rng = 25;
+                    }
+                }
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
             } else {
                 return;

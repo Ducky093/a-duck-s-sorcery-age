@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Teleport extends Ability {
-    private static final double RANGE = 70.0D;
+    private static final double RANGE = 40.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -26,7 +26,7 @@ public class Teleport extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
+        return target != null && !target.isDeadOrDying() ;
     }
 
     @Override
@@ -34,24 +34,24 @@ public class Teleport extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable HitResult getTarget(LivingEntity owner) {
-        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
-        if (hit.getType() == HitResult.Type.MISS) return null;
-        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;
-        return hit;
+    private Vec3 getTarget(LivingEntity owner) {
+        Vec3 start = owner.getEyePosition();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 end = start.add(look.scale(RANGE));
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
+        return result.getType() == HitResult.Type.MISS ? end : result.getLocation();
     }
 
     @Override
     public void run(LivingEntity owner) {
-        HitResult target = this.getTarget(owner);
+        Vec3 target = this.getTarget(owner);
 
         if (target != null) {
             owner.swing(InteractionHand.MAIN_HAND);
 
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
 
-            Vec3 pos = target.getLocation();
-            owner.setPos(pos.x, pos.y, pos.z);
+            owner.setPos(target.x, target.y, target.z);
 
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
         }
@@ -64,21 +64,17 @@ public class Teleport extends Ability {
 
     @Override
     public int getCooldown() {
-        return 1 * 20;
+        return 4 * 20;
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        HitResult target = this.getTarget(owner);
 
-        if (target == null) {
-            return Status.FAILURE;
-        }
         return super.isTriggerable(owner);
     }
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.MELEE;
+        return MenuType.J2TSU;
     }
 }

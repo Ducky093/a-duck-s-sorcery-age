@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -16,14 +17,16 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class HollowPurpleProjectile extends JujutsuProjectile {
-    private static final int DELAY = 50;//2 * 20;
+    private static final int DELAY = 40;//2 * 20;
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 35.0F;
@@ -58,6 +61,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     entity.discard();
                     continue;
                 }
+
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
                         DAMAGE * this.getPower());
             }

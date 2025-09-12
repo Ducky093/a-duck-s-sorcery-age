@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
+import radon.jujutsu_kaisen.client.gui.screen.JutwotsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
@@ -57,6 +58,11 @@ public class AbilityOverlay {
             return MeleeScreen.getSelected();
         }
         return null;
+    }
+
+    @Nullable
+    public static Ability getSelected2() {
+        return JutwotsuScreen.getSelected();
     }
 
     private static int getIndex() {
@@ -149,5 +155,14 @@ public class AbilityOverlay {
             }
             render(gui, graphics, width, height, selected);
         }
+
+        Ability selected = JutwotsuScreen.getSelected();
+
+        if (selected == null) return;
+
+        if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
+            selected = null;
+        }
+        render(gui, graphics, width, height-30, selected);
     };
 }
