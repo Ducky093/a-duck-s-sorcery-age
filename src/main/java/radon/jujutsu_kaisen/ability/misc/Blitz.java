@@ -90,7 +90,7 @@ public class Blitz extends Ability {
             Vec3 cPos = ogPos.lerp(target,1/dist*i).add(0,1,0);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, cPos.x, cPos.y, cPos.z, 0, look2.x/4, look2.y/4, look2.z/4, 0D);
             for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 4, 4, 4),
-                    entity -> entity != owner && owner.hasLineOfSight(entity))) {
+                    entity -> entity != owner)) {
                 boolean found = false;
                 for (String enemy: targets) {
                     if (Objects.equals(enemy, entity.getStringUUID())) {
@@ -116,8 +116,8 @@ public class Blitz extends Ability {
                 if (!(owner instanceof Player player)) {
                     newDMG/=1.65F;
                 }
-                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
-                    entity.setDeltaMovement(look.scale(1 * (1.0F + this.getPower(owner) * 0.1F))
+                if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
+                    entity.setDeltaMovement(look.scale(1 * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                             .multiply(1.0D, 0.25D, 1.0D));
                 }
             }
