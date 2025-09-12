@@ -54,7 +54,7 @@ public class WormCurseGrab extends Ability {
 
         AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
 
-        if (!(JJKAbilities.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
+        if (curse.equals(null) || !(JJKAbilities.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
 
         worm.grab(target);
         this.enemy = null;
