@@ -52,6 +52,11 @@ public class RCT2 extends RCT1 {
         return cost;
     }
 
+    @Override
+    public float healMult() {
+        return 1.5f;
+    }
+
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {

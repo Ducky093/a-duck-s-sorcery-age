@@ -40,6 +40,11 @@ public class RCT3 extends RCT2 {
     }
 
     @Override
+    public float healMult() {
+        return 2f;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         float cost = super.getCost(owner);
 
