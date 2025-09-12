@@ -161,7 +161,7 @@ public class Slam extends Ability implements Ability.ICharged {
                 slamCrater(owner,1);
             }
             else {
-                Vec3 direction = new Vec3(0.0D, Math.min(3.0D,launchPower*1.25D), 0.0D);
+                Vec3 direction = new Vec3(0.0D, Math.min(3.0D,launchPower*0.75D), 0.0D);
                 owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
         
 
@@ -186,7 +186,7 @@ public class Slam extends Ability implements Ability.ICharged {
                     cap.delayTickEvent(() -> {
                         TARGETS.remove(owner.getUUID());
                     }, 20*3);
-                }, 5);
+                }, 20);
             }
         }
         return true;

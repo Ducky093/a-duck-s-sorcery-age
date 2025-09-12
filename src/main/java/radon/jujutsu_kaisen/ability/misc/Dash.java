@@ -131,7 +131,7 @@ public class Dash extends Ability {
 
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
-        if (!owner.isShiftKeyDown()) {
+        if (owner.isShiftKeyDown()) {
             power*=0.5f;
         }
         Vec3 target = this.getTarget(owner);
@@ -142,7 +142,7 @@ public class Dash extends Ability {
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             velocity = velocity.multiply(new Vec3(1.1D, 0.9D, 1.1D)).add(new Vec3(0.0D, 0.1D,0.0D));
-            if (owner.isShiftKeyDown()) {
+            if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
               velocity = velocity.multiply(new Vec3(1.2D,1,1.2D));
             }
@@ -216,10 +216,10 @@ public class Dash extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (owner.isShiftKeyDown()) {
+            if (!owner.isShiftKeyDown()) {
                 return 15;
             }
-            return 5;
+            return 2;
         }
         if (owner.isShiftKeyDown()) {
             return 25;
