@@ -44,6 +44,7 @@ public class Heal extends Ability implements Ability.IChannelened {
         if (owner instanceof Player player) {
             owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.225F, Math.log(this.getPower(owner))) * 0.225F));
         }
+        //min between 1.0, 0.075 * math.pow(1 * 0.225, math.log(1)) * 0.225
         else {
             owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.15F, Math.log(this.getPower(owner))) * 0.15F));
         }
@@ -68,6 +69,7 @@ public class Heal extends Ability implements Ability.IChannelened {
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
             return (float) Math.min(8.5F, (ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner))))*3.0F);
+            
         }
         return 0.0F;
     }

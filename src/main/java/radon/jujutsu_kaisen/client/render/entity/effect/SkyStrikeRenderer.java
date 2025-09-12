@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -11,10 +12,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 
 public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
@@ -24,7 +23,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
     private static final float TEXTURE_HEIGHT = 32.0F;
     private static final float BEAM_MIN_U = 176.0F / TEXTURE_WIDTH;
     private static final float BEAM_MAX_U = 1.0F;
-    private static final float PIXEL_SCALE = 1.0F / 16.0F;
+    private static final float PIXEL_SCALE = 1.0F / 16;
     private static final int MAX_HEIGHT = 256;
     private static final float DRAW_FADE_IN_RATE = 2.0F;
     private static final float DRAW_FADE_IN_POINT = 1.0F / DRAW_FADE_IN_RATE;
@@ -39,6 +38,16 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
     public SkyStrikeRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
+    }
+
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(1.0F, 1.0F, 1.0F, alpha)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 
     @Override
@@ -92,11 +101,10 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        Matrix3f matrix3f = pose.normal();
-        this.drawVertex(matrix4f, matrix3f, consumer, -RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, minU, minV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, minU, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, maxU, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, maxU, minV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, minU, minV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, minU, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, maxU, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, maxU, minV, opacity, packedLight);
     }
 
     private void drawBeam(boolean drawing, float drawTime, float strikeTime, float opacity, float maxY, PoseStack poseStack, VertexConsumer builder, int packedLight) {
@@ -116,20 +124,9 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        Matrix3f matrix3f = pose.normal();
-        this.drawVertex(matrix4f, matrix3f, builder, -radius, 0.0F, 0.0F, BEAM_MIN_U, minV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, builder, -radius, maxY, 0.0F, BEAM_MIN_U, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, builder, radius, maxY, 0.0F, BEAM_MAX_U, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, matrix3f, builder, radius, 0.0F, 0.0F, BEAM_MAX_U, minV, opacity, packedLight);
-    }
-
-    public void drawVertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
-        consumer.vertex(matrix4f, x, y, z)
-                .color(1.0F, 1.0F, 1.0F, alpha)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(matrix3f, 0.0F, 1.0F, 0.0F)
-                .endVertex();
+        vertex(matrix4f, pose, builder, -radius, 0.0F, 0.0F, BEAM_MIN_U, minV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, -radius, maxY, 0.0F, BEAM_MIN_U, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, radius, maxY, 0.0F, BEAM_MAX_U, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, radius, 0.0F, 0.0F, BEAM_MAX_U, minV, opacity, packedLight);
     }
 }
