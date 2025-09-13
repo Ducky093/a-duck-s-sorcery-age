@@ -41,7 +41,7 @@ public class RCT3 extends RCT2 {
 
     @Override
     public float healMult() {
-        return 2f;
+        return 1.5f;
     }
 
     @Override
