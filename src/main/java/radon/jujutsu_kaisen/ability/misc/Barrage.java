@@ -50,13 +50,16 @@ public class Barrage extends Ability {
     @Override
     public void run(LivingEntity owner) {
 
-        Vec3 look2 = RotationUtil.getTargetAdjustedLookAngle(owner);
-        owner.push(look2.x,look2.y,look2.z);
         Level level = owner.level();
-
+        int gap = 2;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        int duration2 = DURATION;
+        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            duration2 = 15;
+            gap = 1;
+        }
 
-        for (int i = 0; i < DURATION; i++) {
+        for (int i = 0; i < duration2; i++) {
             cap.delayTickEvent(() -> {
 
                 owner.swing(InteractionHand.MAIN_HAND, true);
@@ -97,7 +100,7 @@ public class Barrage extends Ability {
                     }
                     entity.invulnerableTime = 0;
                 }
-            }, i * 2);
+            }, i * gap);
         }
     }
 

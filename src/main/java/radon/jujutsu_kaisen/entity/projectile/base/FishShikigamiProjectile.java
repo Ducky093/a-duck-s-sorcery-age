@@ -37,7 +37,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final float DAMAGE = 13.0F;
-    private static final int DELAY = 20;
+    private int DELAY = 20;
     private static final int DURATION = 20*3;
     private static final double SPEED = 2.5D;
 
@@ -133,6 +133,10 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         return !(pTarget instanceof FishShikigamiProjectile) && super.canHitEntity(pTarget);
     }
 
+    public void setDELAY(int num) {
+        this.DELAY = num;
+    }
+
     private void applyRotation() {
         LivingEntity target = this.getTarget();
 
@@ -191,13 +195,13 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public void tick() {
         super.tick();
 
-        if (this.getTime() - DELAY >= DURATION) {
+        if (this.getTime() - this.DELAY >= DURATION) {
             this.discard();
             return;
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
+            if (this.getTime() < this.DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
@@ -206,7 +210,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                     }
                     this.applyOffset();
                 }
-            } else if (this.getTime() >= DELAY) {
+            } else if (this.getTime() >= this.DELAY) {
                 this.applyRotation();
 
                 if (!this.level().isClientSide) {

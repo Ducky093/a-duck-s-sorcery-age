@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Blitz extends Ability {
-    private static final double RANGE = 20.0D;
+    private static final double RANGE = 40.0D;
     public static int DURATION = 10;
 
     @Override
@@ -69,11 +69,11 @@ public class Blitz extends Ability {
         Vec3 target = getTarget(owner);
         Vec3 ogPos = owner.position();
         Vec3 oldV = owner.getDeltaMovement();
-        owner.setPos(target);
+        owner.moveTo(target);
         owner.setDeltaMovement(oldV);
 
         if (!(owner.level() instanceof ServerLevel level)) return;
-        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), ogPos.x, ogPos.y, ogPos.z,
                 0, 0.0D, 0.0D, 0.0D, 1.0D);
         double dist = ogPos.distanceTo(target);
@@ -90,7 +90,7 @@ public class Blitz extends Ability {
         for ( double i = 0; i < dist; i+=0.2)  {
             Vec3 cPos = ogPos.lerp(target,1/dist*i).add(0,1,0);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, cPos.x, cPos.y, cPos.z, 0, look2.x/4, look2.y/4, look2.z/4, 0D);
-            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 5, 5, 5),
+            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 6, 6, 6),
                     entity -> entity != owner)) {
                 boolean found = false;
                 for (String enemy: targets) {
@@ -99,7 +99,7 @@ public class Blitz extends Ability {
                     }
                 }
                 if (found) {
-                    return;
+                    continue;
                 }
                 targets.add(entity.getStringUUID());
                 Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
@@ -113,11 +113,12 @@ public class Blitz extends Ability {
                 }
                 entity.invulnerableTime = 0;
                 float newDMG;
-                newDMG = 3;
+                newDMG = 10;
                 if (!(owner instanceof Player player)) {
                     newDMG/=1.65F;
                 }
                 if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
+                    entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),20, 0, false, false, false));
                     entity.setDeltaMovement(look.scale(1 * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                             .multiply(1.0D, 0.25D, 1.0D));
                 }
@@ -167,7 +168,7 @@ public class Blitz extends Ability {
     }
 
     public int getCooldown() {
-        return 3 * 20;
+        return 10 * 20;
     }
 
     @Override

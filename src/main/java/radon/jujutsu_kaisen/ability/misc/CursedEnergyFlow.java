@@ -263,7 +263,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                     if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                         if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
+                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 9 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
                             victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
                             if (!attacker.level().isClientSide) {
@@ -297,8 +297,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                     if (HelperMethods.isMelee(source)) {
                         switch (victimCap.getNature()) {
-                            case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0,
-                                    false, false, false));
+                            /*case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0,
+                                    false, false, false));*/
                             case ROUGH -> attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), 1.0F + (victimCap.getExperience() * 0.0025F));
                         }
                     }
