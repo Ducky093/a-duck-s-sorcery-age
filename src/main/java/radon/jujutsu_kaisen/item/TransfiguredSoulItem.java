@@ -13,6 +13,11 @@ public class TransfiguredSoulItem extends Item {
         super(pProperties);
     }
 
+    @Override
+    public int getUseDuration(ItemStack pStack) {
+        return 5;
+    }
+
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 

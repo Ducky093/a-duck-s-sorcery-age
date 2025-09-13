@@ -38,6 +38,11 @@ public class CursedSpiritOrbItem extends Item {
     }
 
     @Override
+    public int getUseDuration(ItemStack pStack) {
+        return 5;
+    }
+
+    @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {
         MutableComponent name = super.getName(pStack).copy();
         return name.withStyle(ChatFormatting.DARK_PURPLE);
