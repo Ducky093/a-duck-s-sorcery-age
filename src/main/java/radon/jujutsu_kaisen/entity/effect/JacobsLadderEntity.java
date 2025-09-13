@@ -89,7 +89,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         this.strikeTimeO = this.strikeTime;
 
         if (this.strikeTime == 0) {
-            this.playSound(JJKSounds.JACOBS_CHARGE.get(), 1.0F, 1.0F);
+            this.playSound(JJKSounds.JACOBS_CHARGE.get(), 0.6F, 1.0F);
         }
         if (this.strikeTime >= HITBOX_START) {
             this.hurtEntities(5);
