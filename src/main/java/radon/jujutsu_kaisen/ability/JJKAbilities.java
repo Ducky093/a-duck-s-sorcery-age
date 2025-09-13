@@ -172,6 +172,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
     public static RegistryObject<Ability> SOUL_DECIMATION = ABILITIES.register("soul_decimation", SoulDecimation::new);
+    public static RegistryObject<Ability> BODY_REPEL = ABILITIES.register("body_repel", BodyRepel::new);
     public static RegistryObject<Ability> SOUL_REINFORCEMENT = ABILITIES.register("soul_reinforcement", SoulReinforcement::new);
     public static RegistryObject<Ability> SOUL_RESTORATION = ABILITIES.register("soul_restoration", SoulRestoration::new);
     public static RegistryObject<Ability> ARM_BLADE = ABILITIES.register("arm_blade", ArmBlade::new);
@@ -218,6 +219,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
     public static RegistryObject<Ability> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
+    public static RegistryObject<Ability> FISH_SWARM = ABILITIES.register("fish_swarm", FishSwarm::new);
 
     public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);

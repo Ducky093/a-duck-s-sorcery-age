@@ -106,8 +106,8 @@ public class Dash extends Ability {
         Vec3 start = owner.getEyePosition();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = RotationUtil.getHitResult(owner, start, end);
-        return result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+       // HitResult result = RotationUtil.getHitResult(owner, start, end);
+        return end;
     }
 
     @Override
@@ -139,12 +139,14 @@ public class Dash extends Ability {
         velocity = velocity.multiply(new Vec3(1.0D, 1.0D, 1.0D));
         if (velocity.y > 0) {
            velocity = velocity.multiply(new Vec3(1.3D, 0.8D, 1.3D));
+        } else {
+            velocity = velocity.multiply(new Vec3(1.2D,1.2,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.4D, 0.9D, 1.4D)).add(new Vec3(0.0D, 0.1D, 0.0D));
+            velocity = velocity.multiply(new Vec3(2.2D, 1D, 2.2D)).add(new Vec3(0.0D, 0.1D, 0.0D));
             if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
-                velocity = velocity.multiply(new Vec3(0.5D, 1, 0.5D));
+                velocity = velocity.multiply(new Vec3(0.4D, 1, 0.4D));
             }
         }
         velocity = velocity.add(new Vec3(0.0D,0.2D,0.0D));
@@ -217,7 +219,7 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 10;
+                return 8;
             }
             return 5;
         }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +55,9 @@ public class FishShikigami extends Ability {
                 new SharkShikigamiProjectile(owner, this.getPower(owner) * 1.1F, target, xOffset, yOffset),
                 new PiranhaShikigamiProjectile(owner, getPower(owner) * 1.1F, target, xOffset, yOffset)
         };
-        owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
+        FishShikigamiProjectile selected = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
+        //selected.setDELAY(15);
+        owner.level().addFreshEntity(selected);
         this.enemy = null;
     }
 

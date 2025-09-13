@@ -95,7 +95,7 @@ public class Punch extends Ability implements Ability.ICharged{
             float mod = 1;
             num = 5;
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                mod = 2.5f;
+                mod = 2.75f;
             }
             if (cap.getSpeedStacks() > 0) {
                 mod = 1+0.15f*cap.getSpeedStacks();

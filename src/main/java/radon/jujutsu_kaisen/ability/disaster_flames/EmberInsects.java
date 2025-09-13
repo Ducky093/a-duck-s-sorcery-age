@@ -26,7 +26,7 @@ public class EmberInsects extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < 12; i++) {
-            int delay = i * 2;
+            int delay = i;
 
             cap.delayTickEvent(() -> {
                 owner.swing(InteractionHand.MAIN_HAND);

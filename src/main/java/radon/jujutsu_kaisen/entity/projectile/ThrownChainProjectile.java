@@ -19,6 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -132,7 +134,8 @@ public class ThrownChainProjectile extends AbstractArrow {
                 }
             }
         } else {
-            DamageSource source = this.damageSources().arrow(this, owner == null ? this : owner);
+            assert owner != null;
+            DamageSource source = JJKDamageSources.jujutsuAttack((LivingEntity) owner, JJKAbilities.PUNCH.get());
             this.dealtDamage = true;
 
             //float speed = this.getDeltaMovement().lengthSqr();
@@ -167,11 +170,11 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.setTime(this.getTime() + 1);
 
         Entity owner = this.getOwner();
-        float speedMult = 3.5F;
+        float speedMult = 4F;
             
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            speedMult = 5.0F;
+            speedMult = 8.0F;
         }
         
 

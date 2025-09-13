@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -87,6 +88,7 @@ public class WeaponEventHandler {
 
                         for (Ability ability : victimCap.getToggled()) {
                             if (!ability.isTechnique()) continue;
+                            if (ability.getClass().isAssignableFrom(Summon.class)) continue;
 
                             remove.add(ability);
                         }
@@ -177,7 +179,7 @@ public class WeaponEventHandler {
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {
-                        event.setAmount(event.getAmount()*1.8f);
+                        event.setAmount(event.getAmount()*1.6f);
                     } else {
                         event.setAmount(event.getAmount()*1.2f);
                     }
