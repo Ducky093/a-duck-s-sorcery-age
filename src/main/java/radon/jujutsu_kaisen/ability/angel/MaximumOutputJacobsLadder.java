@@ -1,18 +1,27 @@
 package radon.jujutsu_kaisen.ability.angel;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
+import radon.jujutsu_kaisen.entity.effect.MaximumOutputJacobsLadderEntity;
+import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class MaximumOutputJacobsLadder extends Ability {
-    public static final double RANGE = 100.0D;
+    public static final double RANGE = 150.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -37,23 +46,52 @@ public class MaximumOutputJacobsLadder extends Ability {
         return null;
     }
 
+     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
+        Vec3 start = owner.getEyePosition();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 end = start.add(look.scale(RANGE));
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
+
+        if (result.getType() == HitResult.Type.BLOCK) {
+            return (BlockHitResult) result;
+        } else if (result.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) result).getEntity();
+            Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        }
+        return null;
+    }
+
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
         LivingEntity target = this.getTarget(owner);
+        Vec3 pos;
+        if (target == null) {
+            BlockHitResult hit = this.getBlockHit(owner);
+            if (hit != null) {
+                Vec3 topCenter = Vec3.atCenterOf(hit.getBlockPos()).add(0, 0.5, 0);
+                pos = topCenter;
+            } 
+            else {
+                return;
+            }
+        } else{
+            pos = target.position();
+        }
 
-        if (target == null) return;
 
-        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getPower(owner), target.position());
+        MaximumOutputJacobsLadderEntity strike = new MaximumOutputJacobsLadderEntity(owner, this.getPower(owner), pos);
         owner.level().addFreshEntity(strike);
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
-
-        if (target == null) {
+        BlockHitResult hit = this.getBlockHit(owner);
+      
+        if (target == null && hit == null) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
@@ -61,7 +99,7 @@ public class MaximumOutputJacobsLadder extends Ability {
 
     @Override
     public int getCooldown() {
-        return 16 * 20;
+        return 30 * 20;
     }
 
     @Override

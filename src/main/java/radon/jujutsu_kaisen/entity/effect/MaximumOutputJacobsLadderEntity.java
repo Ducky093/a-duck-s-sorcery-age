@@ -33,23 +33,22 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 6.0F;
-    public static final int HITBOX_START = 5;
-    public static final int STRIKE_EXPLOSION = 6;
-    private static final int STRIKE_LENGTH = 24;
+public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
+    private static final float DAMAGE = 12.0F;
+    public static final int HITBOX_START = 28;
+    public static final int STRIKE_EXPLOSION = 28;
+    private static final int STRIKE_LENGTH = 80;
 
     private int strikeTimeO;
     private int strikeTime;
 
-    public JacobsLadderEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+    public MaximumOutputJacobsLadderEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
-
         this.noCulling = true;
     }
 
-    public JacobsLadderEntity(LivingEntity owner, float power, Vec3 pos) {
-        this(JJKEntities.JACOBS_LADDER.get(), owner.level());
+    public MaximumOutputJacobsLadderEntity(LivingEntity owner, float power, Vec3 pos) {
+        this(JJKEntities.MAXIMUM_OUTPUT_JACOBS_LADDER.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
@@ -79,7 +78,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 1024.0D;
+        return distance < 2048.0D;
     }
 
     @Override
@@ -89,10 +88,10 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         this.strikeTimeO = this.strikeTime;
 
         if (this.strikeTime == 0) {
-            this.playSound(JJKSounds.JACOBS_CHARGE.get(), 0.6F, 1.0F);
+            this.playSound(JJKSounds.JACOBS_STRONG_CHARGE.get(), 0.8F, 1.0F);
         }
         if (this.strikeTime >= HITBOX_START) {
-            this.hurtEntities(4);
+            this.hurtEntities(15);
         }
 
         this.moveDownToGround();
@@ -100,7 +99,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         if (this.strikeTime >= STRIKE_LENGTH ) {
             this.discard();
         } else if (this.strikeTime == STRIKE_EXPLOSION) {
-            this.playSound(JJKSounds.JACOBS_FIRE.get(), 0.8F, 1.0F);
+            this.playSound(JJKSounds.JACOBS_FIRE.get(), 1.0F, 1.0F);
             //this.hurtEntities(5);
         }
         this.strikeTime++;
@@ -155,13 +154,13 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                         }
                 }*/
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.setDisable(10);
+                                cap.setDisable(40);
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
              });
                         
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), DAMAGE * this.getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), DAMAGE * this.getPower());
             }
         }
     }

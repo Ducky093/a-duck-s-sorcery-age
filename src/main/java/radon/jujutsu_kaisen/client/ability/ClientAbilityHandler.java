@@ -261,6 +261,8 @@ public class ClientAbilityHandler {
             case BURNOUT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
                             cap.getBurnout() / 20), false);
+            case DISABLE ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
             case FAILURE ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
         }

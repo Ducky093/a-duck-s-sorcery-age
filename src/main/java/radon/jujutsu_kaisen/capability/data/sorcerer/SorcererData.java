@@ -77,6 +77,8 @@ public class SorcererData implements ISorcererData {
     private float extraEnergy;
 
     private JujutsuType type;
+    
+    private int disable;
 
     private int burnout;
     private int brainDamage;
@@ -417,6 +419,9 @@ public class SorcererData implements ISorcererData {
 
         if (this.burnout > 0) {
             this.burnout--;
+        }
+        if (this.disable > 0) {
+            this.disable--;
         }
 
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
@@ -917,14 +922,29 @@ public class SorcererData implements ISorcererData {
         this.burnout = duration;
     }
 
+     @Override
+    public void setDisable(int duration) {
+        this.disable = duration;
+    }
+
     @Override
     public int getBurnout() {
         return this.burnout;
     }
 
     @Override
+    public int getDisable() {
+        return this.disable;
+    }
+
+    @Override
     public boolean hasBurnout() {
         return this.burnout > 0;
+    }
+
+    @Override
+    public boolean hasDisable() {
+        return this.disable > 0;
     }
 
     @Override
@@ -935,6 +955,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void resetBurnout() {
         this.burnout = 0;
+    }
+
+    @Override
+    public void resetDisable() {
+        this.disable = 0;
     }
 
     @Override
@@ -1494,6 +1519,7 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("extra_energy", this.extraEnergy);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
+        nbt.putInt("disable", this.disable);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
         nbt.putInt("charge", this.charge);
@@ -1659,6 +1685,7 @@ public class SorcererData implements ISorcererData {
         this.extraEnergy = nbt.getFloat("extra_energy");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
+        this.disable = nbt.getInt("disable");
         this.brainDamage = nbt.getInt("brain_damage");
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.charge = nbt.getInt("charge");

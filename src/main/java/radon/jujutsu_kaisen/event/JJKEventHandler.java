@@ -134,6 +134,7 @@ public class JJKEventHandler {
                 newCap.setEnergy(newCap.getMaxEnergy());
                 newCap.resetCooldowns();
                 newCap.resetBurnout();
+                newCap.resetDisable();
                 newCap.clearToggled();
                 newCap.setCurrentCopied(null);
                 newCap.resetCopy();

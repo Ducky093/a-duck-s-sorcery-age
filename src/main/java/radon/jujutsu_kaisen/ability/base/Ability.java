@@ -40,7 +40,8 @@ public abstract class Ability {
         SUCCESS,
         ENERGY,
         COOLDOWN,
-        BURNOUT
+        BURNOUT,
+        DISABLE
     }
 
     public enum Classification {
@@ -187,7 +188,10 @@ public abstract class Ability {
                 return false;
             }
         }
-
+        if (this.isTechnique() && cap.hasDisable()) {
+            return false;
+        }
+        
         for (Ability ability : this.getRequirements()) {
             if (!ability.isUnlocked(owner)) return false;
         }
@@ -222,6 +226,9 @@ public abstract class Ability {
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
+            }
+             if (this.isTechnique() && cap.hasDisable()) {
+                return Status.DISABLE;
             }
 
             if (!cap.isCooldownDone(this)) {

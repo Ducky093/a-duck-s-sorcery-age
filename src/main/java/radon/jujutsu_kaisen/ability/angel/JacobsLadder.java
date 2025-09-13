@@ -66,7 +66,7 @@ public class JacobsLadder extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 100.0F;
     }
 
     @Override

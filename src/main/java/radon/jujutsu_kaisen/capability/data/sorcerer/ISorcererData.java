@@ -167,13 +167,21 @@ public interface ISorcererData {
     
     void setBurnout(int duration);
 
+     void setDisable(int duration);
+
     int getBurnout();
 
+    int getDisable();
+
     boolean hasBurnout();
+
+    boolean hasDisable();
 
     void resetCooldowns();
 
     void resetBurnout();
+
+    void resetDisable();
 
     float getMaxEnergy();
 

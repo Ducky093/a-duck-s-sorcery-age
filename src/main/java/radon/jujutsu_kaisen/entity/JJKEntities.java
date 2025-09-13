@@ -14,7 +14,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
-import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
@@ -376,8 +375,8 @@ public class JJKEntities {
                         .sized(0.1F, 0.1F)
                         .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_ladder")
                                 .toString()));
-        public static RegistryObject<EntityType<JacobsLadderEntity>> MAXIMUM_OUTPUT_JACOBS_LADDER = ENTITIES.register("maximum_output_jacobs_ladder", () ->
-                EntityType.Builder.<JacobsLadderEntity>of(JacobsLadderEntity::new, MobCategory.MISC)
+        public static RegistryObject<EntityType<MaximumOutputJacobsLadderEntity>> MAXIMUM_OUTPUT_JACOBS_LADDER = ENTITIES.register("maximum_output_jacobs_ladder", () ->
+                EntityType.Builder.<MaximumOutputJacobsLadderEntity>of(MaximumOutputJacobsLadderEntity::new, MobCategory.MISC)
                         .sized(0.1F, 0.1F)
                         .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_output_jacobs_ladder")
                                 .toString()));

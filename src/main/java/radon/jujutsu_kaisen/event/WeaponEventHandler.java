@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -77,6 +78,8 @@ public class WeaponEventHandler {
                 }
 
                 if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                   
+                    /* 
                     if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -92,7 +95,18 @@ public class WeaponEventHandler {
                         if (victim instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
-                    }
+                    }*/
+                  
+
+              
+                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                cap.setDisable(5);
+                                if (victim instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                }
+                            });
+                        
+                    
                 }
 
                 if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
