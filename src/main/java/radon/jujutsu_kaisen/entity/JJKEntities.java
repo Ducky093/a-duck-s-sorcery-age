@@ -540,6 +540,11 @@ public class JJKEntities {
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul")
                             .toString()));
+    public static RegistryObject<EntityType<BodyRepelEntity>> BODY_REPEL = ENTITIES.register("body_repel", () ->
+            EntityType.Builder.<BodyRepelEntity>of(BodyRepelEntity::new, MobCategory.MISC)
+                    .sized(1.3125F, 1.375F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "body_repel")
+                            .toString()));
 
     @SubscribeEvent
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
