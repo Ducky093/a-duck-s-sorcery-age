@@ -84,10 +84,10 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         if (drawing) {
             opacity *= DRAW_OPACITY_MULTIPLIER;
         }
-
-        this.drawRing(drawing, drawTime, strikeTime,25, opacity, poseStack, builder, packedLightIn);
+ this.drawRing(drawing, drawTime, strikeTime,75, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 16.0F);
+        
         poseStack.pushPose();
-        this.drawRing(drawing, drawTime, strikeTime,0, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 1.3F);
+       this.drawRing(drawing, drawTime, strikeTime,0, opacity, poseStack, builder, packedLightIn);
         poseStack.popPose();
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().getYRot()));
