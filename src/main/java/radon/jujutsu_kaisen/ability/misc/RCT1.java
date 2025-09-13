@@ -49,7 +49,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
             if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
                 healMult *= 2.0F;
             }
-            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * healMult, Math.log(this.getPower(owner))) * healMult));
+            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * healMult, Math.log(this.getPower(owner))) * healMult)* this.healMult());
          //min between 1.0, 0.05 * math.pow(1 * 0.225, math.log(1)) * 0.225
         }
         else {
@@ -70,12 +70,16 @@ public class RCT1 extends Ability implements Ability.IChannelened {
          }
     }
 
+    public float healMult() {
+        return 1;
+    }
+
     @Override
     public float getCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return (float) Math.min(8.5F, (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner)))) * this.getMultiplier());
+            return (float) Math.min(8.5F, (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner)))) * this.getMultiplier()) ;
             // 8.5 min, 0.05 * math.pow(1, math.log(1)) * 8 (lvl 3)
         }
         return 0;

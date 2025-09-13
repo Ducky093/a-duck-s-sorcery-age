@@ -144,7 +144,7 @@ public class Slam extends Ability implements Ability.ICharged {
                 velocity = velocity.multiply(1.0D, 0D, 1.0D);
             }
             else {
-                velocity = velocity.multiply(1.0D, 2D, 1.0D);
+                velocity = velocity.multiply(1.0D, 1.75D, 1.0D);
             }
             owner.setDeltaMovement(velocity);
             owner.swing(InteractionHand.MAIN_HAND);
