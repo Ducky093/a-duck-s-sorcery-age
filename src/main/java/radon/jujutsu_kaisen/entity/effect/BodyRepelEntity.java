@@ -22,9 +22,14 @@ import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -35,7 +40,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     public static EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BodyRepelEntity.class, EntityDataSerializers.INT);
 
     private static final double SPEED = 3D;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 8.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
     private static final float MAX_EXPLOSION = 10.0F;
     private static final int DURATION = 3 * 20;
@@ -217,6 +222,12 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         return pDistance < d0 * d0;
     }
 
+    public float getRealDamage() {
+
+        ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return DAMAGE*(1f+(this.souls/10f))* SorcererUtil.getPower(ownerCap.getExperience());
+    }
+
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
@@ -226,8 +237,8 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         if (entity == owner) return;
-
-        entity.hurt(this.damageSources().thrown(this, owner), DAMAGE * this.souls);
+        // direct hit damage here and in OnHitBlock
+        entity.hurt(this.damageSources().thrown(this, owner), this.getRealDamage());
     }
 
     @Override
@@ -237,8 +248,11 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         Vec3 location = pResult.getLocation();
+        // damage on explosion here
+        // this might stack and hit multiple times with on hit entity IDK
+        // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
         ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
-                20, 1.0F, owner, this.damageSources().explosion(this, owner), false);
+                20, this.getRealDamage()*0.5f, owner, this.damageSources().explosion(this, owner), false);
 
         this.discard();
     }
