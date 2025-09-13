@@ -84,22 +84,21 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         if (drawing) {
             opacity *= DRAW_OPACITY_MULTIPLIER;
         }
-         this.drawRing(drawing, drawTime, strikeTime, opacity, poseStack, builder, packedLightIn);
 
+        this.drawRing(drawing, drawTime, strikeTime,25, opacity, poseStack, builder, packedLightIn);
         poseStack.pushPose();
-        poseStack.translate(0.0F, 8.0F, 0.0F);
-        this.drawRing(drawing, drawTime, strikeTime, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 1.3F);
+        this.drawRing(drawing, drawTime, strikeTime,0, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 1.3F);
         poseStack.popPose();
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().getYRot()));
         this.drawBeam(drawing, drawTime, strikeTime, opacity, maxY, poseStack, builder, packedLightIn);
     }
 
-private void drawRing(boolean drawing, float drawTime, float strikeTime, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
-    this.drawRing(drawing, drawTime, strikeTime, opacity, poseStack, consumer, packedLight, RING_RADIUS);
+private void drawRing(boolean drawing, float drawTime, float strikeTime, int maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    this.drawRing(drawing, drawTime, strikeTime, maxY, opacity, poseStack, consumer, packedLight, RING_RADIUS);
 }
 
-private void drawRing(boolean drawing, float drawTime, float strikeTime, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight, float radius) {
+private void drawRing(boolean drawing, float drawTime, float strikeTime, int maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight, float radius) {
     int frame = (int) (((drawing ? drawTime : strikeTime) * (RING_FRAME_COUNT + 1.0F)));
     if (frame > RING_FRAME_COUNT) frame = RING_FRAME_COUNT;
 
@@ -111,10 +110,10 @@ private void drawRing(boolean drawing, float drawTime, float strikeTime, float o
 
     PoseStack.Pose pose = poseStack.last();
     Matrix4f matrix4f = pose.pose();
-    vertex(matrix4f, pose, consumer, -radius + offset, 0.0F, -radius + offset, minU, minV, opacity, packedLight);
-    vertex(matrix4f, pose, consumer, -radius + offset, 0.0F, radius + offset, minU, maxV, opacity, packedLight);
-    vertex(matrix4f, pose, consumer, radius + offset, 0.0F, radius + offset, maxU, maxV, opacity, packedLight);
-    vertex(matrix4f, pose, consumer, radius + offset, 0.0F, -radius + offset, maxU, minV, opacity, packedLight);
+    vertex(matrix4f, pose, consumer, -radius + offset, maxY, -radius + offset, minU, minV, opacity, packedLight);
+    vertex(matrix4f, pose, consumer, -radius + offset, maxY, radius + offset, minU, maxV, opacity, packedLight);
+    vertex(matrix4f, pose, consumer, radius + offset, maxY, radius + offset, maxU, maxV, opacity, packedLight);
+    vertex(matrix4f, pose, consumer, radius + offset, maxY, -radius + offset, maxU, minV, opacity, packedLight);
 }
 
     private void drawBeam(boolean drawing, float drawTime, float strikeTime, float opacity, float maxY, PoseStack poseStack, VertexConsumer builder, int packedLight) {
