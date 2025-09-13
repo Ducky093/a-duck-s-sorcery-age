@@ -218,6 +218,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
     public static RegistryObject<Ability> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
+    public static RegistryObject<Ability> FISH_SWARM = ABILITIES.register("fish_swarm", FishSwarm::new);
 
     public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);

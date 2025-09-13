@@ -11,7 +11,7 @@ public enum CursedTechnique {
     SKY_STRIKE(null, JJKAbilities.SKY_STRIKE.get()),
     ANGEL(null, JJKAbilities.ANGEL_WINGS.get(), JJKAbilities.JACOBS_LADDER.get(), JJKAbilities.BARRIER_TRAVEL.get()),
     CURSE_MANIPULATION(null, JJKAbilities.CURSE_ABSORPTION.get(), JJKAbilities.RELEASE_CURSE.get(), JJKAbilities.RELEASE_CURSES.get(), JJKAbilities.SUMMON_ALL.get(), JJKAbilities.ENHANCE_CURSE.get(),
-            JJKAbilities.MAXIMUM_UZUMAKI.get(), JJKAbilities.MINI_UZUMAKI.get(), JJKAbilities.WORM_CURSE_GRAB.get()),
+            JJKAbilities.MAXIMUM_UZUMAKI.get(), JJKAbilities.MINI_UZUMAKI.get(), JJKAbilities.WORM_CURSE_GRAB.get(),JJKAbilities.FISH_SWARM.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE_STILL.get(),
             JJKAbilities.BLUE_MOTION.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get(), JJKAbilities.FLY.get()),
     DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_NET.get(), JJKAbilities.DISMANTLE_SKATING.get(), JJKAbilities.CLEAVE.get(),

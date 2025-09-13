@@ -37,6 +37,11 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
     @Override
+    protected float getFlyingSpeed() {
+        return 0.1f;
+    }
+
+    @Override
     public int getMinCount() {
         return 2;
     }
