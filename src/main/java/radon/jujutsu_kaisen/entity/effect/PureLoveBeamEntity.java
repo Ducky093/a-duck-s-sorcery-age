@@ -16,9 +16,9 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class PureLoveBeamEntity extends BeamEntity {
     public static final int FRAMES = 3;
     public static final float SCALE = 2.0F;
-    private static final float DAMAGE = 12.0F;
+    private static final float DAMAGE = 15.0F;
     public static final int CHARGE = (int) (2.5F * 20);
-    public static final int DURATION = 3 * 20;
+    public static final int DURATION = 5 * 20;
 
     public PureLoveBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -46,7 +46,7 @@ public class PureLoveBeamEntity extends BeamEntity {
 
     @Override
     protected double getRange() {
-        return 20.0D;
+        return 40.0D;
     }
 
     @Override

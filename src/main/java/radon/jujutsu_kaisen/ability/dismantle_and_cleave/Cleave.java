@@ -53,7 +53,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
         float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
+        float f1 = Mth.clamp(armor - damage / f, armor * 0.4F, 20.0F);
         damage /= 1.0F - f1 / 25.0F;
 
         MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
