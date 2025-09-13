@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.block.domain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -18,6 +19,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
@@ -43,7 +46,7 @@ public class DomainBlock extends Block implements EntityBlock {
                 if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || (entity instanceof LivingEntity living && (JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()))) ) {
                         if (!pContext.isAbove(Shapes.block(), pPos, true)) {
                             return Shapes.empty();
                         }

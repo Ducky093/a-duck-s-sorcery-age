@@ -370,6 +370,17 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sky_strike")
                             .toString()));
+
+        public static RegistryObject<EntityType<JacobsLadderEntity>> JACOBS_LADDER = ENTITIES.register("jacobs_ladder", () ->
+                EntityType.Builder.<JacobsLadderEntity>of(JacobsLadderEntity::new, MobCategory.MISC)
+                        .sized(0.1F, 0.1F)
+                        .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_ladder")
+                                .toString()));
+        public static RegistryObject<EntityType<JacobsLadderEntity>> MAXIMUM_OUTPUT_JACOBS_LADDER = ENTITIES.register("maximum_output_jacobs_ladder", () ->
+                EntityType.Builder.<JacobsLadderEntity>of(JacobsLadderEntity::new, MobCategory.MISC)
+                        .sized(0.1F, 0.1F)
+                        .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_output_jacobs_ladder")
+                                .toString()));
     public static RegistryObject<EntityType<MaximumUzumakiProjectile>> MAXIMUM_UZUMAKI = ENTITIES.register("maximum_uzumaki", () ->
             EntityType.Builder.<MaximumUzumakiProjectile>of(MaximumUzumakiProjectile::new, MobCategory.MISC)
                     .sized(2.0F, 2.0F)

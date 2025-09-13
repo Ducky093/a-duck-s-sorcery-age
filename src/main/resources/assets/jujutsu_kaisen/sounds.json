@@ -24,6 +24,21 @@
       "jujutsu_kaisen:clap"
     ]
   },
+  "jacobs_charge": {
+    "sounds": [
+      "jujutsu_kaisen:jacobs_charge"
+    ]
+  },
+  "jacobs_strong_charge": {
+    "sounds": [
+      "jujutsu_kaisen:jacobs_strong_charge"
+    ]
+  },
+  "jacobs_fire": {
+    "sounds": [
+      "jujutsu_kaisen:jacobs_fire"
+    ]
+  },
   "forest_spikes": {
     "sounds": [
       "jujutsu_kaisen:forest_spikes"

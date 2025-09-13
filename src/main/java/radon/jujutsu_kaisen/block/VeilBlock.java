@@ -60,7 +60,7 @@ public class VeilBlock extends Block implements EntityBlock {
             Entity entity = ctx.getEntity();
 
             if (entity != null) {
-                if (entity instanceof LivingEntity living && JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                if (entity instanceof LivingEntity living && (JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) || JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()) ) && !pContext.isAbove(Shapes.block(), pPos, true)) {
                     return Shapes.empty();
                 }
                 if (entity instanceof Projectile projectile) entity = projectile.getOwner();

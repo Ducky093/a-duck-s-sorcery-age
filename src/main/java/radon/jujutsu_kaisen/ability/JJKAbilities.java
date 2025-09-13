@@ -21,6 +21,10 @@ import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.angel.AngelWings;
+import radon.jujutsu_kaisen.ability.angel.BarrierTravel;
+import radon.jujutsu_kaisen.ability.angel.JacobsLadder;
+import radon.jujutsu_kaisen.ability.angel.MaximumOutputJacobsLadder;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -82,6 +86,11 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
 
+    public static RegistryObject<Ability> MAXIMUM_OUTPUT_JACOBS_LADDER = ABILITIES.register("maximum_output_jacobs_ladder", MaximumOutputJacobsLadder::new);
+    public static RegistryObject<Ability> JACOBS_LADDER = ABILITIES.register("jacobs_ladder", JacobsLadder::new);
+    public static RegistryObject<Ability> ANGEL_WINGS = ABILITIES.register("angel_wings",  AngelWings::new);
+    public static RegistryObject<Ability> BARRIER_TRAVEL = ABILITIES.register("barrier_travel", BarrierTravel::new);
+    
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);

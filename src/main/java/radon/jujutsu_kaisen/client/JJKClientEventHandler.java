@@ -482,6 +482,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
             event.registerEntityRenderer(JJKEntities.JUJUTSU_LIGHTNING.get(), LightningBoltRenderer::new);
+            event.registerEntityRenderer(JJKEntities.JACOBS_LADDER.get(), JacobsLadderRenderer::new);
             event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_UZUMAKI.get(), MaximumUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.MINI_UZUMAKI.get(), MiniUzumakiRenderer::new);

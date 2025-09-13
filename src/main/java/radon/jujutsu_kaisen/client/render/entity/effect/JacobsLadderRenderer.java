@@ -14,9 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
+import radon.jujutsu_kaisen.entity.effect.JacobsLadderEntity;
 
-public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
+public class JacobsLadderRenderer extends EntityRenderer<JacobsLadderEntity> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/sky_strike.png");
 
     private static final float TEXTURE_WIDTH = 208.0F;
@@ -36,7 +36,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
     private static final float BEAM_DRAW_END_RADIUS = 0.25F;
     private static final float BEAM_STRIKE_RADIUS = 1.0F;
 
-    public SkyStrikeRenderer(EntityRendererProvider.Context pContext) {
+    public JacobsLadderRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
 
@@ -51,12 +51,12 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SkyStrikeEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull JacobsLadderEntity pEntity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(SkyStrikeEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(JacobsLadderEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         float maxY = (float) (MAX_HEIGHT - pEntity.getY());
 
         if (maxY < 0) {
@@ -65,6 +65,8 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
+        pPoseStack.scale(2.0F, 2.0F, 2.0F);
+        //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 
         if (isStriking) {
@@ -73,7 +75,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
         pPoseStack.popPose();
     }
 
-    private void drawStrike(SkyStrikeEntity entity, float maxY, float partialTicks, PoseStack poseStack, VertexConsumer builder, int packedLightIn) {
+    private void drawStrike(JacobsLadderEntity entity, float maxY, float partialTicks, PoseStack poseStack, VertexConsumer builder, int packedLightIn) {
         float drawTime = entity.getStrikeDrawTime(partialTicks);
         float strikeTime = entity.getStrikeDamageTime(partialTicks);
         boolean drawing = entity.isStrikeDrawing(partialTicks);
