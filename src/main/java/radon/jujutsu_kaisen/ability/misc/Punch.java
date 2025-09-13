@@ -213,7 +213,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 10;
     }
 
     @Override
