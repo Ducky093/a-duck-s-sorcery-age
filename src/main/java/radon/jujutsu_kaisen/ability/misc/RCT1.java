@@ -71,7 +71,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     public float healMult() {
-        return 1;
+        return 1.25;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return (float) Math.min(8.5F, (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner)))) * this.getMultiplier()) ;
+            return (float) Math.min(15.0F, (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner)))) * this.getMultiplier()) ;
             // 8.5 min, 0.05 * math.pow(1, math.log(1)) * 8 (lvl 3)
         }
         return 0;
