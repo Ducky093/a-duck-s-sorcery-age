@@ -75,6 +75,6 @@ public class RCT2 extends RCT1 {
 
     @Override
     protected float getMultiplier() {
-        return 5.0f;
+        return 4.5f;
     }
 }
