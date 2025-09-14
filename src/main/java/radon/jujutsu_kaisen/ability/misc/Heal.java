@@ -42,11 +42,11 @@ public class Heal extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return;
         if (owner instanceof Player player) {
-            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.175F, Math.log(this.getPower(owner))) * 0.175F));
+            owner.heal((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .175f);
         }
         //min between 1.0, 0.075 * math.pow(1 * 0.225, math.log(1)) * 0.225
         else {
-            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.125F, Math.log(this.getPower(owner))) * 0.125F));
+            owner.heal((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .125f);
         }
         if (!(owner.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < 2; i++) {
@@ -68,8 +68,7 @@ public class Heal extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return (float) Math.min(15.0F, (ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), Math.log(this.getPower(owner))))*3.0F);
-            
+            return (float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * this.getPower(owner) ;
         }
         return 0.0F;
     }
