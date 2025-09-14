@@ -19,7 +19,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
-    private static final int DURATION = 3 * 20;
+    private static final int DURATION = 2;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -58,7 +58,9 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         } else {
             super.tick();
 
-            if (this.getTime() >= DURATION) {
+
+
+            if (this.getTime() >= (DURATION * (this.getPower() * 1.5f))) {
                 this.discard();
             } else if (victim != null) {
                 if (this.pos != null) {
