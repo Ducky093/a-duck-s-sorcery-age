@@ -98,9 +98,6 @@ public class Punch extends Ability implements Ability.ICharged{
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                 mod = 2.75f;
             }
-            if (cap.getSpeedStacks() > 0) {
-                mod = 1+0.15f*cap.getSpeedStacks();
-            }
             if (mod != 1) {
                 Vec3 look2 = look.scale(power*mod);
                 owner.push(look2.x,look2.y,look2.z);
@@ -113,10 +110,15 @@ public class Punch extends Ability implements Ability.ICharged{
         for (int i = 0; i < num; i++) {
             cap.delayTickEvent(() -> {
 
+                double newRange = RANGE;
 
-                Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+                if (cap.getSpeedStacks() > 0) {
+                newRange = RANGE + (1 * cap.getSpeedStacks());
+                }
 
-                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                Vec3 offset = owner.getEyePosition().add(look.scale(newRange / 2));
+
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, newRange, newRange, newRange),
                         entity -> entity != owner )) {
                     //&& owner.hasLineOfSight(entity)
                     boolean found = false;
