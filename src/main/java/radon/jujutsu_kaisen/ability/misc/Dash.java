@@ -143,10 +143,10 @@ public class Dash extends Ability {
             velocity = velocity.multiply(new Vec3(1.2D,1.2,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(2.2D, 1D, 2.2D)).add(new Vec3(0.0D, 0.1D, 0.0D));
-            if (!owner.isShiftKeyDown()) {
+            velocity = velocity.multiply(new Vec3(1.2D, 1D, 1.2D)).add(new Vec3(0.0D, 0.1D, 0.0D));
+            if (owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
-                velocity = velocity.multiply(new Vec3(0.4D, 1, 0.4D));
+                velocity = velocity.multiply(new Vec3(0.9D, 1, 0.9D));
             }
         }
         velocity = velocity.add(new Vec3(0.0D,0.2D,0.0D));
@@ -210,7 +210,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 20;
     }
 
     @Override
@@ -224,7 +224,7 @@ public class Dash extends Ability {
             return 5;
         }
         if (!owner.isShiftKeyDown()) {
-            return 25;
+            return 35;
         }
         return super.getRealCooldown(owner);
     }

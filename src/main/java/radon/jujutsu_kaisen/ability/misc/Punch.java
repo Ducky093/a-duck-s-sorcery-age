@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -145,8 +146,14 @@ public class Punch extends Ability implements Ability.ICharged{
                     if (!(owner instanceof Player player)) {
                         newDMG/=1.65F;
                     }
-                    float newPower = (float) (LAUNCH_POWER*(1+0.5*power));
+
+                    float newPower = (float) (LAUNCH_POWER*(0.8+0.7*power)); // retains max of 1.5 launch power
                     newDMG *= (float) (1+0.5*power);
+
+                    if (power == 1) {
+                        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),30, 0, false, false, false));
+                    }
+
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)

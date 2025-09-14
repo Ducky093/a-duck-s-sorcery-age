@@ -53,6 +53,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
   
     private static final double SPEED = 0.03D;
+    public boolean hasShieldDrained = false;
 
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
@@ -108,11 +109,20 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             player.bob += (f - player.bob) * 0.4F;
         }
 
-        if (!(owner.level() instanceof ServerLevel level)) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        boolean isShielding = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
+        if (isShielding) {
+            if (!this.hasShieldDrained) {
+                this.hasShieldDrained = true;
+                cap.useEnergy(100);
+            }
+        } else {
+            this.hasShieldDrained = false;
+        }
 
-        float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.4F : 1.0F;
+        if (!(owner.level() instanceof ServerLevel level)) return;
+        float scale = isShielding ? 1.4F : 1.0F;
 
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
             for (int i = 0; i < 4; i++) {
@@ -297,7 +307,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                     if (HelperMethods.isMelee(source)) {
                         switch (victimCap.getNature()) {
-                            /*case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0,
+                            /*case LIGHTNING -> attacker.addEffect(new MobEfat fectInstance(JJKEffects.STUN.get(), 8, 0,
                                     false, false, false));*/
                             case ROUGH -> attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), 1.0F + (victimCap.getExperience() * 0.0025F));
                         }

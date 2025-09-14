@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import net.minecraft.world.entity.player.Player;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
@@ -30,9 +32,9 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     @Override
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel)) return;
-
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
     }
+
 
     @Override
     public boolean isValid(LivingEntity owner) {
@@ -46,7 +48,7 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 4.0F;
+        return 2.0F;
     }
 
     @Override
