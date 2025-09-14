@@ -117,7 +117,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         return MenuType.NONE;
     }
 
-    protected int getMultiplier() {
-        return 2;
+    protected float getMultiplier() {
+        return 2.5f;
     }
 }

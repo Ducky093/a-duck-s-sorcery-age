@@ -73,7 +73,7 @@ public class RCT3 extends RCT2 {
     }
 
     @Override
-    protected int getMultiplier() {
-        return 8;
+    protected float getMultiplier() {
+        return 10.0f;
     }
 }
