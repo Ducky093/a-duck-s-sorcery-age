@@ -71,7 +71,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     public float healMult() {
-        return 1.25;
+        return 1.25f;
     }
 
     @Override
