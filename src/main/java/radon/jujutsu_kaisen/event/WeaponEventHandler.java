@@ -102,7 +102,7 @@ public class WeaponEventHandler {
 
               
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.setDisable(5);
+                                cap.setDisable(20);
                                 if (victim instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }

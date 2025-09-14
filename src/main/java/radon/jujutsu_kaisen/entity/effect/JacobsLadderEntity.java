@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 6.0F;
+    private static final float DAMAGE = 10.0F;
     public static final int HITBOX_START = 5;
     public static final int STRIKE_EXPLOSION = 6;
     private static final int STRIKE_LENGTH = 24;
@@ -155,7 +155,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                         }
                 }*/
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.setDisable(10);
+                                cap.setDisable(20);
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }

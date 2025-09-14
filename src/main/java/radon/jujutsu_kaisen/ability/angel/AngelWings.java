@@ -17,6 +17,8 @@ public class AngelWings extends Transformation {
         return false;
     }
 
+    
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return owner.fallDistance > 0.0F;
@@ -29,7 +31,7 @@ public class AngelWings extends Transformation {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.fallDistance > 0.0F) {
+      //  if (!owner.onGround()) {
         owner.resetFallDistance();
 
         Vec3 movement = owner.getDeltaMovement();
@@ -43,7 +45,7 @@ public class AngelWings extends Transformation {
            f1 *= 0.25F;
        }
         owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
-        }
+      //  }
     }
 
     @Override
