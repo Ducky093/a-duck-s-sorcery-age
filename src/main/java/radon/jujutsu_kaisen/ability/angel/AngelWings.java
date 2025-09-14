@@ -17,28 +17,9 @@ public class AngelWings extends Transformation {
         return false;
     }
 
-    double getDistanceToGround(LivingEntity owner) {
-    Vec3 pos = owner.position();
-    Vec3 down = pos.add(0.0, -256.0, 0.0); // shoot down far enough
-    var result = owner.level().clip(new net.minecraft.world.level.ClipContext(
-            pos,
-            down,
-            net.minecraft.world.level.ClipContext.Block.COLLIDER,
-            net.minecraft.world.level.ClipContext.Fluid.NONE,
-            owner
-    ));
-
-    if (result.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
-        return pos.y - result.getLocation().y;
-    }
-    return Double.MAX_VALUE; // no ground found (void)
-    }
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        double distanceToGround = getDistanceToGround(owner);
-        return distanceToGround > 5.0; // only trigger if 5 blocks above ground
-        //return owner.fallDistance > 0.0F;
+        return owner.fallDistance > 0.0F;
     }
 
     @Override
@@ -48,7 +29,7 @@ public class AngelWings extends Transformation {
 
     @Override
     public void run(LivingEntity owner) {
-        //if (owner.fallDistance >= 1.0F) {
+        if (owner.fallDistance > 0.0F) {
         owner.resetFallDistance();
 
         Vec3 movement = owner.getDeltaMovement();
@@ -62,7 +43,7 @@ public class AngelWings extends Transformation {
            f1 *= 0.25F;
        }
         owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
-        //}
+        }
     }
 
     @Override
