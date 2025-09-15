@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -61,7 +62,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         this.setTarget(target);
 
         this.applyOffset();
-        owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.DOLPHIN_SPLASH, SoundSource.MASTER, 0.8F, 1F);
+
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -183,7 +184,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         if (entity == owner) return;
 
         if (entity != this.getTarget()) return;
-
+        owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PHANTOM_BITE, SoundSource.MASTER, 1.0F, 1.2F);
         if (this.isDomain()) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
@@ -204,8 +205,11 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() == 1) {
+                owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.AMBIENT_UNDERWATER_ENTER, SoundSource.MASTER, 1F, 0.8F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
+            }
             if (this.getTime() == this.DELAY) {
-                owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.MASTER, 0.8F, 1.5F);
+                owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.MASTER, 0.8F, 1F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
             }
             if (this.getTime() < this.DELAY) {
                 if (!owner.isAlive()) {

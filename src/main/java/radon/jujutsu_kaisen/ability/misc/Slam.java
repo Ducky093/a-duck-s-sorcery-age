@@ -1,11 +1,14 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +24,7 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
+import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -108,7 +112,7 @@ public class Slam extends Ability implements Ability.ICharged {
     public static void slamCrater(LivingEntity owner, float distance) {
         if (owner.level().isClientSide) return;
 
-        float radius = Math.min(MAX_EXPLOSION, 2.0F+7.5F * TARGETS.get(owner.getUUID()));
+        float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
         float dmgMult = 0.65F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
             dmgMult = 0.8F;
@@ -118,13 +122,31 @@ public class Slam extends Ability implements Ability.ICharged {
             radius = 1f;
             dmgMult = 0.3f;
         }
+        boolean steeled = false;
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+            steeled = true;
+            radius = radius*1.2f+1.5f;
+
+        }
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (!owner.level().isClientSide) {
-            ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * dmgMult, owner,
+            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), radius*2, radius*2, radius*2),
+                    entity -> entity != owner )) {
+                int stunDuration = 30;
+                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                    stunDuration = 40;
+                }
+                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
+            }
+             ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * dmgMult, owner,
                     owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
         }
+        if (steeled) {
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 3F, 0.8F);
+        }
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.SNIFFER_EGG_CRACK, SoundSource.MASTER, 2.0F, 1.0F);
 
         TARGETS.remove(owner.getUUID());
     }
@@ -144,7 +166,7 @@ public class Slam extends Ability implements Ability.ICharged {
                 velocity = velocity.multiply(1.0D, 0D, 1.0D);
             }
             else {
-                velocity = velocity.multiply(1.0D, 1.75D, 1.0D);
+                velocity = velocity.multiply(1.2D, 1.7D, 1.2D);
             }
             owner.setDeltaMovement(velocity);
             owner.swing(InteractionHand.MAIN_HAND);
@@ -186,7 +208,7 @@ public class Slam extends Ability implements Ability.ICharged {
                     cap.delayTickEvent(() -> {
                         TARGETS.remove(owner.getUUID());
                     }, 20*3);
-                }, 20);
+                }, 15);
             }
         }
         return true;

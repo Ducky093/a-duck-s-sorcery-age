@@ -142,6 +142,7 @@ public class JJKEventHandler {
                 newCap.resetBlackFlash();
                 newCap.resetExtraEnergy();
                 newCap.resetSpeedStacks();
+                newCap.resetDash();
 
                 if (!player.level().isClientSide) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);

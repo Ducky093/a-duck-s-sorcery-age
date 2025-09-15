@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -23,11 +24,14 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
+import radon.jujutsu_kaisen.item.cursed_tool.PolearmStaffItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
-    private static final double RANGE = 8.0D;
+    private static final double RANGE = 9.0D;
     public static int DURATION = 10;
 
     @Override
@@ -59,7 +63,24 @@ public class Barrage extends Ability {
             gap = 1;
         }
 
+        double newRange = RANGE;
+
+        Vec3 look1 = RotationUtil.getTargetAdjustedLookAngle(owner);
+        int dash = cap.getDash();
+        if (dash > 0) {
+            newRange+=1.5;
+            duration2+=2;
+            Vec3 pos = owner.getEyePosition().add(look1);
+            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.MASTER, 1.0F, 1.5F);
+
+        }
+
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+            newRange+=1.5;
+        }
+
         for (int i = 0; i < duration2; i++) {
+            double finalNewRange = newRange;
             cap.delayTickEvent(() -> {
 
                 owner.swing(InteractionHand.MAIN_HAND, true);
@@ -69,7 +90,9 @@ public class Barrage extends Ability {
                 if (level instanceof ServerLevel) {
                     for (int j = 0; j < 4; j++) {
                         Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
-                        ((ServerLevel) level).sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+
+                        Item item = owner.getItemInHand(InteractionHand.MAIN_HAND).getItem();
+                        ((ServerLevel) level).sendParticles(item instanceof SwordItem && !(item instanceof SteelGauntletItem)? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                                 pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -84,15 +107,21 @@ public class Barrage extends Ability {
                                 0, 0.0D, 0.0D, 0.0D, 1.0D);
                     }
                     Vec3 pos = owner.getEyePosition().add(look);
-                    owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+
+                    owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.MASTER, 1.0F, 1.3F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
+                    owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.MASTER, 1.0F, 1.9F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .4f);
 
                 }
 
-                Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+                Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
 
-                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, finalNewRange, finalNewRange+2, finalNewRange),
                         entity -> entity != owner)) {
                     // && owner.hasLineOfSight(entity)
+                    Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+                    if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                        entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
+                    }
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {

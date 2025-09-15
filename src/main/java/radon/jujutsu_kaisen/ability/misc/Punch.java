@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -29,6 +30,9 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
+import radon.jujutsu_kaisen.item.cursed_tool.PolearmStaffItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -37,7 +41,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 6.5D;
+    private static final double RANGE = 7.5D;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -77,9 +81,6 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) {
-            return Status.FAILURE;
-        }
         return super.isStillUsable(owner);
     }
 
@@ -96,29 +97,45 @@ public class Punch extends Ability implements Ability.ICharged{
             float mod = 1;
             num = 5;
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                mod = 2.75f;
+                mod = 1.8f;
             }
             if (mod != 1) {
                 Vec3 look2 = look.scale(power*mod);
                 owner.push(look2.x,look2.y,look2.z);
             }
+
         }
 
+        double newRange = RANGE;
+
+        int dash = cap.getDash();
+        if (dash > 0) {
+            num+=3;
+            newRange+=1.5;
+            Vec3 pos = owner.getEyePosition().add(look);
+            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.MASTER, 1.0F, 1.5F);
+
+        }
+
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+            newRange+=1.5;
+        }
+
+        if (cap.getSpeedStacks() > 0) {
+            newRange = RANGE + ((double) cap.getSpeedStacks() /5); //someone tell brosif to use tabs
+        }
 
         List<String> targets = new ArrayList<String>();
         Level level1 = owner.level();
         for (int i = 0; i < num; i++) {
+            double finalNewRange = newRange;
             cap.delayTickEvent(() -> {
 
-                double newRange = RANGE;
 
-                if (cap.getSpeedStacks() > 0) {
-                newRange = RANGE + (1 * cap.getSpeedStacks());
-                }
 
-                Vec3 offset = owner.getEyePosition().add(look.scale(newRange / 2));
+                Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
 
-                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, newRange, newRange, newRange),
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, finalNewRange, finalNewRange+2, finalNewRange),
                         entity -> entity != owner )) {
                     //&& owner.hasLineOfSight(entity)
                     boolean found = false;
@@ -133,7 +150,12 @@ public class Punch extends Ability implements Ability.ICharged{
                     targets.add(entity.getStringUUID());
                     if (level1 instanceof ServerLevel) {
                         Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-                        entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+                        entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 0.9F, 1.2F);
+
+                        entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.MASTER, 1.5F, 1.3F);
+                        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                            entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
+                        }
 
                         ((ServerLevel) level1).sendParticles(ParticleTypes.FLASH, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     }
@@ -149,28 +171,30 @@ public class Punch extends Ability implements Ability.ICharged{
                         newDMG/=1.65F;
                     }
 
-                    float newPower = (float) (LAUNCH_POWER*(0.8+0.5*power)); // retains max of 1.5 launch power
+                    float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
                     newDMG *= (float) (1+1*power);
 
 
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                        if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
+                        if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
-                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 25, 0, false, false, false));
+                            if (power == 1) {
+                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                            }
+
                         }
                     } else {
-
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                     .multiply(1.0D, 0.25D, 1.0D));
                         }
-                            if (power == 1) {
+                        if (power == 1) {
                             cap.moreBlackFlash(true);
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),30, 0, false, false, false));
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
                             cap.delayTickEvent(() -> {
-                            cap.moreBlackFlash(false);
+                                cap.moreBlackFlash(false);
                             }, 2);
                         }
                     }
@@ -179,9 +203,14 @@ public class Punch extends Ability implements Ability.ICharged{
         }
 
         if ((owner.level() instanceof ServerLevel level)) {
+            if (dash > 0) {
+                Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y+1, pos.z, 0, 0D, 0.0D, 0.0D, 1.0D);
+            }
             for (int i = 0; i < 4; i++) {
                 Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
-                level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                Item item = owner.getItemInHand(InteractionHand.MAIN_HAND).getItem();
+                level.sendParticles(item instanceof SwordItem && !(item instanceof SteelGauntletItem) ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                         pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                         pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                         pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -197,7 +226,8 @@ public class Punch extends Ability implements Ability.ICharged{
             }
 
             Vec3 pos = owner.getEyePosition().add(look);
-            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.MASTER, 1.0F, 1F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
+            owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.MASTER, 1.0F, 1.6F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .4f);
 
         }
 

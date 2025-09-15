@@ -73,6 +73,7 @@ public class SorcererData implements ISorcererData {
     private float output;
 
     private float energy;
+    private int dashes = 0;
     private float maxEnergy;
     private float extraEnergy;
 
@@ -436,20 +437,34 @@ public class SorcererData implements ISorcererData {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
-            double damage = this.getRealPower() * 5.0D;
+            double damage = this.getRealPower() * 3.8D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double speed = this.getRealPower();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.getRealPower() * 0.25D;
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.95,  movement), AttributeModifier.Operation.ADDITION);
+            double movement = this.getRealPower() * 0.3D;
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {
                 this.owner.heal(0.5F / 20);
             }
 
             EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+
+            if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty() && this.getDash() >0) {
+                Vec3 motion = owner.getDeltaMovement();
+
+                if (motion.y < 0.0D) {
+                    double amount = 0.01D;
+                    if (owner.isInWater()) {
+                        amount = 0.15D;
+                    }
+                    owner.setDeltaMovement(motion.x, amount, motion.z);
+                }
+                owner.setOnGround(true);
+            }
+
         } else {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 17.0D) / 20) * 20;
 
@@ -1467,6 +1482,22 @@ public class SorcererData implements ISorcererData {
     @Override
     public int getSpeedStacks() {
         return this.speedStacks;
+    }
+
+    public int getDash() {
+        return this.dashes;
+    }
+
+    public void addDash() {
+        this.dashes++;
+    }
+
+    public void subDash() {
+        this.dashes--;
+    }
+
+    public void resetDash() {
+        this.dashes = 0;
     }
 
     @Override

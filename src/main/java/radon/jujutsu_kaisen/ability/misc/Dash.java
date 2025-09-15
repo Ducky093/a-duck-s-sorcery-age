@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -135,9 +136,15 @@ public class Dash extends Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        cap.addDash();
+        cap.delayTickEvent(cap::subDash
+        ,8);
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.MASTER, 2F, 1.25F);
+
         if (cap.getSpeedStacks() > 0 || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 0.5F, 1.0F);
-            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 2, 0, false, false, false));
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 0.2F, 1.5F);
+            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
@@ -149,24 +156,32 @@ public class Dash extends Ability {
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
         if (owner.isShiftKeyDown()) {
-            power*=0.6f;
+            power*=0.5f;
         }
-        Vec3 target = this.getTarget(owner);
-        Vec3 velocity = target.subtract(owner.position()).normalize().scale(power);
-        velocity = velocity.multiply(new Vec3(1.0D, 1.0D, 1.0D));
+        //Vec3 target = this.getTarget(owner);
+        if (owner.onGround() && look.y < 0) {
+            look = owner.getLookAngle().multiply(1,0,1);
+        }
+        Vec3 velocity = look.normalize().scale(power);
+        velocity = velocity.multiply(new Vec3(1.5D, 1.0D, 1.5D));
         if (velocity.y > 0) {
-           velocity = velocity.multiply(new Vec3(1.3D, 0.8D, 1.3D));
+           velocity = velocity.multiply(new Vec3(1.2D, 0.6D, 1.2D));
         } else {
             velocity = velocity.multiply(new Vec3(1.2D,1.2,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.2D, 1D, 1.2D)).add(new Vec3(0.0D, 0.1D, 0.0D));
-            if (owner.isShiftKeyDown()) {
-                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10, 0, false, false, false));
-                velocity = velocity.multiply(new Vec3(0.9D, 1, 0.9D));
+            velocity = velocity.multiply(new Vec3(1.5D, 1D, 1.5D));
+            if (!owner.isShiftKeyDown()) {
+                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
+
+            } else {
+                velocity = velocity.multiply(new Vec3(1.0D, 1, 1.0D));
             }
         }
-        velocity = velocity.add(new Vec3(0.0D,0.2D,0.0D));
+        if (owner.onGround() && velocity.y < 0) {
+            velocity.multiply(1,0,1);
+        }
+        velocity = velocity.add(new Vec3(0.0D,0.6D,0.0D));
         if (!owner.onGround() && owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
            velocity = velocity.add(new Vec3(0.0D,-0.75D,0.0D));
         }
@@ -213,6 +228,19 @@ public class Dash extends Ability {
             Vec3 speed = look.add(x, y, z).reverse();
             level.sendParticles(ParticleTypes.CLOUD, xPos, yPos, zPos, 0, speed.x, speed.y, speed.z, 1.0D);
         }
+
+        for (int i = 0; i < 4; i++) {
+            cap.delayTickEvent(() -> {
+                for (int a = 0; a < 4; a++) {
+                    Vec3 pos2 = owner.getEyePosition();
+                    level.sendParticles(ParticleTypes.POOF,
+                            pos2.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D,
+                            pos2.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D,
+                            pos2.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D,
+                            0, 0.0D, 0.0D, 0.0D, 1.0D);
+                }
+            }, i);
+        }
     }
 
     @Override
@@ -236,12 +264,12 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 8;
+                return 15;
             }
-            return 5;
+            return 8;
         }
         if (!owner.isShiftKeyDown()) {
-            return 35;
+            return 40;
         }
         return super.getRealCooldown(owner);
     }

@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +23,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -49,6 +52,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
     }
 
@@ -62,7 +66,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         BlockPos center = owner.blockPosition();
-
+        owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED, SoundSource.MASTER, 0.5F, 0.7F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * 0.8f);
+        owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.CONDUIT_DEACTIVATE, SoundSource.MASTER, 1F, 1F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .3f);
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), WIDTH, HEIGHT, WIDTH))) {
             if (!isInside(owner, entity.blockPosition())) continue;
 
@@ -109,6 +114,11 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super.tick();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        if (this.getTime() == 1) {
+            owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.CONDUIT_ACTIVATE, SoundSource.MASTER, 8F, 3F);
+            owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.HOSTILE_SPLASH, SoundSource.MASTER, 1F, 1F);
+        }
 
         if (this.getTime() <= DURATION) {
             if (!owner.isAlive()) {

@@ -306,4 +306,9 @@ public interface ISorcererData {
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);
+
+    void addDash();
+    int getDash();
+    void subDash();
+    void resetDash();
 }

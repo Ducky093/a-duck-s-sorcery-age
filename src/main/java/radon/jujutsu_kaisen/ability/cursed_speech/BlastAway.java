@@ -60,6 +60,7 @@ public class BlastAway extends Ability {
         }
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        owner.level().playSound(null, src.x, src.y, src.z, SoundEvents.VEX_CHARGE, SoundSource.MASTER, 1F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (Entity entity : getEntities(owner)) {
             if (entity instanceof LivingEntity living && JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;

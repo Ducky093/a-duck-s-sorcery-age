@@ -100,10 +100,7 @@ public class RedProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             float radius = Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower());
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, radius*2, radius*2, radius*2),
-                    entity -> entity != owner && owner.hasLineOfSight(entity))) {
-        
-            }
+
             ExplosionHandler.spawn(this.level().dimension(), offset, radius, 1 * 20, this.getPower() * 0.33F, owner,
                     JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false);
         }

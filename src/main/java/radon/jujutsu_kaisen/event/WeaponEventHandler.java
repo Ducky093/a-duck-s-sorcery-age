@@ -177,11 +177,15 @@ public class WeaponEventHandler {
                     }
                 } */
 
+                if (stacks.contains(JJKItems.STEEL_GAUNTLET.get())) {
+                    event.setAmount(event.getAmount()*1.2f);
+                }
+
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {
-                        event.setAmount(event.getAmount()*1.4f);
+                        event.setAmount(event.getAmount()*1.35f);
                     } else {
-                        event.setAmount(event.getAmount()*1.2f);
+                        event.setAmount(event.getAmount()*1.1f);
                     }
                 }
             }

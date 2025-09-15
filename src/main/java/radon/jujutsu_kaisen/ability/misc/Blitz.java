@@ -90,7 +90,7 @@ public class Blitz extends Ability {
         for ( double i = 0; i < dist; i+=0.2)  {
             Vec3 cPos = ogPos.lerp(target,1/dist*i).add(0,1,0);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, cPos.x, cPos.y, cPos.z, 0, look2.x/4, look2.y/4, look2.z/4, 0D);
-            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 6, 6, 6),
+            for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(cPos, 8, 8, 8),
                     entity -> entity != owner)) {
                 boolean found = false;
                 for (String enemy: targets) {
@@ -113,7 +113,7 @@ public class Blitz extends Ability {
                 }
                 entity.invulnerableTime = 0;
                 float newDMG;
-                newDMG = 10;
+                newDMG = 8;
                 if (!(owner instanceof Player player)) {
                     newDMG/=1.65F;
                 }
@@ -167,7 +167,7 @@ public class Blitz extends Ability {
     }
 
     public int getCooldown() {
-        return 10 * 20;
+        return 14 * 20;
     }
 
     @Override
