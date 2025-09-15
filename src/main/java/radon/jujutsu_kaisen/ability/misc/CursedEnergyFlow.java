@@ -159,6 +159,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
             newSpeed*=1.15;
         }
+        float ratio = owner.getHealth()/owner.getMaxHealth();
+        if (ratio <= 0.25) {
+            newSpeed *= 0.5;
+        }
+        if (cap.getEnergy() < cap.getMaxEnergy()*0.1f) {
+            newSpeed *= 0.5;
+        }
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION);
