@@ -33,16 +33,14 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity result = null;
-
-        LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
+        LivingEntity target = RotationUtil.getExpandedLookAt(owner,RANGE);
         if (target != null) {
-            if (owner.canAttack(target)) {
-                result = target;
-            }
+            if (!owner.canAttack(target)) return null;
+            return target;
         }
-        return result;
+        return null;
     }
+
 
     private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

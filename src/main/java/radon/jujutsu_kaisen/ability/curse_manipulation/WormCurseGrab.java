@@ -37,14 +37,14 @@ public class WormCurseGrab extends Ability {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
+        LivingEntity target = RotationUtil.getExpandedLookAt(owner,RANGE);
         if (target != null) {
             if (!owner.canAttack(target)) return null;
-
             return target;
         }
         return null;
     }
+
 
     @Override
     public void run(LivingEntity owner) {

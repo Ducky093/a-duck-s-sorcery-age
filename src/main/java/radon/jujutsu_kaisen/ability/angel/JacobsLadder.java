@@ -1,8 +1,11 @@
 package radon.jujutsu_kaisen.ability.angel;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -13,6 +16,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class JacobsLadder extends Ability {
     public static final double RANGE = 50.0D;
+    public LivingEntity enemy = null;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -30,7 +34,8 @@ public class JacobsLadder extends Ability {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+        LivingEntity target = RotationUtil.getExpandedLookAt(owner,RANGE);
+        if (target != null) {
             if (!owner.canAttack(target)) return null;
             return target;
         }
@@ -39,19 +44,25 @@ public class JacobsLadder extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        /*Level level = owner.level();
+        if (level instanceof ClientLevel) {
+            return;
+        }*/
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LivingEntity target = this.getTarget(owner);
+        LivingEntity target = this.enemy;
 
         if (target == null) return;
 
         JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), target.position());
         owner.level().addFreshEntity(strike);
+        this.enemy = null;
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
+        this.enemy = target;
 
         if (target == null) {
             return Status.FAILURE;

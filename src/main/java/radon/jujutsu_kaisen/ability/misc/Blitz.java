@@ -118,7 +118,6 @@ public class Blitz extends Ability {
                     newDMG/=1.65F;
                 }
                 if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
-                    entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),20, 0, false, false, false));
                     entity.setDeltaMovement(look.scale(1 * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                             .multiply(1.0D, 0.25D, 1.0D));
                 }

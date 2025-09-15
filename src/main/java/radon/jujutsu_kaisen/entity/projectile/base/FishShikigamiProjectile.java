@@ -5,6 +5,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -59,6 +61,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         this.setTarget(target);
 
         this.applyOffset();
+        owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.DOLPHIN_SPLASH, SoundSource.MASTER, 0.8F, 1F);
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -201,6 +204,9 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() == this.DELAY) {
+                owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.MASTER, 0.8F, 1.5F);
+            }
             if (this.getTime() < this.DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();

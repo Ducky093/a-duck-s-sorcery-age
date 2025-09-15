@@ -285,6 +285,7 @@ public class ClientAbilityHandler {
             if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
+                ability.charge(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
