@@ -3,6 +3,10 @@ package radon.jujutsu_kaisen.entity.idle_transfiguration;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import radon.jujutsu_kaisen.util.SorcererUtil;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -27,6 +31,7 @@ public class TransfiguredSoulLargeEntity extends TransfiguredSoulVariantEntity {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 4 * 16.0F)
                 .add(Attributes.ARMOR, 20.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5 * 2.5D);
     }
 
