@@ -118,6 +118,6 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     protected float getMultiplier() {
-        return 2.5f;
+        return 2.25f;
     }
 }

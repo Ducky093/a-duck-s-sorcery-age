@@ -253,6 +253,18 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
+        }
+
+    }
+
+    @Override
     public void setJump(boolean jump) {
         this.jump = jump;
     }

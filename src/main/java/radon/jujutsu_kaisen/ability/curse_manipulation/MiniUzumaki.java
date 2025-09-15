@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.MiniUzumakiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import net.minecraft.world.phys.Vec2;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -80,5 +81,9 @@ public class MiniUzumaki extends Ability {
         return 5 * 20;
     }
 
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.J2TSU;
+    }
 
 }

@@ -6,6 +6,10 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import radon.jujutsu_kaisen.util.SorcererUtil;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -17,14 +21,16 @@ public class PolymorphicSoulIsomerEntity extends TransfiguredSoulEntity {
         super(pType, pLevel);
     }
 
+
+
     public PolymorphicSoulIsomerEntity(LivingEntity owner) {
         super(JJKEntities.POLYMORPHIC_SOUL_ISOMER.get(), owner);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 3 * 15.0F)
-                .add(Attributes.ARMOR, 16.0D)
+                .add(Attributes.MAX_HEALTH, 4 * 15.0F)
+                .add(Attributes.ARMOR, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 6 * 3.5D);
     }
 

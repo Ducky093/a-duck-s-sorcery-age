@@ -98,9 +98,6 @@ public class Punch extends Ability implements Ability.ICharged{
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                 mod = 2.75f;
             }
-            if (cap.getSpeedStacks() > 0) {
-                mod = 1+0.15f*cap.getSpeedStacks();
-            }
             if (mod != 1) {
                 Vec3 look2 = look.scale(power*mod);
                 owner.push(look2.x,look2.y,look2.z);
@@ -113,10 +110,15 @@ public class Punch extends Ability implements Ability.ICharged{
         for (int i = 0; i < num; i++) {
             cap.delayTickEvent(() -> {
 
+                double newRange = RANGE;
 
-                Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+                if (cap.getSpeedStacks() > 0) {
+                newRange = RANGE + (1 * cap.getSpeedStacks());
+                }
 
-                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                Vec3 offset = owner.getEyePosition().add(look.scale(newRange / 2));
+
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, newRange, newRange, newRange),
                         entity -> entity != owner )) {
                     //&& owner.hasLineOfSight(entity)
                     boolean found = false;
@@ -150,25 +152,26 @@ public class Punch extends Ability implements Ability.ICharged{
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.7*power)); // retains max of 1.5 launch power
                     newDMG *= (float) (1+0.5*power);
 
-                    if (power == 1) {
-                        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),30, 0, false, false, false));
-                    }
+
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.45F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
+                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 25, 0, false, false, false));
                         }
                     } else {
-                        if (power == 1) {
-                            cap.moreBlackFlash(true);
-                            cap.delayTickEvent(() -> {
-                                cap.moreBlackFlash(false);
-                            }, 2);
-                        }
+
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                     .multiply(1.0D, 0.25D, 1.0D));
+                        }
+                            if (power == 1) {
+                            cap.moreBlackFlash(true);
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),30, 0, false, false, false));
+                            cap.delayTickEvent(() -> {
+                            cap.moreBlackFlash(false);
+                            }, 2);
                         }
                     }
                 }

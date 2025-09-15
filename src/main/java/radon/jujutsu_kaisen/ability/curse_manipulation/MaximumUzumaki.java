@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.projectile.MaximumUzumakiProjectile;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import net.minecraft.world.phys.Vec2;
@@ -76,4 +77,10 @@ public class MaximumUzumaki extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
+
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.J2TSU;
+    }
+
 }
