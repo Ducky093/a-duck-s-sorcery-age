@@ -157,6 +157,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
+
+        if (this.getTime() == 0) {
+            this.playSound(JJKSounds.FIRE_ARROW.get(), 1.0F, 1.0F);
+        }
+
         super.tick();
 
         if (this.getTime() >= DELAY) {

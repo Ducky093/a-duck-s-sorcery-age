@@ -135,7 +135,7 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
     public float getExperience() {
         ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float exp = ownerCap.getExperience();
-        return exp * 0.15f;
+        return exp * 0.3f;
     }
 
     @Override

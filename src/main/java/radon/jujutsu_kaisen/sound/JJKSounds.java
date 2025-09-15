@@ -12,6 +12,10 @@ public class JJKSounds {
 
     public static final RegistryObject<SoundEvent> SLASH = SOUNDS.register("slash", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slash")));
+    public static RegistryObject<SoundEvent> FIRE_ARROW = SOUNDS.register("fire_arrow", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")));
+    public static RegistryObject<SoundEvent> HOLLOW_PURPLE = SOUNDS.register("hollow_purple", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")));
     public static RegistryObject<SoundEvent> JACOBS_STRONG_CHARGE = SOUNDS.register("jacobs_strong_charge", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_strong_charge")));
     public static RegistryObject<SoundEvent> JACOBS_FIRE = SOUNDS.register("jacobs_fire", () ->

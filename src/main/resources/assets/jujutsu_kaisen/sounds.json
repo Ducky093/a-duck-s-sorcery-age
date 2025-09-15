@@ -54,6 +54,11 @@
       "jujutsu_kaisen:malevolent_shrine"
     ]
   },
+  "fire_arrow": {
+    "sounds": [
+      "jujutsu_kaisen:fire_arrow"
+    ]
+  },
   "electricity": {
     "sounds": [
       "jujutsu_kaisen:electricity"
@@ -72,6 +77,11 @@
   "dash": {
     "sounds": [
       "jujutsu_kaisen:dash"
+    ]
+  },
+  "hollow_purple": {
+    "sounds": [
+      "jujutsu_kaisen:hollow_purple"
     ]
   },
   "hollow_purple_explosion": {

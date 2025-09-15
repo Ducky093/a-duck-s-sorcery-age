@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -252,6 +253,11 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
+
+        if (this.getTime() == 0) {
+            this.playSound(JJKSounds.HOLLOW_PURPLE.get(), 3.0F, 1.0F);
+        }
+
         super.tick();
 
         this.refreshDimensions();
