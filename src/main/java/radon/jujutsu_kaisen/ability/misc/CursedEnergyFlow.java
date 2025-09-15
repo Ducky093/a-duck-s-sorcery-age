@@ -175,9 +175,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.isInWater() && cap.getNature() == CursedEnergyNature.LIGHTNING) {
-            return 5.0F;
+            return 5.1F;
         }
-        return 0.01F;
+        return 0.1F;
     }
 
     @Override

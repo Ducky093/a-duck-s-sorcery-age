@@ -67,7 +67,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        pPoseStack.scale(16.0F, 16.0F, 16.0F);
+        pPoseStack.scale(1.6F * pEntity.getPower(), 1.6F * pEntity.getPower(), 1.6F * pEntity.getPower());
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 
@@ -88,7 +88,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
     }
 
 
-    this.drawRing(drawing, rawDrawTime, strikeTime, 35, opacity,
+    this.drawRing(drawing, rawDrawTime, strikeTime, 350F / entity.getPower(), opacity,
                   poseStack, builder, packedLightIn, RING_RADIUS * 16.0F);
 
 
@@ -106,11 +106,11 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
     this.drawBeam(drawing, rawDrawTime, strikeTime, opacity, maxY, poseStack, builder, packedLightIn);
     }
 
-private void drawRing(boolean drawing, float drawTime, float strikeTime, int maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+private void drawRing(boolean drawing, float drawTime, float strikeTime, float maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
     this.drawRing(drawing, drawTime, strikeTime, maxY, opacity, poseStack, consumer, packedLight, RING_RADIUS);
 }
 
-private void drawRing(boolean drawing, float drawTime, float strikeTime, int maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight, float radius) {
+private void drawRing(boolean drawing, float drawTime, float strikeTime, float maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight, float radius) {
     int frame = (int) (((drawing ? drawTime : strikeTime) * (RING_FRAME_COUNT + 1.0F)));
     if (frame > RING_FRAME_COUNT) frame = RING_FRAME_COUNT;
 

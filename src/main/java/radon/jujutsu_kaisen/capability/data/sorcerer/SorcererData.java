@@ -79,7 +79,7 @@ public class SorcererData implements ISorcererData {
     private JujutsuType type;
     
     private int disable;
-
+    private int selfHit;
     private int burnout;
     private int brainDamage;
     private int brainDamageTimer;
@@ -422,6 +422,9 @@ public class SorcererData implements ISorcererData {
         }
         if (this.disable > 0) {
             this.disable--;
+        }
+        if (this.selfHit > 0) {
+            this.selfHit--;
         }
 
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
@@ -893,6 +896,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void clearCooldown(Ability ability) {
+        this.cooldowns.put(ability, 1);
+    }
+
+    @Override
     public int getRemainingCooldown(Ability ability) {
         return this.cooldowns.getOrDefault(ability, 0);
     }
@@ -927,6 +935,11 @@ public class SorcererData implements ISorcererData {
         this.disable = duration;
     }
 
+     @Override
+    public void setSelfHit(int duration) {
+        this.selfHit = duration;
+    }
+
     @Override
     public int getBurnout() {
         return this.burnout;
@@ -938,6 +951,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getSelfHit() {
+        return this.selfHit;
+    }
+
+    @Override
     public boolean hasBurnout() {
         return this.burnout > 0;
     }
@@ -946,6 +964,12 @@ public class SorcererData implements ISorcererData {
     public boolean hasDisable() {
         return this.disable > 0;
     }
+
+    @Override
+    public boolean hasSelfHit() {
+        return this.selfHit > 0;
+    }
+
 
     @Override
     public void resetCooldowns() {
@@ -960,6 +984,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void resetDisable() {
         this.disable = 0;
+    }
+
+    @Override
+    public void resetSelfHit() {
+        this.selfHit = 0;
     }
 
     @Override
@@ -1520,6 +1549,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
+        nbt.putInt("self_hit", this.selfHit);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
         nbt.putInt("charge", this.charge);

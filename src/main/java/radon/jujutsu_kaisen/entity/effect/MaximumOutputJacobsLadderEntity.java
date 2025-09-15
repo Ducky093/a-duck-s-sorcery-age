@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 14.0F;
+    private static final float DAMAGE = 1.0F;
     public static final int HITBOX_START = 28;
     public static final int STRIKE_EXPLOSION = 28;
-    private static final int STRIKE_LENGTH = 80;
+    private static final int STRIKE_LENGTH = 118;
 
     private int strikeTimeO;
     private int strikeTime;
@@ -91,7 +91,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
             this.playSound(JJKSounds.JACOBS_STRONG_CHARGE.get(), 4.0F, 1.0F);
         }
         if (this.strikeTime >= HITBOX_START) {
-            this.hurtEntities(15);
+            this.hurtEntities(1.52 * this.getPower() );
         }
 
         this.moveDownToGround();
@@ -99,7 +99,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
         if (this.strikeTime >= STRIKE_LENGTH ) {
             this.discard();
         } else if (this.strikeTime == STRIKE_EXPLOSION) {
-            this.playSound(JJKSounds.JACOBS_FIRE.get(), 4.0F, 1.0F);
+            this.playSound(JJKSounds.JACOBS_STRONG_FIRE.get(), 4.0F, 1.0F);
             //this.hurtEntities(5);
         }
         this.strikeTime++;
@@ -161,7 +161,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
              });
-                        
+                entity.invulnerableTime = 0;   
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), DAMAGE * this.getPower());
             }
         }

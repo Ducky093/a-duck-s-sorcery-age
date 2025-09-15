@@ -149,8 +149,8 @@ public class Punch extends Ability implements Ability.ICharged{
                         newDMG/=1.65F;
                     }
 
-                    float newPower = (float) (LAUNCH_POWER*(0.8+0.7*power)); // retains max of 1.5 launch power
-                    newDMG *= (float) (1+0.5*power);
+                    float newPower = (float) (LAUNCH_POWER*(0.8+0.5*power)); // retains max of 1.5 launch power
+                    newDMG *= (float) (1+1*power);
 
 
 

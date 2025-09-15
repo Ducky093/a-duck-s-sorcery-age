@@ -154,6 +154,8 @@ public interface ISorcererData {
 
     Set<Ability> getToggled();
 
+    void clearCooldown(Ability ability);
+
     void addCooldown(Ability ability);
 
     int getRemainingCooldown(Ability ability);
@@ -167,21 +169,29 @@ public interface ISorcererData {
     
     void setBurnout(int duration);
 
-     void setDisable(int duration);
+    void setDisable(int duration);
+
+    void setSelfHit(int duration);
 
     int getBurnout();
 
     int getDisable();
 
+    int getSelfHit();
+
     boolean hasBurnout();
 
     boolean hasDisable();
+
+    boolean hasSelfHit();
 
     void resetCooldowns();
 
     void resetBurnout();
 
     void resetDisable();
+
+    void resetSelfHit();
 
     float getMaxEnergy();
 

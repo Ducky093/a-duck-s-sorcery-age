@@ -243,7 +243,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5f);
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.75f);
         }
     }
 

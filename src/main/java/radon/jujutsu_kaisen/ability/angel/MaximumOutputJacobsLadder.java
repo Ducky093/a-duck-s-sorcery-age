@@ -25,7 +25,7 @@ public class MaximumOutputJacobsLadder extends Ability {
 
     @Override
     public boolean isScalable(LivingEntity owner) {
-        return false;
+        return true;
     }
 
     @Override

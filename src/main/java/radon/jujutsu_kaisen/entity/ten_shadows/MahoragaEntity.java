@@ -223,7 +223,7 @@ public class MahoragaEntity extends TenShadowsSummon {
             this.entityData.set(DATA_SLASH, --slash);
         } else {
             if (target != null) {
-                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.75f);
+                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
                 if (this.onGround() && this.distanceTo(target) < 6.0D) {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
@@ -327,7 +327,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     public void tick() {
         super.tick();
         if (this.getHealth() != this.getMaxHealth()) {
-            this.heal(1.0F / 20);
+            this.heal(2.0F / 20);
         }
     }
 
