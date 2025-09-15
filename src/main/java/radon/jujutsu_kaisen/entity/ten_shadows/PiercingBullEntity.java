@@ -23,7 +23,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 public class PiercingBullEntity extends TenShadowsSummon {
     private static final float DAMAGE = 17.0F;
-    private static final int INTERVAL = 100;
+    private static final int INTERVAL = 200;
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");

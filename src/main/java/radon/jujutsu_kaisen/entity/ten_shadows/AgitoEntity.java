@@ -14,6 +14,9 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -54,7 +57,7 @@ public class AgitoEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        this.moveControl = new MoveControl(this);
     }
 
     @Override
@@ -136,6 +139,28 @@ public class AgitoEntity extends TenShadowsSummon {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
+        }
+
     }
 
     @Override

@@ -17,6 +17,9 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +66,8 @@ public class ToadEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+
+        this.moveControl = new MoveControl(this);
     }
 
     @Override
@@ -156,7 +161,7 @@ public class ToadEntity extends TenShadowsSummon {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.ARMOR, 6.0D)
-                .add(Attributes.MAX_HEALTH, 1 * 1.0D);
+                .add(Attributes.MAX_HEALTH, 3 * 5.0D);
     }
 
     private PlayState walkPredicate(AnimationState<ToadEntity> animationState) {
@@ -198,6 +203,16 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
     public Summon<?> getAbility() {
         return this.hasWings() ? JJKAbilities.TOAD_FUSION.get() : JJKAbilities.TOAD.get();
     }
@@ -231,7 +246,7 @@ public class ToadEntity extends TenShadowsSummon {
 
         if (target != null && target.isAlive() && !target.isRemoved()) {
             this.lookControl.setLookAt(target, 30.0F, 30.0F);
-
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5f);
             if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
                 if (this.getTime() % SHOOT_INTERVAL == 0) {
                     this.shoot(target);

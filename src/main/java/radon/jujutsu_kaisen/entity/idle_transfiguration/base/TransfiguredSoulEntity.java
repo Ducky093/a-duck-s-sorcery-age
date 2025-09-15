@@ -17,6 +17,10 @@ import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -129,7 +133,9 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
 
     @Override
     public float getExperience() {
-        return SorcererGrade.GRADE_2.getRequiredExperience();
+        ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float exp = ownerCap.getExperience();
+        return exp * 0.15f;
     }
 
     @Override

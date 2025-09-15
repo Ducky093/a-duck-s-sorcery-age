@@ -18,6 +18,9 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -66,7 +69,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        this.moveControl = new MoveControl(this);
     }
 
     @Override
@@ -168,6 +171,27 @@ public class GreatSerpentEntity extends TenShadowsSummon {
                 seg.kill();
             }
         }
+    }
+
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5f);
+        }
+
     }
 
     private void moveSegments() {

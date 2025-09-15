@@ -29,6 +29,9 @@ import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -68,6 +71,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.yHeadRotO = this.yHeadRot;
 
         this.setVariant(variant);
+        this.moveControl = new MoveControl(this);
     }
 
     @Override
@@ -184,7 +188,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));
         }
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
@@ -197,6 +201,16 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
 
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -274,6 +288,12 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.75f);
+        }
 
         int leap = this.entityData.get(DATA_LEAP);
 
