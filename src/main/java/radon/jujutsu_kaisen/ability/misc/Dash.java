@@ -91,12 +91,13 @@ public class Dash extends Ability {
         boolean collision = false;
 
         AABB bounds = owner.getBoundingBox();
-        Cursor3D cursor = new Cursor3D(Mth.floor(bounds.minX - 1.0E-7D) - 2,
-                Mth.floor(bounds.minY - 1.0E-7D) - 2,
-                Mth.floor(bounds.minZ - 1.0E-7D) - 2,
-                Mth.floor(bounds.maxX + 1.0E-7D) + 2,
-                Mth.floor(bounds.maxY + 1.0E-7D) + 2,
-                Mth.floor(bounds.maxZ + 1.0E-7D) + 2);
+        int bound = 4;
+        Cursor3D cursor = new Cursor3D(Mth.floor(bounds.minX - 1.0E-7D) - bound,
+                Mth.floor(bounds.minY - 1.0E-7D) - bound,
+                Mth.floor(bounds.minZ - 1.0E-7D) - bound,
+                Mth.floor(bounds.maxX + 1.0E-7D) + bound,
+                Mth.floor(bounds.maxY + 1.0E-7D) + bound,
+                Mth.floor(bounds.maxZ + 1.0E-7D) + bound);
 
         while (cursor.advance()) {
             int i = cursor.nextX();

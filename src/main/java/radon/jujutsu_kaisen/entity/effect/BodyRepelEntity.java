@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -8,6 +9,9 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -30,6 +34,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -77,10 +82,15 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
         this.moveTo(pShooter.getEyePosition());
-        EntityUtil.offset(this, pShooter.getLookAngle(), new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2), pShooter.getZ()).add(look));
+        Vec3 dest = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2), pShooter.getZ()).add(look);
+        EntityUtil.offset(this, pShooter.getLookAngle(), dest);
         this.setYRot(pShooter.getYHeadRot());
         double speed = SPEED * (1+ (1.5 * this.souls) /10);
         this.setDeltaMovement(look.scale(speed));
+
+        if (!(pShooter.level() instanceof ServerLevel level)) return;
+        level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, this.getX(), this.getY(), this.getZ(), 0, 0,0,0, 1.0D);
+
     }
 
 
@@ -174,6 +184,12 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         } else {
             super.tick();
 
+            if (this.getTime() == 2) {
+                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ALLAY_DEATH, SoundSource.MASTER, 1F, 0.5F);
+                owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.SOUL_ESCAPE, SoundSource.MASTER, 2F, 1F);
+            }
+
+
             if (this.getTime() >= DURATION) {
                 this.discard();
                 return;
@@ -194,6 +210,10 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
             double d1 = this.getY() + movement.y;
             double d2 = this.getZ() + movement.z;
             this.setPos(d0, d1, d2);
+
+
+            if (!(owner.level() instanceof ServerLevel level)) return;
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY(), this.getZ(), 0, 0,0,0, 1.0D);
         }
     }
 

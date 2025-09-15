@@ -285,9 +285,13 @@ public class JJKEventHandler {
 		        armor = SorcererUtil.getDefenseHR(cap.getExperience());
             }
 
+
             float ratio = victim.getHealth()/victim.getMaxHealth();
             if (ratio < 0.25) {
                 armor*= 0.75F;
+                if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    armor *= 0.9F;
+                }
             }
 
             float blocked = event.getAmount()/armor;
