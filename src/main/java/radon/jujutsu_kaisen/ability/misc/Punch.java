@@ -41,7 +41,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 7.5D;
+    private static final double RANGE = 6.5D;
     private static final double LAUNCH_POWER = 3.0D;
 
     @Override
@@ -95,7 +95,7 @@ public class Punch extends Ability implements Ability.ICharged{
         float num = 3;
         if (power >= 0.25) {
             float mod = 1;
-            num = 5;
+            num = 4;
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                 mod = 1.8f;
             }
@@ -110,7 +110,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
         int dash = cap.getDash();
         if (dash > 0) {
-            num+=3;
+            num+=2;
             newRange+=1.5;
             Vec3 pos = owner.getEyePosition().add(look);
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.MASTER, 1.0F, 1.5F);

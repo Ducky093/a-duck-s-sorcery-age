@@ -157,10 +157,7 @@ public class Dash extends Ability {
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
 
-        float ratio = owner.getHealth()/owner.getMaxHealth();
-        if (ratio < 0.25) {
-            power*=0.75f;
-        }
+
         if (owner.isShiftKeyDown()) {
             power*=0.5f;
         }

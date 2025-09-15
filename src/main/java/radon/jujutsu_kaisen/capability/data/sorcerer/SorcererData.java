@@ -443,13 +443,9 @@ public class SorcererData implements ISorcererData {
             double speed = this.getRealPower();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            float ratio = owner.getHealth()/owner.getMaxHealth();
+
             double movement = this.getRealPower() * 0.3D;
-            if (ratio <= .2) {
-                movement*= 0.1;
-            } else if (ratio <= 0.35) {
-                movement *= 0.4;
-            }
+
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {

@@ -159,10 +159,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
             newSpeed*=1.15;
         }
-        float ratio = owner.getHealth()/owner.getMaxHealth();
-        if (ratio <= 0.25) {
-            newSpeed *= 0.5;
-        }
+ 
         if (cap.getEnergy() < cap.getMaxEnergy()*0.1f) {
             newSpeed *= 0.5;
         }
