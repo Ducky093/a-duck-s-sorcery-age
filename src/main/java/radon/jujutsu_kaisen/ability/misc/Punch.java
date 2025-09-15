@@ -181,7 +181,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
                             if (power == 1) {
-                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
                             }
 
                         }
@@ -192,7 +192,7 @@ public class Punch extends Ability implements Ability.ICharged{
                         }
                         if (power == 1) {
                             cap.moreBlackFlash(true);
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
                             cap.delayTickEvent(() -> {
                                 cap.moreBlackFlash(false);
                             }, 2);
