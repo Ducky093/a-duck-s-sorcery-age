@@ -7,6 +7,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.effect.JacobsLadderEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -16,7 +18,7 @@ public class JacobsLadder extends Ability {
 
     @Override
     public boolean isScalable(LivingEntity owner) {
-        return false;
+        return true;
     }
 
     @Override
@@ -43,7 +45,9 @@ public class JacobsLadder extends Ability {
 
         LivingEntity target = this.getTarget(owner);
 
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
 
         JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), target.position());
         owner.level().addFreshEntity(strike);
@@ -51,7 +55,7 @@ public class JacobsLadder extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
+       LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;

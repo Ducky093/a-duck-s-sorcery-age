@@ -58,7 +58,7 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.set(DATA_POWER, power);
     }
 
-    protected float getPower() {
+    public float getPower() {
         return this.entityData.get(DATA_POWER);
     }
 
@@ -143,7 +143,7 @@ public class JujutsuProjectile extends Projectile {
         if (Double.isNaN(d0)) {
             d0 = 1.0D;
         }
-        d0 *= 156.0D * getViewScale();
+        d0 *= 302.0D * getViewScale();
         return pDistance < d0 * d0;
     }
 

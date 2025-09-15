@@ -160,7 +160,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
              });
-                        
+               // entity.invulnerableTime = 0;   
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), DAMAGE * this.getPower());
             }
         }
