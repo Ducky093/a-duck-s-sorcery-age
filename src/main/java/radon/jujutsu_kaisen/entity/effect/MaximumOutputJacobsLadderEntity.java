@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -155,14 +156,23 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
                 }*/
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+           
+
+             
+                 ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                
                                 cap.setDisable(40);
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
-             });
-                entity.invulnerableTime = 0;   
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), DAMAGE * this.getPower());
+
+               // entity.invulnerableTime = 0;   
+               int mult = 1;
+               if (cap.hasTrait(Trait.INCARNATED)) {
+                   mult = 4;
+               }
+                entity.invulnerableTime = 0;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), mult * DAMAGE * this.getPower());
             }
         }
     }

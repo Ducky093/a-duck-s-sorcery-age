@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -32,6 +33,8 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.checkerframework.checker.units.qual.m;
 
 public class JacobsLadderEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
@@ -154,14 +157,19 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
                 }*/
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                
                                 cap.setDisable(20);
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
-             });
+
                // entity.invulnerableTime = 0;   
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), DAMAGE * this.getPower());
+               int mult = 1;
+               if (cap.hasTrait(Trait.INCARNATED)) {
+                   mult = 4;
+               }
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), mult * DAMAGE * this.getPower());
             }
         }
     }
