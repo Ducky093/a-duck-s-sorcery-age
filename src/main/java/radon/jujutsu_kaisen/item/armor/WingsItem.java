@@ -48,22 +48,62 @@ public class WingsItem extends ArmorItem implements GeoItem {
         });
     }
 
+    private static double getDistanceGround(LivingEntity entity) {
+        Vec3 pos = entity.position();
+        Vec3 down = pos.add(0.0, -256.0, 0.0);
+
+        var result = entity.level().clip(new net.minecraft.world.level.ClipContext(
+                pos, down,
+                net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE,
+                entity
+        ));
+
+        if (result.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
+            return pos.y - result.getLocation().y;
+        }
+        return Double.MAX_VALUE;
+    }
+
     @Override
     public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-        return !entity.onGround() && new Vec3(entity.xxa, 0.0D, entity.zza).length() > 1.0E-7D;
+        double dist = getDistanceGround(entity);
+        // Must be at least 5 blocks above ground, not standing, and moving
+        return dist > 4.0 && !entity.onGround() &&
+                new Vec3(entity.xxa, 0.0D, entity.zza).length() > 1.0E-7D;
     }
+
+    // @Override
+    // public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
+    //     return !entity.onGround() && new Vec3(entity.xxa, 0.0D, entity.zza).length() > 1.0E-7D;
+    // }
 
     @Override
     public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
         return true;
     }
 
+    // private PlayState flyPredicate(AnimationState<WingsItem> animationState) {
+    //     if (animationState.getData(DataTickets.ENTITY) instanceof LivingEntity entity && !entity.onGround()) {
+    //         return animationState.setAndContinue(new Vec3(entity.xxa, 0.0D, entity.zza).lengthSqr() > 1.0E-7D ? FLY_HORIZONTAL : FLY_VERTICAL);
+    //     }
+    //     return PlayState.STOP;
+    // }
+
     private PlayState flyPredicate(AnimationState<WingsItem> animationState) {
-        if (animationState.getData(DataTickets.ENTITY) instanceof LivingEntity entity && !entity.onGround()) {
-            return animationState.setAndContinue(new Vec3(entity.xxa, 0.0D, entity.zza).lengthSqr() > 1.0E-7D ? FLY_HORIZONTAL : FLY_VERTICAL);
+        if (animationState.getData(DataTickets.ENTITY) instanceof LivingEntity entity) {
+            double dist = getDistanceGround(entity);
+            if (dist > 4.0 && !entity.onGround()) {
+                return animationState.setAndContinue(
+                        new Vec3(entity.xxa, 0.0D, entity.zza).lengthSqr() > 1.0E-7D
+                                ? FLY_HORIZONTAL
+                                : FLY_VERTICAL
+                );
+            }
         }
         return PlayState.STOP;
     }
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {

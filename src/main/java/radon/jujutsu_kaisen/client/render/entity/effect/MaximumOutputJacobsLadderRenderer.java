@@ -35,6 +35,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
     private static final float BEAM_DRAW_START_RADIUS = 2.0F;
     private static final float BEAM_DRAW_END_RADIUS = 0.25F;
     private static final float BEAM_STRIKE_RADIUS = 1.0F;
+    private static final float DRAW_DELAY = 0.3F;
 
     public MaximumOutputJacobsLadderRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -55,6 +56,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         return TEXTURE;
     }
 
+    
     @Override
     public void render(MaximumOutputJacobsLadderEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         float maxY = (float) (MAX_HEIGHT - pEntity.getY());
@@ -65,7 +67,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        pPoseStack.scale(7.0F, 7.0F, 7.0F);
+        pPoseStack.scale(16.0F, 16.0F, 16.0F);
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 
@@ -76,22 +78,32 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
     }
 
     private void drawStrike(MaximumOutputJacobsLadderEntity entity, float maxY, float partialTicks, PoseStack poseStack, VertexConsumer builder, int packedLightIn) {
-        float drawTime = entity.getStrikeDrawTime(partialTicks);
-        float strikeTime = entity.getStrikeDamageTime(partialTicks);
-        boolean drawing = entity.isStrikeDrawing(partialTicks);
-        float opacity = drawing && drawTime < DRAW_FADE_IN_POINT ? drawTime * DRAW_FADE_IN_RATE : 1;
+        float rawDrawTime = entity.getStrikeDrawTime(partialTicks);
+    float strikeTime = entity.getStrikeDamageTime(partialTicks);
+    boolean drawing = entity.isStrikeDrawing(partialTicks);
 
-        if (drawing) {
-            opacity *= DRAW_OPACITY_MULTIPLIER;
-        }
- this.drawRing(drawing, drawTime, strikeTime,75, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 16.0F);
-        
-        poseStack.pushPose();
-       this.drawRing(drawing, drawTime, strikeTime,0, opacity, poseStack, builder, packedLightIn);
-        poseStack.popPose();
+    float opacity = drawing && rawDrawTime < DRAW_FADE_IN_POINT ? rawDrawTime * DRAW_FADE_IN_RATE : 1.0F;
+    if (drawing) {
+        opacity *= DRAW_OPACITY_MULTIPLIER;
+    }
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().getYRot()));
-        this.drawBeam(drawing, drawTime, strikeTime, opacity, maxY, poseStack, builder, packedLightIn);
+
+    this.drawRing(drawing, rawDrawTime, strikeTime, 35, opacity,
+                  poseStack, builder, packedLightIn, RING_RADIUS * 16.0F);
+
+
+    if (rawDrawTime < DRAW_DELAY) {
+        return;
+    }
+
+    float drawTime = rawDrawTime - DRAW_DELAY;
+
+    poseStack.pushPose();
+    this.drawRing(drawing, drawTime, strikeTime, 0, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 0.9F);
+    poseStack.popPose();
+
+    poseStack.mulPose(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().getYRot()));
+    this.drawBeam(drawing, rawDrawTime, strikeTime, opacity, maxY, poseStack, builder, packedLightIn);
     }
 
 private void drawRing(boolean drawing, float drawTime, float strikeTime, int maxY, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {

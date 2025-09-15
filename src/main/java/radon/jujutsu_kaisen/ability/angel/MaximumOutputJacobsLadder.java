@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class MaximumOutputJacobsLadder extends Ability {
-    public static final double RANGE = 150.0D;
+    public static final double RANGE = 100.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {

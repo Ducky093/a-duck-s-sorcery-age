@@ -39,6 +39,11 @@
       "jujutsu_kaisen:jacobs_fire"
     ]
   },
+  "jacobs_strong_fire": {
+    "sounds": [
+      "jujutsu_kaisen:jacobs_strong_fire"
+    ]
+  },
   "forest_spikes": {
     "sounds": [
       "jujutsu_kaisen:forest_spikes"

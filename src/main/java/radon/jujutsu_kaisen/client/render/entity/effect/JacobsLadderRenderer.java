@@ -84,36 +84,15 @@ public class JacobsLadderRenderer extends EntityRenderer<JacobsLadderEntity> {
         if (drawing) {
             opacity *= DRAW_OPACITY_MULTIPLIER;
         }
-       this.drawSkyRing(drawing, drawTime, strikeTime, opacity, poseStack, builder, packedLightIn, RING_RADIUS * 10.0F);
-
-    // Sky ring above
-    poseStack.pushPose();
-    poseStack.translate(0.0F, 999.0F, 0.0F); 
+   
     this.drawRing(drawing, drawTime, strikeTime, opacity, poseStack, builder, packedLightIn);
-    poseStack.popPose();
+   // poseStack.popPose();
 
     poseStack.mulPose(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().getYRot()));
     this.drawBeam(drawing, drawTime, strikeTime, opacity, maxY, poseStack, builder, packedLightIn);
     }
 
-     private void drawSkyRing(boolean drawing, float drawTime, float strikeTime, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight, float radius) {
-        int frame = (int) (((drawing ? drawTime : strikeTime) * (RING_FRAME_COUNT + 1.0F)));
-        if (frame > RING_FRAME_COUNT) frame = RING_FRAME_COUNT;
-
-        float minU = frame * RING_FRAME_SIZE / TEXTURE_WIDTH;
-        float maxU = minU + RING_FRAME_SIZE / TEXTURE_WIDTH;
-        float minV = drawing ? 0.0F : RING_FRAME_SIZE / TEXTURE_HEIGHT;
-        float maxV = minV + RING_FRAME_SIZE / TEXTURE_HEIGHT;
-        float offset = PIXEL_SCALE * radius * (frame % 2);
-
-        PoseStack.Pose pose = poseStack.last();
-        Matrix4f matrix4f = pose.pose();
-        vertex(matrix4f, pose, consumer, -radius + offset, 0.0F, -radius + offset, minU, minV, opacity, packedLight);
-        vertex(matrix4f, pose, consumer, -radius + offset, 0.0F, radius + offset, minU, maxV, opacity, packedLight);
-        vertex(matrix4f, pose, consumer, radius + offset, 0.0F, radius + offset, maxU, maxV, opacity, packedLight);
-        vertex(matrix4f, pose, consumer, radius + offset, 0.0F, -radius + offset, maxU, minV, opacity, packedLight);
-    }
-
+    
 
     private void drawRing(boolean drawing, float drawTime, float strikeTime, float opacity, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
             this.drawRing(drawing, drawTime, strikeTime, opacity, poseStack, consumer, packedLight, RING_RADIUS);

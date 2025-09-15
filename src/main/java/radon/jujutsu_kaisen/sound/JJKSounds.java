@@ -16,6 +16,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_strong_charge")));
     public static RegistryObject<SoundEvent> JACOBS_FIRE = SOUNDS.register("jacobs_fire", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_fire")));
+    public static RegistryObject<SoundEvent> JACOBS_STRONG_FIRE = SOUNDS.register("jacobs_strong_fire", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_strong_fire")));
     public static RegistryObject<SoundEvent> JACOBS_CHARGE = SOUNDS.register("jacobs_charge", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_charge")));
     public static RegistryObject<SoundEvent> WHEEL = SOUNDS.register("wheel", () ->

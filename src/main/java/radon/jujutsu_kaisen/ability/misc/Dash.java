@@ -67,8 +67,25 @@ public class Dash extends Ability {
         return super.isTriggerable(owner);
     }
 
+    private static double getDistanceGround(LivingEntity entity) {
+        Vec3 pos = entity.position();
+        Vec3 down = pos.add(0.0, -256.0, 0.0);
+
+        var result = entity.level().clip(new net.minecraft.world.level.ClipContext(
+                pos, down,
+                net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE,
+                entity
+        ));
+        if (result.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
+            return pos.y - result.getLocation().y;
+        }
+        return Double.MAX_VALUE;
+    }
+        
     private static boolean canDash(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) return false;
+           ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner.hasEffect(JJKEffects.STUN.get()) || (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get()) && getDistanceGround(owner) > 4.0D)) return false;
 
         boolean collision = false;
 

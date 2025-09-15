@@ -143,7 +143,7 @@ public class JujutsuProjectile extends Projectile {
         if (Double.isNaN(d0)) {
             d0 = 1.0D;
         }
-        d0 *= 64.0D * getViewScale();
+        d0 *= 156.0D * getViewScale();
         return pDistance < d0 * d0;
     }
 
