@@ -41,7 +41,7 @@ public class HollowWickerBasketRenderer extends EntityRenderer<HollowWickerBaske
         int stacks = 64;
 
         poseStack.scale(1f, 1f, 1f);
-
+        poseStack.translate(0, entity.getEyeHeight(), 0);
         Matrix4f poseMatrix = poseStack.last().pose();
         Matrix3f normalMatrix = poseStack.last().normal();
 
