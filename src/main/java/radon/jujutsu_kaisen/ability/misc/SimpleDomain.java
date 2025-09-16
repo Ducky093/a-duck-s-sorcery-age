@@ -63,7 +63,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public int getCooldown() {
-        return 20 * 20;
+        return 30 * 20;
     }
 
     @Override

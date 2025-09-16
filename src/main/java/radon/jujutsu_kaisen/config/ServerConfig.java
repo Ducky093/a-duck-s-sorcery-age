@@ -41,6 +41,7 @@ public class ServerConfig {
 
     public final ForgeConfigSpec.IntValue simpleDomainCost;
     public final ForgeConfigSpec.IntValue quickDrawCost;
+    public final ForgeConfigSpec.IntValue hollowWickerBasketCost;
     public final ForgeConfigSpec.IntValue fallingBlossomEmotionCost;
     public final ForgeConfigSpec.IntValue domainExpansionCost;
     public final ForgeConfigSpec.IntValue domainAmplificationCost;
@@ -130,6 +131,8 @@ public class ServerConfig {
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.fallingBlossomEmotionCost = builder.comment("The amount of points falling blossom emotion costs to unlock")
                 .defineInRange("fallingBlossomEmotionCost", 50, 1, 10000);
+        this.hollowWickerBasketCost = builder.comment("The amount of points hollow wicker basket costs to unlock")
+                .defineInRange("hollowWickerBasketCost", 50, 1, 10000);
         this.domainExpansionCost = builder.comment("The amount of points domain expansion costs to unlock")
                 .defineInRange("domainExpansionCost", 200, 1, 10000);
         this.domainAmplificationCost = builder.comment("The amount of points domain amplification costs to unlock")

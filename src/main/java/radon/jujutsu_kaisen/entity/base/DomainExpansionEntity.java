@@ -198,6 +198,10 @@ public abstract class DomainExpansionEntity extends Entity {
 
             if ((victim instanceof MahoragaEntity && victimTenShadowsCap.isAdaptedTo(this.ability))) return false;
 
+            if (victimSorcererCap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
+                return false;       
+            }
+
             if (victimSorcererCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 SimpleDomainEntity simple = victimSorcererCap.getSummonByClass(SimpleDomainEntity.class);
 

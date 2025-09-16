@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 1.0F;
+    private static final float DAMAGE = 5.0F;
     public static final int HITBOX_START = 28;
     public static final int STRIKE_EXPLOSION = 28;
     private static final int STRIKE_LENGTH = 118;
@@ -160,15 +160,15 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
              
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                     if (cap.hasTrait(Trait.INCARNATED)) {
-                                        mult[0] *= 4;
+                                        mult[0] *= 2.0;
                                     }
-                                    cap.setDisable((int)(40F * this.getPower() * mult[0]));
+                                    cap.setDisable((int)(15F * this.getPower() * mult[0]));
                                     if (entity instanceof ServerPlayer player) {
                                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                     }
                                                 
                             });
-                entity.invulnerableTime = 0;
+                entity.invulnerableTime = 5;
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), mult[0] * DAMAGE * this.getPower());
             }
         }

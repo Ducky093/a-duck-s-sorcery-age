@@ -73,6 +73,11 @@ public class Punch extends Ability implements Ability.ICharged{
     }
 
     @Override
+    public boolean usesHands() {
+        return true;
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),

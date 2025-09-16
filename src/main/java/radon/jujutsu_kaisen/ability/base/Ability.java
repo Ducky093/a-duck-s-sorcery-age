@@ -94,9 +94,17 @@ public abstract class Ability {
         return 0;
     }
 
+    public boolean isIncarnatedLocked() {
+        return false;
+    }
+
     public int getRealPointsCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        if (this.isIncarnatedLocked()) {
+            if (!cap.hasTrait(Trait.INCARNATED)) {
+                return 0;
+            }
+        }
         /*if (cap.hasTrait(Trait.SIX_EYES)) {
             return this.getPointsCost() / 2;
         }*/
@@ -146,6 +154,10 @@ public abstract class Ability {
 
     public boolean isMelee() {
         return false;
+    }
+
+    public boolean usesHands() {
+        return true;
     }
 
     // Used for AI

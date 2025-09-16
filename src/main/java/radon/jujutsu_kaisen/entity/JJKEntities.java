@@ -289,6 +289,12 @@ public class JJKEntities {
                     .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
                             .toString()));
+
+    public static RegistryObject<EntityType<HollowWickerBasketEntity>> HOLLOW_WICKER_BASKET = ENTITIES.register("hollow_wicker_basket", () ->
+            EntityType.Builder.<HollowWickerBasketEntity>of(HollowWickerBasketEntity::new, MobCategory.MISC)
+                    .sized(HollowWickerBasketEntity.RADIUS, HollowWickerBasketEntity.RADIUS)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_wicker_basket")
+                            .toString()));
     public static RegistryObject<EntityType<RedProjectile>> RED = ENTITIES.register("red", () ->
             EntityType.Builder.<RedProjectile>of(RedProjectile::new, MobCategory.MISC)
                     .sized(0.15F, 0.15F)
