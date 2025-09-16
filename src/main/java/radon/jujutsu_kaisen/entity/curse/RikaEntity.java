@@ -67,7 +67,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z);
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
@@ -174,6 +173,10 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
             LivingEntity target = this.getTarget();
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+
+            if (target != null) {
+                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
+            }
 
             if (owner != null && this.isOpen()) {
                 Vec3 pos = owner.position()

@@ -41,7 +41,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 6.5D;
+    private static final double RANGE = 7.0D;
     private static final double LAUNCH_POWER = 3.0D;
 
     @Override

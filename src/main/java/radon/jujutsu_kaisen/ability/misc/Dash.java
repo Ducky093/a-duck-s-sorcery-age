@@ -114,7 +114,7 @@ public class Dash extends Ability {
                 break;
             }
         }
-        return collision || owner.getXRot() >= 15.0F;
+        return collision || owner.getXRot() >= 1.0F;
     }
 
     private static float getRange(LivingEntity owner) {
@@ -258,7 +258,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 12;
     }
 
     @Override
@@ -269,10 +269,10 @@ public class Dash extends Ability {
             if (!owner.isShiftKeyDown()) {
                 return 14;
             }
-            return 10;
+            return 7;
         }
         if (!owner.isShiftKeyDown()) {
-            return 40;
+            return 25;
         }
         return super.getRealCooldown(owner);
     }

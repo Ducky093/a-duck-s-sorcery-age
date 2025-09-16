@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -21,7 +22,6 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -53,7 +54,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
 
-    private static final double SLASH_LAUNCH = 10.0D;
+    private static final double SLASH_LAUNCH = 30.0D;
     private static final float SLASH_EXPLOSION = 5.0F;
     private static final float SLASH_DAMAGE = 25.0F; //no scaling
 
@@ -106,7 +107,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     protected boolean canFly() {
-        return true;
+        return false;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 5 * 15.0D)
+                .add(Attributes.MAX_HEALTH, 4 * 15.0D)
                 .add(Attributes.ARMOR, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 7 * 3.0D);
     }
@@ -224,15 +225,15 @@ public class MahoragaEntity extends TenShadowsSummon {
         } else {
             if (target != null) {
                 this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
-                if (this.onGround() && this.distanceTo(target) < 6.0D) {
+                if (this.onGround() && this.distanceTo(target) < 5.0D) {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    target.hurt(JJKDamageSources.jujutsuAttack(target, JJKAbilities.DISMANTLE.get()), SLASH_DAMAGE);
                     target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
                     target.hurtMarked = true;
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(RotationUtil.getTargetAdjustedLookAngle(this));
-                    this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SLASH_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                    ExplosionHandler.spawn(this.level().dimension(), explosionPos, SLASH_EXPLOSION,
+                            20, SLASH_DAMAGE * 0.25f, this,  JJKDamageSources.indirectJujutsuAttack(this, this, JJKAbilities.DISMANTLE.get()), false);
 
                 }
             }
