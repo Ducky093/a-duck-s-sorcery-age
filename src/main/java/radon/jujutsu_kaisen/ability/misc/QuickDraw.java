@@ -120,6 +120,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
         return false;
     }
 
+
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class QuickDrawForgeEvents {
         @SubscribeEvent

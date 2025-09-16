@@ -82,6 +82,11 @@ public class HorseLegs extends Transformation {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public void onDisabled(LivingEntity owner) {
 
     }

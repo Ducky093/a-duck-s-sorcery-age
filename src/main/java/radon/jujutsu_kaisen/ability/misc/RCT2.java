@@ -32,6 +32,11 @@ public class RCT2 extends RCT1 {
         return super.shouldTrigger(owner, target);
     }
 
+     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Override
     public void run(LivingEntity owner) {
         super.run(owner);

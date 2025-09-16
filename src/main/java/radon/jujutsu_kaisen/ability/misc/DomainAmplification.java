@@ -63,6 +63,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         return MenuType.DOMAIN;
     }
 
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {

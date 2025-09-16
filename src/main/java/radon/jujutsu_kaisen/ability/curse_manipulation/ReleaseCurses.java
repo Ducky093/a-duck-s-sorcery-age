@@ -43,6 +43,12 @@ public class ReleaseCurses extends Ability {
         }
     }
 
+
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Override
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;

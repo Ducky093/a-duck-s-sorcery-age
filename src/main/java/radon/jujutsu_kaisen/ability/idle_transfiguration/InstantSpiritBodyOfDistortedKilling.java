@@ -115,4 +115,9 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     public void onDisabled(LivingEntity owner) {
 
     }
+
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
 }

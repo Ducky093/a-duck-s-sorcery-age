@@ -31,7 +31,7 @@ public class ForestRoots extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
-            if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
+            if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || !entity.onGround() ) continue;
             owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getPower(owner), living));
         }
     }

@@ -60,6 +60,11 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
     }
 
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class SoulReinforcementForgeEvents {
         @SubscribeEvent(priority = EventPriority.LOWEST)

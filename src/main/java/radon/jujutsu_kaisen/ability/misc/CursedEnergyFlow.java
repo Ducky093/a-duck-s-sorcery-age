@@ -84,6 +84,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
             Vec3 movement = owner.getDeltaMovement();

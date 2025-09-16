@@ -12,11 +12,33 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+
 import org.jetbrains.annotations.NotNull;
 
 public class SkinModel<T extends LivingEntity> extends PlayerModel<T> {
     public SkinModel(ModelPart pRoot) {
         super(pRoot, false);
+    }
+
+    @Override
+    public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
+            this.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+            this.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+            // Move arms in front of the chest
+            this.rightArm.xRot = (float) Math.toRadians(-45);
+            this.rightArm.yRot = (float) Math.toRadians(-10);
+            this.rightArm.zRot = 0;
+
+            this.leftArm.xRot = (float) Math.toRadians(-45);
+            this.leftArm.yRot = (float) Math.toRadians(10);
+            this.leftArm.zRot = 0;
+        }
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -44,6 +66,8 @@ public class SkinModel<T extends LivingEntity> extends PlayerModel<T> {
             if (pEntity.getUsedItemHand() == pHand && pEntity.getUseItemRemainingTicks() > 0) {
                 UseAnim anim = stack.getUseAnimation();
 
+
+                
                 if (anim == UseAnim.BLOCK) {
                     return HumanoidModel.ArmPose.BLOCK;
                 }

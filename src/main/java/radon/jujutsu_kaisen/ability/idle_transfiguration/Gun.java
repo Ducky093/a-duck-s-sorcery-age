@@ -84,6 +84,7 @@ public class Gun extends Transformation {
     public void onDisabled(LivingEntity owner) {
 
     }
+    
 
     @Override
     public float getSlimTranslation() {

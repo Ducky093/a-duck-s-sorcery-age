@@ -105,6 +105,11 @@ public class Slam extends Ability implements Ability.ICharged {
         return MenuType.MELEE;
     }
 
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     public static void onHitGround(LivingEntity owner, float distance) {
         slamCrater(owner,distance);
     }

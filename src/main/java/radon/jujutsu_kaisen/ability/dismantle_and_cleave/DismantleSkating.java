@@ -43,6 +43,11 @@ public class DismantleSkating extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 0.3F;
     }

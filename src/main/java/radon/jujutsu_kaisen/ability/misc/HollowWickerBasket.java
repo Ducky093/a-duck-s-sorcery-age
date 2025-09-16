@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -69,8 +70,9 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     }
 
     @Override
-    public boolean isIncarnatedLocked() {
-        return true;
+    public boolean canUnlock(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(Trait.INCARNATED) && super.canUnlock(owner);
     }
 
     @Override
@@ -126,6 +128,11 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
 
    @Override
     public boolean isTenShadows() {
+        return false;
+    }
+
+    @Override
+    public boolean usesHands() {
         return false;
     }
 

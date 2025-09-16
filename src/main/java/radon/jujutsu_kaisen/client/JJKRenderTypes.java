@@ -16,6 +16,18 @@ import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
 import java.util.function.Function;
 
 public class JJKRenderTypes extends RenderType {
+     private static final Function<ResourceLocation, RenderType> HOLLOW_WICKER_BASKET = Util.memoize((pLocation) ->
+            create("hollow_wicker_basket", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, CompositeState.builder()
+                  .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+           .setTextureState(new RenderStateShard.TextureStateShard(pLocation, false, false))
+           .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+           .setCullState(RenderStateShard.NO_CULL)           // render both sides
+           .setLightmapState(RenderStateShard.LIGHTMAP)
+           .setOverlayState(RenderStateShard.NO_OVERLAY)
+           .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)      // important for water blending
+           .setWriteMaskState(RenderStateShard.COLOR_WRITE) // write color & depth
+           .createCompositeState(false)
+            ));
     private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) ->
             create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
                     .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
@@ -68,6 +80,10 @@ public class JJKRenderTypes extends RenderType {
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
+    }
+
+    public static RenderType hollow_wicker_basket(ResourceLocation pLocation) {
+        return HOLLOW_WICKER_BASKET.apply(pLocation);
     }
 
     public static RenderType glow(ResourceLocation pLocation) {

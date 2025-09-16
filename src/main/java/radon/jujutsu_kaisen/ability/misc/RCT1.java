@@ -31,6 +31,11 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return owner.getHealth() < owner.getMaxHealth();
     }

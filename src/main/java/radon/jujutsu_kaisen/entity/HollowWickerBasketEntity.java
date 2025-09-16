@@ -35,7 +35,7 @@ public class HollowWickerBasketEntity extends Entity {
 
     private static final float STRENGTH = 100.0F;
     private static final double X_STEP = 0.025D;
-    public static final float RADIUS = 1.0F;
+    public static final float RADIUS = 1.25F;
     private static final float MAX_RADIUS = 4.0F;
     private static final float DAMAGE = 3.0F;
     private boolean invuln = false;
