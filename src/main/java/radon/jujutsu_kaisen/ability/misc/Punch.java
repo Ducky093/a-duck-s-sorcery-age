@@ -41,8 +41,8 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 7.5D;
-    private static final double LAUNCH_POWER = 2.5D;
+    private static final double RANGE = 6.5D;
+    private static final double LAUNCH_POWER = 3.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -95,7 +95,7 @@ public class Punch extends Ability implements Ability.ICharged{
         float num = 3;
         if (power >= 0.25) {
             float mod = 1;
-            num = 5;
+            num = 4;
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                 mod = 1.8f;
             }
@@ -110,7 +110,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
         int dash = cap.getDash();
         if (dash > 0) {
-            num+=3;
+            num+=2;
             newRange+=1.5;
             Vec3 pos = owner.getEyePosition().add(look);
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.MASTER, 1.0F, 1.5F);
@@ -181,7 +181,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
                             if (power == 1) {
-                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
                             }
 
                         }
@@ -192,7 +192,7 @@ public class Punch extends Ability implements Ability.ICharged{
                         }
                         if (power == 1) {
                             cap.moreBlackFlash(true);
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
                             cap.delayTickEvent(() -> {
                                 cap.moreBlackFlash(false);
                             }, 2);

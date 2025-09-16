@@ -133,9 +133,9 @@ public class Slam extends Ability implements Ability.ICharged {
         if (!owner.level().isClientSide) {
             for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), radius*2, radius*2, radius*2),
                     entity -> entity != owner )) {
-                int stunDuration = 30;
+                int stunDuration = 40;
                 if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
-                    stunDuration = 40;
+                    stunDuration = 50;
                 }
                 entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
             }

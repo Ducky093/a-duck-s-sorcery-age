@@ -157,10 +157,7 @@ public class Dash extends Ability {
         float power = Math.min(MAX_DASH,
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
 
-        float ratio = owner.getHealth()/owner.getMaxHealth();
-        if (ratio < 0.25) {
-            power*=0.75f;
-        }
+
         if (owner.isShiftKeyDown()) {
             power*=0.5f;
         }
@@ -176,7 +173,7 @@ public class Dash extends Ability {
             velocity = velocity.multiply(new Vec3(1.2D,1.2,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.5D, 1D, 1.5D));
+            velocity = velocity.multiply(new Vec3(1.35D, 1D, 1.35D));
             if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
 
@@ -270,7 +267,7 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 15;
+                return 12;
             }
             return 8;
         }
