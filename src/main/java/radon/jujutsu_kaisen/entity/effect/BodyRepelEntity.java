@@ -47,7 +47,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     public static EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BodyRepelEntity.class, EntityDataSerializers.INT);
 
     private static final double SPEED = 3D;
-    private static final float DAMAGE = 8.0F;
+    private static final float DAMAGE = 10.0F;
     private static final float EXPLOSIVE_POWER = 1.0F;
     private static final float MAX_EXPLOSION = 10.0F;
     private static final int DURATION = 3 * 20;
@@ -247,7 +247,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     public float getRealDamage() {
 
         ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float soulscale = 1f + (this.souls/10f);
+        float soulscale = 10f * (this.souls/10f);
         return (DAMAGE + soulscale) * SorcererUtil.getPower(ownerCap.getExperience());
     }
 
