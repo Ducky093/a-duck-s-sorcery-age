@@ -6,7 +6,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -17,10 +20,10 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class JacobsLadder extends Ability {
     public static final double RANGE = 50.0D;
     public LivingEntity enemy = null;
-
+    public BlockHitResult block = null;
     @Override
     public boolean isScalable(LivingEntity owner) {
-        return false;
+        return true;
     }
 
     @Override
@@ -51,16 +54,28 @@ public class JacobsLadder extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         LivingEntity target = this.enemy;
-
-        if (target == null) return;
-
-        JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), target.position());
+        Vec3 pos;
+        if (target != null) {
+            pos = target.position();
+        } else {
+            Vec3 topCenter = Vec3.atCenterOf(this.block.getBlockPos()).add(0, 0.5, 0);
+            pos = topCenter;
+        }
+        JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), pos);
         owner.level().addFreshEntity(strike);
         this.enemy = null;
+        this.block = null;
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
+        if (owner.isShiftKeyDown()) {
+            BlockHitResult hit = this.getBlockHit(owner, RANGE);
+            if (hit != null) {
+                this.block = hit;
+                return super.isTriggerable(owner);
+            }
+        }
         LivingEntity target = this.getTarget(owner);
         this.enemy = target;
 

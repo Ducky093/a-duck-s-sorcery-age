@@ -11,6 +11,7 @@ public enum Trait {
     HEAVENLY_RESTRICTION,
     VESSEL,
     DOCTOR_HOUSE,
+    INCARNATED,
     PERFECT_BODY;
 
     public Component getName() {

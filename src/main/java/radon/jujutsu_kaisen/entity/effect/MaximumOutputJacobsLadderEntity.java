@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -38,7 +39,6 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
     public static final int HITBOX_START = 28;
     public static final int STRIKE_EXPLOSION = 28;
     private static final int STRIKE_LENGTH = 118;
-
     private int strikeTimeO;
     private int strikeTime;
 
@@ -114,7 +114,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
             if (blockHit.getDirection() == Direction.UP) {
                 BlockState state = this.level().getBlockState(blockHit.getBlockPos());
 //&& state != this.level().getBlockState(blockPosition().below())
-                if (this.strikeTime > STRIKE_LENGTH ) {
+                if (this.strikeTime >= STRIKE_LENGTH ) {
                     this.discard();
                 }
                 if (state.getBlock() instanceof SlabBlock && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.BOTTOM) {
@@ -155,14 +155,21 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
                 }*/
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.setDisable(40);
-                                if (entity instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                                }
-             });
-                entity.invulnerableTime = 0;   
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), DAMAGE * this.getPower());
+           
+                final int[] mult = {1};
+             
+                                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                    if (cap.hasTrait(Trait.INCARNATED)) {
+                                        mult[0] *= 4;
+                                    }
+                                    cap.setDisable((int)(40F * this.getPower() * mult[0]));
+                                    if (entity instanceof ServerPlayer player) {
+                                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                    }
+                                                
+                            });
+                entity.invulnerableTime = 0;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), mult[0] * DAMAGE * this.getPower());
             }
         }
     }

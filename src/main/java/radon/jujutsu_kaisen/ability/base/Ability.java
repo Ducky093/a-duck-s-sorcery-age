@@ -5,10 +5,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -19,6 +25,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 
@@ -308,6 +315,23 @@ public abstract class Ability {
         if (key == null) return Component.empty();
 
         return Component.translatable(String.format("ability.%s.%s.disable", key.getNamespace(), key.getPath()));
+    }
+
+
+    public @Nullable BlockHitResult getBlockHit(LivingEntity owner, double range) {
+        Vec3 start = owner.getEyePosition();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 end = start.add(look.scale(range));
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
+
+        if (result.getType() == HitResult.Type.BLOCK) {
+            return (BlockHitResult) result;
+        } else if (result.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) result).getEntity();
+            Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        }
+        return null;
     }
 
     public float getRealCost(LivingEntity owner) {

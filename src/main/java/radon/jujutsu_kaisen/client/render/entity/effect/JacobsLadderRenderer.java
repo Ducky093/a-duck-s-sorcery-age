@@ -69,7 +69,7 @@ public class JacobsLadderRenderer extends EntityRenderer<JacobsLadderEntity> {
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 
-        if (isStriking) {
+        if (isStriking && pEntity.isAlive()) {
             this.drawStrike(pEntity, maxY, pPartialTick, pPoseStack, consumer, pPackedLight);
         }
         pPoseStack.popPose();
