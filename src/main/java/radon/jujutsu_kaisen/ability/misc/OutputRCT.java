@@ -34,6 +34,11 @@ public class OutputRCT extends Ability {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;

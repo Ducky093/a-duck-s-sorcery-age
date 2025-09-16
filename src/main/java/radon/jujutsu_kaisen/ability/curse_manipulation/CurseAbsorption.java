@@ -72,6 +72,12 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
     }
 
+
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     private static void check(LivingEntity victim, DamageSource source) {
         if (!HelperMethods.isMelee(source)) return;
 

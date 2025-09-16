@@ -38,6 +38,11 @@ public class EmberInsectFlight extends Summon<EmberInsectFlightEntity> {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     protected EmberInsectFlightEntity summon(LivingEntity owner) {
         return new EmberInsectFlightEntity(owner);
     }

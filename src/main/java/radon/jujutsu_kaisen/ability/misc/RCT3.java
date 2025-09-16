@@ -39,6 +39,12 @@ public class RCT3 extends RCT2 {
         }
     }
 
+     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+
     @Override
     public float healMult() {
         return 2.25f;

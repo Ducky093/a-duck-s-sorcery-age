@@ -79,6 +79,11 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 0;
     }

@@ -91,6 +91,8 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     }
 
+    
+
     public static void absorb(LivingEntity owner, LivingEntity target) {
         ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
         

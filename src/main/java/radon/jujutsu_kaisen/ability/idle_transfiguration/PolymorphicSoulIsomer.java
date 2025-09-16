@@ -33,6 +33,8 @@ public class PolymorphicSoulIsomer extends TransfiguredSoul<PolymorphicSoulIsome
         return false;
     }
 
+    
+
     @Override
     protected PolymorphicSoulIsomerEntity summon(LivingEntity owner) {
         return new PolymorphicSoulIsomerEntity(owner);

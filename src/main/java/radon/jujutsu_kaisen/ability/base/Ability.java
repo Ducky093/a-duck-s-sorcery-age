@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -48,7 +49,8 @@ public abstract class Ability {
         ENERGY,
         COOLDOWN,
         BURNOUT,
-        DISABLE
+        DISABLE,
+        DISARMED
     }
 
     public enum Classification {
@@ -94,22 +96,17 @@ public abstract class Ability {
         return 0;
     }
 
-    public boolean isIncarnatedLocked() {
-        return false;
-    }
 
     public int getRealPointsCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (this.isIncarnatedLocked()) {
-            if (!cap.hasTrait(Trait.INCARNATED)) {
-                return 0;
-            }
-        }
+       // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+      
         /*if (cap.hasTrait(Trait.SIX_EYES)) {
             return this.getPointsCost() / 2;
         }*/
         return this.getPointsCost();
     }
+
+    
 
     public boolean isUnlocked(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -211,6 +208,10 @@ public abstract class Ability {
             return false;
         }
         
+        if (this.usesHands() && cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
+            return false;
+        }
+
         for (Ability ability : this.getRequirements()) {
             if (!ability.isUnlocked(owner)) return false;
         }
@@ -246,9 +247,14 @@ public abstract class Ability {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
             }
-             if (this.isTechnique() && cap.hasDisable()) {
+            if (this.isTechnique() && cap.hasDisable()) {
                 return Status.DISABLE;
             }
+            if (this.usesHands() && cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
+                return Status.DISARMED;
+            }
+
+
 
             if (!cap.isCooldownDone(this)) {
                 return Status.COOLDOWN;

@@ -1,203 +1,183 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
-import java.nio.channels.OverlappingFileLockException;
-
-import org.joml.Math;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-
-import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.HollowWickerBasketEntity;
-import radon.jujutsu_kaisen.entity.effect.WaterballEntity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class HollowWickerBasketRenderer extends EntityRenderer<HollowWickerBasketEntity> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_wicker_basket.png");
+    public static final ResourceLocation TEXTURE =
+            new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_wicker_basket.png");
 
+            
     public HollowWickerBasketRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public void render(HollowWickerBasketEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-     poseStack.pushPose();
+    public void render(HollowWickerBasketEntity entity, float yaw, float partialTicks,
+                       PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        poseStack.pushPose();
 
-        float radius = 1.25F; 
-        int slices = 64;
-        int stacks = 64;
+        // center sphere on entity
+        poseStack.translate(0.0D, entity.getBbHeight() * 0.9D, 0.0D);
 
-        poseStack.scale(1f, 1f, 1f);
-        poseStack.translate(0, entity.getEyeHeight(), 0);
-        Matrix4f poseMatrix = poseStack.last().pose();
-        Matrix3f normalMatrix = poseStack.last().normal();
+        float radius = HollowWickerBasketEntity.RADIUS;
 
-        VertexConsumer builder = buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+        final int stacks = 64;   // vertical segments
+        final int slices = 64;   // horizontal segments
 
-        for (int stack = 0; stack < stacks; stack++) {
-            double lat0 = Math.PI * ((double) stack / stacks - 0.5);
-            double lat1 = Math.PI * ((double) (stack + 1) / stacks - 0.5);
+        // how many times texture repeats horizontally/vertically
+        final float tileU = 4.0f;
+        final float tileV = 4.0f;
+        VertexConsumer consumer = buffer.getBuffer(JJKRenderTypes.hollow_wicker_basket(TEXTURE));
+        //VertexConsumer consumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
 
-            double y0 = Math.sin(lat0);
-            double y1 = Math.sin(lat1);
+        // precompute positions + uvs
+        float[][][] positions = new float[stacks + 1][slices + 1][3];
+        float[][][] uvs = new float[stacks + 1][slices + 1][2];
 
-            double r0 = Math.cos(lat0);
-            double r1 = Math.cos(lat1);
+        for (int i = 0; i <= stacks; i++) {
+            float phi = (float) Math.PI * i / stacks;   // latitude
+            float v = (i / (float) stacks) * tileV;     // vertical uv
 
-            for (int slice = 0; slice < slices; slice++) {
-                double lon = 2.0 * Math.PI * ((double) slice / slices);
-                double x0 = r0 * Math.cos(lon);
-                double z0 = r0 * Math.sin(lon);
+            for (int j = 0; j <= slices; j++) {
+                float theta = (float) (2.0 * Math.PI * j / slices); // longitude
+                float u = (j / (float) slices) * tileU;             // horizontal uv
 
-                double x1 = r1 * Math.cos(lon);
-                double z1 = r1 * Math.sin(lon);
+                float x = (float) (radius * Math.sin(phi) * Math.cos(theta));
+                float y = (float) (radius * Math.cos(phi));
+                float z = (float) (radius * Math.sin(phi) * Math.sin(theta));
 
-   
-                float px0 = (float) (x0 * radius);
-                float py0 = (float) (y0 * radius);
-                float pz0 = (float) (z0 * radius);
+                positions[i][j][0] = x;
+                positions[i][j][1] = y;
+                positions[i][j][2] = z;
 
-                float px1 = (float) (x1 * radius);
-                float py1 = (float) (y1 * radius);
-                float pz1 = (float) (z1 * radius);
+                uvs[i][j][0] = u;
+                uvs[i][j][1] = v;
+            }
+        }
 
-          
-                float nx0 = (float) x0;
-                float ny0 = (float) y0;
-                float nz0 = (float) z0;
+        PoseStack.Pose pose = poseStack.last();
+        Matrix4f posMat = pose.pose();
+        Matrix3f normalMat = pose.normal();
 
-                float nx1 = (float) x1;
-                float ny1 = (float) y1;
-                float nz1 = (float) z1;
+        final float alpha = 0.2f; // transparency (1.0 = opaque)
 
-               
-               int repeatU = 4;
-                int repeatV = 4; 
+        // build quads
+        for (int i = 0; i < stacks; i++) {
+            for (int j = 0; j < slices; j++) {
+                float[] v1 = positions[i][j];
+                float[] v2 = positions[i][j + 1];
+                float[] v3 = positions[i + 1][j + 1];
+                float[] v4 = positions[i + 1][j];
 
-                float u = ((float) slice / (float) slices) * repeatU;
-                 float uNext = ((float) (slice + 1) / (float) slices) * repeatU;
-                float v0 = (1.0f - (float) stack / (float) stacks) * repeatV;
-                float v1 = (1.0f - (float) (stack + 1) / (float) stacks) * repeatV;
-
-              
-                builder.vertex(poseMatrix, px0, py0, pz0)
-                        .color(255, 255, 255, 255)
-                        .uv(u, v0)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx0, ny0, nz0)
-                        .endVertex();
-
-                builder.vertex(poseMatrix, px1, py1, pz1)
-                        .color(255, 255, 255, 255)
-                        .uv(u, v1)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx1, ny1, nz1)
-                        .endVertex();
-
-            
-                double lonNext = 2.0 * Math.PI * ((double) (slice + 1) / slices);
-                double x0n = r0 * Math.cos(lonNext);
-                double z0n = r0 * Math.sin(lonNext);
-                float px0n = (float) (x0n * radius);
-                float pz0n = (float) (z0n * radius);
-                float nx0n = (float) x0n;
-                float nz0n = (float) z0n;
-             
-
-                builder.vertex(poseMatrix, px0n, py0, pz0n)
-                        .color(255, 255, 255, 255)
-                        .uv(uNext, v0)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx0n, ny0, nz0n)
-                        .endVertex();
-
-                double x1n = r1 * Math.cos(lonNext);
-                double z1n = r1 * Math.sin(lonNext);
-                float px1n = (float) (x1n * radius);
-                float pz1n = (float) (z1n * radius);
-                float nx1n = (float) x1n;
-                float nz1n = (float) z1n;
-
-                builder.vertex(poseMatrix, px1, py1, pz1)
-                        .color(255, 255, 255, 255)
-                        .uv(u, v1)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx1, ny1, nz1)
-                        .endVertex();
-
-                builder.vertex(poseMatrix, px1n, py1, pz1n)
-                        .color(255, 255, 255, 255)
-                        .uv(uNext, v1)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx1n, ny1, nz1n)
-                        .endVertex();
-
-                builder.vertex(poseMatrix, px0n, py0, pz0n)
-                        .color(255, 255, 255, 255)
-                        .uv(uNext, v0)
-                        .overlayCoords(OverlayTexture.NO_OVERLAY)
-                        .uv2(packedLight)
-                        .normal(normalMatrix, nx0n, ny0, nz0n)
-                        .endVertex();
+                float[] uv1 = uvs[i][j];
+                float[] uv2 = uvs[i][j + 1];
+                float[] uv3 = uvs[i + 1][j + 1];
+                float[] uv4 = uvs[i + 1][j];
+addQuadDualSided(consumer, posMat, normalMat,
+    v1, uv1, v2, uv2, v3, uv3, v4, uv4,
+    alpha, packedLight, radius);
+                // two triangles per quad
+                //addTriangleDualSided(consumer, posMat, normalMat,
+                //        v1, uv1, v2, uv2, v3, uv3, alpha, packedLight, radius);
+                //addTriangleDualSided(consumer, posMat, normalMat,
+                //        v1, uv1, v3, uv3      , v4, uv4, alpha, packedLight, radius);
             }
         }
 
         poseStack.popPose();
         super.render(entity, yaw, partialTicks, poseStack, buffer, packedLight);
-}
+    }
 
-// helper
-private void putVertex(VertexConsumer consumer, Matrix4f model, Matrix3f normalMat,
-                       float x, float y, float z, float u, float v, int light) {
-    Vector3f normal = new Vector3f(x, y, z);
-    normal.normalize();
+    private static void addTriangleDualSided(VertexConsumer consumer,
+                                             Matrix4f mat, Matrix3f normalMat,
+                                             float[] aPos, float[] aUV,
+                                             float[] bPos, float[] bUV,
+                                             float[] cPos, float[] cUV,
+                                             float alpha, int light, float radius) {
+        float[] an = normalize(aPos, radius);
+        float[] bn = normalize(bPos, radius);
+        float[] cn = normalize(cPos, radius);
 
-    consumer.vertex(model, x, y, z)
-            .color(1.0f, 1.0f, 1.0f, 1.0f)   // full white, texture provides color
-            .uv(u, v)
-            .overlayCoords(OverlayTexture.NO_OVERLAY)
-            .uv2(light)
-            .normal(normalMat, normal.x(), normal.y(), normal.z())
-            .endVertex();
-}
-    private static float[] sphereVertex(float r, float phi, float theta) {
-        float x = (float) (r * Math.sin(phi) * Math.cos(theta));
-        float y = (float) (r * Math.cos(phi));
-        float z = (float) (r * Math.sin(phi) * Math.sin(theta));
-        return new float[]{x, y, z};
+        // forward (outside)
+        putVertex(consumer, mat, normalMat, aPos, aUV, an, alpha, light);
+        putVertex(consumer, mat, normalMat, bPos, bUV, bn, alpha, light);
+        putVertex(consumer, mat, normalMat, cPos, cUV, cn, alpha, light);
+
+        // reverse (inside)
+        putVertex(consumer, mat, normalMat, cPos, cUV, negate(cn), alpha, light);
+        putVertex(consumer, mat, normalMat, bPos, bUV, negate(bn), alpha, light);
+        putVertex(consumer, mat, normalMat, aPos, aUV, negate(an), alpha, light);
     }
 
     
-
-    private static void addVertex(PoseStack poseStack, VertexConsumer consumer, float[] pos, float alpha, int light, float u, float v) {
-        float len = Mth.sqrt(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
-        consumer.vertex(poseStack.last().pose(), pos[0], pos[1], pos[2])
-            .color(1f, 1f, 1f, alpha) // pure white, let texture show fully
-            .uv(u, v)
-            .overlayCoords(0, 10)
-            .uv2(light)
-            .normal(poseStack.last().normal(), pos[0]/len, pos[1]/len, pos[2]/len)
-            .endVertex();
+    private static void putVertex(VertexConsumer consumer, Matrix4f mat, Matrix3f normalMat,
+                                  float[] pos, float[] uv, float[] normal,
+                                  float alpha, int light) {
+        consumer.vertex(mat, pos[0], pos[1], pos[2])
+                .color(1f, 1f, 1f, alpha)
+                .uv(uv[0], uv[1])
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
+                .normal(normalMat, normal[0], normal[1], normal[2])
+                .endVertex();
     }
 
+ private static void addQuadDualSided(VertexConsumer consumer, Matrix4f mat, Matrix3f normalMat,
+                                     float[] v1, float[] uv1,
+                                     float[] v2, float[] uv2,
+                                     float[] v3, float[] uv3,
+                                     float[] v4, float[] uv4,
+                                     float alpha, int light, float radius) {
+    float[] n1 = normalize(v1, radius);
+    float[] n2 = normalize(v2, radius);
+    float[] n3 = normalize(v3, radius);
+    float[] n4 = normalize(v4, radius);
+
+    // --- outside (original radius) ---
+    putVertex(consumer, mat, normalMat, v1, uv1, n1, alpha, light);
+    putVertex(consumer, mat, normalMat, v2, uv2, n2, alpha, light);
+    putVertex(consumer, mat, normalMat, v3, uv3, n3, alpha, light);
+    putVertex(consumer, mat, normalMat, v4, uv4, n4, alpha, light);
+
+    // --- inside (slightly smaller radius, reversed winding) ---
+    final float shrink = 0.999f;
+    float[] v1i = { v1[0] * shrink, v1[1] * shrink, v1[2] * shrink };
+    float[] v2i = { v2[0] * shrink, v2[1] * shrink, v2[2] * shrink };
+    float[] v3i = { v3[0] * shrink, v3[1] * shrink, v3[2] * shrink };
+    float[] v4i = { v4[0] * shrink, v4[1] * shrink, v4[2] * shrink };
+
+    putVertex(consumer, mat, normalMat, v4i, uv4, negate(n4), alpha, light);
+    putVertex(consumer, mat, normalMat, v3i, uv3, negate(n3), alpha, light);
+    putVertex(consumer, mat, normalMat, v2i, uv2, negate(n2), alpha, light);
+    putVertex(consumer, mat, normalMat, v1i, uv1, negate(n1), alpha, light);
+}
+
+
+
+    private static float[] normalize(float[] pos, float radius) {
+        float x = pos[0], y = pos[1], z = pos[2];
+        float len = (float) Math.sqrt(x * x + y * y + z * z);
+        if (len == 0f) return new float[]{0, 1, 0};
+        return new float[]{x / len, y / len, z / len};
+    }
+
+    private static float[] negate(float[] v) {
+        return new float[]{-v[0], -v[1], -v[2]};
+    }
 
     @Override
     public ResourceLocation getTextureLocation(HollowWickerBasketEntity entity) {

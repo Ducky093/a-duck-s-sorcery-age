@@ -97,4 +97,9 @@ public class Wings extends Transformation {
     public void onDisabled(LivingEntity owner) {
 
     }
+
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
 }
