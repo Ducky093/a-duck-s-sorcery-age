@@ -46,21 +46,7 @@ public class MaximumOutputJacobsLadder extends Ability {
         return null;
     }
 
-     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
-        Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = RotationUtil.getHitResult(owner, start, end);
-
-        if (result.getType() == HitResult.Type.BLOCK) {
-            return (BlockHitResult) result;
-        } else if (result.getType() == HitResult.Type.ENTITY) {
-            Entity entity = ((EntityHitResult) result).getEntity();
-            Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
-        }
-        return null;
-    }
+     
 
     @Override
     public void run(LivingEntity owner) {
@@ -69,7 +55,7 @@ public class MaximumOutputJacobsLadder extends Ability {
         LivingEntity target = this.getTarget(owner);
         Vec3 pos;
         if (target == null) {
-            BlockHitResult hit = this.getBlockHit(owner);
+            BlockHitResult hit = this.getBlockHit(owner, RANGE);
             if (hit != null) {
                 Vec3 topCenter = Vec3.atCenterOf(hit.getBlockPos()).add(0, 0.5, 0);
                 pos = topCenter;
@@ -89,7 +75,7 @@ public class MaximumOutputJacobsLadder extends Ability {
     @Override
     public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
-        BlockHitResult hit = this.getBlockHit(owner);
+        BlockHitResult hit = this.getBlockHit(owner, RANGE);
       
         if (target == null && hit == null) {
             return Status.FAILURE;

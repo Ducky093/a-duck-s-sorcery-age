@@ -34,14 +34,11 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.m;
-
 public class JacobsLadderEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
     public static final int HITBOX_START = 5;
     public static final int STRIKE_EXPLOSION = 6;
     private static final int STRIKE_LENGTH = 24;
-
     private int strikeTimeO;
     private int strikeTime;
 
@@ -118,7 +115,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
             if (blockHit.getDirection() == Direction.UP) {
                 BlockState state = this.level().getBlockState(blockHit.getBlockPos());
 //&& state != this.level().getBlockState(blockPosition().below())
-                if (this.strikeTime > STRIKE_LENGTH ) {
+                if (this.strikeTime >= STRIKE_LENGTH ) {
                     this.discard();
                 }
                 if (state.getBlock() instanceof SlabBlock && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.BOTTOM) {
@@ -157,19 +154,20 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
                 }*/
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                
-                                cap.setDisable(20);
+          
+                final int[] mult = {1};
+                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                if (cap.hasTrait(Trait.INCARNATED)) {
+                                    mult[0] *= 1.75;
+                                }
+                                cap.setDisable((int)(20F * this.getPower() * mult[0]));
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }
-
-               // entity.invulnerableTime = 0;   
-               int mult = 1;
-               if (cap.hasTrait(Trait.INCARNATED)) {
-                   mult = 4;
-               }
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), mult * DAMAGE * this.getPower());
+                               
+             });
+               // entity.invulnerableTime = 0;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), mult[0] * DAMAGE * this.getPower());
             }
         }
     }
