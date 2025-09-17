@@ -12,6 +12,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -85,6 +87,12 @@ public class SwapOthers extends Ability {
 
                 second.teleportTo(first.getX(), first.getY(), first.getZ());
                 first.teleportTo(pos.x, pos.y, pos.z);
+                first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
+                second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
 
                 second.setYRot(firstRot.y);
                 second.setXRot(firstRot.x);

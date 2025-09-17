@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -76,7 +77,12 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
             first.teleportTo(second.getX(), second.getY(), second.getZ());
             second.teleportTo(pos.x, pos.y, pos.z);
-
+            first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
+                second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
             first.setYRot(ownerRot.y);
             first.setXRot(ownerRot.x);
 

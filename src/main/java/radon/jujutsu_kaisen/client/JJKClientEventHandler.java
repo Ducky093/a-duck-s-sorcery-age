@@ -173,8 +173,12 @@ public class JJKClientEventHandler {
             if (mc.player == null) return;
 
             MobEffectInstance instance = mc.player.getEffect(JJKEffects.STUN.get());
+            
+            ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (cap == null) return;
+            
 
-            if ((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+            if ((cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) && !cap.hasTrait(Trait.PERFECT_BODY)) ||((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get()))) {
                 event.setCanceled(true);
                 event.setSwingHand(false);
             }

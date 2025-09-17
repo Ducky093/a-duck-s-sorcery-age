@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
@@ -72,6 +73,12 @@ public class SwapSelf extends Ability {
 
             target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
             owner.teleportTo(pos.x, pos.y, pos.z);
+            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(10);
+                });
 
             target.setYRot(ownerRot.y);
             target.setXRot(ownerRot.x);

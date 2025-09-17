@@ -136,7 +136,9 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         List<Entity> entities = this.level().getEntities(this, bounds);
         double radiusSq = radius * radius;
         for (Entity entity : entities) {
-            if (entity == owner) continue;
+            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if ( entity == owner && !cap.hasSelfHit() ) continue;
+
 
             if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
                 /*

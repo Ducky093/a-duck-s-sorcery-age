@@ -16,6 +16,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -56,8 +58,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        if (entity == owner) return;
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if ( entity == owner && !cap.hasSelfHit() ) return;
 
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
     }

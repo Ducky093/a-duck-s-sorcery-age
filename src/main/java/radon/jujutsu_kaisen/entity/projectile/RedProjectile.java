@@ -78,8 +78,11 @@ public class RedProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+          
 
-        if (entity == owner) return;
+      
+        if ( entity == owner && !cap.hasSelfHit() ) return;
 
         float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 

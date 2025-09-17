@@ -17,6 +17,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
@@ -143,7 +145,8 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
         for (Entity entity : entities) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity == owner && !cap.hasSelfHit())) continue;
 
             if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                 entity.setSecondsOnFire(5);
