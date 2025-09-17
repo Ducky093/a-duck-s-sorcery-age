@@ -14,6 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import net.minecraft.world.effect.MobEffectInstance;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -31,13 +33,13 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
-    private static final double RANGE = 9.0D;
+    private static final double RANGE = 10.0D;
     public static int DURATION = 10;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
+        if (owner.distanceTo(target) > RANGE) return false;
         return HelperMethods.RANDOM.nextInt(6) == 0;
     }
 
@@ -122,6 +124,9 @@ public class Barrage extends Ability {
                     if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }
+
+                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 5, 0, false, false, false));
+
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
@@ -135,6 +140,9 @@ public class Barrage extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
         return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 

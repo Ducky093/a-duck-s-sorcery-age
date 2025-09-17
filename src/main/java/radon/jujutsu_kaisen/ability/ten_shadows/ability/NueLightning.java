@@ -22,12 +22,12 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
-    private static final float DAMAGE = 3.5F;
-    private static final int STUN = 20;
+    private static final float DAMAGE = 4.0F;
+    private static final int STUN = 10;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 5.0D;
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 9.0D;
     }
 
     @Override

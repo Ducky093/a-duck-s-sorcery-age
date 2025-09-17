@@ -5,6 +5,8 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
@@ -34,6 +36,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -500,7 +503,11 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaximumOutput() {
-        return (this.isInZone() ? 1.2F : 1.0F) * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
+        float output = 1.0F;
+        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
+            output = 1.2F;
+        }
+        return output * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
     }
 
     @Override

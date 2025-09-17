@@ -82,6 +82,9 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return Status.FAILURE;
+        }
         return super.isStillUsable(owner);
     }
 

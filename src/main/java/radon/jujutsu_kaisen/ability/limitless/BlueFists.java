@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class BlueFists extends Ability implements Ability.IToggled, Ability.IAttack {
-    private static final float DAMAGE = 4.5F;
+    private static final float DAMAGE = 5.0F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -30,7 +30,7 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 5.0D;
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 9.0D;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 25.0F;
+        return 30.0F;
     }
 
     @Override

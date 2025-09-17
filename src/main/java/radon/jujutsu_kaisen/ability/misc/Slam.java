@@ -75,7 +75,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) {
+        if (owner.hasEffect(JJKEffects.STUN.get()) || (owner.hasEffect(JJKEffects.STAGGER.get()))) {
             return Status.FAILURE;
         }
         return super.isStillUsable(owner);
