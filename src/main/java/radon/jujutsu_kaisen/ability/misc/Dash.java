@@ -144,7 +144,7 @@ public class Dash extends Ability {
 
         cap.addDash();
         cap.delayTickEvent(cap::subDash
-        ,8);
+        ,10);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.MASTER, 2F, 1.25F);
 
