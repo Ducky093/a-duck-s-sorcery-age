@@ -253,16 +253,18 @@ public class JJKEventHandler {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+            
 
             if (victim.level().isClientSide) return;
-
+            
             DamageSource source = event.getSource();
+           
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                if (source.getEntity() == victim && !cap.hasSelfHit() ) {
+                  if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
+                     ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (source.getEntity() == victim && !capSelf.hasSelfHit() ) {
                     event.setAmount(event.getAmount() * 0.1F);
                 }
             }
@@ -279,7 +281,7 @@ public class JJKEventHandler {
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             float armor = SorcererUtil.getDefense(cap.getExperience());
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
