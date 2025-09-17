@@ -84,11 +84,10 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
             this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
             this.pulled.hurtMarked = true;
 
-            if (this.pulled.distanceTo(owner) <= 1.0D) {
+
+            if (this.distanceTo(owner) >= RANGE) {
                 this.discard();
             }
-        } else if (this.distanceTo(owner) >= RANGE) {
-            this.discard();
         }
     }
 
