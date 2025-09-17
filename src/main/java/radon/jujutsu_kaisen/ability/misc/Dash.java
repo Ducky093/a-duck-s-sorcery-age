@@ -178,7 +178,7 @@ public class Dash extends Ability {
             velocity = velocity.multiply(new Vec3(1.2D,1.3,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.3D, 1.0D, 1.3D));
+            velocity = velocity.multiply(new Vec3(1.2D, 1.0D, 1.2D));
             if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
 
@@ -272,9 +272,9 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 14;
+                return 16;
             }
-            return 7;
+            return 10;
         }
         if (!owner.isShiftKeyDown()) {
             return 25;
