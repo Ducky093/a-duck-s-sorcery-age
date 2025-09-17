@@ -91,7 +91,7 @@ public class Punch extends Ability implements Ability.ICharged{
     @Override
     public boolean onRelease(LivingEntity owner) {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return;
+            return false;
         }
 
         owner.swing(InteractionHand.MAIN_HAND);
