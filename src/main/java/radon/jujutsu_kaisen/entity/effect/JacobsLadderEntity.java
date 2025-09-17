@@ -163,7 +163,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                  final int[] mult = {1};
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 if (cap.hasTrait(Trait.INCARNATED)) {
-                                    mult[0] *= 1.75;
+                                    mult[0] *= 2.0;
                                 }
                                 cap.setDisable((int)(10F * this.getPower() * mult[0]));
                                 if (entity instanceof ServerPlayer player) {
