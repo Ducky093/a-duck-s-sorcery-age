@@ -39,6 +39,9 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
         if (target == null || target.isDeadOrDying()) return false;
         return owner.hasLineOfSight(target);
     }
