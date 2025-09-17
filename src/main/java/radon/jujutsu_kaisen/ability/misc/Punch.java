@@ -90,6 +90,10 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return;
+        }
+
         owner.swing(InteractionHand.MAIN_HAND);
 
         float power = (float) Math.min(20, this.getCharge(owner)) / 20;
