@@ -27,7 +27,7 @@ public class BlastAway extends Ability {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.0D;
     private static final float DAMAGE = 11.0F;
-    private static final double LAUNCH_POWER = 7.5D;
+    private static final double LAUNCH_POWER = 1.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -73,7 +73,7 @@ public class BlastAway extends Ability {
                         4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
                 double power = LAUNCH_POWER * this.getPower(owner);
-                entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.75D, 1.0D));
+                entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.501D, 1.0D));
                 entity.hurtMarked = true;
             }
             if (entity instanceof Player player) {
@@ -90,6 +90,11 @@ public class BlastAway extends Ability {
     @Override
     public int getCooldown() {
         return 8 * 20;
+    }
+
+    @Override
+    public boolean usesHands() {
+        return true;
     }
 
     @Override
