@@ -35,6 +35,11 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
         return false;
     }
 
+     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target) || owner.distanceTo(target) > this.getRadius(owner) / 2) return false;
