@@ -131,8 +131,12 @@ public class Punch extends Ability implements Ability.ICharged{
 
         }
 
-        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
-            newRange+=1.5;
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+            newRange+=2.0;
+        }
+
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
+            newRange+=0.5;
         }
 
         if (cap.getSpeedStacks() > 0) {

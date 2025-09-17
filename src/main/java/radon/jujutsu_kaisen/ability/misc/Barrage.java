@@ -125,7 +125,7 @@ public class Barrage extends Ability {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }
 
-                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 5, 0, false, false, false));
+                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 7, 0, false, false, false));
 
                     if (owner instanceof Player player) {
                         player.attack(entity);
