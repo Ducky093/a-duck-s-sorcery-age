@@ -20,6 +20,7 @@ public class JJKVisuals {
     static {
         VISUALS.add(new CursedEnergyVisual());
         VISUALS.add(new BlueFistsVisual());
+        VISUALS.add(new MythicalBeastAmberVisual());
         VISUALS.add(new IdleTransfigurationVisual());
         VISUALS.add(new TransfiguredSoulVisual());
         VISUALS.add(new PerfectBodyVisual());

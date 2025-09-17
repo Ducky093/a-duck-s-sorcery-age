@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
+import radon.jujutsu_kaisen.item.cursed_tool.PlayfulCloudItem;
 import radon.jujutsu_kaisen.item.cursed_tool.PolearmStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -41,7 +42,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 6.5D;
+    private static final double RANGE = 7.0D;
     private static final double LAUNCH_POWER = 3.0D;
 
     @Override
@@ -105,8 +106,9 @@ public class Punch extends Ability implements Ability.ICharged{
                 mod = 1.8f;
             }
             if (mod != 1) {
-                Vec3 look2 = look.scale(power*mod);
-                owner.push(look2.x,look2.y,look2.z);
+                mod = (float) owner.getDeltaMovement().length();
+                Vec3 look2 = look.normalize().scale(power*mod+2);
+                owner.setDeltaMovement(look2.x,look2.y,look2.z);
             }
 
         }
@@ -186,7 +188,11 @@ public class Punch extends Ability implements Ability.ICharged{
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
                             if (power == 1) {
-                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
+                                int tim = 8;
+                                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PlayfulCloudItem) {
+                                    tim = 10;
+                                }
+                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                             }
 
                         }
@@ -197,7 +203,11 @@ public class Punch extends Ability implements Ability.ICharged{
                         }
                         if (power == 1) {
                             cap.moreBlackFlash(true);
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 8, 0, false, false, false));
+                            int tim = 8;
+                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                                tim = 10;
+                            }
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                             cap.delayTickEvent(() -> {
                                 cap.moreBlackFlash(false);
                             }, 2);

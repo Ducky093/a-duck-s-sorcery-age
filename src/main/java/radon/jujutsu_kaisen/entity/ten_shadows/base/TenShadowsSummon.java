@@ -154,7 +154,9 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public void changeTarget(LivingEntity target) {
-        this.setTarget(target);
+        if (!(target instanceof TenShadowsSummon)) {
+            this.setTarget(target);
+        }
     }
 
     @Override

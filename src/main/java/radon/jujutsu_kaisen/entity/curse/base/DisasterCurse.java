@@ -18,6 +18,9 @@ public abstract class DisasterCurse extends CursedSpirit {
         super(pType, pLevel);
     }
 
+
+
+
     @Override
     public boolean hasMeleeAttack() {
         return true;
@@ -32,6 +35,7 @@ public abstract class DisasterCurse extends CursedSpirit {
     public boolean canJump() {
         return true;
     }
+
 
     @Override
     public float getExperience() {

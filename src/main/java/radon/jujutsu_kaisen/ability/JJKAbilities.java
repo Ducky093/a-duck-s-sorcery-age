@@ -15,6 +15,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.mythical_beast_amber.MythicalBeastAmber;
 import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
 import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
@@ -186,6 +187,9 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> POLYMORPHIC_SOUl_ISOMER = ABILITIES.register("polymorphic_soul_isomer", PolymorphicSoulIsomer::new);
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static RegistryObject<Ability> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
+
+
+    public static RegistryObject<Ability> MYTHICAL_BEAST_AMBER = ABILITIES.register("mythical_beast_amber", MythicalBeastAmber::new);
 
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);

@@ -119,7 +119,7 @@ public class Dash extends Ability {
                 break;
             }
         }
-        return collision || owner.getXRot() >= 15.0F;
+        return collision || owner.getXRot() >= 1.0F;
     }
 
     private static float getRange(LivingEntity owner) {
@@ -164,7 +164,7 @@ public class Dash extends Ability {
 
 
         if (owner.isShiftKeyDown()) {
-            power*=0.5f;
+            power*=0.55f;
         }
         //Vec3 target = this.getTarget(owner);
         if (owner.onGround() && look.y < 0) {
@@ -175,15 +175,15 @@ public class Dash extends Ability {
         if (velocity.y > 0) {
            velocity = velocity.multiply(new Vec3(1.2D, 0.6D, 1.2D));
         } else {
-            velocity = velocity.multiply(new Vec3(1.2D,1.2,1.2D));
+            velocity = velocity.multiply(new Vec3(1.2D,1.3,1.2D));
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            velocity = velocity.multiply(new Vec3(1.25D, 0.8D, 1.25D));
+            velocity = velocity.multiply(new Vec3(1.2D, 1.0D, 1.2D));
             if (!owner.isShiftKeyDown()) {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
 
             } else {
-                velocity = velocity.multiply(new Vec3(1.0D, 1, 1.0D));
+                velocity = velocity.multiply(new Vec3(1.1D, 1, 1.1D));
             }
         }
         if (owner.onGround() && velocity.y < 0) {
@@ -263,7 +263,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15;
+        return 12;
     }
 
     @Override
@@ -272,12 +272,12 @@ public class Dash extends Ability {
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             if (!owner.isShiftKeyDown()) {
-                return 14;
+                return 16;
             }
             return 10;
         }
         if (!owner.isShiftKeyDown()) {
-            return 40;
+            return 25;
         }
         return super.getRealCooldown(owner);
     }

@@ -25,6 +25,7 @@ public class JogoEntity extends DisasterCurse {
         super(pType, pLevel);
     }
 
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -42,8 +43,10 @@ public class JogoEntity extends DisasterCurse {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(),JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(),JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get());
     }
+
+
 
     private PlayState walkRunPredicate(AnimationState<JogoEntity> animationState) {
         if (animationState.isMoving()) {
