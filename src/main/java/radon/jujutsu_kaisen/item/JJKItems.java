@@ -61,6 +61,9 @@ public class JJKItems {
     public static RegistryObject<ArmorItem> WINGS = ITEMS.register("wings",
             () -> new WingsItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 
+    public static RegistryObject<ArmorItem> MYTHICAL_BEAST_AMBER = ITEMS.register("mythical_beast_amber",
+            () -> new MythicalBeastAmberItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<Item> BLINDFOLD = ITEMS.register("blindfold",
