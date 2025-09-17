@@ -273,7 +273,7 @@ public class JJKEventHandler {
                 ISorcererData capSelf = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
                     if (HelperMethods.isMelee(source)) {
-                        event.setAmount(event.getAmount() * 2.0F);
+                        event.setAmount(event.getAmount() * 1.75F);
                     }
                 }
             }
