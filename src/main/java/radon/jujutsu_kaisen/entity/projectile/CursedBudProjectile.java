@@ -60,8 +60,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
     public void implant(LivingEntity victim) {
         if (this.getOwner() instanceof LivingEntity owner) {
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-          
+      
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
       
         if ( victim == owner && !cap.hasSelfHit() ) return;

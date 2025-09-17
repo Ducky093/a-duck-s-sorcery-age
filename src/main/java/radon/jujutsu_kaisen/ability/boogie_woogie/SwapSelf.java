@@ -46,6 +46,7 @@ public class SwapSelf extends Ability {
                 || target instanceof JujutsuProjectile) && (!(target instanceof LivingEntity living) || !JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION));
     }
 
+    
     private @Nullable Entity getTarget(LivingEntity owner) {
         LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
         if (target != null) {
@@ -70,16 +71,14 @@ public class SwapSelf extends Ability {
 
             Vec2 ownerRot = owner.getRotationVector();
             Vec2 targetRot = target.getRotationVector();
+            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(15);
+                });
+      
 
             target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
             owner.teleportTo(pos.x, pos.y, pos.z);
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
-                });
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
-                });
-
+           
             target.setYRot(ownerRot.y);
             target.setXRot(ownerRot.x);
 

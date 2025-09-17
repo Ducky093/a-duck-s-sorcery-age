@@ -145,7 +145,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
         for (Entity entity : entities) {
-            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity == owner && !cap.hasSelfHit())) continue;
 
             if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {

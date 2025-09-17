@@ -114,6 +114,11 @@ public class GetCrushed extends Ability {
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 125.0F;
     }

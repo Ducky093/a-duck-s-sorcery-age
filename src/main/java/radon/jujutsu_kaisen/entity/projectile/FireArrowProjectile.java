@@ -58,7 +58,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+         LivingEntity target = (LivingEntity) entity;
+                    ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if ( entity == owner && !cap.hasSelfHit() ) return;
 
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());

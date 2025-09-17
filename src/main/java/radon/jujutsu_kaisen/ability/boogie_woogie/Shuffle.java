@@ -74,15 +74,15 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
             Vec2 ownerRot = second.getRotationVector();
             Vec2 targetRot = first.getRotationVector();
-
-            first.teleportTo(second.getX(), second.getY(), second.getZ());
-            second.teleportTo(pos.x, pos.y, pos.z);
-            first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
+             first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(15);
                 });
                 second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
+                    cap.setSelfHit(15);
                 });
+            first.teleportTo(second.getX(), second.getY(), second.getZ());
+            second.teleportTo(pos.x, pos.y, pos.z);
+          
             first.setYRot(ownerRot.y);
             first.setXRot(ownerRot.x);
 

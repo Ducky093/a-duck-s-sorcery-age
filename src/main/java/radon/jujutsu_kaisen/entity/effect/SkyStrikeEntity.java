@@ -19,6 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -125,8 +127,10 @@ public class SkyStrikeEntity extends JujutsuProjectile {
         AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, this.getY() + 20.0D, this.getZ() + radius);
         List<Entity> entities = this.level().getEntities(this, bounds);
         double radiusSq = radius * radius;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         for (Entity entity : entities) {
-            if (entity == owner) continue;
+            if (entity == owner && !cap.hasSelfHit() ) continue;
+
 
             if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SKY_STRIKE.get()), DAMAGE * this.getPower());

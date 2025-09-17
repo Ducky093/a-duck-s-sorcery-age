@@ -213,9 +213,12 @@ public class ExperienceHandler {
             if (!(level.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !(level.getEntity(this.targetUUID) instanceof LivingEntity target)) return;
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
+            
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+           // if (cap.hasSelfHit()) {
+          //      this.damageDealtByOwner = 1.0F;
+          //  }
             float targetStrength = calculateStrength(target) * 1.25F;
             float ownerStrength = calculateStrength(owner) * 0.5F;
 
@@ -249,7 +252,7 @@ public class ExperienceHandler {
         public void attack(UUID attackerUUID, float damage) {
             this.totalDamageDealt += damage;
 
-            if (attackerUUID.equals(this.ownerUUID)) {
+            if (attackerUUID.equals(this.ownerUUID)  ) {
                 this.damageDealtByOwner += damage;
             }
         }

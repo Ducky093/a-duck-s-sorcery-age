@@ -47,6 +47,11 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 2.0F;
     }

@@ -22,6 +22,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -112,7 +114,10 @@ public class AirFrameEntity extends Entity {
                     owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                             4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-                    for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(center, RANGE, RANGE, RANGE))) {
+                    for (Entity entity : owner.level().getEntities(null, AABB.ofSize(center, RANGE, RANGE, RANGE))) {
+                             
+                        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        if ((entity == owner && !cap.hasSelfHit())) continue;
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.AIR_FRAME.get()), DAMAGE * this.getPower());
                     }
                 }

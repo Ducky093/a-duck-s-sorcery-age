@@ -84,15 +84,15 @@ public class SwapOthers extends Ability {
 
                 Vec2 firstRot = first.getRotationVector();
                 Vec2 secondRot = second.getRotationVector();
-
-                second.teleportTo(first.getX(), first.getY(), first.getZ());
-                first.teleportTo(pos.x, pos.y, pos.z);
-                first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
+                 first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.setSelfHit(15);
                 });
                 second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setSelfHit(10);
+                    cap.setSelfHit(15);
                 });
+                second.teleportTo(first.getX(), first.getY(), first.getZ());
+                first.teleportTo(pos.x, pos.y, pos.z);
+               
 
                 second.setYRot(firstRot.y);
                 second.setXRot(firstRot.x);

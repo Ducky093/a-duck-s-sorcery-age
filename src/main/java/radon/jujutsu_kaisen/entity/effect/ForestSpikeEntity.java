@@ -8,6 +8,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -41,10 +43,14 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
             if (this.level().isClientSide) return;
 
-            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(RotationUtil.getTargetAdjustedLookAngle(this).scale(5.0D)))) {
+            for (Entity entity : this.level().getEntities(null, this.getBoundingBox().expandTowards(RotationUtil.getTargetAdjustedLookAngle(this).scale(5.0D)))) {
+    
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (entity == owner && !cap.hasSelfHit()) continue;
                 if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower())) {
                     this.discard();
                 }
+                
             }
         }
     }

@@ -64,7 +64,8 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         Entity entity = pResult.getEntity();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (entity == owner && !cap.hasSelfHit() ) return;
 
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), DAMAGE * this.getPower());

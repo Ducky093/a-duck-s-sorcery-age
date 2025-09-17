@@ -43,6 +43,10 @@ public class DontMove extends Ability {
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
+    @Override
+    public boolean usesHands() {
+        return false;
+    }
 
     @Override
     public void run(LivingEntity owner) {

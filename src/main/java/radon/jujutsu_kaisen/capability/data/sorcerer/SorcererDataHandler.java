@@ -44,6 +44,7 @@ public class SorcererDataHandler {
             newCap.setEnergy(newCap.getMaxEnergy());
             newCap.resetCooldowns();
             newCap.resetBurnout();
+            newCap.resetDisable();
             newCap.clearToggled();
             
             newCap.resetBlackFlash();

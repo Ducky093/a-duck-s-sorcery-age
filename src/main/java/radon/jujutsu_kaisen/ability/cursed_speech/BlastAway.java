@@ -94,7 +94,7 @@ public class BlastAway extends Ability {
 
     @Override
     public boolean usesHands() {
-        return true;
+        return false;
     }
 
     @Override

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 2.0F;
     public static final int HITBOX_START = 28;
     public static final int STRIKE_EXPLOSION = 28;
     private static final int STRIKE_LENGTH = 118;
@@ -136,8 +136,9 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
         AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, this.getY() + 40.0D, this.getZ() + radius);
         List<Entity> entities = this.level().getEntities(this, bounds);
         double radiusSq = radius * radius;
+        ISorcererData selfCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         for (Entity entity : entities) {
-            if (entity == owner) continue;
+            if (entity == owner && !selfCap.hasSelfHit() ) continue;
 
             if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
                 /*
@@ -168,7 +169,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
                                     }
                                                 
                             });
-                entity.invulnerableTime = 5;
+                entity.invulnerableTime = 10;
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get()), mult[0] * DAMAGE * this.getPower());
             }
         }

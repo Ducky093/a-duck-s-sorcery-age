@@ -38,6 +38,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -109,9 +111,10 @@ public class ExplosionHandler {
                         Mth.floor(explosion.position.y + diameter + 1.0F),
                         Mth.floor(explosion.position.z + diameter + 1.0F)));
                 ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
-
+                  ISorcererData cap = explosion.instigator.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 for (Entity entity : entities) {
-                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;
+
+                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && (entity == explosion.instigator && !cap.hasSelfHit())) continue;
 
                     if (!entity.ignoreExplosion()) {
                         double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
