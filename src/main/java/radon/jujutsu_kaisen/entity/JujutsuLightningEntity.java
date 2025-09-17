@@ -106,7 +106,7 @@ public class JujutsuLightningEntity extends LightningBolt {
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     for (Entity entity : entities) {
-                        if (entity == owner) continue;
+                        if (entity == owner && !cap.hasSelfHit() ) continue;
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null),
                                 this.damage * cap.getAbilityPower());
                     }
