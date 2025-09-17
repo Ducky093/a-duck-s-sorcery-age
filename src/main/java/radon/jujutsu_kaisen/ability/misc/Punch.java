@@ -59,6 +59,9 @@ public class Punch extends Ability implements Ability.ICharged{
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
         if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
         return HelperMethods.RANDOM.nextInt(10) == 0;
     }
@@ -82,9 +85,6 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return Status.FAILURE;
-        }
         return super.isStillUsable(owner);
     }
 
@@ -261,6 +261,9 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public boolean isValid(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
         return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 
