@@ -136,8 +136,8 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         List<Entity> entities = this.level().getEntities(this, bounds);
         double radiusSq = radius * radius;
         for (Entity entity : entities) {
-            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            if ( entity == owner && !cap.hasSelfHit() ) continue;
+            //ISorcererData hasSelf = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if ( entity == owner  ) continue;
 
 
             if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
@@ -157,7 +157,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                         }
                 }*/
           
-                final int[] mult = {1};
+                final int[] mult = {1, 0};
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 if (cap.hasTrait(Trait.INCARNATED)) {
                                     mult[0] *= 1.75;
