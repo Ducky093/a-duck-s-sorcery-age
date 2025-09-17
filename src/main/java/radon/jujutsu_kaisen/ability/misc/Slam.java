@@ -164,7 +164,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return;
         }
-        
+
         double launchPower = 2.0D + (2.0D * (Math.min(20, this.getCharge(owner)) / 20));
         if (!owner.onGround()) {
             if (!owner.level().isClientSide) {
