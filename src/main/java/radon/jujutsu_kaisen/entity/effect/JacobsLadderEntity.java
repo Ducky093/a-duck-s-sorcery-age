@@ -158,17 +158,15 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                 }*/
           
                 final int[] mult = {1};
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                if (cap.hasTrait(Trait.INCARNATED)) {
-                                    mult[0] *= 1.75;
-                                }
-                                cap.setDisable((int)(10F * this.getPower() * mult[0]));
-                                if (entity instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                                }
-                               
-             });
-               // entity.invulnerableTime = 0;
+                if (cap.hasTrait(Trait.INCARNATED)) {
+                    mult[0] *= 1.75;
+                }
+                cap.setDisable((int)(10F * this.getPower() * mult[0]));
+                if (entity instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                }
+
+                // entity.invulnerableTime = 0;
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.JACOBS_LADDER.get()), mult[0] * DAMAGE * this.getPower());
             }
         }
