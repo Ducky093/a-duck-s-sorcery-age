@@ -133,11 +133,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return this.entityData.get(DATA_RADIUS);
     }
 
-    @Override
+      @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid))
-            return true;
-
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
@@ -157,17 +154,25 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.isRemoved()) return;
 
+       
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
 
      BlockEntity existing = this.level().getBlockEntity(pos);
-
-        CompoundTag saved = null;
-
-        if (existing != null) {
-            saved = existing.saveWithFullMetadata();
-        }
+      CompoundTag saved = null;
+         if (existing instanceof VeilBlockEntity be) {
+                be.destroy();
+                state = this.level().getBlockState(pos);
+            } else if (existing instanceof DomainBlockEntity be) {
+                BlockState original = be.getOriginal();
+                state = original;
+                saved = be.getSaved();
+            }
+            else if (existing != null) {
+                saved = existing.saveWithFullMetadata();
+            }
 
             DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
             List<Block> blocks = domain.getBlocks();
