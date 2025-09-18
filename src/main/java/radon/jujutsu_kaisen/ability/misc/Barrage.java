@@ -157,7 +157,7 @@ public class Barrage extends Ability {
     }
 
     public int getCooldown() {
-        return 3 * 20;
+        return 5 * 20;
     }
 
     @Override
