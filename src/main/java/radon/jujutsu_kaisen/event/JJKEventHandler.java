@@ -271,7 +271,7 @@ public class JJKEventHandler {
 //add check for hollow wicker basket
             if (source.getEntity() instanceof LivingEntity attacker) {
                 ISorcererData capSelf = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
+                if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
                     if (HelperMethods.isMelee(source)) {
                         event.setAmount(event.getAmount() * 1.75F);
                     }
