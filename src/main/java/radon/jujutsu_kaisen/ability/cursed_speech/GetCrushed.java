@@ -31,8 +31,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class GetCrushed extends Ability {
-    private static final double RANGE = 25.0D;
-    private static final double RADIUS = 2.0D;
+    private static final double RANGE = 30.0D;
+    private static final double RADIUS = 2.5D;
     private static final float DAMAGE = 17.0F;
     private static final double CRUSH_POWER = 20.0D;
 
