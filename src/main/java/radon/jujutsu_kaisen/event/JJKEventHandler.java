@@ -263,8 +263,8 @@ public class JJKEventHandler {
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                  if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
-                     ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
+                ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 if (source.getEntity() == victim && !capSelf.hasSelfHit() ) {
                     event.setAmount(event.getAmount() * 0.1F);
                 }
