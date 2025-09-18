@@ -140,9 +140,6 @@ public class Barrage extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return false;
-        }
         return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 
