@@ -31,7 +31,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.*;
 
 public class Slam extends Ability implements Ability.ICharged {
-    private static final double RANGE = 30.0D;
+    private static final double RANGE = 50.0D;
     private static final double LAUNCH_POWER = 2.0D;
     private static final float MAX_EXPLOSION = 6.0F;
 
