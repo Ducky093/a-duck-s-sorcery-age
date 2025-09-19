@@ -36,7 +36,7 @@ import java.util.List;
 
 public class JacobsLadderEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
-    public static final int HITBOX_START = 5;
+    public static final int HITBOX_START = 6;
     public static final int STRIKE_EXPLOSION = 6;
     private static final int STRIKE_LENGTH = 24;
     private int strikeTimeO;

@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -73,6 +74,12 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.hasTrait(Trait.INCARNATED) && super.canUnlock(owner);
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(Trait.INCARNATED) && super.isDisplayed(owner);
     }
 
     @Override

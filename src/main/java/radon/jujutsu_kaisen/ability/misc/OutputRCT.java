@@ -72,6 +72,18 @@ public class OutputRCT extends Ability {
         return ActivationType.INSTANT;
     }
 
+    @Override
+    public boolean canUnlock(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(Trait.DOCTOR_HOUSE) && super.canUnlock(owner);
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(Trait.DOCTOR_HOUSE) && super.isDisplayed(owner);
+    }
+
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
         LivingEntity result = null;
@@ -109,9 +121,9 @@ public class OutputRCT extends Ability {
         }
         float healMult = 1.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
-            healMult *= 2.5F;
-        }
+        //if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
+           // healMult *= 2.5F;
+        //}
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
 
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
