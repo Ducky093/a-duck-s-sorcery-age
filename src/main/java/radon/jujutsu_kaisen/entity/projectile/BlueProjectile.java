@@ -126,7 +126,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                 if (entity instanceof LivingEntity) {
                     if (this.DURATION <= 55) {
-                        ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 7, 0, false, false, false));
+                        ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 5, 0, false, false, false));
                     }
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
                 } else if (entity instanceof AbstractArrow || entity instanceof FallingBlockEntity) {
