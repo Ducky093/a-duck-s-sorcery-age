@@ -45,7 +45,7 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 200.0F;
     }
 
     @Override

@@ -45,7 +45,7 @@ public class HollowPurple extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 2500.0F;
+        return 3500.0F;
     }
 
     @Override

@@ -248,9 +248,9 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
         ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float soulscale = 10f * (this.souls/10f);
-        return (DAMAGE + soulscale) * SorcererUtil.getPower(ownerCap.getExperience());
+        return (DAMAGE + soulscale) * SorcererUtil.getPower(ownerCap.getExperience()) / 2;
     }
-
+/* 
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
@@ -260,9 +260,9 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         if (entity == owner) return;
-        // direct hit damage here and in OnHitBlock
+        // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
-    }
+    }*/
 
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
@@ -275,7 +275,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         // this might stack and hit multiple times with on hit entity IDK (from wood yes it does, im gonna reduce the dmg on direct hit)
         // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
         ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
-                20, this.getRealDamage() * 0.25f, owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
+                20, this.getRealDamage(), owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
 
         this.discard();
     }
