@@ -247,6 +247,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
 
     public static RegistryObject<Ability> COLLAPSE = ABILITIES.register("collapse", Collapse::new);
+    public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
 
     public static String getName(Ability ability) {
         return getKey(ability).getPath();

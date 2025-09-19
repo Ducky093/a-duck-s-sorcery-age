@@ -149,8 +149,6 @@ public class Punch extends Ability implements Ability.ICharged{
             double finalNewRange = newRange;
             cap.delayTickEvent(() -> {
 
-
-
                 Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
 
                 for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, finalNewRange, finalNewRange+2, finalNewRange),
@@ -177,12 +175,35 @@ public class Punch extends Ability implements Ability.ICharged{
 
                         ((ServerLevel) level1).sendParticles(ParticleTypes.FLASH, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     }
-                    if (owner instanceof Player player) {
-                        player.attack(entity);
-                    } else {
-                        owner.doHurtTarget(entity);
-                    }
-                    entity.invulnerableTime = 0;
+
+                        int tim = 8;
+
+                        if (power == 1) {
+                            if (!cap.hasToggled(JJKAbilities.RATIO_RULE.get()) && (!JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION))) {
+                                cap.moreBlackFlash(true);
+                            }
+
+                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                                tim = 10;
+                            }
+
+                            cap.delayTickEvent(() -> {
+                                cap.moreBlackFlash(false);
+                            }, 2);
+                        }
+
+                        if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                            cap.moreBlackFlash(true);
+                            tim = 14;
+                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                                tim = 16;
+                            }
+
+                            cap.delayTickEvent(() -> {
+                                cap.moreBlackFlash(false);
+                            }, 2);
+                        }
+
                     float newDMG;
                     newDMG = DAMAGE;
                     if (!(owner instanceof Player player)) {
@@ -192,41 +213,36 @@ public class Punch extends Ability implements Ability.ICharged{
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
                     newDMG *= (float) (1+1*power);
 
+                    if (owner instanceof Player player) {
+                        player.attack(entity);
+                    } else {
+                        owner.doHurtTarget(entity);
+                    }
 
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
-                            if (power == 1) {
-                                int tim = 8;
-                                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PlayfulCloudItem) {
-                                    tim = 10;
-                                }
-                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            }
-
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                         }
-                    } else {
+                    }
+
+                    else {
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                     .multiply(1.0D, 0.25D, 1.0D));
-                        }
-                        if (power == 1) {
-                            cap.moreBlackFlash(true);
-                            int tim = 8;
-                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
-                                tim = 10;
-                            }
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            cap.delayTickEvent(() -> {
-                                cap.moreBlackFlash(false);
-                            }, 2);
-                        }
+
                     }
-                }
-            }, i*1);
-        }
+                    }
+
+                    entity.invulnerableTime = 0;
+
+                    }
+                }, i*1);
+            }
+
 
         if ((owner.level() instanceof ServerLevel level)) {
             if (dash > 0) {
