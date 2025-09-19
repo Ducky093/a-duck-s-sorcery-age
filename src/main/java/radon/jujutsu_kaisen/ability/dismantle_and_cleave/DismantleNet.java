@@ -37,7 +37,7 @@ public class DismantleNet extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         int size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, (int) (SIZE * this.getPower(owner))));
-        int count = size / 4;
+        int count = size / 2;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
