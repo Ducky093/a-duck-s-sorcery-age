@@ -272,7 +272,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
         Vec3 location = pResult.getLocation();
         // damage on explosion here
-        // this might stack and hit multiple times with on hit entity IDK
+        // this might stack and hit multiple times with on hit entity IDK (from wood yes it does, im gonna reduce the dmg on direct hit)
         // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
         ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
                 20, this.getRealDamage() * 0.25f, owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);

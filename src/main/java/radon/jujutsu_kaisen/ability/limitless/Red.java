@@ -35,7 +35,7 @@ public class Red extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 200.0F;
+        return 1000.0F;
     }
 
     @Override

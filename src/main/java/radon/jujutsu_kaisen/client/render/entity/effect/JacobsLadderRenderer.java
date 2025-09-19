@@ -65,7 +65,9 @@ public class JacobsLadderRenderer extends EntityRenderer<JacobsLadderEntity> {
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        pPoseStack.scale(2.0F, 2.0F, 2.0F);
+        float scale = Math.max(1.5F, pEntity.getPower() * 0.2F); 
+
+        pPoseStack.scale(scale, scale, scale);
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 

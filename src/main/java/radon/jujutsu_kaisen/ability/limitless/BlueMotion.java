@@ -45,7 +45,7 @@ public class BlueMotion extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 500.0F;
     }
 
     @Override

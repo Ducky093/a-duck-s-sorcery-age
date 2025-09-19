@@ -34,6 +34,8 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Math;
+
 public class JacobsLadderEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
     public static final int HITBOX_START = 5;
@@ -92,7 +94,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
             this.playSound(JJKSounds.JACOBS_CHARGE.get(), 0.8F, 1.0F);
         }
         if (this.strikeTime >= HITBOX_START) {
-            this.hurtEntities(4);
+            this.hurtEntities(Math.max(4, 0.2 * this.getPower()));
         }
 
         this.moveDownToGround();
