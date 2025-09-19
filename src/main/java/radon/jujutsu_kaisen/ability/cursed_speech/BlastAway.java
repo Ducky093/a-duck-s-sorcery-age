@@ -24,8 +24,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class BlastAway extends Ability {
-    private static final double RANGE = 25.0D;
-    private static final double RADIUS = 2.0D;
+    private static final double RANGE = 30.0D;
+    private static final double RADIUS = 2.5D;
     private static final float DAMAGE = 11.0F;
     private static final double LAUNCH_POWER = 1.0D;
 

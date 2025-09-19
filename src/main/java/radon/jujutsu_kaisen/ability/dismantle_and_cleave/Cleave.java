@@ -87,7 +87,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     @Override
     public int getCooldown() {
-        return 20 * 20;
+        return 25 * 20;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 25; i++) {
             cap.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
@@ -118,7 +118,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             }, i);
         }
 
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 15; i++) {
             cap.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,

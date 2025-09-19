@@ -20,7 +20,7 @@ public class DismantleNet extends Ability {
     private static final int MIN_SIZE = 5;
     private static final int MAX_SIZE = 20;
     private static final int SIZE = 10;
-    private static final int STARTUP = 13;
+    private static final int STARTUP = 10;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

@@ -31,7 +31,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.*;
 
 public class Slam extends Ability implements Ability.ICharged {
-    private static final double RANGE = 30.0D;
+    private static final double RANGE = 50.0D;
     private static final double LAUNCH_POWER = 2.0D;
     private static final float MAX_EXPLOSION = 6.0F;
 
@@ -39,9 +39,6 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return false;
-        }
         if (target == null || target.isDeadOrDying()) return false;
         return owner.hasLineOfSight(target);
     }
@@ -78,7 +75,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get()) || (owner.hasEffect(JJKEffects.STAGGER.get()))) {
+        if (owner.hasEffect(JJKEffects.STUN.get())) {
             return Status.FAILURE;
         }
         return super.isStillUsable(owner);
