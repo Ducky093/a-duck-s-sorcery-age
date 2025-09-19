@@ -33,6 +33,8 @@ public class BlueMotion extends Ability {
         owner.level().addFreshEntity(blue);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.BLUE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+         cap.setDisarmed(100);
     }
 
     @Override

@@ -81,7 +81,7 @@ public class SorcererData implements ISorcererData {
     private float extraEnergy;
 
     private JujutsuType type;
-    private boolean disarmed;
+    private int disarmed;
     private int disable;
     private int selfHit;
     private int burnout;
@@ -960,7 +960,7 @@ public class SorcererData implements ISorcererData {
     }
     
     @Override
-    public void setDisarmed(boolean disarmed) {
+    public void setDisarmed(int disarmed) {
         this.disarmed = disarmed;
     }
 
@@ -980,7 +980,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean getDisarmed() {
+    public int getDisarmed() {
         return this.disarmed;
     }
 
@@ -999,7 +999,10 @@ public class SorcererData implements ISorcererData {
         return this.disable > 0;
     }
 
-
+    @Override
+    public boolean hasDisarmed() {
+        return this.disarmed > 0;
+    }
 
     @Override
     public boolean hasSelfHit() {
@@ -1024,7 +1027,7 @@ public class SorcererData implements ISorcererData {
 
      @Override
     public void resetDisarmed() {
-        this.disarmed = false;
+        this.disarmed = 0;
     }
 
     @Override
@@ -1606,7 +1609,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
-        nbt.putBoolean("disarmed", this.disarmed);
+        nbt.putInt("disarmed", this.disarmed);
         nbt.putInt("self_hit", this.selfHit);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);

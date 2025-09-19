@@ -100,8 +100,8 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                 }
                   cap.delayTickEvent(() -> {
                 domain.discard();
-                      }, 8);
-            }, 8);
+                      }, 10);
+            }, 10);
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                 cap.addCooldown(ability);

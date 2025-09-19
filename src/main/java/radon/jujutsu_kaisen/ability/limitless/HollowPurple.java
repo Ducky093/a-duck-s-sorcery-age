@@ -34,6 +34,8 @@ public class HollowPurple extends Ability {
 
         HollowPurpleProjectile purple = new HollowPurpleProjectile(owner, getPower(owner));
         owner.level().addFreshEntity(purple);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setDisarmed(40);
     }
 
     @Override

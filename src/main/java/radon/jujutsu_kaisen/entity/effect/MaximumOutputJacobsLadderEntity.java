@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 2.0F;
+    private static final float DAMAGE = 2.1F;
     public static final int HITBOX_START = 28;
     public static final int STRIKE_EXPLOSION = 28;
     private static final int STRIKE_LENGTH = 118;
