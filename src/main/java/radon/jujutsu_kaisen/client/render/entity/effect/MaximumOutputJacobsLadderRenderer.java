@@ -67,7 +67,7 @@ public class MaximumOutputJacobsLadderRenderer extends EntityRenderer<MaximumOut
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        pPoseStack.scale(1.6F * pEntity.getPower(), 1.6F * pEntity.getPower(), 1.6F * pEntity.getPower());
+        pPoseStack.scale(1.92F * pEntity.getPower(), 1.92F * pEntity.getPower(), 1.92F * pEntity.getPower());
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
         //VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(this.getTextureLocation(pEntity)));
 

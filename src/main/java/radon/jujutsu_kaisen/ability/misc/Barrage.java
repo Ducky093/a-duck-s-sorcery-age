@@ -61,7 +61,7 @@ public class Barrage extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         int duration2 = DURATION;
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            duration2 = 12;
+            duration2 = 10;
             gap = 1;
         }
 
