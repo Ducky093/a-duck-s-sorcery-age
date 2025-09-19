@@ -102,6 +102,9 @@ public abstract class Ability {
         return 0;
     }
 
+    public boolean isDomain() {
+        return false;
+    }
 
     public int getRealPointsCost(LivingEntity owner) {
        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -370,8 +373,8 @@ public abstract class Ability {
         if (copied != null && List.of(copied.getAbilities()).contains(this)) {
             cost *= 1.5F;
         }
-        if (cap.hasTrait(Trait.SIX_EYES) && this.isTechnique() ) {
-            cost *= 0.12F;
+        if (cap.hasTrait(Trait.SIX_EYES) && (this.isTechnique() || this.isDomain() ) ) {
+            cost *= 0.5F;
         }
         if (output > 0) {
             output = Mth.clamp(output*0.8F,1.0F,100.0F);

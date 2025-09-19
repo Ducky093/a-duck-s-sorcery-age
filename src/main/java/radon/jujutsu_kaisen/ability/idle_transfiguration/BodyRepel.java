@@ -93,7 +93,7 @@ public class BodyRepel extends Ability implements ICharged {
 
     @Override
     public int getCooldown() {
-        return 8 * 20;
+        return 5 * 20;
     }
 
     @Override
