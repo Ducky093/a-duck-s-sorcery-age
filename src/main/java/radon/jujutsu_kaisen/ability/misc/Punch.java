@@ -192,7 +192,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             }, 2);
                         }
 
-                        if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                        if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get()) || power == 0.7 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
                             cap.moreBlackFlash(true);
                             tim = 14;
                             if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {

@@ -83,7 +83,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
             float f2 = Mth.clamp(k, 0.0F, 20.0F);
             damage /= 1.0F - f2 / 25.0F;
         }
-        return damage;
+        return damage * 0.5f;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
 
         if (cap.addBlackFlash()) {
             ((ServerLevel) owner.level()).getChunkSource().broadcastAndSend(owner, new ClientboundAnimatePacket(target, ClientboundAnimatePacket.CRITICAL_HIT));
-            target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.RATIO_RULE.get()), calculateDamage(source, owner, target) * (this.getPower(owner) * 0.1F ));
+            target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.RATIO_RULE.get()), calculateDamage(source, owner, target) * (this.getPower(owner) * 0.2F ));
 
             return true;
         }

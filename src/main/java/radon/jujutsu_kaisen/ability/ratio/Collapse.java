@@ -82,18 +82,19 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public void run(LivingEntity owner) {
-            if (owner.level().isClientSide) return;
+            if (!(owner.level() instanceof ServerLevel level)) return;
+
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
 
             Vec3 pos = owner.position();
             int index = this.getCharge(owner);
 
-        float scale = 1.5F;
+            float scale = 1.5F;
 
-        Minecraft mc = Minecraft.getInstance();
+       // Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player == null) return;
+        //if (mc.player == null) return;
 
         for (int i = 0; i < 12 * scale; i++) {
 
@@ -101,8 +102,9 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
             double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
-            mc.level.addParticle(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.DARK_BLUE, owner.getBbWidth() * 0.5F * scale,
-                    0.2F, 6), x, y, z, 00.0D, speed * scale, 0.0D);
+
+            level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.FALLING_BLOSSOM_EMOTION, owner.getBbWidth() * 0.5F,
+                    0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
         }
 
 
@@ -163,7 +165,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
                     }
                 }
 
-            } else if (index < DURATION) {
+            } else if (index < DURATION || index >= DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 0.5F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 0.5F),
                         20, DAMAGE * (this.getPower(owner) * 0.125F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
             }
