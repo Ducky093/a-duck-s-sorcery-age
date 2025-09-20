@@ -88,11 +88,11 @@ public class MobEventHandler {
                     if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                         AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
                     }
-
+                    if (!source.is(DamageTypeTags.BYPASSES_SHIELD)) {
                     if (!JJKAbilities.isChanneling(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
                         AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
                     }
-
+                    }
                     if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                         if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());

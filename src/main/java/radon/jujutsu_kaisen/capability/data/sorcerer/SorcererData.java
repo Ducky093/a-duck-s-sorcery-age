@@ -60,6 +60,7 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable CursedTechnique technique;
 
+    private Set<CursedTechnique> add;
     private @Nullable CursedTechnique additional;
 
     private Set<CursedTechnique> copied;
@@ -138,6 +139,7 @@ public class SorcererData implements ISorcererData {
 
         this.type = JujutsuType.SORCERER;
 
+        this.add = new LinkedHashSet<>();
         this.copied = new LinkedHashSet<>();
         this.absorbed = new LinkedHashSet<>();
 

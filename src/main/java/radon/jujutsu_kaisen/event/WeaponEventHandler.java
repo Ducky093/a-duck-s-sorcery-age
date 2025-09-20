@@ -64,14 +64,25 @@ public class WeaponEventHandler {
                     .stream().map(ItemStack::getItem).toList());
 
             if (HelperMethods.isMelee(source)) {
-                /* if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                   / if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()*0.15F)) {
-                        if (victim.isDeadOrDying()) {
-                            event.setCanceled(true);
-                            return;
-                        }
-                    }
-                } */
+            //    if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+            //     if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 2.33f )) {
+            //         if (victim.isDeadOrDying()) {
+            //             event.setCanceled(true);
+            //             return;
+            //         }
+            //     }
+               
+            //     //if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()*0.15F)) {
+            //              //victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()*0.1F);
+            //           // if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                       
+            //              //victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), victim.getMaxHealth()*((event.getAmount()/102) *1.5f)/10);
+            //             //if (victim.isDeadOrDying()) {
+            //            //     event.setCanceled(true);
+            //            //     return;
+            //          //   }
+            //       //  }
+            //     }
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     Vec3 pos = attacker.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(attacker));
@@ -176,7 +187,16 @@ public class WeaponEventHandler {
                         }
                     }
                 } */
-
+                if (stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                   // source = JJKDamageSources.splitSoulKatanaAttack(victim);
+                    //event.setAmount(event.getAmount()*0.9f);
+                   // event.setAmount(event.getAmount()*0.196f); //all
+                    if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) ) {
+                        if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.1f )) {
+                              event.setAmount(event.getAmount()*0f);
+                        }
+                    }
+                }
                 if (stacks.contains(JJKItems.STEEL_GAUNTLET.get())) {
                     event.setAmount(event.getAmount()*1.1f);
                 }
