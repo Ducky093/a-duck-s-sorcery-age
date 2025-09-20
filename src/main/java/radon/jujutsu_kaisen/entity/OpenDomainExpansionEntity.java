@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -109,6 +111,23 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
+    @Override
+    public AABB getBounds() {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
+                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        BlockPos center = this.blockPosition();
+        BlockPos relative = pos.subtract(center);
+        return relative.getY() > -height / 2 && relative.distSqr(Vec3i.ZERO) < width * width;
+    }
+    
     @Override
     public boolean checkSureHitEffect() {
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {

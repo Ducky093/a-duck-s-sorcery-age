@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -41,6 +44,8 @@ public abstract class DomainExpansionEntity extends Entity {
     public DomainExpansion ability;
     protected boolean first = true;
 
+      private float scale;
+
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -51,6 +56,11 @@ public abstract class DomainExpansionEntity extends Entity {
         this.setOwner(owner);
 
         this.ability = ability;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap == null) return;
+
+            this.scale = cap.getDomainSize();
     }
 
     @Override
@@ -88,6 +98,7 @@ public abstract class DomainExpansionEntity extends Entity {
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
         pCompound.putInt("time", this.getTime());
+        pCompound.putFloat("scale", this.scale);
     }
 
     @Override
@@ -98,6 +109,7 @@ public abstract class DomainExpansionEntity extends Entity {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
+        this.scale = pCompound.getFloat("scale");
     }
 
     @Override
@@ -221,11 +233,39 @@ public abstract class DomainExpansionEntity extends Entity {
     public boolean shouldCollapse(float strength) {
         return (strength / this.getStrength()) > 3.0F;
     }
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
 
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+        d0 *= 64.0D * getViewScale();
+        return pDistance < d0 * d0;
+    }
     public float getStrength() {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
     }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        LivingEntity entity = this.getOwner();
+        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
+
+        if (owner != null) {
+            this.setOwner(owner);
+        }
+    }
 }
+
+

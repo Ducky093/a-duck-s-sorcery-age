@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -262,25 +263,33 @@ public class JJKEventHandler {
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                  if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
-                     ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
+                ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 if (source.getEntity() == victim && !capSelf.hasSelfHit() ) {
                     event.setAmount(event.getAmount() * 0.1F);
                 }
             }
-//add check for hollow wicker basket
-            if (source.getEntity() instanceof LivingEntity attacker) {
-                ISorcererData capSelf = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
-                    if (HelperMethods.isMelee(source)) {
-                        event.setAmount(event.getAmount() * 1.75F);
-                    }
-                }
-            }
+            Entity attackerEntity = source.getEntity();
+if (attackerEntity instanceof Projectile projectile) {
+    attackerEntity = projectile.getOwner();
+}
+
+if (!(attackerEntity instanceof LivingEntity attacker)) return;
+
+if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
+    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(capSelf -> {
+        if (HelperMethods.isMelee(source) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
+            event.setAmount(event.getAmount() * 1.75F);
+        }
+    });
+}
+            
 
             if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             float armor = SorcererUtil.getDefense(cap.getExperience());

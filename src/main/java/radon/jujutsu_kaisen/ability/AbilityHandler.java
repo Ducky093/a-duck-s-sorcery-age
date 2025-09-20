@@ -9,8 +9,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
 public class AbilityHandler {
     public static void untrigger(LivingEntity owner,Ability ability) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
         if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (cap.hasToggled(ability)) {
                 cap.toggle(ability);
@@ -20,6 +19,7 @@ public class AbilityHandler {
                 cap.channel(ability);
             }
         }
+    });
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {

@@ -90,7 +90,7 @@ public class MaximumOutputJacobsLadder extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 500.0F;
+        return 300.0F;
     }
 
     @Override

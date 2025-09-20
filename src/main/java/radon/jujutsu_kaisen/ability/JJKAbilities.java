@@ -34,6 +34,8 @@ import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
+import radon.jujutsu_kaisen.ability.ratio.*;
+
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
@@ -243,6 +245,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
     public static RegistryObject<Ability> AIR_FRAME = ABILITIES.register("air_frame", AirFrame::new);
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
+
+    public static RegistryObject<Ability> COLLAPSE = ABILITIES.register("collapse", Collapse::new);
+    public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
 
     public static String getName(Ability ability) {
         return getKey(ability).getPath();

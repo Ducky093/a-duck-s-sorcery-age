@@ -174,6 +174,26 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     }
 
     @Override
+public boolean isPickable() {
+    return false; // can't be picked with raytrace (e.g., cursor)
+}
+
+@Override
+public boolean isPushable() {
+    return false; // nothing pushes it
+}
+
+@Override
+protected boolean canRide(Entity entity) {
+    return false; // prevent riding collisions
+}
+
+@Override
+public boolean canCollideWith(Entity entity) {
+    return false; // disables collisions with all entities
+}
+
+    @Override
     public void tick() {
         this.setTime(this.getTime() + 1);
 
@@ -198,12 +218,12 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
             this.moveSegments();
 
             HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-
-            if (hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit)) {
+//hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit) &&
+            if (  hit.getType() == HitResult.Type.ENTITY ) {
                 this.onHit(hit);
             }
 
-            this.checkInsideBlocks();
+            //this.checkInsideBlocks();
 
             Vec3 movement = this.getDeltaMovement();
             double d0 = this.getX() + movement.x;
@@ -258,13 +278,13 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         Entity entity = pResult.getEntity();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        if (entity == owner) return;
-        // direct hit damage here and in OnHitBlock
+  ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (entity == owner && !ownerCap.hasSelfHit() ) return;
+        // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
     }
 
-    @Override
+    /*@Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
@@ -272,13 +292,13 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
         Vec3 location = pResult.getLocation();
         // damage on explosion here
-        // this might stack and hit multiple times with on hit entity IDK
+        // this might stack and hit multiple times with on hit entity IDK (from wood yes it does, im gonna reduce the dmg on direct hit)
         // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
-        ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
-                20, this.getRealDamage() * 0.25f, owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
+       // ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
+         //       20, this.getRealDamage(), owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
 
         this.discard();
-    }
+    }*/
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {

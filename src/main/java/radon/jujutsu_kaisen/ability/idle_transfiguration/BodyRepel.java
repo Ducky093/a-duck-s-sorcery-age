@@ -88,7 +88,12 @@ public class BodyRepel extends Ability implements ICharged {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        return 50.0F;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5 * 20;
     }
 
     @Override

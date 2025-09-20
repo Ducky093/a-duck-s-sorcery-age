@@ -171,7 +171,7 @@ public interface ISorcererData {
 
     void setDisable(int duration);
 
-    void setDisarmed(boolean type);
+    void setDisarmed(int duration);
 
     void setSelfHit(int duration);
 
@@ -179,7 +179,7 @@ public interface ISorcererData {
 
     int getDisable();
 
-    boolean getDisarmed();
+    int getDisarmed();
 
     int getSelfHit();
 
@@ -187,7 +187,7 @@ public interface ISorcererData {
 
     boolean hasDisable();
 
-
+    boolean hasDisarmed();
 
     boolean hasSelfHit();
 

@@ -31,9 +31,9 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.*;
 
 public class Slam extends Ability implements Ability.ICharged {
-    private static final double RANGE = 30.0D;
+    private static final double RANGE = 50.0D;
     private static final double LAUNCH_POWER = 2.0D;
-    private static final float MAX_EXPLOSION = 5.5F;
+    private static final float MAX_EXPLOSION = 6.0F;
 
     public static Map<UUID, Float> TARGETS = new HashMap<>();
 
@@ -75,7 +75,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get()) || (owner.hasEffect(JJKEffects.STAGGER.get()))) {
+        if (owner.hasEffect(JJKEffects.STUN.get())) {
             return Status.FAILURE;
         }
         return super.isStillUsable(owner);
@@ -118,9 +118,9 @@ public class Slam extends Ability implements Ability.ICharged {
         if (owner.level().isClientSide) return;
 
         float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
-        float dmgMult = 0.65F;
+        float dmgMult = 0.75F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-            dmgMult = 0.8F;
+            dmgMult = 0.9F;
             radius = radius*1.35f+2;
         }
         if (owner instanceof RabbitEscapeEntity) {
@@ -158,6 +158,10 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
+
         double launchPower = 2.0D + (2.0D * (Math.min(20, this.getCharge(owner)) / 20));
         if (!owner.onGround()) {
             if (!owner.level().isClientSide) {

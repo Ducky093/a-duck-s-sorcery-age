@@ -213,6 +213,8 @@
   "ability.jujutsu_kaisen.maximum_output_jacobs_ladder": "Maximum Output: Jacob's Ladder",
   "ability.jujutsu_kaisen.barrier_travel": "Barrier Traversal",
   "ability.jujutsu_kaisen.angel_wings": "Angel Wings",
+  "ability.jujutsu_kaisen.collapse": "Collapse",
+  "ability.jujutsu_kaisen.ratio_rule": "Ratio Rule",
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.punch": "Punch",
   "ability.jujutsu_kaisen.blitz": "Blitz",
@@ -470,6 +472,7 @@
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
   "cursed_technique.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
+  "cursed_technique.jujutsu_kaisen.ratio": "Ratio",
 
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",

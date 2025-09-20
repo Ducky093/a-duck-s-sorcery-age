@@ -21,7 +21,7 @@ public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<Item> INVERTED_SPEAR_OF_HEAVEN = ITEMS.register("inverted_spear_of_heaven", () ->
-            new InvertedSpearOfHeavenItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+            new InvertedSpearOfHeavenItem(JJKTiers.CURSED_TOOL, 5, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> PLAYFUL_CLOUD = ITEMS.register("playful_cloud",
             () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL, 8, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",

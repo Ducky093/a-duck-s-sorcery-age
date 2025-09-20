@@ -167,7 +167,7 @@ public class Blitz extends Ability {
     }
 
     public int getCooldown() {
-        return 14 * 20;
+        return 28 * 20;
     }
 
     @Override

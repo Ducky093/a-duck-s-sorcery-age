@@ -35,10 +35,10 @@ public class BlueProjectile extends JujutsuProjectile {
 
     public static final double RANGE = 15.0D;
     private static final int DELAY = 20;
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 7.0F;
     private static final int DURATION = 5 * 20;
-    private static final float RADIUS = 3.0F;
-    private static final float MAX_RADIUS = 6.0F;
+    private static final float RADIUS = 4.0F;
+    private static final float MAX_RADIUS = 8.0F;
     private static final double OFFSET = 8.0D;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level) {
@@ -126,8 +126,8 @@ public class BlueProjectile extends JujutsuProjectile {
 
                 if (entity instanceof LivingEntity) {
                     if (this.DURATION <= 55) {
-                        ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 5, 0, false, false, false));
-                    }
+                        ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 7, 0, false, false, false));
+                   }
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
                 } else if (entity instanceof AbstractArrow || entity instanceof FallingBlockEntity) {
                     entity.discard();
@@ -280,7 +280,18 @@ public class BlueProjectile extends JujutsuProjectile {
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                         this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
                     }
-                    this.pullEntities();
+                    int delayfactor = 1 *20;
+                    if (this.entityData.get(DATA_MOTION) == false) {
+                        if ( this.getTime() <= DELAY + delayfactor &&  this.getTime() >= DELAY ) {
+                            this.pullEntities();
+                        }
+                    }
+                    else {
+                        if ( this.getTime() >= DELAY) {
+                            this.pullEntities();
+                        }
+                    }
+                   
                     this.hurtEntities();
 
                     if (!this.level().isClientSide) {

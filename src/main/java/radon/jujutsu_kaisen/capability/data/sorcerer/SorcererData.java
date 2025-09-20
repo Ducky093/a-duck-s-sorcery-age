@@ -60,6 +60,7 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable CursedTechnique technique;
 
+    private Set<CursedTechnique> add;
     private @Nullable CursedTechnique additional;
 
     private Set<CursedTechnique> copied;
@@ -81,7 +82,7 @@ public class SorcererData implements ISorcererData {
     private float extraEnergy;
 
     private JujutsuType type;
-    private boolean disarmed;
+    private int disarmed;
     private int disable;
     private int selfHit;
     private int burnout;
@@ -138,6 +139,7 @@ public class SorcererData implements ISorcererData {
 
         this.type = JujutsuType.SORCERER;
 
+        this.add = new LinkedHashSet<>();
         this.copied = new LinkedHashSet<>();
         this.absorbed = new LinkedHashSet<>();
 
@@ -429,6 +431,9 @@ public class SorcererData implements ISorcererData {
         }
         if (this.selfHit > 0) {
             this.selfHit--;
+        }
+        if (this.disarmed > 0) {
+            this.disarmed--;
         }
 
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
@@ -960,7 +965,7 @@ public class SorcererData implements ISorcererData {
     }
     
     @Override
-    public void setDisarmed(boolean disarmed) {
+    public void setDisarmed(int disarmed) {
         this.disarmed = disarmed;
     }
 
@@ -980,7 +985,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean getDisarmed() {
+    public int getDisarmed() {
         return this.disarmed;
     }
 
@@ -999,7 +1004,10 @@ public class SorcererData implements ISorcererData {
         return this.disable > 0;
     }
 
-
+    @Override
+    public boolean hasDisarmed() {
+        return this.disarmed > 0;
+    }
 
     @Override
     public boolean hasSelfHit() {
@@ -1024,7 +1032,7 @@ public class SorcererData implements ISorcererData {
 
      @Override
     public void resetDisarmed() {
-        this.disarmed = false;
+        this.disarmed = 0;
     }
 
     @Override
@@ -1606,7 +1614,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
-        nbt.putBoolean("disarmed", this.disarmed);
+        nbt.putInt("disarmed", this.disarmed);
         nbt.putInt("self_hit", this.selfHit);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);

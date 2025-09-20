@@ -34,7 +34,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
     private static final double RANGE = 10.0D;
-    public static int DURATION = 10;
+    public static int DURATION = 8;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -61,7 +61,7 @@ public class Barrage extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         int duration2 = DURATION;
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            duration2 = 15;
+            duration2 = 10;
             gap = 1;
         }
 
@@ -125,7 +125,7 @@ public class Barrage extends Ability {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }
 
-                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 5, 0, false, false, false));
+                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 6, 0, false, false, false));
 
                     if (owner instanceof Player player) {
                         player.attack(entity);
@@ -140,9 +140,6 @@ public class Barrage extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return false;
-        }
         return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 
@@ -157,7 +154,7 @@ public class Barrage extends Ability {
     }
 
     public int getCooldown() {
-        return 3 * 20;
+        return 5 * 20;
     }
 
     @Override

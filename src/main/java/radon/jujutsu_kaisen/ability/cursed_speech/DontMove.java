@@ -24,7 +24,7 @@ import java.util.List;
 
 public class DontMove extends Ability {
     private static final double RANGE = 25.0D;
-    private static final double RADIUS = 2.0D;
+    private static final double RADIUS = 2.5D;
     private static final int DURATION = 15;
 
     @Override

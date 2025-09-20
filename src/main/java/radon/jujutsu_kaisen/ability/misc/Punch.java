@@ -42,7 +42,7 @@ import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
-    private static final double RANGE = 7.0D;
+    private static final double RANGE = 7.5D;
     private static final double LAUNCH_POWER = 3.0D;
 
     @Override
@@ -59,6 +59,9 @@ public class Punch extends Ability implements Ability.ICharged{
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
         if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
         return HelperMethods.RANDOM.nextInt(10) == 0;
     }
@@ -82,14 +85,15 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
-            return Status.FAILURE;
-        }
         return super.isStillUsable(owner);
     }
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STAGGER.get())) {
+            return false;
+        }
+
         owner.swing(InteractionHand.MAIN_HAND);
 
         float power = (float) Math.min(20, this.getCharge(owner)) / 20;
@@ -127,8 +131,12 @@ public class Punch extends Ability implements Ability.ICharged{
 
         }
 
-        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
-            newRange+=1.5;
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+            newRange+=2.0;
+        }
+
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
+            newRange+=0.5;
         }
 
         if (cap.getSpeedStacks() > 0) {
@@ -140,8 +148,6 @@ public class Punch extends Ability implements Ability.ICharged{
         for (int i = 0; i < num; i++) {
             double finalNewRange = newRange;
             cap.delayTickEvent(() -> {
-
-
 
                 Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
 
@@ -169,56 +175,77 @@ public class Punch extends Ability implements Ability.ICharged{
 
                         ((ServerLevel) level1).sendParticles(ParticleTypes.FLASH, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     }
+
+                        int tim = 8;
+
+                        if (power == 1) {
+                            if (!cap.hasToggled(JJKAbilities.RATIO_RULE.get()) && (!JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION))) {
+                                cap.moreBlackFlash(true);
+                            }
+
+                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                                tim = 10;
+                            }
+
+                            cap.delayTickEvent(() -> {
+                                cap.moreBlackFlash(false);
+                            }, 3);
+                        }
+
+                        if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get()) || power == 0.7 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                            int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
+                            if (cooldown <= 0) {
+                                cap.moreBlackFlash(true);
+                                tim = 14;
+                                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
+                                    tim = 16;
+                                }
+
+                                cap.delayTickEvent(() -> {
+                                    cap.moreBlackFlash(false);
+                                }, 3);
+                            }
+                        }
+
+                    float newDMG;
+                    newDMG = DAMAGE;
+
+                    if (!(owner instanceof Player player)) {
+                        newDMG/=1.65F;
+                    }
+
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
                         owner.doHurtTarget(entity);
                     }
+
                     entity.invulnerableTime = 0;
-                    float newDMG;
-                    newDMG = DAMAGE;
-                    if (!(owner instanceof Player player)) {
-                        newDMG/=1.65F;
-                    }
 
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
                     newDMG *= (float) (1+1*power);
-
-
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
-                            if (power == 1) {
-                                int tim = 8;
-                                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PlayfulCloudItem) {
-                                    tim = 10;
-                                }
-                                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            }
-
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                         }
-                    } else {
+                    }
+
+                    else {
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                     .multiply(1.0D, 0.25D, 1.0D));
-                        }
-                        if (power == 1) {
-                            cap.moreBlackFlash(true);
-                            int tim = 8;
-                            if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
-                                tim = 10;
-                            }
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            cap.delayTickEvent(() -> {
-                                cap.moreBlackFlash(false);
-                            }, 2);
-                        }
+
                     }
-                }
-            }, i*1);
-        }
+                    }
+
+                    }
+                }, i*1);
+            }
+
 
         if ((owner.level() instanceof ServerLevel level)) {
             if (dash > 0) {

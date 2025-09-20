@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 public class BlackFlashHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BlackFlashHandlerForgeEvents {
-        private static final float MAX_DAMAGE = 30.0F;
+        private static final float MAX_DAMAGE = 40.0F;
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingDamage(LivingDamageEvent event) {
@@ -53,8 +53,11 @@ public class BlackFlashHandler {
 
             if (lastBlackFlashTime == 0 || seconds >= 1) {
                 int rng = 200;
-                if (cap.addBlackFlash() ){
+                if (cap.addBlackFlash()){
                     rng = 150;
+                    if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                        rng = 20;
+                    }
                 }
                 if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
                     rng = 175;
@@ -64,8 +67,11 @@ public class BlackFlashHandler {
                 }
                 if ((attacker instanceof Player player) && (cap.isInZone())) {
                     rng = 30;
-                    if (cap.addBlackFlash() ){
+                    if (cap.addBlackFlash()){
                         rng = 15;
+                        if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                            rng = 3;
+                        }
                     }
                 }
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;

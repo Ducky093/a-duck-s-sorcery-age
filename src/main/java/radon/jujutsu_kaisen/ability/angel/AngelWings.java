@@ -49,8 +49,8 @@ public class AngelWings extends Transformation {
         owner.resetFallDistance();
 
         Vec3 movement = owner.getDeltaMovement();
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        owner.setDeltaMovement(movement.x, look.y, movement.z);
+      //  Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        owner.setDeltaMovement(movement.x, movement.y, movement.z);
 
         float f = owner.xxa * 0.5F;
         float f1 = owner.zza;
@@ -64,7 +64,7 @@ public class AngelWings extends Transformation {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 0.0F;
     }
 
     @Override

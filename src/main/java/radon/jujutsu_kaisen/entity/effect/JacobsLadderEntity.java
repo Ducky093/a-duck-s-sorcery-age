@@ -34,6 +34,8 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Math;
+
 public class JacobsLadderEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
     public static final int HITBOX_START = 6;
@@ -92,7 +94,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
             this.playSound(JJKSounds.JACOBS_CHARGE.get(), 0.8F, 1.0F);
         }
         if (this.strikeTime >= HITBOX_START) {
-            this.hurtEntities(4);
+            this.hurtEntities(Math.max(4, 0.2 * this.getPower()));
         }
 
         this.moveDownToGround();
@@ -163,7 +165,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                  final int[] mult = {1};
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 if (cap.hasTrait(Trait.INCARNATED)) {
-                                    mult[0] *= 1.75;
+                                    mult[0] *= 2.0;
                                 }
                                 cap.setDisable((int)(10F * this.getPower() * mult[0]));
                                 if (entity instanceof ServerPlayer player) {
