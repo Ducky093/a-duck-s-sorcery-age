@@ -26,7 +26,6 @@ public class AbilityHandler {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Ability.Status status = ability.isTriggerable(owner);
-
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             if (status == Ability.Status.SUCCESS) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));

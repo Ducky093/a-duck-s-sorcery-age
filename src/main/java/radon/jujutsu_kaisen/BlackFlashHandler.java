@@ -59,16 +59,24 @@ public class BlackFlashHandler {
                         rng = 20;
                     }
                 }
+
                 if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-                    rng = 175;
-                    if (cap.addBlackFlash() ){
-                        rng = 125;
+                    rng = 150;
+                    if (cap.addBlackFlash()){
+                        rng = 100;
                     }
                 }
+
                 if ((attacker instanceof Player player) && (cap.isInZone())) {
                     rng = 30;
+                    if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                        rng = 20;
+                    }
                     if (cap.addBlackFlash()){
                         rng = 15;
+                        if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                            rng = 10;
+                        }
                         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
                             rng = 3;
                         }

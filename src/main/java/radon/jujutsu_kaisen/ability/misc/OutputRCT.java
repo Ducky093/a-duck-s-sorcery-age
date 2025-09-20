@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 public class OutputRCT extends Ability {
-    public static final float RANGE = 7.0F;
+    public static final float RANGE = 10.0F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -40,7 +40,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target)) return false;
+        if (target == null) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() == JujutsuType.CURSE && this.getTarget(owner) == target;
@@ -76,9 +76,7 @@ public class OutputRCT extends Ability {
         LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
         LivingEntity result = null;
         if (target != null) {
-            if (owner.canAttack(target)) {
-                result = target;
-            }
+            result = target;
         }
         return result;
     }
@@ -111,6 +109,9 @@ public class OutputRCT extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
             healMult *= 2.5F;
+        }
+        if (cap.getType() == JujutsuType.SHIKIGAMI) {
+            healMult *= 4.0F;
         }
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
 

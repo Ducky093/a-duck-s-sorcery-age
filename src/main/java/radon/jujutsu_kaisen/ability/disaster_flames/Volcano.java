@@ -12,27 +12,29 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Volcano extends Ability {
+public class Volcano extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final double RANGE = 30.0D;
-
-
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (JJKAbilities.isChanneling(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.CHANNELED;
     }
 
-    private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
+    /*private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
@@ -46,39 +48,46 @@ public class Volcano extends Ability {
             return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         }
         return null;
-    }
+    }*/
 
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        BlockHitResult hit = this.getBlockHit(owner);
+        Vec3 start = owner.getEyePosition();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 end = start.add(look.scale(RANGE));
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
-        if (hit != null) {
-            Direction dir = hit.getDirection();
-            VolcanoEntity volcano = new VolcanoEntity(owner, this.getPower(owner), hit.getBlockPos(), dir);
-            owner.level().addFreshEntity(volcano);
+        if (result.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult hitter = this.getBlockHit(owner, 10.0D);
+
+            if (hitter != null) {
+                Direction dir = hitter.getDirection();
+                VolcanoEntity volcano = new VolcanoEntity(owner, this.getPower(owner), hitter.getBlockPos(), dir);
+                owner.level().addFreshEntity(volcano);
+            }
         }
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        BlockHitResult hit = this.getBlockHit(owner);
-
-        if (hit == null) {
-            return Status.FAILURE;
-        }
         return super.isTriggerable(owner);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 75.0F;
+        return 20.0F;
+    }
+
+    @Override
+    public int getDuration() {
+        return 2;
     }
 
     @Override
     public int getCooldown() {
-        return 1 * 20;
+        return 12 * 20;
     }
 
     @Override

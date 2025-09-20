@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -116,6 +117,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     public static void slamCrater(LivingEntity owner, float distance) {
         if (owner.level().isClientSide) return;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
         float dmgMult = 0.75F;
@@ -133,6 +135,15 @@ public class Slam extends Ability implements Ability.ICharged {
             radius = radius*1.2f+1.5f;
 
         }
+
+        if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+            int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
+            if (cooldown <= 0) {
+                dmgMult = 1.1F;
+                radius = radius * 2.0f;
+            }
+        }
+
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (!owner.level().isClientSide) {
@@ -161,16 +172,34 @@ public class Slam extends Ability implements Ability.ICharged {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
         }
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
 
         double launchPower = 2.0D + (2.0D * (Math.min(20, this.getCharge(owner)) / 20));
+        float checkcharge = (float) Math.min(20, this.getCharge(owner)) / 20;
+
+        if (checkcharge >= 0.65f && checkcharge <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+            int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
+            if (cooldown <= 0) {
+                launchPower = 22.0D;
+                cap.moreBlackFlash(true);
+                System.out.println(this.getCharge(owner));
+
+                cap.delayTickEvent(() -> {
+                    cap.moreBlackFlash(false);
+                }, 20);
+            }
+        }
+
+        double reallaunch = launchPower;
+
         if (!owner.onGround()) {
             if (!owner.level().isClientSide) {
                 TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
             }
-            
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             Vec3 target = this.getTarget(owner);
-            Vec3 velocity = (target.subtract(owner.position()).normalize().scale(launchPower));
+            Vec3 velocity = (target.subtract(owner.position()).normalize().scale(reallaunch));
             if (velocity.y > 0) {
                 velocity = velocity.multiply(1.0D, 0D, 1.0D);
             }
@@ -189,24 +218,32 @@ public class Slam extends Ability implements Ability.ICharged {
                     TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
                 }
                 owner.swing(InteractionHand.MAIN_HAND);
-                slamCrater(owner,1);
+                slamCrater(owner, 1);
             }
             else {
-                Vec3 direction = new Vec3(0.0D, Math.min(3.0D,launchPower*0.65D), 0.0D);
+                Vec3 direction = new Vec3(0.0D, Math.min(3.0D,reallaunch*0.65D), 0.0D);
                 owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
-        
-
-        
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 float power = ((float) Math.min(20, this.getCharge(owner)) / 20);
+                System.out.println(power);
+
+                if (power >= 0.65f && power <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                    int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
+                    if (cooldown <= 0) {
+                        power = 1.5f;
+                    }
+                }
+
+                float realpower = power;
 
                 cap.delayTickEvent(() -> {
                     if (!owner.level().isClientSide) {
-                        TARGETS.put(owner.getUUID(), power);
+                        TARGETS.put(owner.getUUID(), realpower);
                     }
+
+
                     Vec3 target = this.getTarget(owner);
-                    Vec3 velocity = (target.subtract(owner.position()).normalize().scale(launchPower));
+                    Vec3 velocity = (target.subtract(owner.position()).normalize().scale(reallaunch));
                     if (velocity.y > 0) {
                         velocity = velocity.multiply(1.0D, 0, 1.0D);
                     }
