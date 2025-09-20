@@ -145,7 +145,7 @@ public class Slam extends Ability implements Ability.ICharged {
                 entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
             }
              ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * dmgMult, owner,
-                    owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
+                    owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false, true );
         }
         if (steeled) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 3F, 0.8F);

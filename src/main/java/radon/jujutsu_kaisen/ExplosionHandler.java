@@ -114,7 +114,7 @@ public class ExplosionHandler {
                   ISorcererData cap = explosion.instigator.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 for (Entity entity : entities) {
 
-                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && (entity == explosion.instigator && !cap.hasSelfHit())) continue;
+                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && (entity == explosion.instigator && (!cap.hasSelfHit() || explosion.isMelee)  )) continue;
 
                     if (!entity.ignoreExplosion()) {
                         double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
@@ -239,11 +239,15 @@ public class ExplosionHandler {
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire));
+        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire, false));
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, damage/1.5F, instigator, source, causesFire));
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage/1.5F, instigator, source, causesFire, false));
+    }
+
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire, boolean isMelee ) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage/1.5F, instigator, source, causesFire, isMelee));
     }
 
     private static class ExplosionData {
@@ -257,8 +261,9 @@ public class ExplosionHandler {
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
         private final boolean fire;
+         private final boolean isMelee;
 
-        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire, boolean isMelee) {
             this.calculator = instigator == null ? new ExplosionDamageCalculator() : new EntityBasedExplosionDamageCalculator(instigator);
             this.dimension = dimension;
             this.position = position;
@@ -268,6 +273,7 @@ public class ExplosionHandler {
             this.instigator = instigator;
             this.source = source;
             this.fire = fire;
+             this.isMelee = isMelee;
         }
     }
 }
