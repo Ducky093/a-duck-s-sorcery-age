@@ -174,6 +174,26 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     }
 
     @Override
+public boolean isPickable() {
+    return false; // can't be picked with raytrace (e.g., cursor)
+}
+
+@Override
+public boolean isPushable() {
+    return false; // nothing pushes it
+}
+
+@Override
+protected boolean canRide(Entity entity) {
+    return false; // prevent riding collisions
+}
+
+@Override
+public boolean canCollideWith(Entity entity) {
+    return false; // disables collisions with all entities
+}
+
+    @Override
     public void tick() {
         this.setTime(this.getTime() + 1);
 
@@ -203,7 +223,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
                 this.onHit(hit);
             }
 
-            this.checkInsideBlocks();
+            //this.checkInsideBlocks();
 
             Vec3 movement = this.getDeltaMovement();
             double d0 = this.getX() + movement.x;
