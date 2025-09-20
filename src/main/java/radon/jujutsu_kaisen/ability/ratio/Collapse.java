@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.core.particles.ParticleTypes;
@@ -119,7 +120,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public void onStop(LivingEntity owner) {
-        if (owner.level().isClientSide) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
 
         Vec3 start = owner.getEyePosition();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -129,11 +130,17 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
         if (result.getType() == HitResult.Type.BLOCK) {
             int index = this.getCharge(owner);
             owner.swing(InteractionHand.MAIN_HAND);
+
+            for (int i = 0; i < 4; i++) {
+                level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), RADIUS, 1),
+                        owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
+
             Vec3 realpos = result.getLocation();
 
             if (index >= 20 && index < DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.5F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.5F),
-                        20, DAMAGE * (this.getPower(owner) * 0.25F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
+                        20, DAMAGE + (this.getPower(owner) * 0.5F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
                 BlockPos blocked = hit.getBlockPos();
@@ -167,7 +174,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
             } else if (index < DURATION || index >= DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 0.5F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 0.5F),
-                        20, DAMAGE * (this.getPower(owner) * 0.125F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
+                        20, DAMAGE + (this.getPower(owner) * 0.25f), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
             }
         }
     }
