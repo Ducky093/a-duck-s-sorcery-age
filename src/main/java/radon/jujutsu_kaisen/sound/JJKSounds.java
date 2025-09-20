@@ -18,6 +18,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")));
             public static RegistryObject<SoundEvent> COLLAPSE = SOUNDS.register("collapse", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "collapse")));
+              public static RegistryObject<SoundEvent> RATIO_RULE = SOUNDS.register("ratio_rule", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "ratio_rule")));
     public static RegistryObject<SoundEvent> JACOBS_STRONG_CHARGE = SOUNDS.register("jacobs_strong_charge", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "jacobs_strong_charge")));
     public static RegistryObject<SoundEvent> JACOBS_FIRE = SOUNDS.register("jacobs_fire", () ->

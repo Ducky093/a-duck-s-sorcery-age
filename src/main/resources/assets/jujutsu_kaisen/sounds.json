@@ -19,6 +19,11 @@
       "jujutsu_kaisen:collapse"
     ]
   },
+  "ratio_rule": {
+    "sounds": [
+      "jujutsu_kaisen:ratio_rule"
+    ]
+  },
   "cursed_speech": {
     "sounds": [
       "jujutsu_kaisen:cursed_speech"

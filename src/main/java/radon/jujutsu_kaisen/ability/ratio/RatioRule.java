@@ -100,7 +100,8 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
         if (cap.addBlackFlash()) {
             ((ServerLevel) owner.level()).getChunkSource().broadcastAndSend(owner, new ClientboundAnimatePacket(target, ClientboundAnimatePacket.CRITICAL_HIT));
             target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.RATIO_RULE.get()), calculateDamage(source, owner, target) * (this.getPower(owner) * 0.2F ));
-
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.RATIO_RULE.get(), SoundSource.MASTER,
+                    1.0F, 1.1F);
             return true;
         }
         else return false;

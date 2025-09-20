@@ -189,7 +189,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
                             cap.delayTickEvent(() -> {
                                 cap.moreBlackFlash(false);
-                            }, 2);
+                            }, 3);
                         }
 
                         if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get()) || power == 0.7 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
@@ -201,7 +201,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
                             cap.delayTickEvent(() -> {
                                 cap.moreBlackFlash(false);
-                            }, 2);
+                            }, 3);
                         }
 
                     float newDMG;
