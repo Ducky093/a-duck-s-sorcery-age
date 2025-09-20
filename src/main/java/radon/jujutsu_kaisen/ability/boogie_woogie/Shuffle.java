@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Shuffle extends Ability implements Ability.IChannelened {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 35.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -98,7 +98,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 5.0F;
+        return 20.0F;
     }
 
     public int getCooldown() {

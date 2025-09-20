@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SwapOthers extends Ability {
-    public static final double RANGE = 60.0D;
+    public static final double RANGE = 40.0D;
     private static final int EXPIRATION = 5 * 20;
     public Entity enemy = null;
 
@@ -110,7 +110,7 @@ public class SwapOthers extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 15.0F;
     }
 
     @Override
