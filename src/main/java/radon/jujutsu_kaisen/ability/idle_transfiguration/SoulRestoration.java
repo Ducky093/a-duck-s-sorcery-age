@@ -66,7 +66,7 @@ public class SoulRestoration extends Ability {
         LivingEntity target = this.getTarget(owner);
 
         if (target != null && target.isAlive()) {
-            return (target.getMaxHealth() - target.getHealth()) * 2;
+            return -(target.getMaxHealth() - target.getHealth()) * 2;
         }
         return 0;
     }

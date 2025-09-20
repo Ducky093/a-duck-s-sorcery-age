@@ -279,11 +279,19 @@ public class BlueProjectile extends JujutsuProjectile {
 
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                         this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
-                        this.pullEntities();
                     }
-                    if (this.getTime() != DELAY && this.entityData.get(DATA_MOTION) == true ) {
-                        this.pullEntities();
+                    int delayfactor = 1 *20;
+                    if (this.entityData.get(DATA_MOTION) == false) {
+                        if ( this.getTime() <= DELAY + delayfactor &&  this.getTime() >= DELAY ) {
+                            this.pullEntities();
+                        }
                     }
+                    else {
+                        if ( this.getTime() >= DELAY) {
+                            this.pullEntities();
+                        }
+                    }
+                   
                     this.hurtEntities();
 
                     if (!this.level().isClientSide) {
