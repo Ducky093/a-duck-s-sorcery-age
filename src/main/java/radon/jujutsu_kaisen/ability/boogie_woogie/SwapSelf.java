@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SwapSelf extends Ability {
-    public static final double RANGE = 60.0D;
+    public static final double RANGE = 40.0D;
     public Entity enemy = null;
 
     @Override
@@ -90,7 +90,7 @@ public class SwapSelf extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 5.0F;
+        return 10.0F;
     }
 
     @Override
