@@ -166,6 +166,10 @@ public class Dash extends Ability {
         if (owner.isShiftKeyDown()) {
             power*=0.55f;
         }
+
+        if (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get() )) {
+            power*=1.25f;
+        }
         //Vec3 target = this.getTarget(owner);
         if (owner.onGround() && look.y < 0) {
             look = owner.getLookAngle().multiply(1,0,1);
