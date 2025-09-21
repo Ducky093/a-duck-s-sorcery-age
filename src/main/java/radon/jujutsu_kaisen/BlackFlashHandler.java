@@ -43,6 +43,7 @@ public class BlackFlashHandler {
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData victimcap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (attacker instanceof ISorcerer sorcerer && !sorcerer.hasArms()) return;
