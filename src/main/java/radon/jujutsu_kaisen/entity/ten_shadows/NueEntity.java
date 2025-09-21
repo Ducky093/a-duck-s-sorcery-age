@@ -259,7 +259,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.6f);
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
         }
 
     }

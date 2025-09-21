@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Water extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    public static final double RANGE = 16;
+    public static final double RANGE = 20;
     private static final float SCALE = 2.0F;
     private static final float DAMAGE = 2.0F;
 

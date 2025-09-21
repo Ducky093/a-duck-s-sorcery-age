@@ -192,7 +192,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             }, 3);
                         }
 
-                        if (power == 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get()) || power == 0.7 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
+                        if (power >= 0.65 && power <= 0.75 && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
                             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
                             if (cooldown <= 0) {
                                 cap.moreBlackFlash(true);

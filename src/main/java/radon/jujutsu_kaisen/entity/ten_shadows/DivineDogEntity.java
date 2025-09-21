@@ -292,7 +292,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.75f);
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.85f);
         }
 
         int leap = this.entityData.get(DATA_LEAP);

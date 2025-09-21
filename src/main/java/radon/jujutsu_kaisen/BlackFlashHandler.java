@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -42,6 +43,7 @@ public class BlackFlashHandler {
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimcap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (attacker instanceof ISorcerer sorcerer && !sorcerer.hasArms()) return;
 
@@ -59,21 +61,35 @@ public class BlackFlashHandler {
                         rng = 20;
                     }
                 }
+
                 if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-                    rng = 175;
-                    if (cap.addBlackFlash() ){
-                        rng = 125;
+                    rng = 150;
+                    if (cap.addBlackFlash()){
+                        rng = 100;
                     }
                 }
+
                 if ((attacker instanceof Player player) && (cap.isInZone())) {
                     rng = 30;
+                    if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                        rng = 20;
+                    }
                     if (cap.addBlackFlash()){
                         rng = 15;
+                        if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
+                            rng = 10;
+                        }
                         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
                             rng = 3;
                         }
                     }
                 }
+
+                if (victimcap.getType() == JujutsuType.SHIKIGAMI) {
+                    rng *= 1.5;
+                }
+
+
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
             } else {
                 return;

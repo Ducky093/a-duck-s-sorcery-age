@@ -1129,8 +1129,7 @@ public class SorcererData implements ISorcererData {
         this.lastBlackFlashTime = this.owner.level().getGameTime();
 
         this.output = this.getMaximumOutput();
-        this.energy = Math.min(this.getMaxEnergy(), this.energy+this.getMaxEnergy()*1/15);
-
+        this.energy += Math.max(750.0f, (this.getMaxEnergy() - (this.energy * 2.0f)) * 0.25f);
         if (this.owner instanceof ServerPlayer player) {
             PlayerUtil.giveAdvancement(player, "black_flash");
         }
@@ -1158,7 +1157,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone() {
-        return this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (90);
+        return this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (75);
     }
 
     @Override
