@@ -238,6 +238,8 @@ public interface ISorcererData {
     
     void uncopy(CursedTechnique technique);
 
+    void unsteal(CursedTechnique technique);
+
     void copy(@Nullable CursedTechnique technique);
 
   

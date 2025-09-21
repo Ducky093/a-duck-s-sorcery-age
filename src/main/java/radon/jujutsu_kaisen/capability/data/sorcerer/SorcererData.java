@@ -37,6 +37,8 @@ import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
+import radon.jujutsu_kaisen.network.packet.c2s.UncopyAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.UnstealAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -1171,6 +1173,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void unsteal(CursedTechnique technique) {
+        this.stolen.remove(technique);
+    }
+
+    @Override
     public void resetCopy() {
         this.copied = new LinkedHashSet<>();
         this.sync();
@@ -1231,13 +1238,14 @@ public class SorcererData implements ISorcererData {
    @Override
     public void addStolen(CursedTechnique technique) {
         if (stolen.contains(technique)) {
+             PacketHandler.sendToServer(new UnstealAbilityC2SPacket(technique));
             stolen.remove(technique);
         }
         stolen.add(technique);
-        if (stolen.size() > 2) {
-            CursedTechnique last = null;
-            for (CursedTechnique tech : stolen) last = tech;
-            stolen.remove(last);
+        if (stolen.size() > 2) { 
+            CursedTechnique first = stolen.iterator().next(); 
+            PacketHandler.sendToServer(new UnstealAbilityC2SPacket(first));
+            stolen.remove(first); 
         }
     }
 
