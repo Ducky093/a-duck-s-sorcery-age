@@ -62,7 +62,7 @@ public class Barrage extends Ability {
         int duration2 = DURATION;
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             duration2 = 10;
-            gap = 1;
+            //gap = 1;
         }
 
         double newRange = RANGE;
@@ -77,8 +77,12 @@ public class Barrage extends Ability {
 
         }
 
-        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem || owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+        if ( owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
             newRange+=1.5;
+        }
+        else if 
+            (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem ) {
+                 newRange+=1.125;
         }
 
         for (int i = 0; i < duration2; i++) {

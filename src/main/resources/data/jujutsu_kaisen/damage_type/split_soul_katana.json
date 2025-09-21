@@ -4,5 +4,6 @@
   "scaling": "when_caused_by_living_non_player",
   "effects": "none",
   "bypasses_armor": true,
-  "bypasses_shield": true
+  "bypasses_shield": true,
+  "bypasses_resistance": true
 }

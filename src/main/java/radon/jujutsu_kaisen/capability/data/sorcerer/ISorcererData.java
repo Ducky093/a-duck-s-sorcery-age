@@ -12,6 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.authlib.GameProfile;
+
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 
@@ -237,6 +240,11 @@ public interface ISorcererData {
 
     void copy(@Nullable CursedTechnique technique);
 
+  
+    void steal(@Nullable CursedTechnique technique);
+
+    void resetSteal();
+    
     void resetCopy();
 
     Set<CursedTechnique> getCopied();
@@ -254,6 +262,24 @@ public interface ISorcererData {
     void setCurrentAbsorbed(@Nullable CursedTechnique technique);
 
     @Nullable CursedTechnique getCurrentAbsorbed();
+
+    Set<CursedTechnique> getStolen();
+
+    void setCurrentStolen(@Nullable CursedTechnique technique);
+
+    @Nullable CursedTechnique getCurrentStolen();
+
+    @Nullable CursedTechnique getLastStolen();
+
+    @Nullable CursedTechnique getLatestStolen();
+
+    void setStolenSkinTexture(ResourceLocation skin);
+
+    void setStolenSkinProfile(GameProfile profile);
+
+    GameProfile getStolenSkinProfile();
+
+    ResourceLocation getStolenSkinTexture();
 
     int getTransfiguredSouls();
 

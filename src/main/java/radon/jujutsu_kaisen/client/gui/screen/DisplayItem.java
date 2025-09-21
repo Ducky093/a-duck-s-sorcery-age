@@ -12,6 +12,7 @@ public class DisplayItem {
     public AbstractMap.SimpleEntry<AbsorbedCurse, Integer> curse;
     public CursedTechnique copied;
     public CursedTechnique absorbed;
+    public CursedTechnique stolen;
 
     public DisplayItem(Type type) {
         this.type = type;
@@ -34,6 +35,8 @@ public class DisplayItem {
 
         if (this.type == Type.COPIED) {
             this.copied = technique;
+        } else if (this.type == Type.STOLEN) {
+            this.stolen = technique;
         } else {
             this.absorbed = technique;
         }
@@ -43,6 +46,7 @@ public class DisplayItem {
         ABILITY,
         CURSE,
         COPIED,
-        ABSORBED
+        ABSORBED,
+        STOLEN
     }
 }

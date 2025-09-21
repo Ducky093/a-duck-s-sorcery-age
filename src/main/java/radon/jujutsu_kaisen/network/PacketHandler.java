@@ -117,6 +117,11 @@ public class PacketHandler {
                 .encoder(SetAdditionalC2SPacket::encode)
                 .consumerMainThread(SetAdditionalC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetStolenC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetStolenC2SPacket::new)
+                .encoder(SetStolenC2SPacket::encode)
+                .consumerMainThread(SetStolenC2SPacket::handle)
+                .add();
         INSTANCE.messageBuilder(SetAbsorbedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(SetAbsorbedC2SPacket::new)
                 .encoder(SetAbsorbedC2SPacket::encode)

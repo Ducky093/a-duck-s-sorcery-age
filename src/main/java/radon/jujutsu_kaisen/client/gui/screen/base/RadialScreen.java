@@ -212,7 +212,8 @@ public abstract class RadialScreen extends Screen {
 
         return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
                 item.type == DisplayItem.Type.COPIED && cap.getCurrentCopied() == item.copied ||
-                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentAbsorbed() == item.absorbed;
+                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentAbsorbed() == item.absorbed || 
+                item.type == DisplayItem.Type.STOLEN && cap.getCurrentStolen() == item.stolen;
     }
 
     @Override
@@ -355,13 +356,19 @@ public abstract class RadialScreen extends Screen {
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
                 pGuiGraphics.drawCenteredString(this.font, item.ability.getName(), posX, y, 0xFFFFFF);
                 pGuiGraphics.pose().popPose();
-            } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED) {
+            } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED || item.type == DisplayItem.Type.STOLEN ) {
                 int y = posY - this.font.lineHeight / 2;
 
                 pGuiGraphics.pose().pushPose();
                 pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
-                pGuiGraphics.drawCenteredString(this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
+                pGuiGraphics.drawCenteredString(
+                    this.font,
+                    item.type == DisplayItem.Type.COPIED ? item.copied.getName() :
+                    item.type == DisplayItem.Type.STOLEN ? item.stolen.getName() :
+                    item.absorbed.getName(),
+                    posX, y, 0xAA00AA
+                );
                 pGuiGraphics.pose().popPose();
             }
         }

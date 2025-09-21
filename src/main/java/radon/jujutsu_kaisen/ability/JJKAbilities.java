@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.ability.angel.MaximumOutputJacobsLadder;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.body_swap.BodySteal;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
@@ -86,8 +87,9 @@ public class JJKAbilities {
             ABILITIES.makeRegistry(RegistryBuilder::new);
 
     public static RegistryObject<Ability> SHOCKWAVE = ABILITIES.register("shockwave", Shockwave::new);
-
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
+
+    public static RegistryObject<Ability> BODY_STEAL = ABILITIES.register("body_steal", BodySteal::new);
 
     public static RegistryObject<Ability> MAXIMUM_OUTPUT_JACOBS_LADDER = ABILITIES.register("maximum_output_jacobs_ladder", MaximumOutputJacobsLadder::new);
     public static RegistryObject<Ability> JACOBS_LADDER = ABILITIES.register("jacobs_ladder", JacobsLadder::new);

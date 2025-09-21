@@ -158,6 +158,7 @@ public class ServerConfig {
                                 CursedTechnique.DISASTER_TIDES.name(),
                                 CursedTechnique.DISASTER_PLANTS.name(),
                                 CursedTechnique.ANGEL.name(),
+                                CursedTechnique.BRAIN_TRANSPLANT.name(),
                                 CursedTechnique.IDLE_TRANSFIGURATION.name(),
                                 CursedTechnique.TEN_SHADOWS.name(),
                                 CursedTechnique.BOOGIE_WOOGIE.name(),

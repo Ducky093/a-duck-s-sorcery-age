@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+//import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -14,6 +15,9 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.Set;
 import java.util.function.Supplier;
+
+//import com.mojang.authlib.GameProfile;
+//import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 public class SyncSorcererDataS2CPacket {
     private final CompoundTag nbt;
@@ -43,6 +47,23 @@ public class SyncSorcererDataS2CPacket {
             ISorcererData newCap = new SorcererData();
             newCap.deserializeNBT(this.nbt);
 
+            if (newCap.getStolenSkinProfile() != null) {
+                radon.jujutsu_kaisen.mixin.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
+           //     GameProfile profile = newCap.getStolenSkinProfile();
+           //     SkinManager skinManager = Minecraft.getInstance().getSkinManager();
+                
+           //     skinManager.registerSkins(profile, new SkinManager.SkinTextureCallback() {
+                //     @Override
+                //     public void onSkinTextureAvailable(MinecraftProfileTexture.Type type, ResourceLocation location, MinecraftProfileTexture profileTexture) {
+                //         if (type == MinecraftProfileTexture.Type.SKIN) {
+                //             // store the resolved texture
+                //             oldCap.setStolenSkinTexture(location);
+                //         }
+                //     }
+                // }, true);
+
+
+            }
             Set<Ability> oldToggled = oldCap.getToggled();
             Set<Ability> newToggled = newCap.getToggled();
 

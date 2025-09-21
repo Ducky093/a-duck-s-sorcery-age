@@ -60,14 +60,21 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable CursedTechnique technique;
 
-    private Set<CursedTechnique> add;
+    //private Set<CursedTechnique> add;
     private @Nullable CursedTechnique additional;
 
     private Set<CursedTechnique> copied;
     private @Nullable CursedTechnique currentCopied;
 
+    private Set<CursedTechnique> stolen;
+    private @Nullable CursedTechnique currentStolen;
+
     private final Set<CursedTechnique> absorbed;
     private @Nullable CursedTechnique currentAbsorbed;
+
+
+    private GameProfile stolenSkinProfile;
+    private ResourceLocation stolenSkinTexture;
 
     private int transfiguredSouls;
 
@@ -139,9 +146,11 @@ public class SorcererData implements ISorcererData {
 
         this.type = JujutsuType.SORCERER;
 
-        this.add = new LinkedHashSet<>();
+        //this.add = new LinkedHashSet<>();
         this.copied = new LinkedHashSet<>();
         this.absorbed = new LinkedHashSet<>();
+        this.stolen = new LinkedHashSet<>();
+
 
         this.output = 1.0F;
 
@@ -567,6 +576,26 @@ public class SorcererData implements ISorcererData {
         }
         this.acceptedPacts.get(recipient).add(pact);
     }
+    @Override
+    public void setStolenSkinProfile(GameProfile profile) {
+        this.stolenSkinProfile = profile;
+    }
+
+    @Override
+    public GameProfile getStolenSkinProfile() {
+        return this.stolenSkinProfile;
+    }
+
+     @Override
+    public void setStolenSkinTexture(ResourceLocation skin) {
+        this.stolenSkinTexture = skin;
+    }
+
+    @Override
+    public ResourceLocation getStolenSkinTexture() {
+        return this.stolenSkinTexture;
+    }
+
 
     @Override
     public boolean hasPact(UUID recipient, Pact pact) {
@@ -806,6 +835,7 @@ public class SorcererData implements ISorcererData {
         if (this.getTechnique() != null) techniques.add(this.getTechnique());
         if (this.getCurrentCopied() != null) techniques.add(this.getCurrentCopied());
         if (this.getCurrentAbsorbed() != null) techniques.add(this.getCurrentAbsorbed());
+        if (this.getCurrentStolen() != null) techniques.add(this.getCurrentStolen());
         if (this.getAdditional() != null) techniques.add(this.getAdditional());
 
         return techniques;
@@ -813,7 +843,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique;
+        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.currentStolen == technique;
     }
 
     @Override
@@ -1147,9 +1177,22 @@ public class SorcererData implements ISorcererData {
         this.sync();
     }
 
+
+     @Override
+    public void resetSteal() {
+        this.stolen = new LinkedHashSet<>();
+        this.sync();
+    }
+
     @Override
     public void copy(@Nullable CursedTechnique technique) {
         this.copied.add(technique);
+    }
+
+     @Override
+    public void steal(@Nullable CursedTechnique technique) {
+
+        this.stolen.add(technique);
     }
 
     @Override
@@ -1161,8 +1204,41 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Set<CursedTechnique> getStolen() {
+        if (!this.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)) {
+            return Set.of();
+        }
+        return this.stolen;
+    }
+
+    @Override
+    public CursedTechnique getLastStolen() {
+        if (stolen.isEmpty()) return null;
+        CursedTechnique last = null;
+        for (CursedTechnique tech : stolen) {
+            last = tech; 
+        }
+        return last;
+    }
+
+
+     @Override
+    public CursedTechnique getLatestStolen() {
+        if (stolen.isEmpty()) 
+            return null;
+        return stolen.iterator().next();
+    }
+
+
+    @Override
     public void setCurrentCopied(@Nullable CursedTechnique technique) {
         this.currentCopied = this.currentCopied == technique ? null : technique;
+        this.sync();
+    }
+
+    @Override
+    public void setCurrentStolen(@Nullable CursedTechnique technique) {
+        this.currentCopied = this.currentStolen == technique ? null : technique;
         this.sync();
     }
 
@@ -1172,6 +1248,14 @@ public class SorcererData implements ISorcererData {
             return null;
         }
         return this.currentCopied;
+    }
+
+    @Override
+    public @Nullable CursedTechnique getCurrentStolen() {
+         if (!this.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)) {
+            return null;
+        }
+        return this.currentStolen;
     }
 
     @Override
@@ -1601,6 +1685,9 @@ public class SorcererData implements ISorcererData {
         if (this.currentCopied != null) {
             nbt.putInt("current_copied", this.currentCopied.ordinal());
         }
+        if (this.currentStolen != null) {
+            nbt.putInt("current_stolen", this.currentStolen.ordinal());
+        }
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
@@ -1622,6 +1709,12 @@ public class SorcererData implements ISorcererData {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
+        if (this.stolenSkinProfile != null) {
+            nbt.putUUID("copied_skin_uuid", this.stolenSkinProfile.getId());
+        if (this.stolenSkinProfile.getName() != null) {
+            nbt.putString("copied_skin_name", this.stolenSkinProfile.getName());
+        }
+        }
 
         ListTag unlockedTag = new ListTag();
 
@@ -1640,6 +1733,15 @@ public class SorcererData implements ISorcererData {
             copiedTag.add(IntTag.valueOf(technique.ordinal()));
         }
         nbt.put("copied", copiedTag);
+
+         ListTag stolenTag = new ListTag();
+
+        for (CursedTechnique technique : this.stolen) {
+            stolenTag.add(IntTag.valueOf(technique.ordinal()));
+        }
+        nbt.put("stolen", stolenTag);
+
+
 
         ListTag absorbedTag = new ListTag();
 
@@ -1769,8 +1871,16 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("current_copied")) {
             this.currentCopied = CursedTechnique.values()[nbt.getInt("current_copied")];
         }
+         if (nbt.contains("current_stolen")) {
+            this.currentStolen = CursedTechnique.values()[nbt.getInt("current_stolen")];
+        }
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
+        }
+        if (nbt.contains("copied_skin_uuid")) {
+            UUID uuid = nbt.getUUID("copied_skin_uuid");
+            String name = nbt.getString("copied_skin_name");
+            this.stolenSkinProfile = new GameProfile(uuid, name);
         }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
@@ -1799,6 +1909,12 @@ public class SorcererData implements ISorcererData {
 
         for (Tag tag : nbt.getList("copied", Tag.TAG_INT)) {
             this.copied.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
+        }
+
+        this.stolen.clear();
+
+        for (Tag tag : nbt.getList("stolen", Tag.TAG_INT)) {
+            this.stolen.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
         }
 
         this.absorbed.clear();

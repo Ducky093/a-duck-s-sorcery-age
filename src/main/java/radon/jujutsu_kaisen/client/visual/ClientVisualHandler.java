@@ -66,6 +66,7 @@ public class ClientVisualHandler {
                 if (cap.getTechnique() != null) techniques.add(cap.getTechnique());
                 if (cap.getCurrentCopied() != null) techniques.add(cap.getCurrentCopied());
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
+                if (cap.getCurrentStolen() != null) techniques.add(cap.getCurrentStolen());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
                 return new ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());

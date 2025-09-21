@@ -79,6 +79,10 @@ public class AbilityScreen extends RadialScreen {
                     cap.setCurrentAbsorbed(item.absorbed);
                     PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
                 }
+                case STOLEN -> {
+                    cap.setCurrentStolen(item.stolen);
+                    PacketHandler.sendToServer(new SetStolenC2SPacket(item.stolen));
+                }
             }
         }
     }
