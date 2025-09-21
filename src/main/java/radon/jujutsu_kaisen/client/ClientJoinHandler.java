@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.mixin.client;
+package radon.jujutsu_kaisen.client;
 
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

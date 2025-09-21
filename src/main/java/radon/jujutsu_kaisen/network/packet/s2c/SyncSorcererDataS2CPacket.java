@@ -52,7 +52,7 @@ public class SyncSorcererDataS2CPacket {
             newCap.deserializeNBT(this.nbt);
 
             if (newCap.getStolenSkinProfile() != null) {
-                radon.jujutsu_kaisen.mixin.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
+                radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
            //     GameProfile profile = newCap.getStolenSkinProfile();
                 //  SkinManager skinManager = Minecraft.getInstance().getSkinManager();
                 //     skinManager.registerSkins(newCap.getStolenSkinProfile(), (type, location, texture) -> {

@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.mixin.client;
+package radon.jujutsu_kaisen.client;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
