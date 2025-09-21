@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.ability.body_swap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SkinManager;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -84,7 +86,8 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        //ownerCap.deserializeNBT(ownerCap.serializeNBT());
+        //CompoundTag targetnbt = targetCap.serializeNBT();
         // Require target to have enough exp
         if (targetCap.getExperience() <= 1000) {
             return false;
@@ -101,16 +104,17 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
             String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
             target.getName()
         ));
-
-        ownerCap.setExperience(targetCap.getExperience());
-        targetCap.setExperience(0);
+        
         ownerCap.addStolen(steal);
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
-
+        ownerCap.setExperience(targetCap.getExperience());
+        targetCap.setExperience(0);
+       
+        //NbtUtils.writeGameProfile(nbt, player.getGameProfile());
+        //GameProfile profile = NbtUtils.readGameProfile(targetnbt);
         GameProfile profile = player.getGameProfile();
         ownerCap.setStolenSkinProfile(profile);
-
         if (owner instanceof ServerPlayer servOwner) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
         }

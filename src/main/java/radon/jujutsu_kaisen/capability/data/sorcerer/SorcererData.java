@@ -1721,10 +1721,9 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
         if (this.stolenSkinProfile != null) {
-            nbt.putUUID("copied_skin_uuid", this.stolenSkinProfile.getId());
-        if (this.stolenSkinProfile.getName() != null) {
-            nbt.putString("copied_skin_name", this.stolenSkinProfile.getName());
-        }
+            CompoundTag prof = new CompoundTag();
+            NbtUtils.writeGameProfile(prof, this.stolenSkinProfile);
+            nbt.put("stolen_profile", prof);
         }
 
         ListTag unlockedTag = new ListTag();
@@ -1751,6 +1750,7 @@ public class SorcererData implements ISorcererData {
             stolenTag.add(IntTag.valueOf(technique.ordinal()));
         }
         nbt.put("stolen", stolenTag);
+
 
 
 
@@ -1888,10 +1888,10 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
-        if (nbt.contains("copied_skin_uuid")) {
-            UUID uuid = nbt.getUUID("copied_skin_uuid");
-            String name = nbt.getString("copied_skin_name");
-            this.stolenSkinProfile = new GameProfile(uuid, name);
+        if (nbt.contains("stolen_profile")) {
+            this.stolenSkinProfile = NbtUtils.readGameProfile(nbt.getCompound("stolen_profile"));
+        } else {
+            this.stolenSkinProfile = null;
         }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
