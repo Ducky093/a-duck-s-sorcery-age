@@ -42,7 +42,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class BodySteal extends Ability implements Ability.IToggled, Ability.IAttack {
+public class BodySteal extends Ability implements Ability.IToggled {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -141,10 +141,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         if (current == null) return;
         if (current == steal) return;
 
-        attacker.sendSystemMessage(Component.translatable(
-            String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
-            victim.getName()
-        ));
+        
         
         ownerCap.addStolen(steal);
         //ownerCap.steal(steal);
@@ -154,11 +151,20 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
        
         //NbtUtils.writeGameProfile(nbt, player.getGameProfile());
         //GameProfile profile = NbtUtils.readGameProfile(targetnbt);
-        GameProfile profile = player.getGameProfile();
-        ownerCap.setStolenSkinProfile(profile);
-        // if (owner instanceof ServerPlayer servOwner) {
-        //     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
-        // }
+       // 
+        if (attacker instanceof ServerPlayer servOwner ) {
+            attacker.sendSystemMessage(Component.translatable(
+                String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
+                victim.getName()
+            ));
+             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
+             GameProfile profile = player.getGameProfile();
+             ownerCap.setStolenSkinProfile(profile);
+        }
+
+
+
+      
         // if (target instanceof ServerPlayer servTarget) {
         //     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(targetCap.serializeNBT()), servTarget);
         // }
