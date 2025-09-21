@@ -105,7 +105,7 @@ public class LightningEntity extends JujutsuProjectile {
                     for (Entity entity : entities) {
                         this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
                         if (entity instanceof LivingEntity) {
-                            ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 40, 0, false, false, false));
+                            ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
                         }
                             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()),
                                 this.getDamage() * this.getPower());

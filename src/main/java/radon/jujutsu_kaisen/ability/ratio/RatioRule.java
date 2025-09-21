@@ -39,7 +39,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.addBlackFlash()) {
-            return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 20.0D;
+            return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= 40.0D;
         }
         else return false;
     }

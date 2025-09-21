@@ -35,7 +35,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && target.isDeadOrDying() && owner.hasLineOfSight(target);
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -79,42 +79,45 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
-        if (!(target instanceof Player player) ) return false;
-        //if (!(source.getEntity() instanceof LivingEntity living)) return false;
+        if (!(target instanceof Player player)) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (targetCap.getExperience() <= 1000) { //min exp to steal
+
+        // Require target to have enough exp
+        if (targetCap.getExperience() <= 1000) {
             return false;
         }
+
         CursedTechnique current = ownerCap.getTechnique();
-        CursedTechnique copied = targetCap.getTechnique();
+        CursedTechnique steal = targetCap.getTechnique();
         CursedEnergyNature nature = targetCap.getNature();
-        
-        if (copied == null || current == null) return false;
 
-        if (current != copied) {
-            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID), target.getName()));
-            ownerCap.setExperience(targetCap.getExperience());
-            targetCap.setExperience(0);
-            ownerCap.steal(copied);
-            ownerCap.setNature(nature);
+        if (steal == null || current == null) return false;
+        if (current == steal) return false;
 
-            //SkinManager skinManager = Minecraft.getInstance().getSkinManager();
-            GameProfile profile = player.getGameProfile();
-            ownerCap.setStolenSkinProfile(profile);
-            // skinManager.registerSkins(profile, (type, texture) -> {
-            //     if (type == MinecraftProfileTexture.Type.SKIN) {
-            //         ResourceLocation skin = skinManager.registerTexture(texture, type);
-            //         this.cachedSkin = skin; // save this somewhere (entity, renderer, etc.)
-            //     }
-            // }, true);
-            if (owner instanceof ServerPlayer servPlayer) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servPlayer);
-            }
-            return true;
+        owner.sendSystemMessage(Component.translatable(
+            String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
+            target.getName()
+        ));
+
+        ownerCap.setExperience(targetCap.getExperience());
+        targetCap.setExperience(0);
+        ownerCap.steal(copied);
+        ownerCap.setNature(nature);
+
+        GameProfile profile = player.getGameProfile();
+        ownerCap.setStolenSkinProfile(profile);
+
+        if (owner instanceof ServerPlayer servOwner) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
         }
-        return false;
+        if (target instanceof ServerPlayer servTarget) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(targetCap.serializeNBT()), servTarget);
+        }
+
+        return true;
     }
+
 }
