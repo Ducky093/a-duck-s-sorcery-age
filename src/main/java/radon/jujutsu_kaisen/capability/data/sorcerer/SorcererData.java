@@ -1221,7 +1221,7 @@ public class SorcererData implements ISorcererData {
     }
 
 
-     @Override
+    @Override
     public CursedTechnique getLatestStolen() {
         if (stolen.isEmpty()) 
             return null;
@@ -1235,8 +1235,9 @@ public class SorcererData implements ISorcererData {
         }
         stolen.add(technique);
         if (stolen.size() > 2) {
-            CursedTechnique first = stolen.iterator().next();
-            stolen.remove(first);
+            CursedTechnique last = null;
+            for (CursedTechnique tech : stolen) last = tech;
+            stolen.remove(last);
         }
     }
 
