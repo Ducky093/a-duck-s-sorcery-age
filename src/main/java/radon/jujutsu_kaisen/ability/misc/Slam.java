@@ -139,7 +139,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
             if (cooldown <= 0) {
-                dmgMult = 0.9F;
+                dmgMult = 0.7F;
                 radius = radius * 1.75f;
             }
         }
@@ -181,7 +181,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (checkcharge >= 0.65f && checkcharge <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
             if (cooldown <= 0) {
-                launchPower = 20.0D;
+                launchPower = 16.0D;
                 cap.moreBlackFlash(true);
                 System.out.println(this.getCharge(owner));
 
@@ -225,12 +225,11 @@ public class Slam extends Ability implements Ability.ICharged {
                 owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
 
                 float power = ((float) Math.min(20, this.getCharge(owner)) / 20);
-                System.out.println(power);
 
                 if (power >= 0.65f && power <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
                     int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
                     if (cooldown <= 0) {
-                        power = 1.3f;
+                        power = 1.1f;
                     }
                 }
 
