@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 
 public class ForestDashEntity extends JujutsuProjectile {
     public static final float SIZE = 2.5F;
-    private static final int DURATION = 7 * 20;
+    private static final int DURATION = 3 * 20;
 
     public ForestDashEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -28,7 +28,7 @@ public class ForestDashEntity extends JujutsuProjectile {
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return false;
     }
 
     @Override

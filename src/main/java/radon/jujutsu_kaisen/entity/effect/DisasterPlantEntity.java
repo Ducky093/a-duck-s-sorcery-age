@@ -28,7 +28,7 @@ import java.util.UUID;
 public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_BUD_COUNT = SynchedEntityData.defineId(DisasterPlantEntity.class, EntityDataSerializers.INT);
 
-    public static final int DEFAULT_BUD_COUNT = 20;
+    public static final int DEFAULT_BUD_COUNT = 15;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
