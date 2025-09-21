@@ -95,6 +95,8 @@ public class ExperienceHandler {
 
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
+       // source = event.getSource(); override logic here when body steal is enabled
+
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getExperience() > 0.0F) {

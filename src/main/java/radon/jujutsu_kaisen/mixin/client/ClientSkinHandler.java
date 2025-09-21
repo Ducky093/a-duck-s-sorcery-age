@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SkinManager;
-import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 
 public class ClientSkinHandler {
@@ -20,3 +19,4 @@ public class ClientSkinHandler {
         }, true);
     }
 }
+

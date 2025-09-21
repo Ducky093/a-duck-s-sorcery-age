@@ -54,12 +54,12 @@ public class SyncSorcererDataS2CPacket {
             if (newCap.getStolenSkinProfile() != null) {
                 radon.jujutsu_kaisen.mixin.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
            //     GameProfile profile = newCap.getStolenSkinProfile();
-                 SkinManager skinManager = Minecraft.getInstance().getSkinManager();
-                    skinManager.registerSkins(newCap.getStolenSkinProfile(), (type, location, texture) -> {
-                    if (type == MinecraftProfileTexture.Type.SKIN) {
-                        oldCap.setStolenSkinTexture(location);
-                    }
-                }, true);
+                //  SkinManager skinManager = Minecraft.getInstance().getSkinManager();
+                //     skinManager.registerSkins(newCap.getStolenSkinProfile(), (type, location, texture) -> {
+                //     if (type == MinecraftProfileTexture.Type.SKIN) {
+                //         oldCap.setStolenSkinTexture(location);
+                //     }
+                // }, true);
                                 
            //     skinManager.registerSkins(profile, new SkinManager.SkinTextureCallback() {
                 //     @Override
