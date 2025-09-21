@@ -81,7 +81,7 @@ public class GreatSerpentGrab extends Ability {
 
     @Override
     protected int getCooldown() {
-        return 10 * 20;
+        return 20 * 20;
     }
 
     @Override

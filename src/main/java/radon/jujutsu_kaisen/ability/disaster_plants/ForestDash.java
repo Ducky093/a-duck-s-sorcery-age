@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestDash extends Ability implements Ability.IChannelened {
-    private static final double SPEED = 1.5D;
+    private static final double SPEED = 2.5D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -42,7 +42,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 3.0F;
+        return 6.0F;
     }
 
     @Override

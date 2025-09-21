@@ -49,6 +49,7 @@ public class ForestSpikeEntity extends JujutsuProjectile {
                 if (entity == owner && !cap.hasSelfHit()) continue;
                 if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower())) {
                     this.discard();
+                    entity.invulnerableTime = 20;
                 }
                 
             }

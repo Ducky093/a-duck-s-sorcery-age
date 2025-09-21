@@ -255,10 +255,10 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                         ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                                         victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                                        victim.setDeltaMovement(look.scale(1.0F + (attackerCap.getAbilityPower() * 0.1F)));
+                                        victim.setDeltaMovement(look.scale(1.0F + (attackerCap.getAbilityPower() * 0.05F)));
                                         victim.hurtMarked = true;
                                     }
-                                }, 4);
+                                }, 8);
                             }
                         };
 
