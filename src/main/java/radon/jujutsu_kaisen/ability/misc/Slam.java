@@ -122,7 +122,7 @@ public class Slam extends Ability implements Ability.ICharged {
         float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
         float dmgMult = 0.75F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-            dmgMult = 0.8F;
+            dmgMult = 0.65F;
             radius = radius*1.35f+2;
         }
         if (owner instanceof RabbitEscapeEntity) {
@@ -139,7 +139,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
             if (cooldown <= 0) {
-                dmgMult = 0.9F;
+                dmgMult = 0.7F;
                 radius = radius * 1.75f;
             }
         }
