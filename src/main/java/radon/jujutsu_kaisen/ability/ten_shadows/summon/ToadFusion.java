@@ -38,12 +38,12 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.2F;
+        return 0.45F;
     }
 
     @Override
     public int getCooldown() {
-        return 15 * 20;
+        return 30 * 20;
     }
 
     @Override

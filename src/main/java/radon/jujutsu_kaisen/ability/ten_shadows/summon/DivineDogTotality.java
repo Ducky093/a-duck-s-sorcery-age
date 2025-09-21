@@ -68,6 +68,6 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
 
     @Override
     public int getCooldown() {
-        return 15 * 20;
+        return 30 * 20;
     }
 }

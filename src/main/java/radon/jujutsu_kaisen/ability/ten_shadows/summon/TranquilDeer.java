@@ -44,7 +44,7 @@ public class TranquilDeer extends Summon<TranquilDeerEntity> {
 
     @Override
     public int getCooldown() {
-        return 25 * 20;
+        return 40 * 20;
     }
 
     @Override

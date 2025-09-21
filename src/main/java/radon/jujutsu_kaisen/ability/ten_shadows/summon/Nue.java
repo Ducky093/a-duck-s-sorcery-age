@@ -70,6 +70,6 @@ public class Nue extends Summon<NueEntity> {
 
     @Override
     public int getCooldown() {
-        return 15 * 20;
+        return 30 * 20;
     }
 }
