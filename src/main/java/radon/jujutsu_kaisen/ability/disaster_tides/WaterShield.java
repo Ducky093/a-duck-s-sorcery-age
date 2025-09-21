@@ -97,7 +97,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                     4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RADIUS * 2, RADIUS * 2, RADIUS * 2))) {
+            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RADIUS * 3, RADIUS * 3, RADIUS * 3))) {
                 entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.WATER_SHIELD.get()), DAMAGE * this.getPower(owner));
             }
         }

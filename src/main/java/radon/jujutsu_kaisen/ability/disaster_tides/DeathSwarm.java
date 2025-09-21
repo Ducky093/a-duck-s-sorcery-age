@@ -44,6 +44,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setDisarmed(100);
 
         for (int i = 0; i < 12; i++) {
             float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
@@ -102,7 +103,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     @Override
     public int getCooldown() {
-        return 20 * 20;
+        return 25 * 20;
     }
 
     @Override
