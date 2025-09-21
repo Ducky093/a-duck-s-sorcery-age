@@ -108,7 +108,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         ownerCap.addStolen(steal);
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
-        ownerCap.setExperience(targetCap.getExperience());
+        //ownerCap.setExperience(targetCap.getExperience());
         targetCap.setExperience(0);
        
         //NbtUtils.writeGameProfile(nbt, player.getGameProfile());

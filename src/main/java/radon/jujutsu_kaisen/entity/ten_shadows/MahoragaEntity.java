@@ -56,7 +56,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     private static final double SLASH_LAUNCH = 30.0D;
     private static final float SLASH_EXPLOSION = 5.0F;
-    private static final float SLASH_DAMAGE = 25.0F; //no scaling
+    private static final float SLASH_DAMAGE = 15.0F; //no scaling
 
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
@@ -139,7 +139,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 4 * 15.0D)
                 .add(Attributes.ARMOR, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 10 * 20.0D);
+                .add(Attributes.ATTACK_DAMAGE, 10 * 10.0D);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class MahoragaEntity extends TenShadowsSummon {
             ISorcererData cap = pEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.getType() == JujutsuType.CURSE) {
-                pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth()* 0.25F);
+                pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth()* 0.5F);
             }
         }
         return result;
