@@ -53,7 +53,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         if (!(target instanceof Player player)) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false; 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
-        return cap.getType() == JujutsuType.SORCERER; 
+        return cap.getType() == JujutsuType.SORCERER && cap.getExperience() >= 1000; 
     }
 
     private static boolean canSteal(LivingEntity owner, LivingEntity target) {
@@ -64,7 +64,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return (target instanceof Player player) && ( targetCap.getType() == JujutsuType.SORCERER) &&
-                (target.isDeadOrDying());
+                (target.isDeadOrDying()) && targetCap.getExperience() >= 1000;
     }
 
 
@@ -102,7 +102,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 5 * 20;
     }
 
       private static void check(LivingEntity victim, DamageSource source) {
