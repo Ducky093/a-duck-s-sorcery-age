@@ -33,12 +33,12 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 10.0D;
-    private static final float EXPLOSIVE_POWER = 7.0F;
+    private static final float EXPLOSIVE_POWER = 5.0F;
     private static final float MAX_EXPLOSION = 15.0F;
     public static final int DELAY = 15;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
-    private static final float DAMAGE = 30.0F;
+    private static final float DAMAGE = 26.0F;
 
     private boolean chanted;
 
@@ -104,7 +104,7 @@ public class RedProjectile extends JujutsuProjectile {
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
             ExplosionHandler.spawn(this.level().dimension(), offset, radius, 1 * 20, this.getPower() * 0.33F, owner,
-                    JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false);
+                    JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false, false);
         }
         this.discard();
     }
