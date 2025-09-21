@@ -120,7 +120,7 @@ public class OutputRCT extends Ability {
         float healMult = 1.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
-            healMult *= 2.5F;
+            healMult *= 28.0F;
         }
         if (cap.getType() == JujutsuType.SHIKIGAMI) {
             healMult *= 4.0F;
