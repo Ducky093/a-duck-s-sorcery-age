@@ -43,6 +43,9 @@ public class AbilityScreen extends RadialScreen {
         Set<CursedTechnique> absorbed = cap.getAbsorbed();
         items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
 
+         Set<CursedTechnique> stolen = cap.getStolen();
+        items.addAll(stolen.stream().map(technique -> new DisplayItem(DisplayItem.Type.STOLEN, technique)).toList());
+
         return items;
     }
 
