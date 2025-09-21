@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -42,6 +43,7 @@ public class BlackFlashHandler {
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimcap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (attacker instanceof ISorcerer sorcerer && !sorcerer.hasArms()) return;
 
@@ -82,6 +84,12 @@ public class BlackFlashHandler {
                         }
                     }
                 }
+
+                if (victimcap.getType() == JujutsuType.SHIKIGAMI) {
+                    rng *= 1.5;
+                }
+
+
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
             } else {
                 return;

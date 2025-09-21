@@ -25,7 +25,7 @@ public class PiercingWaterEntity extends BeamEntity {
 
     @Override
     public int getFrames() {
-        return 16;
+        return 12;
     }
 
     @Override
