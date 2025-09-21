@@ -7,10 +7,18 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -21,12 +29,17 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BodySteal extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -35,10 +48,25 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         return false;
     }
 
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target);
+    @Override public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) { 
+        if (target == null) return false; 
+        if (!(target instanceof Player player)) return false;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false; 
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
+        return cap.getType() == JujutsuType.SORCERER; 
     }
+
+    private static boolean canSteal(LivingEntity owner, LivingEntity target) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return (target instanceof Player player) && ( targetCap.getType() == JujutsuType.SORCERER) &&
+                (target.isDeadOrDying());
+    }
+
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
@@ -59,7 +87,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 0.0F;
     }
 
     @Override
@@ -75,6 +103,28 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
     @Override
     public int getCooldown() {
         return 30 * 20;
+    }
+
+      private static void check(LivingEntity victim, DamageSource source) {
+        if (!HelperMethods.isMelee(source)) return;
+
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        if (!canSteal(attacker, victim)) return;
+
+        if (!JJKAbilities.hasToggled(attacker, JJKAbilities.BODY_STEAL.get())) return;
+
+       // ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        attacker.swing(InteractionHand.MAIN_HAND, true);
+
+        //ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
+
+        //if (!(victim instanceof Player)) {
+       //     victim.discard();
+      //  } else {
+            victim.kill();
+      //  }
     }
 
     @Override
@@ -123,6 +173,19 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         }
 
         return true;
+    }
+
+     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class BodyStealForgeEvents {
+        @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            check(event.getEntity(), event.getSource());
+        }
+
+        @SubscribeEvent
+        public static void onLivingDeath(LivingDeathEvent event) {
+            check(event.getEntity(), event.getSource());
+        }
     }
 
 }
