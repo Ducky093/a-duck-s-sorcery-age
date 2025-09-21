@@ -78,12 +78,12 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
     }
 
-    @Override
-    public boolean isValid(LivingEntity owner) {
-        //ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        //return cap.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()) && super.isValid(owner);
-        return true;
-    }
+    // @Override
+    // public boolean isValid(LivingEntity owner) {
+    //     //ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+    //     //return cap.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()) && super.isValid(owner);
+    //     return true;
+    // }
 
     @Override
     public float getCost(LivingEntity owner) {
@@ -147,7 +147,7 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         CursedTechnique steal = targetCap.getTechnique();
         CursedEnergyNature nature = targetCap.getNature();
 
-        if (steal == null || current == null) return false;
+        if (current == null) return false;
         if (current == steal) return false;
 
         owner.sendSystemMessage(Component.translatable(
