@@ -1228,6 +1228,18 @@ public class SorcererData implements ISorcererData {
         return stolen.iterator().next();
     }
 
+   @Override
+    public void addStolen(CursedTechnique technique) {
+        if (stolen.contains(technique)) {
+            stolen.remove(technique);
+        }
+        stolen.add(technique);
+        if (stolen.size() > 2) {
+            CursedTechnique first = stolen.iterator().next();
+            stolen.remove(first);
+        }
+    }
+
 
     @Override
     public void setCurrentCopied(@Nullable CursedTechnique technique) {

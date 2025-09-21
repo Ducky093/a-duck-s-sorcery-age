@@ -43,6 +43,11 @@ public class Infinity extends Ability implements Ability.IToggled {
         return false;
     }
 
+     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return true;

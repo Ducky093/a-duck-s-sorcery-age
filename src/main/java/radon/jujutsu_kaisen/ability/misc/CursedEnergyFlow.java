@@ -120,7 +120,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (isShielding) {
             if (!this.hasShieldDrained) {
                 this.hasShieldDrained = true;
-                cap.useEnergy(50);
+                cap.useEnergy(10);
             }
         } else {
             this.hasShieldDrained = false;

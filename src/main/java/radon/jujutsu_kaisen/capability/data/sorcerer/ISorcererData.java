@@ -273,6 +273,8 @@ public interface ISorcererData {
 
     @Nullable CursedTechnique getLatestStolen();
 
+    void addStolen(CursedTechnique technique);
+
     void setStolenSkinTexture(ResourceLocation skin);
 
     void setStolenSkinProfile(GameProfile profile);

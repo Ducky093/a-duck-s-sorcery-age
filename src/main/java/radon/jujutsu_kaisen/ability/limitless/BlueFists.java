@@ -29,6 +29,11 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
     }
 
     @Override
+    public boolean usesHands() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 9.0D;
     }
