@@ -106,6 +106,13 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
     }
 
       private static void check(LivingEntity victim, DamageSource source) {
+      //if (owner.level().isClientSide) return false;
+      //  if (!HelperMethods.isMelee(source)) return false;
+        //if (!(target instanceof Player player)) return false;
+        if (!(victim instanceof Player player)) return;
+
+        if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return ;
+
         if (!HelperMethods.isMelee(source)) return;
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
@@ -118,41 +125,25 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
 
         attacker.swing(InteractionHand.MAIN_HAND, true);
 
-        //ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
-
-        //if (!(victim instanceof Player)) {
-       //     victim.discard();
-      //  } else {
-            victim.kill();
-      //  }
-    }
-
-    @Override
-    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
-        if (!(target instanceof Player player)) return false;
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         //ownerCap.deserializeNBT(ownerCap.serializeNBT());
         //CompoundTag targetnbt = targetCap.serializeNBT();
         // Require target to have enough exp
         if (targetCap.getExperience() <= 1000) {
-            return false;
+            return;
         }
 
         CursedTechnique current = ownerCap.getTechnique();
         CursedTechnique steal = targetCap.getTechnique();
         CursedEnergyNature nature = targetCap.getNature();
 
-        if (current == null) return false;
-        if (current == steal) return false;
+        if (current == null) return;
+        if (current == steal) return;
 
-        owner.sendSystemMessage(Component.translatable(
+        attacker.sendSystemMessage(Component.translatable(
             String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
-            target.getName()
+            victim.getName()
         ));
         
         ownerCap.addStolen(steal);
@@ -165,23 +156,25 @@ public class BodySteal extends Ability implements Ability.IToggled, Ability.IAtt
         //GameProfile profile = NbtUtils.readGameProfile(targetnbt);
         GameProfile profile = player.getGameProfile();
         ownerCap.setStolenSkinProfile(profile);
-        if (owner instanceof ServerPlayer servOwner) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
-        }
-        if (target instanceof ServerPlayer servTarget) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(targetCap.serializeNBT()), servTarget);
-        }
+        // if (owner instanceof ServerPlayer servOwner) {
+        //     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
+        // }
+        // if (target instanceof ServerPlayer servTarget) {
+        //     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(targetCap.serializeNBT()), servTarget);
+        // }
 
-        return true;
+        //ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
+
+        //if (!(victim instanceof Player)) {
+       //     victim.discard();
+      //  } else {
+           // victim.kill();
+      //  }
     }
+
 
      @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BodyStealForgeEvents {
-        @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            check(event.getEntity(), event.getSource());
-        }
-
         @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             check(event.getEntity(), event.getSource());
