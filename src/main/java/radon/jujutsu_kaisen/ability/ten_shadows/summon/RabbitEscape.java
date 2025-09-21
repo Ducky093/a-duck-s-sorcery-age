@@ -67,7 +67,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
      @Override
     public int getCooldown() {
-        return 6 * 20;
+        return 10 * 20;
     }
 
     @Override
