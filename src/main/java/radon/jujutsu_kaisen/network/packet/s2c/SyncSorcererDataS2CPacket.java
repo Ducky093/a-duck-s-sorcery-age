@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 //import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,8 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.Set;
 import java.util.function.Supplier;
+
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 //import com.mojang.authlib.GameProfile;
 //import com.mojang.authlib.minecraft.MinecraftProfileTexture;
@@ -50,8 +54,13 @@ public class SyncSorcererDataS2CPacket {
             if (newCap.getStolenSkinProfile() != null) {
                 radon.jujutsu_kaisen.mixin.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
            //     GameProfile profile = newCap.getStolenSkinProfile();
-           //     SkinManager skinManager = Minecraft.getInstance().getSkinManager();
-                
+                 SkinManager skinManager = Minecraft.getInstance().getSkinManager();
+                    skinManager.registerSkins(newCap.getStolenSkinProfile(), (type, location, texture) -> {
+                    if (type == MinecraftProfileTexture.Type.SKIN) {
+                        oldCap.setStolenSkinTexture(location);
+                    }
+                }, true);
+                                
            //     skinManager.registerSkins(profile, new SkinManager.SkinTextureCallback() {
                 //     @Override
                 //     public void onSkinTextureAvailable(MinecraftProfileTexture.Type type, ResourceLocation location, MinecraftProfileTexture profileTexture) {
