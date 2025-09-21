@@ -123,7 +123,7 @@ public class OutputRCT extends Ability {
             healMult *= 28.0F;
         }
         if (cap.getType() == JujutsuType.SHIKIGAMI) {
-            healMult *= 4.0F;
+            healMult *= 6.0F;
         }
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
 

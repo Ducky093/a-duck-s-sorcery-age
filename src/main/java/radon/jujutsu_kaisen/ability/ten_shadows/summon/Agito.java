@@ -50,7 +50,7 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 45 * 20;
     }
 
     @Override
