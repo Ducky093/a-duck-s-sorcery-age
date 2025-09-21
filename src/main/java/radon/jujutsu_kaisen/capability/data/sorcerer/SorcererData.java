@@ -843,7 +843,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.getCurrentStolen() == technique;
+        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.currentStolen == technique;
     }
 
     @Override
