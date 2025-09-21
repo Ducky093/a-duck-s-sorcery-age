@@ -140,7 +140,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
             if (index >= 20 && index < DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.5F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.5F),
-                        20, DAMAGE + (this.getPower(owner) * 0.5F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
+                        20, DAMAGE + (this.getPower(owner) * 0.35F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
                 BlockPos blocked = hit.getBlockPos();
