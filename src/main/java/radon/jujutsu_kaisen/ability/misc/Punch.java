@@ -105,11 +105,11 @@ public class Punch extends Ability implements Ability.ICharged{
             float mod = 1;
             num = 4;
             if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-//                mod = 1.6f;
-//            }
+                mod = 1.6f;
+           }
             if (mod != 1) {
                 mod = (float) owner.getDeltaMovement().length();
-                Vec3 look2 = look.normalize().scale(power*mod+0.5);
+                Vec3 look2 = look.normalize().scale(power*mod+1.5);
                 if (look2.y < 0) {
                     look2.multiply(0.8,0.4,0.8);
                 } else {
