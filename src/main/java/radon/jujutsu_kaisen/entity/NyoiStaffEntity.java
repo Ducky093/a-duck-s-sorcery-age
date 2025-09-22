@@ -22,15 +22,17 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
 public class NyoiStaffEntity extends Entity {
+   // private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionCenterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(NyoiStaffEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Boolean> DATA_CHARGED = SynchedEntityData.defineId(NyoiStaffEntity.class, EntityDataSerializers.BOOLEAN);
-
+   // private static final int DELAY = 1 * 20;
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -81,9 +83,22 @@ public class NyoiStaffEntity extends Entity {
         return super.interact(pPlayer, pHand);
     }
 
+   // public int getTime() {
+ //       return this.entityData.get(DATA_TIME);
+ //   }
+
+ //   public void setTime(int time) {
+  //      this.entityData.set(DATA_TIME, time);
+ //   }
+
+
     @Override
     public void tick() {
         super.tick();
+        //this.setTime(this.getTime() + 1);
+       // if (this.getTime() == DELAY)  {
+       //     this.setCharged(true);
+       // }
 
         if (!this.isCharged()) return;
 
@@ -113,6 +128,7 @@ public class NyoiStaffEntity extends Entity {
     protected void defineSynchedData() {
         this.entityData.define(DATA_ITEM_STACK, ItemStack.EMPTY);
         this.entityData.define(DATA_CHARGED, false);
+       // this.entityData.define(DATA_TIME, 0);
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
@@ -141,6 +157,7 @@ public class NyoiStaffEntity extends Entity {
         }
         pCompound.put("item", this.getItem().save(new CompoundTag()));
         pCompound.putBoolean("charged", this.isCharged());
+      //  pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -150,6 +167,7 @@ public class NyoiStaffEntity extends Entity {
         }
         this.setItem(ItemStack.of(pCompound.getCompound("item")));
         this.setCharged(pCompound.getBoolean("charged"));
+      //  this.setTime(pCompound.getInt("time"));
     }
 
     @Override

@@ -55,15 +55,23 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
             float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.75F;
 
-            boolean success = player.getAbilities().instabuild;
-
-            if (!player.getAbilities().instabuild) {
-                if (cap.getEnergy() >= cost) {
-                    cap.useEnergy(cost);
-                    success = true;
+            //boolean success = player.getAbilities().instabuild;
+            cap.delayTickEvent(() -> {
+                if (staff != null) {
+                if (!player.getAbilities().instabuild) {
+                    if (cap.getEnergy() >= cost) {
+                        cap.useEnergy(cost);
+                        staff.setCharged(true);
+                        //success = true;
+                    }
                 }
-            }
-            staff.setCharged(success);
+                else {
+                    staff.setCharged(true);
+                }
+                }
+            }, 20);
+            
+            //
         }
         stack.shrink(1);
         ctx.getLevel().addFreshEntity(staff);

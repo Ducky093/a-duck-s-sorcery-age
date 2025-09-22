@@ -35,7 +35,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
     public static final double RANGE = 15.0D;
     private static final int DELAY = 20;
-    private static final float DAMAGE = 7.0F;
+    private static final float DAMAGE = 6.0F;
     private static final int DURATION = 5 * 20;
     private static final float RADIUS = 4.0F;
     private static final float MAX_RADIUS = 8.0F;
@@ -280,17 +280,17 @@ public class BlueProjectile extends JujutsuProjectile {
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                         this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
                     }
-                    int delayfactor = 1 *20;
-                    if (this.entityData.get(DATA_MOTION) == false) {
-                        if ( this.getTime() <= DELAY + delayfactor &&  this.getTime() >= DELAY ) {
-                            this.pullEntities();
-                        }
-                    }
-                    else {
+                    //int delayfactor = 1 *20;
+                    // if (this.entityData.get(DATA_MOTION) == false) {
+                    //     if ( this.getTime() <= DELAY + delayfactor &&  this.getTime() >= DELAY ) {
+                    //         this.pullEntities();
+                    //     }
+                    // }
+                    // else {
                         if ( this.getTime() >= DELAY) {
                             this.pullEntities();
                         }
-                    }
+                  //  }
                    
                     this.hurtEntities();
 
