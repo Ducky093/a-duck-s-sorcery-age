@@ -88,7 +88,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 200.0F;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 12 * 20;
     }
 
     @Override

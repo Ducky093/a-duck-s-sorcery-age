@@ -32,6 +32,7 @@ public class HelperMethods {
                 source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() != null && jujutsu.getAbility().isMelee();
     }
 
+
     public static int getRGB24(Vector3f rgb) {
         return FastColor.ARGB32.color(255, Math.round(rgb.x * 255.0F), Math.round(rgb.y * 255.0F), Math.round(rgb.z * 255.0F));
     }

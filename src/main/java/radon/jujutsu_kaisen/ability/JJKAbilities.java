@@ -250,6 +250,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> COLLAPSE = ABILITIES.register("collapse", Collapse::new);
     public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
+    public static RegistryObject<Ability> BISECTION = ABILITIES.register("bisection", Bisection::new);
 
     public static String getName(Ability ability) {
         return getKey(ability).getPath();
