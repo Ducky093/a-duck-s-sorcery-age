@@ -45,20 +45,9 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     @Override
     public void run(LivingEntity owner) {
        
-        super.run(owner);
-         if (this.triggered == false ) {
-            this.triggered = true;
-              //if (!(owner.level() instanceof ServerLevel level)) return;
-        // owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
-        //owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 6 * 20, 0, false, false, false));
-        MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 6 * 20, 0, false, false, true);
-       //  owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 120, 0, false, false, false));
-        owner.addEffect(instance);
-     if (!owner.level().isClientSide) {
-            PacketDistributor.TRACKING_ENTITY.with(() -> owner).send(new ClientboundUpdateMobEffectPacket(owner.getId(), instance));
-     }
-        }
-      
+           super.run(owner);
+         
+   
        // }
        
     }
@@ -102,6 +91,31 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     public float getCost(LivingEntity owner) {
         return this.isTamed(owner) ? 0.1F : 10.0F;
     }
+
+
+     @Override
+public void onEnabled(LivingEntity owner) {
+    if (!this.triggered) {
+        this.triggered = true;
+        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 6 * 20,
+                0, false, false, false));
+        // MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 6 * 20, 0, false, false, false);
+
+        // // Apply effect server-side
+        // owner.addEffect(instance);
+
+        // // Only on server
+        // if (!owner.level().isClientSide && owner.level() instanceof ServerLevel serverLevel) {
+        //     // Send packet to ALL players on the server
+        //     serverLevel.players().forEach(player -> {
+        //         player.connection.send(new ClientboundUpdateMobEffectPacket(owner.getId(), instance));
+        //     });
+        // }
+    }
+    super.onEnabled(owner);
+}
+
+
 
     @Override
     public void onDisabled(LivingEntity owner) {
