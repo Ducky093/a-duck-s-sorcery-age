@@ -136,11 +136,11 @@ public class WeaponEventHandler {
                             attackerCap.useEnergy(cost);
                         }
 
-                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
-                            if (victim.isDeadOrDying()) {
-                                event.setCanceled(true);
-                                return;
-                            }
+                        // if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                        //     if (victim.isDeadOrDying()) {
+                        //         event.setCanceled(true);
+                        //         return;
+                        //     }
 
                             victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
 
@@ -155,7 +155,7 @@ public class WeaponEventHandler {
                                         victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
                                         0, 0.0D, 0.0D, 0.0D, 0.0D);
                             }
-                        }
+                        
 
                         if (attacker instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
@@ -198,7 +198,7 @@ public class WeaponEventHandler {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) ) {
                         if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.15f )) {
                             //if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 0.05f )) {
-                                 event.setAmount(event.getAmount()*0.1f);
+                                 event.setAmount(event.getAmount()*0.15f);
                             //}
                         }
                     }
