@@ -91,7 +91,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
             Vec3 pos = owner.position();
             int index = this.getCharge(owner);
 
-            //owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 1, 0, false, false, false));
+            owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 1, 0, false, false, false));
 
             float scale = 1.5F;
 
