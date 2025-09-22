@@ -187,6 +187,11 @@ public class PacketHandler {
                 .encoder(UncopyAbilityC2SPacket::encode)
                 .consumerMainThread(UncopyAbilityC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UnstealAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UnstealAbilityC2SPacket::new)
+                .encoder(UnstealAbilityC2SPacket::encode)
+                .consumerMainThread(UnstealAbilityC2SPacket::handle)
+                .add();
         INSTANCE.messageBuilder(SyncVisualDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SyncVisualDataS2CPacket::new)
                 .encoder(SyncVisualDataS2CPacket::encode)
@@ -243,9 +248,7 @@ public class PacketHandler {
         INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 
-    public static <MSG> void sendToServer(MSG message) {
-        INSTANCE.sendToServer(message);
-    }
+
 
     public static <MSG> void sendToClient(MSG message, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
@@ -253,5 +256,9 @@ public class PacketHandler {
 
     public static <MSG> void sendTracking(MSG message, Entity entity) {
         INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+    }
+
+    public static <MSG> void sendToServer(MSG message) {
+        INSTANCE.sendToServer(message);
     }
 }
