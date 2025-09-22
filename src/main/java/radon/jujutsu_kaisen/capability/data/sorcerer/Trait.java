@@ -12,7 +12,8 @@ public enum Trait {
     VESSEL,
     DOCTOR_HOUSE,
     INCARNATED,
-    PERFECT_BODY;
+    PERFECT_BODY,
+    SIMURIAN;
 
     public Component getName() {
         return Component.translatable(String.format("trait.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
