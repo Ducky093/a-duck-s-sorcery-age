@@ -15,7 +15,7 @@ public abstract class PlayerRendererMixin {
 
     @Inject(
         method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;",
-        at = @At("HEAD"),
+        at = @At("RETURN"),
         cancellable = true,
         require = 0
     )
