@@ -6,6 +6,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Transformation;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -15,6 +18,12 @@ public class AngelWings extends Transformation {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getTechnique() == CursedTechnique.ANGEL && super.isValid(owner);
     }
 
     private static double getDistanceGround(LivingEntity entity) {

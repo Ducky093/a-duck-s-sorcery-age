@@ -15,8 +15,8 @@ public class ClientJoinHandler {
         if (!(event.getEntity() instanceof net.minecraft.client.player.LocalPlayer player)) return;
 
         player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            // If the player already has a stolen skin saved
-            if (cap.getStolenSkinProfile() != null) {
+            if (cap.getStolenSkinProfile() != null && cap.getStolenSkinTexture() == null) {
+                // Profile exists but texture not resolved yet
                 ClientSkinHandler.handleSkinSync(cap, cap);
             }
         });

@@ -21,7 +21,8 @@
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.PlayerRendererMixin"
   ],
   "mixins": [
     "common.EnchantmentHelperMixin",

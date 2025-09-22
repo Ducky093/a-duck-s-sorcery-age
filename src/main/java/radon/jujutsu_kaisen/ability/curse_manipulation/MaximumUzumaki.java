@@ -61,11 +61,12 @@ public class MaximumUzumaki extends Ability {
         return 50;
     }
 
+    
     @Override
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return technique == CursedTechnique.CURSE_MANIPULATION && super.isDisplayed(owner);
+        return (technique == CursedTechnique.CURSE_MANIPULATION || cap.hasStolen(CursedTechnique.CURSE_MANIPULATION )  ) && super.isDisplayed(owner);
     }
 
     @Override

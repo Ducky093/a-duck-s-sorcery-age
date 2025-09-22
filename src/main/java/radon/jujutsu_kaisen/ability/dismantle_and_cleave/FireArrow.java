@@ -43,13 +43,6 @@ public class FireArrow extends Ability {
     }
 
     @Override
-    public boolean isDisplayed(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
-        return technique == CursedTechnique.DISMANTLE_AND_CLEAVE && super.isDisplayed(owner);
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
         return 350.0F;
     }
@@ -57,6 +50,13 @@ public class FireArrow extends Ability {
     @Override
     public int getCooldown() {
         return 30 * 20;
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        CursedTechnique technique = cap.getTechnique();
+        return (technique == CursedTechnique.DISMANTLE_AND_CLEAVE || cap.hasStolen(CursedTechnique.DISMANTLE_AND_CLEAVE )  ) && super.isDisplayed(owner);
     }
 
     @Override

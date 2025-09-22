@@ -277,6 +277,8 @@ public interface ISorcererData {
 
     void addStolen(CursedTechnique technique);
 
+    boolean hasStolen(CursedTechnique technique);
+
     void setStolenSkinTexture(ResourceLocation skin);
 
     void setStolenSkinProfile(GameProfile profile);

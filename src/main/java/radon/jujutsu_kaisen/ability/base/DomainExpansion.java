@@ -179,7 +179,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return technique != null && technique.getDomain() == this && super.isDisplayed(owner);
+        return ((technique != null && technique.getDomain() == this ) || (technique == CursedTechnique.BRAIN_TRANSPLANT && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isDisplayed(owner));
     }
 
     @Override

@@ -16,6 +16,12 @@ public class ClientSkinHandler {
         skinManager.registerSkins(profile, (type, location, profileTexture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN) {
                 oldCap.setStolenSkinTexture(location);
+                Minecraft.getInstance().execute(() -> {
+                    if (Minecraft.getInstance().player != null) {
+                        Minecraft.getInstance().player.refreshDimensions();
+                    }
+                });
+
             }
         }, true);
     }

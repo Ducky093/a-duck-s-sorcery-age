@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -114,6 +115,9 @@ public class WeaponEventHandler {
               
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 cap.setDisable(20);
+                                if (cap.getTechnique() == CursedTechnique.BRAIN_TRANSPLANT  ) {
+                                    victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                                }
                                 if (victim instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                 }

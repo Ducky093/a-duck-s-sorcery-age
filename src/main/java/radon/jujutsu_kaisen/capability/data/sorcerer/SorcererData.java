@@ -1258,6 +1258,13 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    @Override
+    public boolean hasStolen(CursedTechnique technique) {
+        if (stolen.contains(technique)) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void setCurrentCopied(@Nullable CursedTechnique technique) {

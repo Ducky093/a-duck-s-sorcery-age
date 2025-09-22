@@ -157,9 +157,14 @@ public class BodySteal extends Ability implements Ability.IToggled {
                 String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
                 victim.getName()
             ));
-             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
-            // GameProfile profile = player.getGameProfile();
-             //ownerCap.setStolenSkinProfile(profile);
+            // PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
+             GameProfile profile = player.getGameProfile();
+             ownerCap.setStolenSkinProfile(profile);
+             SyncSorcererDataS2CPacket packet = new SyncSorcererDataS2CPacket(ownerCap.serializeNBT());
+
+             for (ServerPlayer online : servOwner.server.getPlayerList().getPlayers()) {
+                 PacketHandler.sendToClient(packet, online);
+            }
         }
 
 
