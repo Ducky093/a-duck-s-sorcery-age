@@ -71,9 +71,9 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         return domain;
     }
 
-     @Override
+    @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
+        return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
     }
 
     @Override

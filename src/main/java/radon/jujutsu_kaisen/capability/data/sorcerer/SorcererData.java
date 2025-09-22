@@ -520,7 +520,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getMaximumOutput() {
         float output = 1.0F;
-        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
+        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
             output = 1.2F;
         }
         return output * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
@@ -1237,14 +1237,20 @@ public class SorcererData implements ISorcererData {
 
    @Override
     public void addStolen(CursedTechnique technique) {
+        
         if (stolen.contains(technique)) {
-             PacketHandler.sendToServer(new UnstealAbilityC2SPacket(technique));
+            if (this.owner.level().isClientSide()) { 
+                PacketHandler.sendToServer(new UnstealAbilityC2SPacket(technique));
+            }
+           
             stolen.remove(technique);
         }
         stolen.add(technique);
         if (stolen.size() > 2) { 
             CursedTechnique first = stolen.iterator().next(); 
-            PacketHandler.sendToServer(new UnstealAbilityC2SPacket(first));
+            if (this.owner.level().isClientSide()) { 
+                PacketHandler.sendToServer(new UnstealAbilityC2SPacket(first));
+            }
             stolen.remove(first); 
         }
     }
