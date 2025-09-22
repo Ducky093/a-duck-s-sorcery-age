@@ -34,6 +34,12 @@ public class TransfiguredSoulSmall extends TransfiguredSoul<TransfiguredSoulSmal
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+
+    @Override
     protected TransfiguredSoulSmallEntity summon(LivingEntity owner) {
         return new TransfiguredSoulSmallEntity(owner);
     }

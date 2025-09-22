@@ -523,6 +523,9 @@ public class SorcererData implements ISorcererData {
         if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
             output = 1.2F;
         }
+        else if (this.traits.contains(Trait.SIMURIAN)) {
+            output = 1.1F;
+        }
         return output * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
     }
 

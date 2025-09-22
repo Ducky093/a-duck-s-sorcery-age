@@ -73,6 +73,11 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
         return true;
     }
 
+    @Override
+    public boolean canDisable() {
+        return false;
+    }
+
      @Override
     public int getCooldown() {
         return 10 * 20;

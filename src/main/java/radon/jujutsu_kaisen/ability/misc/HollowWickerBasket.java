@@ -57,7 +57,7 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 20 * 20;
     }
 
     @Override

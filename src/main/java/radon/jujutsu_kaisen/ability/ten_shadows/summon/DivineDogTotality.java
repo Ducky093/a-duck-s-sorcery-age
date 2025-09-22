@@ -19,6 +19,11 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+    
+    @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
     }

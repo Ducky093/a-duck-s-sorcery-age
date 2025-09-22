@@ -68,6 +68,11 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     protected boolean canTame() {
         return true;
     }
