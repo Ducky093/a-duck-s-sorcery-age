@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class DeathSwarm extends Ability implements Ability.IDomainAttack {
-    public static final double RANGE = 40.0D;
+    public static final double RANGE = 50.0D;
     public LivingEntity enemy = null;
 
     @Override
@@ -44,7 +44,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setDisarmed(100);
+        cap.setDisarmed(80);
 
         for (int i = 0; i < 12; i++) {
             float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
@@ -98,7 +98,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 275.0F;
+        return 250.0F;
     }
 
     @Override

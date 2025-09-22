@@ -53,7 +53,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
         float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - damage / f, armor * 0.4F, 20.0F);
+        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
         damage /= 1.0F - f1 / 25.0F;
 
         MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
@@ -103,7 +103,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (int i = 1; i <= 25; i++) {
+        for (int i = 1; i <= 20; i++) {
             cap.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
@@ -118,7 +118,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             }, i);
         }
 
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= 10; i++) {
             cap.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
@@ -139,7 +139,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        }, 20);
+        }, 25);
     }
 
     @Override

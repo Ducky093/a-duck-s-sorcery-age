@@ -76,6 +76,8 @@ public class Punch extends Ability implements Ability.ICharged{
         return true;
     }
 
+
+
     @Override
     public void run(LivingEntity owner) {
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
