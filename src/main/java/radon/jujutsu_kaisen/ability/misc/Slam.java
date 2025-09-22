@@ -226,18 +226,9 @@ public class Slam extends Ability implements Ability.ICharged {
 
                 float power = ((float) Math.min(20, this.getCharge(owner)) / 20);
 
-                if (power >= 0.65f && power <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
-                    int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
-                    if (cooldown <= 0) {
-                        power = 1.1f;
-                    }
-                }
-
-                float realpower = power;
-
                 cap.delayTickEvent(() -> {
                     if (!owner.level().isClientSide) {
-                        TARGETS.put(owner.getUUID(), realpower);
+                        TARGETS.put(owner.getUUID(), power);
                     }
 
 
