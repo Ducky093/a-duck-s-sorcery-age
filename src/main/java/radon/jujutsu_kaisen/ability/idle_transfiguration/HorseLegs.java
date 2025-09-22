@@ -43,7 +43,7 @@ public class HorseLegs extends Transformation {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 0.75F;
     }
 
     @Override
