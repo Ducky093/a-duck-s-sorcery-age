@@ -62,6 +62,11 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     protected ToadFusionEntity summon(LivingEntity owner) {
         return new ToadFusionEntity(owner, false);
     }

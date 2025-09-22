@@ -64,6 +64,11 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     protected AgitoEntity summon(LivingEntity owner) {
         return new AgitoEntity(owner);
     }

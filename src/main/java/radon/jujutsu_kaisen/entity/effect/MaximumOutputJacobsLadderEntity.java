@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 9.0F;
+    private static final float DAMAGE = 15.0F;
     public static final int HITBOX_START = 20;
     public static final int STRIKE_EXPLOSION = 20;
     private static final int STRIKE_LENGTH = 118;
@@ -161,7 +161,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
              
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                     if (cap.hasTrait(Trait.INCARNATED)) {
-                                        mult[0] *= 2.0;
+                                        mult[0] *= 1.5;
                                     }
                                     cap.setDisable((int)(15F * this.getPower() * mult[0]));
                                     if (entity instanceof ServerPlayer player) {

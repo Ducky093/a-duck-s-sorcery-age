@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -88,7 +89,11 @@ public class BlackFlashHandler {
 
                 if (victimcap.getType() == JujutsuType.SHIKIGAMI) {
                     rng *= 1.5;
+                    if (victim instanceof RabbitEscapeEntity) {
+                        rng *= 20.0; 
+                    }
                 }
+               
 
 
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;

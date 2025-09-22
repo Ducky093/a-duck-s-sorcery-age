@@ -66,6 +66,10 @@ public class TranquilDeer extends Summon<TranquilDeerEntity> {
     public boolean isTenShadows() {
         return true;
     }
+    @Override
+    public boolean canDisable() {
+        return false;
+    }
 
     @Override
     protected boolean canTame() {

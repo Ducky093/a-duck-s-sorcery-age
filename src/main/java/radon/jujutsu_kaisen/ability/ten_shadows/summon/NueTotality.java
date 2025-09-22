@@ -62,6 +62,11 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     public int getCooldown() {
         return 45 * 20;
     }

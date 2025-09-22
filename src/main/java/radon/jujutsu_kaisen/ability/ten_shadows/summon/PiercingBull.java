@@ -68,6 +68,11 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+    
+    @Override
     protected boolean canTame() {
         return true;
     }

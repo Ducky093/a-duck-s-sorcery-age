@@ -44,6 +44,12 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return true;
     }
 
+    @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+
      @Override
     public boolean isDomain() {
         return true;
