@@ -193,9 +193,9 @@ public class WeaponEventHandler {
                    // event.setAmount(event.getAmount()*0.196f); //all
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) ) {
                         if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.15f )) {
-                            if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 0.05f )) {
-                                 event.setAmount(event.getAmount()*0.0f);
-                            }
+                            //if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 0.05f )) {
+                                 event.setAmount(event.getAmount()*0.05f);
+                            //}
                         }
                     }
                 }
@@ -213,7 +213,7 @@ public class WeaponEventHandler {
             }
             if (stacks.contains(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
                     JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
-                float Amount = Math.min(5.0F,event.getAmount()*0.6F);
+                float Amount = Math.min(8.0F,event.getAmount()*0.7F);
                 DragonBoneItem.addEnergy(stack, Amount);
             }
         }
