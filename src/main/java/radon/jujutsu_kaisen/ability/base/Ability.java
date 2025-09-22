@@ -88,6 +88,11 @@ public abstract class Ability {
         return false;
     }
 
+
+    public boolean canDisable() {
+        return true;
+    }
+
     // Used for skill tree
     public boolean isCursedEnergyColor() {
         return false;
@@ -213,7 +218,7 @@ public abstract class Ability {
                 return false;
             }
         }
-        if (this.isTechnique() && cap.hasDisable()) {
+        if (this.isTechnique() && this.canDisable() && cap.hasDisable() ) {
             return false;
         }
         
@@ -256,7 +261,7 @@ public abstract class Ability {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
             }
-            if (this.isTechnique() && cap.hasDisable()) {
+            if (this.isTechnique() && this.canDisable() && cap.hasDisable()) {
                 return Status.DISABLE;
             }
             if (this.usesHands() && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
