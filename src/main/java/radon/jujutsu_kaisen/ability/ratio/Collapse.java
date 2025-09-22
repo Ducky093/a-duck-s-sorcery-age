@@ -140,7 +140,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
             if (index >= 20 && index < DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.5F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.5F),
-                        20, DAMAGE + (this.getPower(owner) * 0.35F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
+                        20, DAMAGE + (this.getPower(owner) * 0.25F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
                 BlockPos blocked = hit.getBlockPos();
@@ -174,7 +174,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
             } else if (index < DURATION || index >= DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 0.75F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 0.75F),
-                        20, DAMAGE + (this.getPower(owner) * 0.25f), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
+                        20, DAMAGE + (this.getPower(owner) * 0.15f), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
             }
         }
     }
@@ -197,7 +197,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 15 * 20;
     }
 
     @Override
