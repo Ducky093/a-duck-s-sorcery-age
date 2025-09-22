@@ -37,6 +37,8 @@ import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
+import radon.jujutsu_kaisen.network.packet.c2s.UncopyAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.UnstealAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -518,8 +520,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getMaximumOutput() {
         float output = 1.0F;
-        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
+        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
             output = 1.2F;
+        }
+        else if (this.traits.contains(Trait.SIMURIAN)) {
+            output = 1.1F;
         }
         return output * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
     }
@@ -1171,6 +1176,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void unsteal(CursedTechnique technique) {
+        this.stolen.remove(technique);
+    }
+
+    @Override
     public void resetCopy() {
         this.copied = new LinkedHashSet<>();
         this.sync();
@@ -1230,14 +1240,21 @@ public class SorcererData implements ISorcererData {
 
    @Override
     public void addStolen(CursedTechnique technique) {
+        
         if (stolen.contains(technique)) {
+            if (this.owner.level().isClientSide()) { 
+                PacketHandler.sendToServer(new UnstealAbilityC2SPacket(technique));
+            }
+           
             stolen.remove(technique);
         }
         stolen.add(technique);
-        if (stolen.size() > 2) {
-            CursedTechnique last = null;
-            for (CursedTechnique tech : stolen) last = tech;
-            stolen.remove(last);
+        if (stolen.size() > 2) { 
+            CursedTechnique first = stolen.iterator().next(); 
+            if (this.owner.level().isClientSide()) { 
+                PacketHandler.sendToServer(new UnstealAbilityC2SPacket(first));
+            }
+            stolen.remove(first); 
         }
     }
 

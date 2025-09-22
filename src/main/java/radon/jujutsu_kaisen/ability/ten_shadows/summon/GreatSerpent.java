@@ -68,6 +68,11 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     protected boolean canTame() {
         return true;
     }

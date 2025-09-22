@@ -17,6 +17,11 @@ public class TransfiguredSoulLarge extends TransfiguredSoul<TransfiguredSoulLarg
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+    
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 

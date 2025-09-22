@@ -69,6 +69,11 @@ public class Nue extends Summon<NueEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     public int getCooldown() {
         return 30 * 20;
     }

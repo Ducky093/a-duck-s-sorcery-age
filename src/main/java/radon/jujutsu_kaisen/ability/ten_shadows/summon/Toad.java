@@ -67,6 +67,11 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
+    public boolean canDisable() {
+        return false;
+    }
+
+    @Override
     protected ToadEntity summon(LivingEntity owner) {
         return new ToadEntity(JJKEntities.TOAD.get(), owner, this.isTamed(owner), false);
     }

@@ -3,7 +3,11 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec2;
+
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -46,7 +50,7 @@ public class CursedEnergyBlast extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 125.0F;
     }
 
     @Override
@@ -54,9 +58,37 @@ public class CursedEnergyBlast extends Ability {
         return 15 * 20;
     }
 
+    
+     @Override
+    public int getPointsCost() {
+        return 50;
+    }
+
+    @Override
+    public boolean canUnlock(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE && super.canUnlock(owner);
+    }
+
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        return JJKAbilities.CURSED_ENERGY_FLOW.get();
+    }
+
+    @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(2.0F, 3.0F);
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+        return true;
+    }
+
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && cap.getExtraEnergy() > 0.0F && super.isValid(owner);
+        return cap.getType() == JujutsuType.CURSE && super.isValid(owner); //&& cap.getExtraEnergy() > 0.0F 
     }
 }
