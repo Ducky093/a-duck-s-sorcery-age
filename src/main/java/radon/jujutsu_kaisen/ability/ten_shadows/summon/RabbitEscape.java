@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -39,12 +40,14 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     @Override
     public void run(LivingEntity owner) {
         super.run(owner);
-        MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 12 * 10, 0, false, false, true);
+         if (!(owner.level() instanceof ServerLevel level)) return;
+        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 10 * 10, 0, false, false, false));
+       // MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 12 * 10, 0, false, false, true);
         // owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 120, 0, false, false, false));
-        owner.addEffect(instance);
-         if (!owner.level().isClientSide) {
-            PacketDistributor.TRACKING_ENTITY.with(() -> owner).send(new ClientboundUpdateMobEffectPacket(owner.getId(), instance));
-        }
+       // owner.addEffect(instance);
+       //  if (!owner.level().isClientSide) {
+       //     PacketDistributor.TRACKING_ENTITY.with(() -> owner).send(new ClientboundUpdateMobEffectPacket(owner.getId(), instance));
+      //  }
 
     }
 

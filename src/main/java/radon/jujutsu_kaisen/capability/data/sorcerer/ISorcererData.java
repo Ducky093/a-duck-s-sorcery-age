@@ -281,9 +281,10 @@ public interface ISorcererData {
 
     void setStolenSkinProfile(GameProfile profile);
 
-    GameProfile getStolenSkinProfile();
 
-    ResourceLocation getStolenSkinTexture();
+    @Nullable GameProfile getStolenSkinProfile();
+
+    @Nullable ResourceLocation getStolenSkinTexture();
 
     int getTransfiguredSouls();
 

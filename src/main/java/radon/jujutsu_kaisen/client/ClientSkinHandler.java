@@ -11,6 +11,7 @@ public class ClientSkinHandler {
         GameProfile profile = newCap.getStolenSkinProfile();
         if (profile == null) return;
 
+        oldCap.setStolenSkinProfile(profile);
         SkinManager skinManager = Minecraft.getInstance().getSkinManager();
         skinManager.registerSkins(profile, (type, location, profileTexture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN) {

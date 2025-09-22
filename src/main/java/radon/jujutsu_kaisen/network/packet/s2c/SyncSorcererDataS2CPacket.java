@@ -50,9 +50,8 @@ public class SyncSorcererDataS2CPacket {
 
             ISorcererData newCap = new SorcererData();
             newCap.deserializeNBT(this.nbt);
-
-            if (newCap.getStolenSkinProfile() != null) {
-                radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
+           // if (newCap.getStolenSkinProfile() != null) {
+             //   radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
            //     GameProfile profile = newCap.getStolenSkinProfile();
                 //  SkinManager skinManager = Minecraft.getInstance().getSkinManager();
                 //     skinManager.registerSkins(newCap.getStolenSkinProfile(), (type, location, texture) -> {
@@ -72,6 +71,14 @@ public class SyncSorcererDataS2CPacket {
                 // }, true);
 
 
+          //  }
+            if (newCap.getStolenSkinProfile() != null) {
+      
+                radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
+            } else {
+             
+                newCap.setStolenSkinProfile(oldCap.getStolenSkinProfile());
+                newCap.setStolenSkinTexture(oldCap.getStolenSkinTexture());
             }
             Set<Ability> oldToggled = oldCap.getToggled();
             Set<Ability> newToggled = newCap.getToggled();
