@@ -56,6 +56,12 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(Trait.INCARNATED) && super.isValid(owner);
+    }
+
+    @Override
     public int getCooldown() {
         return 20 * 20;
     }
