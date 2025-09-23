@@ -72,14 +72,14 @@ public class SyncSorcererDataS2CPacket {
 
 
           //  }
-            if (newCap.getStolenSkinProfile() != null) {
+            // if (newCap.getStolenSkinProfile() != null) {
       
-                radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
-            } else {
+            //     radon.jujutsu_kaisen.client.ClientSkinHandler.handleSkinSync(oldCap, newCap);
+            // } else {
              
-                newCap.setStolenSkinProfile(oldCap.getStolenSkinProfile());
-                newCap.setStolenSkinTexture(oldCap.getStolenSkinTexture());
-            }
+            //     newCap.setStolenSkinProfile(oldCap.getStolenSkinProfile());
+            //     newCap.setStolenSkinTexture(oldCap.getStolenSkinTexture());
+            // }
             Set<Ability> oldToggled = oldCap.getToggled();
             Set<Ability> newToggled = newCap.getToggled();
 
