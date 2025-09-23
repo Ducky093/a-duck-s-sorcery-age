@@ -78,13 +78,15 @@ public class CursedEnergyBlast extends Ability {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(2.0F, 3.0F);
+        return new Vec2(3.0F, 3.0F);
     }
 
-    @Override
+     @Override
     public boolean isDisplayed(LivingEntity owner) {
-        return true;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE && super.isDisplayed(owner); //&& cap.getExtraEnergy() > 0.0F 
     }
+
 
     @Override
     public boolean isValid(LivingEntity owner) {
