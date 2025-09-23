@@ -91,7 +91,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
             Vec3 pos = owner.position();
             int index = this.getCharge(owner);
 
-            owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 1, 0, false, false, false));
+            owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
             float scale = 1.5F;
 
@@ -135,7 +135,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
                 owner.teleportTo(targeter.x, targeter.y, targeter.z);
 
-                target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BISECTION.get()), DAMAGE * (this.getPower(owner) * 0.5F));
+                target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BISECTION.get()), DAMAGE * (this.getPower(owner) * 0.75F));
 
                 target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
                 target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
