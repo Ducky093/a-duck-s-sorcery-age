@@ -106,7 +106,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
             double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.8F) * HelperMethods.RANDOM.nextDouble();
 
-            level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.FALLING_BLOSSOM_EMOTION, owner.getBbWidth() * 1.0F,
+            level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.DARK_BLUE, owner.getBbWidth() * 1.0F,
                     0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
              }
 
