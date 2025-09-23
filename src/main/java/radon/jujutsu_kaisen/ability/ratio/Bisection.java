@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Bisection extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final double RANGE = 50.0D;
+    private static final double RANGE = 60.0D;
     private static final int DELAY = 20;
     private static final float DAMAGE = 20.0F;
     private static final int DURATION = 25;
