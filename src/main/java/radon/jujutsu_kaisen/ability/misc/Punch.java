@@ -112,10 +112,10 @@ public class Punch extends Ability implements Ability.ICharged{
             if (mod != 1) {
                 mod = (float) owner.getDeltaMovement().length();
                 Vec3 look2 = look.normalize().scale(power*mod+1.5);
-                if (look2.y < 0) {
+                if (look2.y > 0) {
                     look2.multiply(0.8,0.4,0.8);
                 } else {
-                    look2.multiply(1.2,1.2,1.2);
+                    look2.multiply(1.2,0.4,1.2);
                 }
                 owner.setDeltaMovement(look2.x,look2.y,look2.z);
             }
