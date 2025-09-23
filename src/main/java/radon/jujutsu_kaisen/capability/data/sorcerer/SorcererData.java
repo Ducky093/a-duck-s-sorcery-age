@@ -771,13 +771,18 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getAbilityPower() {
         float power = this.getRealPower() * this.getOutput();
+        CursedTechnique tech = this.technique;
+        if (tech != null) {
+                Ability domain = this.technique.getDomain();
 
-        if (this.technique != null) {
-            Ability domain = this.technique.getDomain();
+                if (tech == CursedTechnique.BRAIN_TRANSPLANT && this.getCurrentStolen() != null ) {
+                    domain = this.getCurrentStolen().getDomain();
+                }
 
-            if (domain != null && this.toggled.contains(domain)) {
-                power *= 1.2F;
-            }
+                if (domain != null && this.toggled.contains(domain)) {
+                    power *= 1.2F;
+                }
+            
         }
         return power;
     }

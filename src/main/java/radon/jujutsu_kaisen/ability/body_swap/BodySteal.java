@@ -158,13 +158,13 @@ public class BodySteal extends Ability implements Ability.IToggled {
                 victim.getName()
             ));
             // PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), servOwner);
-             GameProfile profile = player.getGameProfile();
-             ownerCap.setStolenSkinProfile(profile);
+             //GameProfile profile = player.getGameProfile();
+            // ownerCap.setStolenSkinProfile(profile);
              SyncSorcererDataS2CPacket packet = new SyncSorcererDataS2CPacket(ownerCap.serializeNBT());
-
-             for (ServerPlayer online : servOwner.server.getPlayerList().getPlayers()) {
-                 PacketHandler.sendToClient(packet, online);
-            }
+            PacketHandler.sendToClient(packet, servOwner);
+            //  for (ServerPlayer online : servOwner.server.getPlayerList().getPlayers()) {
+            //      PacketHandler.sendToClient(packet, online);
+            // }
         }
 
 
