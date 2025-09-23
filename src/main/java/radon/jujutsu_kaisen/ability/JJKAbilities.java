@@ -453,6 +453,15 @@ public class JJKAbilities {
             if (technique != null && technique.getDomain() != null) {
                 abilities.add(technique.getDomain());
             }
+            if (technique == CursedTechnique.BRAIN_TRANSPLANT ) {
+                 CursedTechnique stolen = cap.getLastStolen();
+
+                if (stolen != null && stolen.getDomain() != null) {
+                    abilities.add(stolen.getDomain());
+                }
+            }
+
+           
         }
         abilities.removeIf(ability -> !ability.isValid(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
 
