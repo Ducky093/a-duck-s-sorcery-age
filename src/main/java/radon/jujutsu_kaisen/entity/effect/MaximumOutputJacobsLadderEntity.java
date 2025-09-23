@@ -164,7 +164,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
              
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                     if (cap.hasTrait(Trait.INCARNATED)) {
-                                        mult[0] *= 1.8;
+                                        mult[0] *= 2.5;
                                     }
                                     cap.setDisable((int)(15F * this.getPower() * mult[0]));
                                     if (cap.getTechnique() == CursedTechnique.BRAIN_TRANSPLANT && entity instanceof LivingEntity living  ) { 
