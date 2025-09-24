@@ -27,13 +27,13 @@ public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
 
     @Override
     protected void animateTick(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull FluidState pState, RandomSource pRandom) {
-        if (pRandom.nextInt(10) == 0) {
+        if (pRandom.nextInt(14) == 0) {
             double d0 = (double) pPos.getX() + pRandom.nextDouble();
             double d1 = (double) pPos.getY() + 1.0D;
             double d2 = (double) pPos.getZ() + pRandom.nextDouble();
             pLevel.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
-        if (pRandom.nextInt(10) == 0) {
+        if (pRandom.nextInt(16) == 0) {
             double d0 = (double) pPos.getX() + pRandom.nextDouble();
             double d1 = (double) pPos.getY() + 1.0D;
             double d2 = (double) pPos.getZ() + pRandom.nextDouble();
