@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
@@ -92,6 +93,11 @@ public class BlackFlashHandler {
                     if (victim instanceof RabbitEscapeEntity) {
                         rng *= 20.0; 
                     }
+                else if (victimcap.getType() == JujutsuType.CURSE)  {
+                    if (victim instanceof CursedSpirit curse && curse.isTame() ) {
+                        rng *= 1.5;
+                    } 
+                }
                 }
                
 
