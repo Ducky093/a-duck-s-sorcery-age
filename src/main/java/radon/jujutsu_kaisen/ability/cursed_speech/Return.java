@@ -80,7 +80,7 @@ public class Return extends Ability {
                        Summon<?> ability = ownable.getAbility();
                        LivingEntity shikiowner = ownable.getOwner();
                        if (shikiowner != null) {
-                            float cost = ability.getRealCost(shikiowner);
+                            float cost = ability.getRealCost(shikiowner) * 100.0F;
                             if (cost == 0) {
                                 cost = 1000;
                             }
@@ -105,12 +105,12 @@ public class Return extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 200.0F;
+        return 150.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 25 * 20;
+        return 30 * 20;
     }
 
     @Override
