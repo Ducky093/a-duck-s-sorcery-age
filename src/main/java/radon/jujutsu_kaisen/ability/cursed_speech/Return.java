@@ -7,7 +7,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -15,18 +17,22 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class DontMove extends Ability {
+public class Return extends Ability {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
-    private static final int DURATION = 15;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -63,14 +69,37 @@ public class DontMove extends Ability {
         }
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        ISorcererData selfCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living)) continue;
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));
-
-            if (entity instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
-            }
+         if (!(entity instanceof LivingEntity living)) continue;
+            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.getType() == JujutsuType.SHIKIGAMI && living instanceof SummonEntity ownable && ownable.getOwner() != null) {             
+                    
+                    if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
+                       Summon<?> ability = ownable.getAbility();
+                       LivingEntity shikiowner = ownable.getOwner();
+                       if (shikiowner != null) {
+                            float cost = ability.getRealCost(shikiowner);
+                            if (cost == 0) {
+                                cost = 1000;
+                            }
+                            if (selfCap.getEnergy() < cost) return;
+                                selfCap.useEnergy(cost);
+                                ISorcererData enemyCap = shikiowner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                                enemyCap.unsummonByClass(ownable.getClass());
+                       }
+                    }            
+                    if (entity instanceof Player player) {
+                        player.sendSystemMessage(
+                            Component.translatable(
+                                String.format("chat.%s.return", JujutsuKaisen.MOD_ID),
+                                owner.getName()
+                            )
+                        );
+                    }
+                }
+            });
         }
     }
 

@@ -91,6 +91,7 @@ public class SorcererData implements ISorcererData {
     private float extraEnergy;
 
     private JujutsuType type;
+    private int silenced;
     private int disarmed;
     private int disable;
     private int selfHit;
@@ -445,6 +446,9 @@ public class SorcererData implements ISorcererData {
         }
         if (this.disarmed > 0) {
             this.disarmed--;
+        }
+        if (this.silenced > 0) {
+            this.silenced--;
         }
 
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
@@ -1009,6 +1013,11 @@ public class SorcererData implements ISorcererData {
         this.disarmed = disarmed;
     }
 
+    @Override
+    public void setSilenced(int silenced) {
+        this.silenced = silenced;
+    }
+
      @Override
     public void setSelfHit(int duration) {
         this.selfHit = duration;
@@ -1027,6 +1036,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public int getDisarmed() {
         return this.disarmed;
+    }
+
+    @Override
+    public int getSilenced() {
+        return this.silenced;
     }
 
     @Override
@@ -1054,6 +1068,11 @@ public class SorcererData implements ISorcererData {
         return this.selfHit > 0;
     }
 
+    @Override
+    public boolean hasSilenced() {
+        return this.silenced > 0;
+    }
+
 
     @Override
     public void resetCooldowns() {
@@ -1073,6 +1092,11 @@ public class SorcererData implements ISorcererData {
      @Override
     public void resetDisarmed() {
         this.disarmed = 0;
+    }
+
+    @Override
+    public void resetSilenced() {
+        this.silenced = 0;
     }
 
     @Override
@@ -1743,6 +1767,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
         nbt.putInt("disarmed", this.disarmed);
+        nbt.putInt("silenced", this.silenced);
         nbt.putInt("self_hit", this.selfHit);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);

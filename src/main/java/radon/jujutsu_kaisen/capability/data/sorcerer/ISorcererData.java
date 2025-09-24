@@ -176,6 +176,8 @@ public interface ISorcererData {
 
     void setDisarmed(int duration);
 
+    void setSilenced(int duration);
+
     void setSelfHit(int duration);
 
     int getBurnout();
@@ -184,6 +186,8 @@ public interface ISorcererData {
 
     int getDisarmed();
 
+    int getSilenced();
+
     int getSelfHit();
 
     boolean hasBurnout();
@@ -191,6 +195,8 @@ public interface ISorcererData {
     boolean hasDisable();
 
     boolean hasDisarmed();
+
+    boolean hasSilenced();
 
     boolean hasSelfHit();
 
@@ -201,6 +207,8 @@ public interface ISorcererData {
     void resetDisable();
 
     void resetDisarmed();
+
+    void resetSilenced();
 
     void resetSelfHit();
 

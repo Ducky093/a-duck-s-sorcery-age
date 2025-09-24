@@ -230,6 +230,11 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
     public static RegistryObject<Ability> FISH_SWARM = ABILITIES.register("fish_swarm", FishSwarm::new);
 
+     public static RegistryObject<Ability> RETURN = ABILITIES.register("return", Return::new);
+    public static RegistryObject<Ability> SHUT_IT = ABILITIES.register("shut_it", ShutIt::new);
+    public static RegistryObject<Ability> BLINK = ABILITIES.register("blink", Blink::new);
+    public static RegistryObject<Ability> RUN_AWAY = ABILITIES.register("run_away", RunAway::new);
+    public static RegistryObject<Ability> BURN_UP = ABILITIES.register("burn_up",  BurnUp::new);
     public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);
     public static RegistryObject<Ability> BLAST_AWAY = ABILITIES.register("blast_away", BlastAway::new);

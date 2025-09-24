@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.cursed_speech;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -24,11 +25,10 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class BlastAway extends Ability {
+public class BurnUp extends Ability {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
-    private static final float DAMAGE = 11.0F;
-    private static final double LAUNCH_POWER = 1.0D;
+    private static final float DAMAGE = 7.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -45,6 +45,25 @@ public class BlastAway extends Ability {
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+    }
+
+    private void spawnParticles(Entity entity) {
+        double x = entity.getX();
+        double y = entity.getY() + (entity.getBbHeight() / 2.0F);
+        double z = entity.getZ();
+
+        for (int i = 0; i < 24; i++) {
+            double scale = HelperMethods.RANDOM.nextDouble() * 0.5D + 0.5D;
+            Vec3 speed = new Vec3(HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian())
+                    .normalize().scale(scale);
+
+            double offsetX = x + speed.x;
+            double offsetY = y + speed.y;
+            double offsetZ = z + speed.z;
+
+            ((ServerLevel) entity.level()).sendParticles((ParticleOptions) ParticleTypes.FLAME, offsetX, offsetY, offsetZ, 0,
+                    speed.x, speed.y, speed.z, 1.0D);
+        }
     }
 
     @Override
@@ -67,30 +86,32 @@ public class BlastAway extends Ability {
             if (entity instanceof LivingEntity living && JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
 
             if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
-                        4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
-
-                double power = LAUNCH_POWER * this.getPower(owner);
-                entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.501D, 1.0D));
+                //Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+                // ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                // ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                // owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+                //         4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
+                // if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner))) {
+                entity.setSecondsOnFire(4);
+                this.spawnParticles(entity);
+               // }
+                
                 entity.hurtMarked = true;
             }
             if (entity instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.blast_away", JujutsuKaisen.MOD_ID), owner.getName()));
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.burn_up", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 75.0F;
+        return 50.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 8 * 20;
+        return 14 * 20;
     }
 
     @Override

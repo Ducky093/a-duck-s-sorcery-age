@@ -146,7 +146,15 @@ public class ServerChantHandler {
 
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
-            onChant(event.getPlayer(), event.getRawText().toLowerCase());
+             ServerPlayer player = event.getPlayer();
+             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.hasSilenced()) {
+                    event.setCanceled(true);
+                    player.displayClientMessage(Component.literal("You are silenced and cannot speak!"), true);
+                } else {
+                    onChant(player, event.getRawText().toLowerCase());
+                }
+            });
         }
     }
 }

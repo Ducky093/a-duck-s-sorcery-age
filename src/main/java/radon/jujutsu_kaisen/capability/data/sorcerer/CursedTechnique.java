@@ -17,7 +17,7 @@ public enum CursedTechnique {
             JJKAbilities.BLUE_MOTION.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get(), JJKAbilities.FLY.get()),
     DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_NET.get(), JJKAbilities.DISMANTLE_SKATING.get(), JJKAbilities.CLEAVE.get(),
             JJKAbilities.SPIDERWEB.get(), JJKAbilities.FIRE_ARROW.get()),
-    CURSED_SPEECH(null, JJKAbilities.DONT_MOVE.get(), JJKAbilities.GET_CRUSHED.get(), JJKAbilities.BLAST_AWAY.get(), JJKAbilities.EXPLODE.get(), JJKAbilities.DIE.get()),
+    CURSED_SPEECH(null,JJKAbilities.RETURN.get(),JJKAbilities.SHUT_IT.get(),JJKAbilities.BLINK.get(),JJKAbilities.BURN_UP.get() ,JJKAbilities.RUN_AWAY.get(), JJKAbilities.DONT_MOVE.get(), JJKAbilities.GET_CRUSHED.get(), JJKAbilities.BLAST_AWAY.get(), JJKAbilities.EXPLODE.get(), JJKAbilities.DIE.get()),
     MIMICRY(null, JJKAbilities.RIKA.get(), JJKAbilities.MIMICRY.get(), JJKAbilities.COMMAND_PURE_LOVE.get()),
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.EMBER_INSECT_FLIGHT.get(), JJKAbilities.VOLCANO.get(),
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get(), JJKAbilities.FIRE_BEAM.get()),
