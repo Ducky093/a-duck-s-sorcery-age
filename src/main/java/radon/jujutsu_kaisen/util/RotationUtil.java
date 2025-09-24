@@ -152,7 +152,7 @@ public class RotationUtil {
         if (blockHit.getType() != HitResult.Type.MISS) {
             end = blockHit.getLocation();
         }
-        AABB bounds = AABB.ofSize(start,1.0D,1.0D,1.0D).expandTowards(end.subtract(start)).inflate(0.25D);
+        AABB bounds = AABB.ofSize(start,3.0D,3.0D,3.0D).expandTowards(end.subtract(start)).inflate(0.25D);
         LivingEntity targeted = null;
         for (LivingEntity select : level.getEntitiesOfClass(LivingEntity.class, bounds,
             select -> select != entity )) {
@@ -193,7 +193,7 @@ public class RotationUtil {
         if (blockHit.getType() != HitResult.Type.MISS) {
             end = blockHit.getLocation();
         }
-        AABB bounds = AABB.ofSize(start,1.0D,1.0D,1.0D).expandTowards(end.subtract(start)).inflate(0.25D);
+        AABB bounds = AABB.ofSize(start,3.0D,3.0D,3.0D).expandTowards(end.subtract(start)).inflate(0.25D);
         NyoiStaffEntity targeted = null;
         for (NyoiStaffEntity select : level.getEntitiesOfClass(NyoiStaffEntity.class, bounds,
             select -> select != entity )) {

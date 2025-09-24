@@ -46,8 +46,8 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
     private static final double RANGE = 60.0D;
     private static final int DELAY = 20;
     private static final float DAMAGE = 20.0F;
-    private static final int DURATION = 25;
-    private static final int STUN = 20;
+    private static final int DURATION = 26;
+    private static final int STUN = 21; //heeehee 7:3 ratio heehee
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -177,7 +177,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public int getDuration() {
-        return 5;
+        return 3;
     }
 
     @Override
