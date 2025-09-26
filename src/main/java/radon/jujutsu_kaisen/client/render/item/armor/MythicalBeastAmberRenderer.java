@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.item.armor;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,5 +23,6 @@ public class MythicalBeastAmberRenderer extends GeoArmorRenderer<MythicalBeastAm
         super(new DefaultedItemGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "armor/mythical_beast_amber")));
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
+
 
 }

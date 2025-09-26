@@ -33,9 +33,14 @@ public class Fly extends Ability implements Ability.IChannelened {
         return MenuType.J2TSU;
     }
 
+    // @Override
+    // public boolean isValid(LivingEntity owner) {
+    //     return JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get());
+    // } //removed cuz its just annoying atp
+
     @Override
-    public boolean isValid(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get());
+    public boolean usesHands() {
+        return false;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ShootPureLove extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return ((RikaEntity) owner).isOpen() || (target != null && owner.hasLineOfSight(target) && HelperMethods.RANDOM.nextInt(10) == 0);
+        return ((RikaEntity) owner).isOpen();
     }
 
     @Override

@@ -17,6 +17,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -81,11 +83,14 @@ public class BurnUp extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         owner.level().playSound(null, src.x, src.y, src.z, SoundEvents.VEX_CHARGE, SoundSource.MASTER, 1F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
         for (Entity entity : getEntities(owner)) {
             if (entity instanceof LivingEntity living && JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
-
-            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
+             if (entity instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.burn_up", JujutsuKaisen.MOD_ID), owner.getName()));
+            }
+            cap.delayTickEvent(() -> {
+            if (entity != null && entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                 //Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                 // ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 // ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
@@ -98,9 +103,8 @@ public class BurnUp extends Ability {
                 
                 entity.hurtMarked = true;
             }
-            if (entity instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.burn_up", JujutsuKaisen.MOD_ID), owner.getName()));
-            }
+            }, 10);
+           
         }
     }
 

@@ -110,8 +110,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && super.isValid(owner);
+        CursedTechnique technique = cap.getTechnique();
+        return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && ((technique != null && technique.getDomain() == this ) || (technique == CursedTechnique.BRAIN_TRANSPLANT && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isValid(owner));
     }
+
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
@@ -134,6 +136,8 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         DomainExpansionEntity domain = this.createBarrier(owner);
         cap.addSummon(domain);
     }
+
+    
 
     @Override
     public void onDisabled(LivingEntity owner) {

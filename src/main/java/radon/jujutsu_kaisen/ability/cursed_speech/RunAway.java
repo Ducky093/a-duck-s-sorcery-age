@@ -27,7 +27,7 @@ import java.util.List;
 public class RunAway extends Ability {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
-    private static final int DURATION = 30;
+    private static final int DURATION = 40;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -67,8 +67,9 @@ public class RunAway extends Ability {
 
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living)) continue;
-                living.addEffect(new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 5*20,10*20), 1, false, false, false));
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 5*20,10*20), 2, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 1, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 5, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 0, false, false, false));
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.run_away", JujutsuKaisen.MOD_ID), owner.getName()));

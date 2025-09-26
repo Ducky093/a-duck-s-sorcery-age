@@ -108,7 +108,13 @@ public class Die extends Ability {
 
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
-
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
+            if (living instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
+            }
+            cap.delayTickEvent(() -> {
+                if (entity != null) {
+                   // if (!JJKAbilities.hasToggled(owner, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ) {
             living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
 
             living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
@@ -118,9 +124,9 @@ public class Die extends Ability {
                 }
             });
 
-            if (living instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
-            }
+        }
+                //}
+            }, 10);
         }
     }
 

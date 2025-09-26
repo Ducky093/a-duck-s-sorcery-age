@@ -147,6 +147,11 @@ public class PacketHandler {
                 .encoder(ScreenFlashS2CPacket::encode)
                 .consumerMainThread(ScreenFlashS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(BlinkS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(BlinkS2CPacket::new)
+                .encoder(BlinkS2CPacket::toBytes)
+                .consumerMainThread(BlinkS2CPacket::handle)
+                .add();
         INSTANCE.messageBuilder(QuestionCreatePactC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(QuestionCreatePactC2SPacket::new)
                 .encoder(QuestionCreatePactC2SPacket::encode)

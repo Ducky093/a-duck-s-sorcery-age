@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import net.minecraft.util.Mth;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
-    public static final int DURATION = 3 * 20;
+    public static final int DURATION = 1 * 20;
     private static final float RADIUS = 5.0F;
     private static final float MAX_EXPLOSION = 25.0F;
 
@@ -69,7 +69,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             owner.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.HOLLOW_PURPLE.get()), (this.getPower() * 5.0F)*radFactor); */
             
             ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), radius,
-                    duration, this.getPower() * 0.4F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
+                    duration, this.getPower() * 1.2F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
             
             
         }

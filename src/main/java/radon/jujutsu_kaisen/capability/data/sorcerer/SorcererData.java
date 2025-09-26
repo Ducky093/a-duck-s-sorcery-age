@@ -524,7 +524,10 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getMaximumOutput() {
         float output = 1.0F;
-        if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
+        if (this.toggled.contains(JJKAbilities.MYTHICAL_BEAST_AMBER.get() )) {
+            output = 1.5F;
+        }
+        else if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
             output = 1.2F;
         }
         else if (this.traits.contains(Trait.SIMURIAN)) {

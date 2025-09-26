@@ -56,7 +56,8 @@ public abstract class Ability {
         COOLDOWN,
         BURNOUT,
         DISABLE,
-        DISARMED
+        DISARMED,
+        SILENCED
     }
 
     public enum Classification {

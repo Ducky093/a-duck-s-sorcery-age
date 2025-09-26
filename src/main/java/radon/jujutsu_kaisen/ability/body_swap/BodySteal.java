@@ -126,6 +126,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         attacker.swing(InteractionHand.MAIN_HAND, true);
 
         ISorcererData ownerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        
         ISorcererData targetCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         //ownerCap.deserializeNBT(ownerCap.serializeNBT());
         //CompoundTag targetnbt = targetCap.serializeNBT();

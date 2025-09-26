@@ -111,10 +111,15 @@ public class ExplosionHandler {
                         Mth.floor(explosion.position.y + diameter + 1.0F),
                         Mth.floor(explosion.position.z + diameter + 1.0F)));
                 ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
-                  ISorcererData cap = explosion.instigator.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                  
                 for (Entity entity : entities) {
+               
+                    if (explosion.instigator.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                         ISorcererData cap = explosion.instigator.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                         if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && ( (entity == explosion.instigator && (!cap.hasSelfHit() || explosion.isMelee) ) )) continue;
+                    }
 
-                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && (entity == explosion.instigator && (!cap.hasSelfHit() || explosion.isMelee)  )) continue;
+                   
 
                     if (!entity.ignoreExplosion()) {
                         double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;

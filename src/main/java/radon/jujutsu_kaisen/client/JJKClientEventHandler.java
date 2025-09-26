@@ -359,6 +359,7 @@ public class JJKClientEventHandler {
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
             event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
+            event.registerAboveAll("blink_overlay", BlinkOverlay.OVERLAY);
         }
 
         @SubscribeEvent

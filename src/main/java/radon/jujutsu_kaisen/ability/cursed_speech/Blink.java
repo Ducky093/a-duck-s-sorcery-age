@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.cursed_speech;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,10 +15,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.BlinkS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -27,7 +34,7 @@ import java.util.List;
 public class Blink extends Ability {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
-    private static final int DURATION = 15;
+private static final int DURATION = 15;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -64,26 +71,30 @@ public class Blink extends Ability {
         }
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-        for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living)) continue;
-             
-                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 2, false, false, false));
-
-            if (entity instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.blink", JujutsuKaisen.MOD_ID), owner.getName()));
-            }
+         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
+        for (Entity entity : getEntities(owner)) {     
+            if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
+                if (entity instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.blink", JujutsuKaisen.MOD_ID), owner.getName()));
+                }
+                //living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 4, false, false, false));
+                cap.delayTickEvent(() -> {  
+                    if (entity != null && !JJKAbilities.hasToggled(living, JJKAbilities.CURSED_ENERGY_SHIELD.get()) && entity instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20)), player);
+                    }
+               
+            }, 10);
         }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 75.0F;
+        return 50.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 16 * 20;
+        return 10 * 20;
     }
 
     @Override
