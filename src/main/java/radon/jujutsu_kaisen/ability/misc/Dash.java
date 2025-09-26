@@ -163,7 +163,7 @@ public class Dash extends Ability {
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
 
 
-        if (!owner.isShiftKeyDown()) {
+        if (owner.isShiftKeyDown()) {
             power*=0.55f;
         }
 
@@ -276,12 +276,12 @@ public class Dash extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (owner.isShiftKeyDown()) {
+            if (!owner.isShiftKeyDown()) {
                 return 16;
             }
             return 8;
         }
-        if (owner.isShiftKeyDown()) {
+        if (!owner.isShiftKeyDown()) {
             return 25;
         }
         return super.getRealCooldown(owner);
