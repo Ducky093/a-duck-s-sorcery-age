@@ -53,7 +53,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
   
     private static final double SPEED = 0.03D;
-    public boolean hasShieldDrained = false;
+    private boolean hasShieldDrained = false;
 
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
