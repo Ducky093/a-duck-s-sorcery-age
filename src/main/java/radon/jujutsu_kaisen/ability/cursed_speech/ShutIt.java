@@ -74,10 +74,12 @@ public class ShutIt extends Ability {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.shut_it", JujutsuKaisen.MOD_ID), owner.getName()));
             }
              capSelf.delayTickEvent(() -> {     
-               if (entity != null && !JJKAbilities.hasToggled(living, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ) {
-                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+               if (entity != null ) {
+                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent() ) return;
                        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                       cap.setSilenced(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,15*20) );
+                       if ( !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                         cap.setSilenced(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,15*20) );
+                       }
                }
             }, 10);
         }

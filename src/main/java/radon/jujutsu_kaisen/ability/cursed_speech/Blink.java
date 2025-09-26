@@ -79,7 +79,7 @@ private static final int DURATION = 15;
                 }
                 //living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 4, false, false, false));
                 cap.delayTickEvent(() -> {  
-                    if (entity != null && !JJKAbilities.hasToggled(living, JJKAbilities.CURSED_ENERGY_SHIELD.get()) && entity instanceof ServerPlayer player) {
+                    if (entity != null && !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) && entity instanceof ServerPlayer player) {
                         PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20)), player);
                     }
                

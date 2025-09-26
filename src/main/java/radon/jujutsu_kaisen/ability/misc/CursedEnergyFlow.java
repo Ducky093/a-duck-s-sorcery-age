@@ -167,13 +167,18 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         float ratio = cap.getEnergy()/cap.getMaxEnergy();
 
-        if (ratio <= 0.5) {
-            newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
-        }
+       
 
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-        EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION);
+       
+         if ( !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) ) {
+            if (ratio <= 0.5) {
+                newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
+            }
+                EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
+                newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION); 
+            
+            }
     }
 
     @Override

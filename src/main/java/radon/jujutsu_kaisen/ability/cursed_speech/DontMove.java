@@ -74,7 +74,7 @@ public class DontMove extends Ability {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
                 }
                 cap.delayTickEvent(() -> {
-                    if (entity != null && !JJKAbilities.hasToggled(living, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ) {
+                    if (entity != null &&  !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) ) {
                         living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
                     }
                 }, 10);

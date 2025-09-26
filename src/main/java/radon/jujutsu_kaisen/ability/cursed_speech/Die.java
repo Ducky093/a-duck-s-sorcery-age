@@ -114,7 +114,6 @@ public class Die extends Ability {
             }
             cap.delayTickEvent(() -> {
                 if (entity != null) {
-                   // if (!JJKAbilities.hasToggled(owner, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ) {
             living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
 
             living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
