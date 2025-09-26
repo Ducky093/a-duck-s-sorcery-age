@@ -120,7 +120,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (isShielding) {
             if (!this.hasShieldDrained) {
                 this.hasShieldDrained = true;
-                cap.useEnergy(10);
+                cap.useEnergy(30);
             }
         } else {
             this.hasShieldDrained = false;
@@ -164,10 +164,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
             newSpeed*=1.15;
         }
- 
-        if (cap.getEnergy() < cap.getMaxEnergy()*0.1f) {
-            newSpeed *= 0.5;
+
+        float ratio = cap.getEnergy()/cap.getMaxEnergy();
+
+        if (ratio <= 0.5) {
+            newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
         }
+
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION);

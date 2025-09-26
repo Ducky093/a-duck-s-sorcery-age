@@ -163,7 +163,7 @@ public class Dash extends Ability {
                 DASH * (1.0F + this.getPower(owner) * 0.1F));
 
 
-        if (owner.isShiftKeyDown()) {
+        if (!owner.isShiftKeyDown()) {
             power*=0.55f;
         }
 
@@ -187,6 +187,7 @@ public class Dash extends Ability {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
 
             } else {
+                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
                 velocity = velocity.multiply(new Vec3(1.1D, 1, 1.1D));
             }
         }
@@ -267,7 +268,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 12;
+        return 10;
     }
 
     @Override
@@ -275,12 +276,12 @@ public class Dash extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (!owner.isShiftKeyDown()) {
+            if (owner.isShiftKeyDown()) {
                 return 16;
             }
-            return 10;
+            return 8;
         }
-        if (!owner.isShiftKeyDown()) {
+        if (owner.isShiftKeyDown()) {
             return 25;
         }
         return super.getRealCooldown(owner);

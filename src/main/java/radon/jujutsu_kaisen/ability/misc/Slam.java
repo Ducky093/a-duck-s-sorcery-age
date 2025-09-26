@@ -123,7 +123,7 @@ public class Slam extends Ability implements Ability.ICharged {
         float dmgMult = 0.75F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
             dmgMult = 0.8F;
-            radius = radius*1.35f+2;
+            radius = radius*1.35f+1.5f;
         }
         if (owner instanceof RabbitEscapeEntity) {
             radius = 1f;
@@ -132,7 +132,7 @@ public class Slam extends Ability implements Ability.ICharged {
         boolean steeled = false;
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
             steeled = true;
-            radius = radius*1.2f+1.5f;
+            radius = radius*1.2f+1.0f;
 
         }
 
@@ -140,7 +140,7 @@ public class Slam extends Ability implements Ability.ICharged {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
             if (cooldown <= 0) {
                 dmgMult = 0.7F;
-                radius = radius * 1.75f;
+                radius = radius * 1.5f;
             }
         }
 

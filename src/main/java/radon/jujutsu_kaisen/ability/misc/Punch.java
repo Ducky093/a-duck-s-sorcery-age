@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.PlayfulCloudItem;
 import radon.jujutsu_kaisen.item.cursed_tool.PolearmStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SlaughterDemonItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -44,6 +45,7 @@ public class Punch extends Ability implements Ability.ICharged{
     private static final float DAMAGE = 7.5F;
     private static final double RANGE = 7.5D;
     private static final double LAUNCH_POWER = 3.0D;
+    private static final int STAGGER = 0;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -104,25 +106,11 @@ public class Punch extends Ability implements Ability.ICharged{
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         float num = 3;
         if (power >= 0.25) {
-            float mod = 1;
             num = 4;
-            if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                mod = 1.4f;
-           }
-            if (mod != 1) {
-                mod = (float) owner.getDeltaMovement().length();
-                Vec3 look2 = look.normalize().scale(power*mod+0.5);
-                if (look2.y > 0) {
-                    look2.multiply(0.8,0.2,0.8);
-                } else {
-                    look2.multiply(1.0,0.2,1.0);
-                }
-                owner.setDeltaMovement(look2.x,look2.y,look2.z);
-            }
-
         }
 
         double newRange = RANGE;
+        int newStagger = STAGGER;
 
         int dash = cap.getDash();
         if (dash > 0) {
@@ -134,12 +122,13 @@ public class Punch extends Ability implements Ability.ICharged{
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
-            newRange+=2.0;
+            newRange+=1.5;
         }
 
-        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem) {
-            newRange+=0.5;
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {
+            newStagger += 8.0;
         }
+
 
         if (cap.getSpeedStacks() > 0) {
             newRange = RANGE + ((double) cap.getSpeedStacks() /5); //someone tell brosif to use tabs
@@ -149,6 +138,7 @@ public class Punch extends Ability implements Ability.ICharged{
         Level level1 = owner.level();
         for (int i = 0; i < num; i++) {
             double finalNewRange = newRange;
+            int finalStagger = newStagger;
             cap.delayTickEvent(() -> {
 
                 Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
@@ -232,6 +222,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
                                     .multiply(1.0D, 0.25D, 1.0D));
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
                         }
                     }
 
@@ -240,6 +231,7 @@ public class Punch extends Ability implements Ability.ICharged{
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                     .multiply(1.0D, 0.25D, 1.0D));
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
+                            entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
 
                     }
                     }

@@ -177,7 +177,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public int getDuration() {
-        return 3;
+        return 5;
     }
 
     @Override

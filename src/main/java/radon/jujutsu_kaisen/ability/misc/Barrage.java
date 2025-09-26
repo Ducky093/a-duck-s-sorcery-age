@@ -29,12 +29,15 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.PolearmStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SlaughterDemonItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
     private static final double RANGE = 10.0D;
     public static int DURATION = 8;
+    private static final int STAGGER = 0;
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -77,16 +80,17 @@ public class Barrage extends Ability {
 
         }
 
-        if ( owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
             newRange+=1.5;
         }
-        else if 
-            (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem ) {
-                 newRange+=1.125;
+
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {
+            newStagger += 2;
         }
 
         for (int i = 0; i < duration2; i++) {
             double finalNewRange = newRange;
+            int finalStagger = newStagger;
             cap.delayTickEvent(() -> {
 
                 owner.swing(InteractionHand.MAIN_HAND, true);
@@ -129,7 +133,7 @@ public class Barrage extends Ability {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }
 
-                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), 6, 0, false, false, false));
+                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
 
                     if (owner instanceof Player player) {
                         player.attack(entity);

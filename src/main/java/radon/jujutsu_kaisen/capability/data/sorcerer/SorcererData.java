@@ -454,7 +454,7 @@ public class SorcererData implements ISorcererData {
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil(((this.getRealPower() - 1.0F) * 24.0D) / 20) * 20;
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 24.0D) / 20) * 20) + 30;
 
             if (this.owner.getMaxHealth() < health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
@@ -466,8 +466,14 @@ public class SorcererData implements ISorcererData {
             double speed = this.getRealPower();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
+            float ratio = owner.getHealth()/owner.getMaxHealth();
+
 
             double movement = this.getRealPower() * 0.3D;
+
+            if (ratio <= 0.5) {
+                movement *= Math.min(0.4, (ratio * 1.25));
+            }
 
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
 
@@ -491,7 +497,7 @@ public class SorcererData implements ISorcererData {
             }
 
         } else {
-            double health = Math.ceil(((this.getRealPower() - 1.0F) * 17.0D) / 20) * 20;
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 17.0D) / 20) * 20) + 30;
 
             double damage = this.getRealPower() * 1.0D;
             if (this.owner instanceof Player player) {
