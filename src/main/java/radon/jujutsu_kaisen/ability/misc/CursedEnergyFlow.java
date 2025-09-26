@@ -171,11 +171,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             newSpeed *= 0.85;
         }
             if (ratio <= 0.3 && ratio > 0.15) {
-                newSpeed *=0.75 ;
+                newSpeed *=0.75;
             }
 
             if (ratio <= 0.15) {
-                newSpeed *= 0.65
+                newSpeed *= 0.65;
             }
 
 

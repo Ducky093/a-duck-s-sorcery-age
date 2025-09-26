@@ -474,7 +474,7 @@ public class SorcererData implements ISorcererData {
             if (ratio <= 0.5 && ratio > 0.3) {
                 movement *= 0.4;
             }
-            
+
             if (ratio <= 0.3 && ratio > 0.15) {
                 movement *= 0.25;
             }
