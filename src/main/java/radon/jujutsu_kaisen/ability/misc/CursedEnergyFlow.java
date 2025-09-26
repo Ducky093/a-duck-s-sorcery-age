@@ -169,11 +169,22 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
        
 
+
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
        
          if ( !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) ) {
-            if (ratio <= 0.5) {
-                newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
+            // if (ratio <= 0.5) {
+            //     newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
+            // }
+             if (ratio <= 0.5 && ratio > 0.3) {
+            newSpeed *= 0.85;
+        }
+            if (ratio <= 0.3 && ratio > 0.15) {
+                newSpeed *=0.75;
+            }
+
+            if (ratio <= 0.15) {
+                newSpeed *= 0.65;
             }
                 EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION); 
