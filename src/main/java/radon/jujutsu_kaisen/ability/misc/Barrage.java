@@ -69,6 +69,7 @@ public class Barrage extends Ability {
         }
 
         double newRange = RANGE;
+        int newStagger = STAGGER;
 
         Vec3 look1 = RotationUtil.getTargetAdjustedLookAngle(owner);
         int dash = cap.getDash();
