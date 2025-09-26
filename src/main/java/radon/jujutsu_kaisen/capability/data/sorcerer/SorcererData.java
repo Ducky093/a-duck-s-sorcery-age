@@ -471,8 +471,16 @@ public class SorcererData implements ISorcererData {
 
             double movement = this.getRealPower() * 0.3D;
 
-            if (ratio <= 0.5) {
-                movement *= Math.min(0.4, (ratio * 1.25));
+            if (ratio <= 0.5 && ratio > 0.3) {
+                movement *= 0.4;
+            }
+            
+            if (ratio <= 0.3 && ratio > 0.15) {
+                movement *= 0.25;
+            }
+
+            if (ratio <= 0.15) {
+                movement *= 0.15;
             }
 
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
