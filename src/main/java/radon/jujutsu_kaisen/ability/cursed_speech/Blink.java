@@ -79,8 +79,13 @@ private static final int DURATION = 15;
                 }
                 //living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 4, false, false, false));
                 cap.delayTickEvent(() -> {  
-                    if (entity != null && !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) && entity instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20)), player);
+                    if (entity != null && entity instanceof ServerPlayer player) {
+
+                         ISorcererData capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
+                        if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                            PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20)), player);
+                        }
+                       
                     }
                
             }, 10);

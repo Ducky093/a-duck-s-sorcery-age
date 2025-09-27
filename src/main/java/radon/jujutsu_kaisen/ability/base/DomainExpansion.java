@@ -43,6 +43,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     protected boolean isNotDisabledFromDA() {
         return true;
     }
+    
 
     @Override
     public boolean canDisable() {

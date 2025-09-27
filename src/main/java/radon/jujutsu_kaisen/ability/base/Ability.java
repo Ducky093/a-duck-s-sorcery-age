@@ -223,7 +223,7 @@ public abstract class Ability {
             return false;
         }
         
-        if (this.usesHands() && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed() ) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
+        if ((this.usesHands() && !this.isDomain() ) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed() ) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
             return false;
         }
 
@@ -265,7 +265,7 @@ public abstract class Ability {
             if (this.isTechnique() && this.canDisable() && cap.hasDisable()) {
                 return Status.DISABLE;
             }
-            if (this.usesHands() && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
+            if ((this.usesHands() && !this.isDomain() ) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
                 return Status.DISARMED;
             }
 

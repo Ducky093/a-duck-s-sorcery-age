@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.cursed_speech;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -74,9 +75,12 @@ public class DontMove extends Ability {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
                 }
                 cap.delayTickEvent(() -> {
-                    if (entity != null &&  !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  ) ) {
-                        living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
-                    }
+                      if (entity != null && living != null) {
+                            ISorcererData capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
+                            if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
+                            }
+                        }
                 }, 10);
         }
     }

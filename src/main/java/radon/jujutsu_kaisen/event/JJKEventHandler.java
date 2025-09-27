@@ -279,7 +279,7 @@ if (!(attackerEntity instanceof LivingEntity attacker)) return;
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(capSelf -> {
         if (HelperMethods.isMelee(source) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
-            event.setAmount(event.getAmount() * 1.75F);
+            event.setAmount(event.getAmount() * 1.5F);
         }
     });
 }
