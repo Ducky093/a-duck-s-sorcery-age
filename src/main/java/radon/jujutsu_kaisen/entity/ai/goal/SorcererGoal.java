@@ -113,7 +113,7 @@ public class SorcererGoal extends Goal {
 
             } else if (success) {
                 AbilityHandler.trigger(this.mob, ability);
-                if (ability != JJKAbilities.DASH.get() && ability != JJKAbilities.SLAM.get() && ability != JJKAbilities.PUNCH.get())  {
+                if (ability != JJKAbilities.QUICKDASH.get() && ability != JJKAbilities.DASH.get() && ability != JJKAbilities.SLAM.get() && ability != JJKAbilities.PUNCH.get())  {
                 return;
                 }
                 }

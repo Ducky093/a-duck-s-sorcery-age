@@ -348,6 +348,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
             event.register(JJKKeys.DASH);
+            event.register(JJKKeys.QUICKDASH);
             event.register(JJKKeys.OPEN_JUJUTSU_MENU);
             event.register(JJKKeys.INCREASE_OUTPUT);
             event.register(JJKKeys.DECREASE_OUTPUT);

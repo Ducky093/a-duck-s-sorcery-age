@@ -41,6 +41,7 @@ public class BlueStill extends Ability {
         return cap.isCooldownDone(JJKAbilities.BLUE_MOTION.get()) ? super.isTriggerable(owner) : Status.FAILURE;
     }
 
+    
     @Override
     public float getCost(LivingEntity owner) {
         return 150.0F;

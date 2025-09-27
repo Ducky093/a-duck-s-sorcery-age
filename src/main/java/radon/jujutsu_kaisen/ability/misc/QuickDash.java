@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -34,44 +35,13 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Dash extends Ability {
+public class QuickDash extends Dash {
     public static final double RANGE = 80.0D;
     private static final float DASH = 2.0F;
     private static final float MAX_DASH = 3.0F;
 
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
 
-    @Override
-    public boolean isTechnique() {
-        return false;
-    }
 
-    @Override
-    public boolean usesHands() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        return owner.hasLineOfSight(target) && owner.distanceTo(target) <= getRange(owner);
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
-    }
-
-    @Override
-    public Status isTriggerable(LivingEntity owner) {
-        if (!canDash(owner)) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
-    }
 
     private static double getDistanceGround(LivingEntity entity) {
         Vec3 pos = entity.position();
@@ -89,6 +59,11 @@ public class Dash extends Ability {
         return Double.MAX_VALUE;
     }
         
+
+    private static float getRange(LivingEntity owner) {
+        return (float) (RANGE * (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+    }
+
     private static boolean canDash(LivingEntity owner) {
            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (owner.hasEffect(JJKEffects.STUN.get()) || (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get()) && getDistanceGround(owner) > 4.0D)) return false;
@@ -122,17 +97,6 @@ public class Dash extends Ability {
         return collision || owner.getXRot() >= 1.0F;
     }
 
-    private static float getRange(LivingEntity owner) {
-        return (float) (RANGE * (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
-    }
-
-   private Vec3 getTarget(LivingEntity owner) {
-        Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 end = start.add(look.scale(RANGE));
-       // HitResult result = RotationUtil.getHitResult(owner, start, end);
-        return end;
-    }
 
     @Override
     public void run(LivingEntity owner) {
@@ -160,16 +124,11 @@ public class Dash extends Ability {
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
         float power = Math.min(MAX_DASH,
-                DASH * (1.0F + this.getPower(owner) * 0.1F));
+                DASH * (1.0F + this.getPower(owner) * 0.1F)) * 0.55f;
 
 
-        if (owner.isShiftKeyDown()) {
-            power*=0.55f;
-        }
-
-        if (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get() )) {
-            power*=1.25f;
-        }
+   
+     
         //Vec3 target = this.getTarget(owner);
         if (owner.onGround() && look.y < 0) {
             look = owner.getLookAngle().multiply(1,0,1);
@@ -183,13 +142,10 @@ public class Dash extends Ability {
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             velocity = velocity.multiply(new Vec3(1.2D, 1.0D, 1.2D));
-            if (!owner.isShiftKeyDown()) {
-                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
-
-            } else {
+           
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
                 velocity = velocity.multiply(new Vec3(1.1D, 1, 1.1D));
-            }
+           
         }
         if (owner.onGround() && velocity.y < 0) {
             velocity.multiply(1,0,1);
@@ -257,42 +213,12 @@ public class Dash extends Ability {
     }
 
     @Override
-    public boolean isValid(LivingEntity owner) {
-        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.canJump()) && super.isValid(owner);
-    }
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 0;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 10;
-    }
-
-    @Override
     public int getRealCooldown(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (!owner.isShiftKeyDown()) {
-                return 16;
-            }
             return 8;
         }
-        if (!owner.isShiftKeyDown()) {
-            return 25;
-        }
-        return super.getRealCooldown(owner);
+        return super.getSuperRealCooldown(owner);
     }
-
-    public int getSuperRealCooldown(LivingEntity owner) {
-        return super.getRealCooldown(owner);
-    }
-
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.NONE;
-    }
+   
 }

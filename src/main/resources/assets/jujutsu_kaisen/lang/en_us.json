@@ -69,7 +69,10 @@
   "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
   "key.jujutsu_kaisen.dash": "Dash",
+  "key.jujutsu_kaisen.quickdash": "Quickdash",
   "key.jujutsu_kaisen.open_jujutsu_menu": "Open Jujutsu Menu",
+  "key.jujutsu_kaisen.activate_j2tsu_menu": "Open Technique Extra Menu",
+  "key.jujutsu_kaisen.activate_j2tsu": "Use Technique Extra",
   "key.jujutsu_kaisen.increase_output": "Increase Output",
   "key.jujutsu_kaisen.decrease_output": "Decrease Output",
 

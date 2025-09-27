@@ -220,6 +220,11 @@ public class ClientAbilityHandler {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                     }
                 }
+                if (JJKKeys.QUICKDASH.isDown()) {
+                    if (ClientAbilityHandler.trigger(JJKAbilities.QUICKDASH.get()) == Ability.Status.SUCCESS) {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.QUICKDASH.get())));
+                    }
+                }
             } else if (event.getAction() == InputConstants.RELEASE) {
                 if (current != null) {
                     boolean possiblyChanneling = channeled != null;

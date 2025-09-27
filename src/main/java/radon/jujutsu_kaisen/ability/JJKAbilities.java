@@ -96,6 +96,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> ANGEL_WINGS = ABILITIES.register("angel_wings",  AngelWings::new);
     public static RegistryObject<Ability> BARRIER_TRAVEL = ABILITIES.register("barrier_travel", BarrierTravel::new);
     
+    public static RegistryObject<Ability> QUICKDASH = ABILITIES.register("quickdash", QuickDash::new);
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
