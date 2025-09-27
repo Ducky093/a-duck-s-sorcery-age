@@ -416,6 +416,8 @@ public abstract class Ability {
     }
 
     public interface IChannelened {
+        default void onStart(LivingEntity owner) {}
+
         default void onStop(LivingEntity owner) {}
 
         default int getCharge(LivingEntity owner) {
