@@ -1419,8 +1419,9 @@ public class SorcererData implements ISorcererData {
             this.channeled = null;
         } else {
             this.channeled = ability;
-
+           
             if (this.channeled != null) {
+                  ((Ability.IChannelened) this.channeled).onStart(this.owner);
                 if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                     this.owner.sendSystemMessage(this.channeled.getEnableMessage());
                 }

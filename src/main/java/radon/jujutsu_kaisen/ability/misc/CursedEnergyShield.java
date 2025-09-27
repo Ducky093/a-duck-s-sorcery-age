@@ -60,4 +60,10 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     public boolean shouldLog(LivingEntity owner) {
         return true;
     }
+
+    @Override
+    public void onStart(LivingEntity owner) {
+       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+       cap.useEnergy(30);
+    }
 }
