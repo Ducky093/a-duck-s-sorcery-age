@@ -41,6 +41,11 @@ public class QuickDash extends Dash {
     private static final float MAX_DASH = 3.0F;
 
 
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isCooldownDone(JJKAbilities.DASH.get()) ? super.isTriggerable(owner) : Status.FAILURE;
+    }
 
 
     private static double getDistanceGround(LivingEntity entity) {

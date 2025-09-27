@@ -70,8 +70,11 @@ public class Dash extends Ability {
         if (!canDash(owner)) {
             return Status.FAILURE;
         }
-        return super.isTriggerable(owner);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isCooldownDone(JJKAbilities.QUICKDASH.get()) ? super.isTriggerable(owner) : Status.FAILURE;
+        // return super.isTriggerable(owner);
     }
+    
 
     private static double getDistanceGround(LivingEntity entity) {
         Vec3 pos = entity.position();
