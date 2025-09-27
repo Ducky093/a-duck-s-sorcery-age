@@ -53,7 +53,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
   
     private static final double SPEED = 0.03D;
-    private boolean hasShieldDrained = false;
+    //private boolean hasShieldDrained = false;
 
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
@@ -115,20 +115,21 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         }
 
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        boolean isShielding = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
-        if (isShielding) {
-            if (!this.hasShieldDrained) {
-                this.hasShieldDrained = true;
-                cap.useEnergy(30);
-            }
-        } else {
-            this.hasShieldDrained = false;
-        }
+        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        // boolean isShielding = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
+        // if (isShielding) {
+        //     if (!this.hasShieldDrained) {
+        //         this.hasShieldDrained = true;
+        //         cap.useEnergy(30);
+        //     }
+        // } else {
+        //     this.hasShieldDrained = false;
+        // }
 
         if (!(owner.level() instanceof ServerLevel level)) return;
-        float scale = isShielding ? 1.4F : 1.0F;
-
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //float scale = isShielding ? 1.4F : 1.0F;
+        float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.4F : 1.0F;
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
             for (int i = 0; i < 4; i++) {
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2 * scale);
