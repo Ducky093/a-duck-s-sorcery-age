@@ -171,7 +171,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                                     mult[0] *= 2.0;
                                 }
                                 cap.setDisable((int)(10F * this.getPower() * mult[0]));
-                                if (cap.getTechnique() == CursedTechnique.BRAIN_TRANSPLANT && entity instanceof LivingEntity living  ) { 
+                                if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && entity instanceof LivingEntity living  ) { 
                                     living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 10, 0, false, false, false));
                                 }
                                 if (entity instanceof ServerPlayer player) {

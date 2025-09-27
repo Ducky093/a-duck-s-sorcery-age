@@ -115,7 +115,7 @@ public class WeaponEventHandler {
               
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 cap.setDisable(20);
-                                if (cap.getTechnique() == CursedTechnique.BRAIN_TRANSPLANT  ) {
+                                if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)  ) {
                                     victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
                                 }
                                 if (victim instanceof ServerPlayer player) {

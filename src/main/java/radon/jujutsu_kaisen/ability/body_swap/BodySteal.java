@@ -140,7 +140,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         CursedEnergyNature nature = targetCap.getNature();
 
         if (current == null) return;
-        if (current == steal) return;
+        if (current == steal || steal == CursedTechnique.MIMICRY ) return;
 
         
         

@@ -112,7 +112,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && ((technique != null && technique.getDomain() == this ) || (technique == CursedTechnique.BRAIN_TRANSPLANT && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isValid(owner));
+        return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && ((technique != null && technique.getDomain() == this ) || (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isValid(owner));
     }
 
 
@@ -184,7 +184,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return ((technique != null && technique.getDomain() == this ) || (technique == CursedTechnique.BRAIN_TRANSPLANT && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isDisplayed(owner));
+        return ((technique != null && technique.getDomain() == this ) || (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isDisplayed(owner));
     }
 
     @Override

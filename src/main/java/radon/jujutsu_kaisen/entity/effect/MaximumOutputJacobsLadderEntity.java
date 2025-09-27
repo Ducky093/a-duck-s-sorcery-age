@@ -167,7 +167,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
                                         mult[0] *= 2.5;
                                     }
                                     cap.setDisable((int)(15F * this.getPower() * mult[0]));
-                                    if (cap.getTechnique() == CursedTechnique.BRAIN_TRANSPLANT && entity instanceof LivingEntity living  ) { 
+                                    if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && entity instanceof LivingEntity living  ) { 
                                         living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 15, 0, false, false, false));
                                     }
                                     if (entity instanceof ServerPlayer player) {

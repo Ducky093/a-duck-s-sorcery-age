@@ -129,8 +129,10 @@ public class QuickDash extends Dash {
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
         float power = Math.min(MAX_DASH,
-                DASH * (1.0F + this.getPower(owner) * 0.1F)) * 0.55f;
-
+                DASH * (1.0F + this.getPower(owner) * 0.1F));
+        if (!owner.isShiftKeyDown()) {
+            power*=0.55f;
+        }
 
    
      
@@ -147,9 +149,13 @@ public class QuickDash extends Dash {
         }
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             velocity = velocity.multiply(new Vec3(1.2D, 1.0D, 1.2D));
-           
+            if (owner.isShiftKeyDown()) {
+                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
+
+            } else {
                 owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
                 velocity = velocity.multiply(new Vec3(1.1D, 1, 1.1D));
+            }
            
         }
         if (owner.onGround() && velocity.y < 0) {
@@ -221,7 +227,13 @@ public class QuickDash extends Dash {
     public int getRealCooldown(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (owner.isShiftKeyDown()) {
+                return 16;
+            }
             return 8;
+        }
+        if (owner.isShiftKeyDown()) {
+            return 25;
         }
         return super.getSuperRealCooldown(owner);
     }
