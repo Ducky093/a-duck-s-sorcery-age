@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +26,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
@@ -84,10 +88,15 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     public List<Block> getFloorBlocks() {
         return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
     }
-    @Override
-    public List<Block> getDecorationBlocks() {
-        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
+
+     @Override
+    public @Nullable ParticleOptions getEnvironmentParticle() {
+        return ParticleTypes.SQUID_INK;
     }
+    // @Override
+    // public List<Block> getDecorationBlocks() {
+    //     return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
+    // }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ChimeraShadowGardenForgeEvents {

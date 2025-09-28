@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -8,6 +9,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -27,16 +30,16 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 9.0D;
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 20.0D;
     }
 
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return !JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
+        return !(owner instanceof Player player) || ( !JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
                 cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
-                cap.getMode() == TenShadowsMode.ABILITY;
+                cap.getMode() == TenShadowsMode.ABILITY);
     }
 
     @Override

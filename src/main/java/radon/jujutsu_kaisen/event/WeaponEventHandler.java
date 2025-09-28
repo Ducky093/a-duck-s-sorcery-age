@@ -196,9 +196,9 @@ public class WeaponEventHandler {
                     //event.setAmount(event.getAmount()*0.9f);
                    // event.setAmount(event.getAmount()*0.196f); //all
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) ) {
-                        if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.15f )) {
+                        if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.0f )) {
                             //if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 0.05f )) {
-                                 event.setAmount(event.getAmount()*0.15f);
+                                 event.setAmount(event.getAmount()*0.1f);
                             //}
                         }
                     }

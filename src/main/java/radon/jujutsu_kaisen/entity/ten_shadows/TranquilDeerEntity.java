@@ -104,7 +104,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 2 * 18.0D)
+                .add(Attributes.MAX_HEALTH, 2 * 16.0D)
                 .add(Attributes.ARMOR, 6.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
     }

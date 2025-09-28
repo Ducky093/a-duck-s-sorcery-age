@@ -55,11 +55,13 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (original != null) {
             if (original.isAir()) {
-                if (!this.getBlockState().getFluidState().isEmpty()) {
-                    this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-                } else {
-                    this.level.destroyBlock(this.getBlockPos(), false);
-                }
+                
+                //check tosee if this ticks while still commented
+                //if (!this.getBlockState().getFluidState().isEmpty()) {
+                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+                //} else {
+                //    this.level.destroyBlock(this.getBlockPos(), false);
+                //}
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
 
@@ -135,10 +137,12 @@ public class DomainBlockEntity extends BlockEntity {
             pTag.putUUID("identifier", this.identifier);
             pTag.putInt("death_time", this.death);
 
-            if (this.original != null) {
+          if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
-            } else {
+            } else if (this.deferred != null) {
                 pTag.put("original", this.deferred);
+            } else {
+                pTag.put("original", new CompoundTag()); // safe fallback
             }
 
             if (this.saved != null) {

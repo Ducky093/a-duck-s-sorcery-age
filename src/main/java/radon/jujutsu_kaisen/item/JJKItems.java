@@ -25,7 +25,7 @@ public class JJKItems {
     public static RegistryObject<Item> PLAYFUL_CLOUD = ITEMS.register("playful_cloud",
             () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL, 8, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",
-            () -> new SplitSoulKatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+            () -> new SplitSoulKatanaItem(JJKTiers.CURSED_TOOL, 7, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> DRAGON_BONE = ITEMS.register("dragon_bone",
             () -> new DragonBoneItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> CHAIN_OF_A_THOUSAND_MILES = ITEMS.register("chain_of_a_thousand_miles",
