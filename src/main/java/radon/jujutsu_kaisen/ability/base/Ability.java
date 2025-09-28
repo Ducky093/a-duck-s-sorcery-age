@@ -37,9 +37,6 @@ import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 
-import radon.jujutsu_kaisen.compat.PlayerReviveCompat;
-import radon.jujutsu_kaisen.compat.CuffedCompat;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -270,22 +267,6 @@ public abstract class Ability {
             }
             if ((this.usesHands() && !this.isDomain() ) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
                 return Status.DISARMED;
-            }
-            if (owner instanceof Player player) {
-               // CompoundTag nbt = owner.saveWithoutId();
-               // owner.save(nbt);
-               //|| hasSlot(nbt, "Arm")
-                if (PlayerReviveCompat.IsBleedingOut(player) ) {
-                    return Status.FAILURE;
-                }
-                if (this.usesHands() && (CuffedCompat.armsRestrained(player) )  ) {
-                    return Status.DISARMED;
-                }
-                else if (CuffedCompat.legsRestrained(player) && !this.usesHands() && !(this.getClassification() == Classification.CURSED_SPEECH)  ) {
-                    return Status.FAILURE;
-                } else if (CuffedCompat.headRestrained(player) && this.getClassification() == Classification.CURSED_SPEECH) {
-                    return Status.FAILURE;
-                }
             }
             
 
