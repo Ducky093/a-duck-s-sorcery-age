@@ -131,7 +131,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             float power = this.getPower(owner);
 
             if (domain != null) {
-                float testpower = (DomainExpansion.getStrength(owner, false) - 0.1);
+                float testpower = (DomainExpansion.getStrength(owner, false) - 0.1f);
                 power *= Math.max(0.1, testpower);
             }
 
