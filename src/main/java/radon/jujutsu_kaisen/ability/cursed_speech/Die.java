@@ -125,7 +125,7 @@ public class Die extends Ability {
 
         }
                 //}
-            }, 10);
+            }, 15);
         }
     }
 

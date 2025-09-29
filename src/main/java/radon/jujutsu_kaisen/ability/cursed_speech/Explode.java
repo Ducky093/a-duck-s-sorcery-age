@@ -29,7 +29,7 @@ public class Explode extends Ability {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
     private static final float EXPLOSIVE_POWER = 3.5F;
-    private static final float MAX_EXPLOSIVE_POWER = 16.0F;
+    private static final float MAX_EXPLOSIVE_POWER = 17.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -78,7 +78,7 @@ public class Explode extends Ability {
             ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, ((EXPLOSIVE_POWER) * (this.getPower(owner)))*1.3F),
                     20, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
              } 
-                }, 10);
+                }, 15);
             
         }
     }

@@ -103,7 +103,7 @@ public class BurnUp extends Ability {
                 
                 entity.hurtMarked = true;
             }
-            }, 10);
+            }, 15);
            
         }
     }

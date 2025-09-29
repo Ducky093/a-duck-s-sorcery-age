@@ -80,6 +80,13 @@ public interface ISorcererData {
 
     int getRemainingCooldown(BindingVow vow);
 
+
+
+    int getShieldTicks();
+
+    void setShieldTicks(int ticks);
+    
+
     boolean isCooldownDone(BindingVow vow);
 
     void addChant(Ability ability, String chant);

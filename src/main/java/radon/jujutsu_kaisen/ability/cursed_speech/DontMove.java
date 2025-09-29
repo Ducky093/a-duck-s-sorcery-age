@@ -81,7 +81,7 @@ public class DontMove extends Ability {
                                 living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
                             }
                         }
-                }, 10);
+                }, 20);
         }
     }
 

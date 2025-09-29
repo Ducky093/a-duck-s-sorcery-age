@@ -88,7 +88,7 @@ private static final int DURATION = 15;
                        
                     }
                
-            }, 10);
+            }, 15);
         }
     }
 

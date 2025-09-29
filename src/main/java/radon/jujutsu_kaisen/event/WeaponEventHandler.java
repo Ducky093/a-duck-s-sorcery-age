@@ -114,7 +114,7 @@ public class WeaponEventHandler {
 
               
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.setDisable(20);
+                                cap.setDisable(5);
                                 if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)  ) {
                                     victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
                                 }
@@ -206,6 +206,10 @@ public class WeaponEventHandler {
                 if (stacks.contains(JJKItems.STEEL_GAUNTLET.get())) {
                     event.setAmount(event.getAmount()*1.1f);
                 }
+
+                // if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                //    event.setAmount(event.getAmount()*0.8f);
+                //}
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {

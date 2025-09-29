@@ -35,7 +35,7 @@ import java.util.List;
 public class GetCrushed extends Ability {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
-    private static final float DAMAGE = 17.0F;
+    private static final float DAMAGE = 15.0F;
     private static final double CRUSH_POWER = 20.0D;
 
     @Override
@@ -109,12 +109,19 @@ public class GetCrushed extends Ability {
                     }
                 }
             }
-            entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
-            entity.hurtMarked = true;
+             entity.hurtMarked = true;
+             ISorcererData capHit = null;
+                                 if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                                    capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
+                                 }  
+            if (capHit == null || !capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
+                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
+            }
+           
             }
             
-            }, 10);
+            }, 15);
         }
      
     }

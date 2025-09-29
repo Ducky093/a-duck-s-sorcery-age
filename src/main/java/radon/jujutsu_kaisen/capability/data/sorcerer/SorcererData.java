@@ -54,6 +54,7 @@ public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private int cursedEnergyColor;
+    
 
     private int points;
     private final Set<Ability> unlocked;
@@ -87,6 +88,7 @@ public class SorcererData implements ISorcererData {
 
     private float energy;
     private int dashes = 0;
+    private int shieldTicks = 0;
     private float maxEnergy;
     private float extraEnergy;
 
@@ -656,6 +658,17 @@ public class SorcererData implements ISorcererData {
             this.requestedPactsRemovals.put(recipient, new HashSet<>());
         }
         this.requestedPactsRemovals.get(recipient).add(pact);
+    }
+
+  
+    @Override
+    public int getShieldTicks() {
+        return shieldTicks;
+    }
+
+    @Override
+    public void setShieldTicks(int ticks) {
+        this.shieldTicks = ticks;
     }
 
     @Override

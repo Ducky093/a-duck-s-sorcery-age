@@ -77,9 +77,14 @@ public class BlastAway extends Ability {
                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                         4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
-
-                double power = LAUNCH_POWER * this.getPower(owner);
+                 ISorcererData capHit = null;
+                                 if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                                    capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
+                                 }  
+                if (capHit == null || !capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                        double power = LAUNCH_POWER * this.getPower(owner);
                 entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.501D, 1.0D));
+                }
                 entity.hurtMarked = true;
             }
          }, 10);

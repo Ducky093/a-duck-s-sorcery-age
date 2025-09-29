@@ -80,7 +80,12 @@ public void run(LivingEntity owner) {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 4.0F;
+        return 3.0F;
+    }
+
+     @Override
+    public boolean usesHands() {
+        return false;
     }
 
     @Override

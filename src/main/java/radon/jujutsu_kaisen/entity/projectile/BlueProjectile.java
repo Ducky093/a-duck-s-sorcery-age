@@ -39,7 +39,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final int DURATION = 5 * 20;
     private static final float RADIUS = 4.0F;
     private static final float MAX_RADIUS = 8.0F;
-    private static final double OFFSET = 8.0D;
+    private static final double OFFSET = 12.0D;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level) {
         super(pType, level);
@@ -125,7 +125,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
                 if (entity instanceof LivingEntity) {
-                    if (this.DURATION <= 55) {
+                    if (this.getTime() <= 55) {
                         ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 7, 0, false, false, false));
                    }
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());

@@ -54,7 +54,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 25.0F;
+        return 20.0F;
     }
 
 

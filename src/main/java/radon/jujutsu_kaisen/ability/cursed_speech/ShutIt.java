@@ -81,7 +81,7 @@ public class ShutIt extends Ability {
                          cap.setSilenced(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,15*20) );
                        }
                }
-            }, 10);
+            }, 15);
         }
     }
 
