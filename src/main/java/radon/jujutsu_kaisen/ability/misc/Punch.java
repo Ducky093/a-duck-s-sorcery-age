@@ -215,7 +215,8 @@ public class Punch extends Ability implements Ability.ICharged{
                     entity.invulnerableTime = 0;
 
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
-                    newDMG *= (float) (1+1*power);
+                    newDMG *= (float) (1+0.75
+                            *power);
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {

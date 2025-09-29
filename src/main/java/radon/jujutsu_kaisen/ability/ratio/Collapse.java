@@ -165,6 +165,11 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
                                  if (owner.level().destroyBlock(blocker, false)) {
                                      FallingBlockEntity entity = FallingBlockEntity.fall(owner.level(), blocker, state);
                                      entity.noPhysics = true;
+
+                                     if (((ServerLevel) owner.level()).getEntity(entity.getUUID()) == null) {
+                                         owner.level().addFreshEntity(entity);
+                                     }
+
                                  }
                              }
                             }

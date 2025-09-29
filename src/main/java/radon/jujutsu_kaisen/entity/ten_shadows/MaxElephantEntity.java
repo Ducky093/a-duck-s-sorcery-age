@@ -100,6 +100,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
         this.moveControl = new MoveControl(this);
     }
 
@@ -157,7 +158,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getRiddenSpeed(@NotNull Player pPlayer) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.5F;
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.0F;
     }
 
     @Override

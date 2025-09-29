@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -58,6 +59,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 

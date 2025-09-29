@@ -91,7 +91,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.5D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.8D, true));
         }
 
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
@@ -112,7 +112,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public boolean canAttack(@NotNull LivingEntity pTarget) {
-        return super.canAttack(pTarget) && !(pTarget.getType() == this.getType() && ((TenShadowsSummon) pTarget).isClone()) &&
+        return super.canAttack(pTarget) && !(pTarget.getType() == this.getType() && !((TenShadowsSummon) pTarget).isClone()) &&
                 !(pTarget instanceof TamableAnimal tamable && tamable.getOwner() == this.getOwner() && tamable.isTame() == this.isTame());
     }
 

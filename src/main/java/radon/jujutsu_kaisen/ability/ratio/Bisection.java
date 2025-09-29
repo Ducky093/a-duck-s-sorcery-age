@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Bisection extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final double RANGE = 60.0D;
+    private static final double RANGE = 50.0D;
     private static final int DELAY = 20;
     private static final float DAMAGE = 20.0F;
     private static final int DURATION = 26;
@@ -137,8 +137,12 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
                 target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BISECTION.get()), DAMAGE * (this.getPower(owner) * 0.75F));
 
-                target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
-                target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                ISorcererData capHit = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                    target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                    target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                }
 
                 float scale = 1.5F;
 

@@ -81,6 +81,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
         this.moveControl = new MoveControl(this);
     }
 

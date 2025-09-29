@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -71,6 +72,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.yHeadRotO = this.yHeadRot;
 
         this.setVariant(variant);
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
         this.moveControl = new MoveControl(this);
     }
 
@@ -147,7 +149,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     protected float getRiddenSpeed(@NotNull Player pPlayer) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.5F;
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.0F;
     }
 
     @Override
@@ -292,7 +294,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.85f);
+            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.9f);
         }
 
         int leap = this.entityData.get(DATA_LEAP);

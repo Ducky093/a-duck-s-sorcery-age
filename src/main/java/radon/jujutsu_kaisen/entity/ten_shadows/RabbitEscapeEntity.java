@@ -1,5 +1,4 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
@@ -15,6 +14,8 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -64,14 +65,15 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
     public RabbitEscapeEntity(RabbitEscapeEntity leader) {
         this(leader, leader.isTame());
-
         this.setLeader(leader);
+        this.setOwner(leader.getOwner());
     }
 
     @Override
     public boolean canAttack(@NotNull LivingEntity pTarget) {
+
         if (this.getLeader() == pTarget || pTarget instanceof RabbitEscapeEntity rabbit && rabbit.getLeader() == pTarget) {
-            return false;
+                return false;
         }
         return super.canAttack(pTarget);
     }
@@ -84,6 +86,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
             this.level().getEntitiesOfClass(RabbitEscapeEntity.class, bounds, EntitySelector.NO_SPECTATORS).stream()
                     .filter(entity -> entity != this)
                     .filter(entity -> entity.getTarget() == null)
+                    .filter(entity -> (entity == this.getOwner()) || this.getOwner() == entity || entity.getOwner() == this)
                     .filter(entity -> !entity.isAlliedTo(this.getTarget()))
                     .filter(entity -> (entity.getLeader() != null && entity.getLeader() == this.getLeader()) || this.getLeader() == entity || entity.getLeader() == this)
                     .forEach(entity -> entity.setTarget(this.getTarget()));
@@ -159,6 +162,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
             for (int i = 0; i < COUNT; i++) {
                 RabbitEscapeEntity entity = new RabbitEscapeEntity(this);
                 entity.setPos(this.position());
+                entity.setTame(true);
                 this.level().addFreshEntity(entity);
             }
         }
