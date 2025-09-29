@@ -411,7 +411,7 @@ public class SorcererData implements ISorcererData {
 
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 0.25D, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
                 
@@ -541,9 +541,13 @@ public class SorcererData implements ISorcererData {
         if (this.toggled.contains(JJKAbilities.MYTHICAL_BEAST_AMBER.get() )) {
             output = 1.5F;
         }
-        else if (this.isInZone() || this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) ) {
+        else if (this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             output = 1.1F;
         }
+        else if (this.isInZone())  {
+            output = 1.2F;
+        }
+
         else if (this.traits.contains(Trait.SIMURIAN)) {
             output = 1.1F;
         }

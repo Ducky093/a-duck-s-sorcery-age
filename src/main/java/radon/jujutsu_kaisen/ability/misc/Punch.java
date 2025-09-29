@@ -126,7 +126,7 @@ public class Punch extends Ability implements Ability.ICharged{
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {
-            newStagger += 8.0;
+            newStagger += 10.0;
         }
 
 
