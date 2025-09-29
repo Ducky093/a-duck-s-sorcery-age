@@ -567,6 +567,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void maxOutput() {
+        this.output = this.getMaximumOutput();
+    }
+
+    @Override
     public int getPoints() {
         return this.points;
     }

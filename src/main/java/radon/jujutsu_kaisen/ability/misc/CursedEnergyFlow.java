@@ -349,7 +349,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
                     //victimCap.abilities.CURSED_ENERGY_SHIELD
-                    float armor = !source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? ( Math.max(1.3F + (0.04F * victimCap.getShieldTicks()), 2.5F) )  : 1.2F;
+                    float armor = !source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? ( Math.min(1.3F + (0.04F * victimCap.getShieldTicks()), 2.5F) )  : 1.2F;
                     
 
                     armor = (!source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.WATER_SHIELD.get()) ? 2.5F : armor);

@@ -247,7 +247,11 @@ public abstract class DomainExpansionEntity extends Entity {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
+        float domainMod = 1.0F;
+        if (JJKAbilities.CHIMERA_SHADOW_GARDEN.get() == this.ability ) {
+            domainMod *= 0.66;
+        }
+        return (cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth())) * domainMod ;
     }
 
     @Override

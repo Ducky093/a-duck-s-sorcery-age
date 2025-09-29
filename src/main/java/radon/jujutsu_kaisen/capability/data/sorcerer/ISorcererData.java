@@ -38,6 +38,8 @@ public interface ISorcererData {
 
     void decreaseOutput();
 
+    void maxOutput();
+
     int getPoints();
 
     void setPoints(int points);
