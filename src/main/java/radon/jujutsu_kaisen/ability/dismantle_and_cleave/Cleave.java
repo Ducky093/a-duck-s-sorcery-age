@@ -139,6 +139,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             float damage = this.calculateDamage(source, owner, target);
             damage = Math.min(MAX_DAMAGE * power, damage);
 
+            if (domain != null) {
+               damage *= 0.5f;
+            }
+
             boolean success = target.hurt(source, damage);
 
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
