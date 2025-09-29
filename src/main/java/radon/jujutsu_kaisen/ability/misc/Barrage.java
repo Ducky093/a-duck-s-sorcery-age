@@ -36,7 +36,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class Barrage extends Ability {
     private static final double RANGE = 10.0D;
     public static int DURATION = 8;
-    private static final int STAGGER = 0;
+    private static final int STAGGER = 6;
 
 
     @Override
