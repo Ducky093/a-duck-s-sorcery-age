@@ -139,7 +139,7 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
 
             if (!(source.getDirectEntity() instanceof DomainExpansionEntity)) return;
 
-            event.setAmount(event.getAmount() * 0.66F);
+            event.setAmount(event.getAmount() * 0.25F);
         }
     }
 }
