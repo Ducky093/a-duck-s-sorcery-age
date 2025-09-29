@@ -1,6 +1,11 @@
 package radon.jujutsu_kaisen.ability.mythical_beast_amber;
 
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -8,17 +13,30 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -80,7 +98,7 @@ public void run(LivingEntity owner) {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 3.0F;
+        return 2.0F;
     }
 
      @Override
@@ -113,8 +131,8 @@ public void run(LivingEntity owner) {
         EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.4D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-        EntityUtil.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor", 30.0D, AttributeModifier.Operation.ADDITION);
-        EntityUtil.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, ARMOR_TOUGHNESS_UUID, "Armor toughness", 4.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        //EntityUtil.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
+        //EntityUtil.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
     
 
@@ -143,6 +161,7 @@ public void run(LivingEntity owner) {
         int color = FastColor.ARGB32.color(255, Math.round(156), Math.round(95), Math.round(255));
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
         cap.setCursedEnergyColor(color);
+        cap.maxOutput();
        // PacketHandler.sendToServer(new SetCursedEnergyColorC2SPacket(color));
        
     }
@@ -166,5 +185,59 @@ public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
         cap.setCursedEnergyColor(color);
         owner.kill();
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class SoulReinforcementForgeEvents {
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onLivingDamage(LivingDamageEvent event) {
+            DamageSource source = event.getSource();
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!victimCap.hasToggled(JJKAbilities.MYTHICAL_BEAST_AMBER.get())) return;
+
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (HelperMethods.isMelee(source)) {
+                    if (attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        return;
+                    }
+                }
+            }
+
+            if (source.is(JJKDamageSources.SOUL) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.OUTPUT_RCT.get())) return;
+
+            for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) victim.level()), victim.blockPosition())) {
+                if (domain.getOwner() == source.getEntity()) return;
+            }
+
+            float cost = event.getAmount() * 10.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            if (victimCap.getEnergy() < cost) return;
+            victimCap.useEnergy(cost);
+
+            int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
+
+            for (int i = 0; i < count; i++) {
+                double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - victim.getLookAngle().scale(0.35D).x;
+                double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * victim.getBbHeight();
+                double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - victim.getLookAngle().scale(0.35D).z;
+               ((ServerLevel) victim.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(victim), 0.2F, 1),
+                                    x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
+            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+            }
+            event.setCanceled(true);
+        }
     }
 }
