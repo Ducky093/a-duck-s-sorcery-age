@@ -145,8 +145,8 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
                 BlockPos blocked = hit.getBlockPos();
 
-                AABB bounds = new AABB(blocked.getX() * 0.75F, blocked.getY() * 0.75F, blocked.getZ() * 0.75F,
-                        blocked.getX() * 1.25F, blocked.getY() * 1.25F, blocked.getZ() * 1.25F);
+                AABB bounds = new AABB(blocked.getX() * 0.9F, blocked.getY() * 0.9F, blocked.getZ() * 0.9F,
+                        blocked.getX() * 1.05F, blocked.getY() * 1.05F, blocked.getZ() * 1.05F);
 
                 double centerX = bounds.getCenter().x;
                 double centerY = bounds.getCenter().y;
@@ -165,10 +165,6 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
                                  if (owner.level().destroyBlock(blocker, false)) {
                                      FallingBlockEntity entity = FallingBlockEntity.fall(owner.level(), blocker, state);
                                      entity.noPhysics = true;
-
-                                     if (((ServerLevel) owner.level()).getEntity(entity.getUUID()) == null) {
-                                         owner.level().addFreshEntity(entity);
-                                     }
 
                                  }
                              }
