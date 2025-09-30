@@ -99,8 +99,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        
         this.moveControl = new MoveControl(this);
     }
 

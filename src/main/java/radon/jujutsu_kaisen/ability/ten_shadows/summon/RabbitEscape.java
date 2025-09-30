@@ -84,12 +84,12 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
      @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 20 * 20;
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.1F : 10.0F;
+        return this.isTamed(owner) ? 0.2F : 10.0F;
     }
 
 
