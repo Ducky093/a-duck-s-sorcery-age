@@ -247,14 +247,16 @@ public class BlueProjectile extends JujutsuProjectile {
         super.tick();
 
         this.refreshDimensions();
-
+         int blueTime = this.getTime(); 
         if (this.entityData.get(DATA_MOTION)) {
             if (this.getTime() >= DELAY) {
                 this.spin();
             }
         }
-
-        if (this.getTime() >= DURATION) {
+        else {
+            blueTime += 20;
+        }
+        if (blueTime >= DURATION) {
             this.discard();
         } else {
             this.spawnParticles();
