@@ -57,7 +57,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
-    private int shieldTicks = 0;
+    //private int shieldTicks = 0;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -173,11 +173,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
 
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-        if (!(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))) {
-            cap.setShieldTicks(0);
-        } else {
-            cap.setShieldTicks(cap.getShieldTicks() + 1);
-        }
+       // if (!(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))) {
+            //cap.setShieldTicks(0);
+       // } else {
+           // cap.setShieldTicks(cap.getShieldTicks() + 1);
+        //}
         
 
          if ( !(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) && owner instanceof Player player ) ) {
@@ -349,7 +349,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
                     //victimCap.abilities.CURSED_ENERGY_SHIELD
-                    float armor = !source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? ( Math.min(1.3F + (0.04F * victimCap.getShieldTicks()), 2.5F) )  : 1.2F;
+                    // ( Math.min(1.3F + (0.04F * victimCap.getShieldTicks()), 2.5F) )
+                    float armor = !source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.5F : 1.2F;
                     
 
                     armor = (!source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.WATER_SHIELD.get()) ? 2.5F : armor);
