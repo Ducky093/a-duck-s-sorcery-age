@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SlaughterDemonItem;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -150,10 +151,18 @@ public class Slam extends Ability implements Ability.ICharged {
             for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), radius*2, radius*2, radius*2),
                     entity -> entity != owner )) {
                 int stunDuration = 40;
+                int staggerDuration = 0;
+
                 if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
                     stunDuration = 50;
                 }
+
+                if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {
+                    staggerDuration = 20;
+                }
+
                 entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
+                entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(),staggerDuration, 0, false, false, false));
             }
              ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * dmgMult, owner,
                     owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false, true );

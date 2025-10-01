@@ -36,7 +36,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class Barrage extends Ability {
     private static final double RANGE = 10.0D;
     public static int DURATION = 8;
-    private static final int STAGGER = 6;
+    private static final int STAGGER = 5;
 
 
     @Override
@@ -82,11 +82,11 @@ public class Barrage extends Ability {
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
-            newRange+=1.5;
+            newRange+=1.25;
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {
-            newStagger += 2;
+            newStagger += 4;
         }
 
         for (int i = 0; i < duration2; i++) {
