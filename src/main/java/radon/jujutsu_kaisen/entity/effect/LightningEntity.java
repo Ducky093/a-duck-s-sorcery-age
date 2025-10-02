@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class LightningEntity extends JujutsuProjectile {
-    public static final float SCALE = 4.0F;
+    public static final float SCALE = 2.0F;
     public static final double RANGE = 40;
 
     public double endPosX, endPosY, endPosZ;
@@ -68,7 +68,7 @@ public class LightningEntity extends JujutsuProjectile {
     }
 
     protected float getDamage() {
-        return 20.0F;
+        return 18.0F;
     }
 
     @Override
