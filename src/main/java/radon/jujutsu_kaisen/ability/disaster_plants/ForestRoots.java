@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.ForestRootsEntity;
@@ -29,21 +30,22 @@ public class ForestRoots extends Ability {
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
+        float output = ChantHandler.getOutput(owner, this);
 
-        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE * output, RANGE * output, RANGE * output))) {
             if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || !entity.onGround() ) continue;
-            owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getPower(owner), living));
+            owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getPower(owner), living, output));
         }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 200.0F;
+        return 250.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 18 * 20;
+        return 20 * 20;
     }
 
 

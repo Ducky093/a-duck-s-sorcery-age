@@ -89,7 +89,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 .add(Attributes.MAX_HEALTH, 6 * 18.0D)
                 .add(Attributes.ARMOR, 30.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
-                .add(Attributes.FOLLOW_RANGE);
+                .add(Attributes.FOLLOW_RANGE, 128.0D);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
 
             if (target != null) {
-                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
+                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.85f);
             }
 
             if (owner != null && this.isOpen()) {

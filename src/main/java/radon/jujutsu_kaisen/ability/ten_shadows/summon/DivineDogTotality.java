@@ -48,7 +48,7 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.4F;
+        return 0.6F;
     }
 
     @Override

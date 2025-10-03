@@ -49,9 +49,9 @@ public class FishShikigami extends Ability {
         float yOffset = owner.getBbHeight() + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F);
 
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                new EelShikigamiProjectile(owner, this.getPower(owner) * 1.1F, target, xOffset, yOffset),
-                new SharkShikigamiProjectile(owner, this.getPower(owner) * 1.1F, target, xOffset, yOffset),
-                new PiranhaShikigamiProjectile(owner, getPower(owner) * 1.1F, target, xOffset, yOffset)
+                new EelShikigamiProjectile(owner, this.getPower(owner) * 1.15F, target, xOffset, yOffset),
+                new SharkShikigamiProjectile(owner, this.getPower(owner) * 1.15F, target, xOffset, yOffset),
+                new PiranhaShikigamiProjectile(owner, getPower(owner) * 1.15F, target, xOffset, yOffset)
         };
         FishShikigamiProjectile selected = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
         //selected.setDELAY(15);
@@ -72,12 +72,12 @@ public class FishShikigami extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 80.0F;
+        return 100.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 7 * 20;
+        return 12 * 20;
     }
 
 

@@ -40,7 +40,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final float DAMAGE = 13.0F;
-    private int DELAY = 20;
+    private int DELAY = 10;
     private static final int DURATION = 20*3;
     private static final double SPEED = 2.5D;
 

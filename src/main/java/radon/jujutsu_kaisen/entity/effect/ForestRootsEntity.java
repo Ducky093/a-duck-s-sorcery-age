@@ -19,9 +19,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
-    private static final int DURATION = 2;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    private float DURATION;
+    private float chanted;
 
     @Nullable
     private UUID victimUUID;
@@ -36,7 +37,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         this.noCulling = true;
     }
 
-    public ForestRootsEntity(LivingEntity owner, float power, LivingEntity target) {
+    public ForestRootsEntity(LivingEntity owner, float power, LivingEntity target, float chant) {
         this(JJKEntities.FOREST_ROOTS.get(), target.level());
 
         this.setOwner(owner);
@@ -47,12 +48,14 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         this.pos = target.position();
 
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), 0.0F);
+        this.chanted = chant;
+        this.DURATION = 40 * this.chanted;
     }
+
 
     @Override
     public void tick() {
         LivingEntity victim = this.getVictim();
-
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
             this.discard();
         } else {
@@ -60,7 +63,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
 
 
 
-            if (this.getTime() >= (DURATION * (this.getPower() * 1.5f))) {
+            if (this.DURATION != 0 && this.getTime() >= this.DURATION) {
                 this.discard();
             } else if (victim != null) {
                 if (this.pos != null) {
@@ -98,6 +101,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         if (this.victimUUID != null) {
             pCompound.putUUID("victim", this.victimUUID);
         }
+
     }
 
     @Override
@@ -107,6 +111,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         if (pCompound.hasUUID("victim")) {
             this.victimUUID = pCompound.getUUID("victim");
         }
+
     }
 
     @Override

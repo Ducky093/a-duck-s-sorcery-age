@@ -64,7 +64,7 @@ public class Wheel extends Summon<WheelEntity> {
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
                 cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
-                (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY);
+                (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY) && !JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 
     @Override

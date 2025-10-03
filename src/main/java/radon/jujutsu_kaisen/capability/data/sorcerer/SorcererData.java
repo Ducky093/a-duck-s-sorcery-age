@@ -473,22 +473,22 @@ public class SorcererData implements ISorcererData {
 
             double movement = this.getRealPower() * 0.3D;
 
-            if (ratio <= 0.5 && ratio > 0.3) {
+            if (ratio <= 0.5 && ratio > 0.35) {
                 movement *= 0.4;
             }
 
-            if (ratio <= 0.3 && ratio > 0.15) {
+            if (ratio <= 0.35 && ratio > 0.2) {
                 movement *= 0.25;
             }
 
-            if (ratio <= 0.15) {
+            if (ratio <= 0.2) {
                 movement *= 0.15;
             }
 
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {
-                this.owner.heal(0.5F / 20);
+                this.owner.heal(0.35F / 20);
             }
 
             EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);

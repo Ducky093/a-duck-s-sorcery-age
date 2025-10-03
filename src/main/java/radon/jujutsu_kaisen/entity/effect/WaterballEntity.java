@@ -37,11 +37,11 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int DURATION = 3 * 20;
-    private static final int INTERVAL = 10;
+    private static final int DURATION = 3 * 5;
+    private static final int INTERVAL = 5;
     private static final int WIDTH = 30;
     private static final int HEIGHT = 10;
-    private static final float DAMAGE = 14.5F;
+    private static final float DAMAGE = 13.0F;
 
     public WaterballEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -72,6 +72,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISASTER_TIDES.get()), DAMAGE * this.getPower())) {
                 entity.setDeltaMovement(entity.position().subtract(center.getCenter()));
+                entity.invulnerableTime = 0;
             }
         }
 

@@ -77,7 +77,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            if (!JJKAbilities.hasToggled(owner, this.getAbility())) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!JJKAbilities.hasToggled(owner, this.getAbility()) || cap.getEnergy() <= 100) {
                 return true;
             }
         }
