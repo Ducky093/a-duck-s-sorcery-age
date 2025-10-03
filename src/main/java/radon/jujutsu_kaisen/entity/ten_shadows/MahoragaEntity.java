@@ -329,7 +329,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     public void tick() {
         super.tick();
         if (this.getHealth() != this.getMaxHealth()) {
-            this.heal(2.0F / 20);
+            this.heal(1.0F / 20);
         }
     }
 

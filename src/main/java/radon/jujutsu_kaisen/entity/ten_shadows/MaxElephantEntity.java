@@ -157,7 +157,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getRiddenSpeed(@NotNull Player pPlayer) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.0F;
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.25F;
     }
 
     @Override

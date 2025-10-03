@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class Collapse extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final int RANGE = 10;
     private static final int DELAY = 20;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 10.0F;
     private static final int DURATION = 24;
     private static final float RADIUS = 3.0F;
     private static final float EXPLOSIVE_POWER = 3.0F;
@@ -139,7 +139,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
             Vec3 realpos = result.getLocation();
 
             if (index >= 20 && index < DURATION) {
-                ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.25F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.25F),
+                ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.0F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.0F),
                         20, DAMAGE + (this.getPower(owner) * 0.1F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);

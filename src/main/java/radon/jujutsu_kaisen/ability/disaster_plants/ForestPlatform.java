@@ -63,7 +63,7 @@ public class ForestPlatform extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.6F;
+        return 0.75F;
     }
 
 
