@@ -76,7 +76,7 @@ public class Return extends Ability {
             entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.getType() == JujutsuType.SHIKIGAMI && living instanceof SummonEntity ownable && ownable.getOwner() != null) {             
                     
-                    if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
+                    if (!(entity instanceof Player player)) {
                        Summon<?> ability = ownable.getAbility();
                        LivingEntity shikiowner = ownable.getOwner();
                        if (shikiowner != null) {

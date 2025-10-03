@@ -137,12 +137,25 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
                 target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BISECTION.get()), DAMAGE * (this.getPower(owner) * 0.75F));
 
-                ISorcererData capHit = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+              
 
-                if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                    target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
-                    target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                  if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                      ISorcererData capHit = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                      if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                        target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                        target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                      }
+                    }
+                else {
+                         target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                        target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
                 }
+                    
+
+                // if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                //     target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                //     target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                // }
 
                 float scale = 1.5F;
 
