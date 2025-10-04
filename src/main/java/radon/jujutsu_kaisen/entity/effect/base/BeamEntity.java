@@ -184,9 +184,14 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
                                 if (distance > radius) continue;
 
-                                if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
-
-                                this.level().destroyBlock(pos, false);
+                                if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                     this.level().destroyBlock(pos, false);
+                                } else if (this.causesFire()) {
+                                    if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
+                                            this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
+                                        this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
+                                    }
+                                }                       
                                  if (this.causesElec()) {
 
                                          int count = this.random.nextInt(16); 
@@ -198,12 +203,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
                                                                 px, py, pz, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                                         }
                                     }
-                                if (!this.causesFire()) continue;
-
-                                if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
-                                        this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
-                                    this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
-                                }
+                               
                             }
                         }
                     }

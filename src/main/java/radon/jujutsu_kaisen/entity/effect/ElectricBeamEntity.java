@@ -46,7 +46,7 @@ public class ElectricBeamEntity extends BeamEntity {
 
     @Override
     protected float getDamage() {
-        return 20.0F;
+        return 10.0F;
     }
 
     @Override
