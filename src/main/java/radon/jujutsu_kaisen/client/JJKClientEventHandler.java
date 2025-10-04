@@ -527,6 +527,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FOREST_DASH.get(), ForestDashRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), ItemEntityRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BOMB.get(), CursedEnergyBombRenderer::new);
+             event.registerEntityRenderer(JJKEntities.ELECTRIC_BEAM.get(), ElectricBeamRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
