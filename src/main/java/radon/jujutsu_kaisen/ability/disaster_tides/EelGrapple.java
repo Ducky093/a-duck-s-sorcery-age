@@ -34,12 +34,12 @@ public class EelGrapple extends Ability {
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 15 * 20;
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 20.0F;
+        return 50.0F;
     }
 
     @Override
