@@ -9,7 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
-
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import org.jetbrains.annotations.Nullable;
 
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -89,7 +90,11 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.2F : 10.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float normalcost = 0.2f;
+        float extracost = cap.getExperience() * 0.000075f;
+        float realcost = normalcost * extracost;
+        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 10.0F;
     }
 
 

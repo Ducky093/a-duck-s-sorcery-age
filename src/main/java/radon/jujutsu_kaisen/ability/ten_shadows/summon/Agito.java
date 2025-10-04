@@ -4,6 +4,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -45,7 +47,11 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float normalcost = 1.0f;
+        float extracost = cap.getExperience() * 0.000075f;
+        float realcost = normalcost * extracost;
+        return Math.max(normalcost, realcost);
     }
 
     @Override

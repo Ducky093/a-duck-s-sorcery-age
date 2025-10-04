@@ -65,7 +65,11 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 1.5F : 1000.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float normalcost = 1.5F;
+        float extracost = cap.getExperience() * 0.000075f;
+        float realcost = normalcost * extracost;
+        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 1000.0F;
     }
 
     @Override

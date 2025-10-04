@@ -46,7 +46,11 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.2F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float normalcost = 0.2F;
+        float extracost = cap.getExperience() * 0.000075f;
+        float realcost = normalcost * extracost;
+        return Math.max(normalcost, realcost);
     }
 
     @Override

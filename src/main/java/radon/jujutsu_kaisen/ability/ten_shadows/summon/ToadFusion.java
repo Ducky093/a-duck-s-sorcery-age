@@ -3,6 +3,8 @@ package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -38,7 +40,11 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.45F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float normalcost = 0.45f;
+        float extracost = cap.getExperience() * 0.000075f;
+        float realcost = normalcost * extracost;
+        return Math.max(normalcost, realcost);
     }
 
     @Override
