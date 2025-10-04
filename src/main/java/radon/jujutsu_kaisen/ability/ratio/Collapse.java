@@ -139,7 +139,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
             Vec3 realpos = result.getLocation();
 
             if (index >= 20 && index < DURATION) {
-                ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.0F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.0F),
+                ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.1F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.1F),
                         20, DAMAGE + (this.getPower(owner) * 0.1F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
