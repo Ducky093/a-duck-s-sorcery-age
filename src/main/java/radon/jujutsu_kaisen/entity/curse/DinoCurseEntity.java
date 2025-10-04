@@ -149,7 +149,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
 
     @Override
     protected float getRiddenSpeed(@NotNull Player pPlayer) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.5F;
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5F;
     }
 
     @Override
