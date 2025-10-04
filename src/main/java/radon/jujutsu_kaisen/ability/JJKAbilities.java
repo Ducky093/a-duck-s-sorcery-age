@@ -16,6 +16,8 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.mythical_beast_amber.MythicalBeastAmber;
+import radon.jujutsu_kaisen.ability.mythical_beast_amber.EMFBlast;
+import radon.jujutsu_kaisen.ability.mythical_beast_amber.ElectricBeam;
 import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
 import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
@@ -195,6 +197,9 @@ public class JJKAbilities {
 
 
     public static RegistryObject<Ability> MYTHICAL_BEAST_AMBER = ABILITIES.register("mythical_beast_amber", MythicalBeastAmber::new);
+    public static RegistryObject<Ability> EMF_BLAST = ABILITIES.register("emf_blast", EMFBlast::new);
+    public static RegistryObject<Ability> ELECTRIC_BEAM = ABILITIES.register("electric_beam", ElectricBeam::new);
+
 
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);

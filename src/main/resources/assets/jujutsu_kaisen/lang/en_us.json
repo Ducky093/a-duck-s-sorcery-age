@@ -213,6 +213,8 @@
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
 
   "ability.jujutsu_kaisen.mythical_beast_amber": "Mythical Beast Amber",
+  "ability.jujutsu_kaisen.emf_blast": "EMF Blast",
+  "ability.jujutsu_kaisen.electric_beam": "Electric Beam",
   "ability.jujutsu_kaisen.jacobs_ladder": "Jacob's Ladder",
   "ability.jujutsu_kaisen.maximum_output_jacobs_ladder": "Maximum Output: Jacob's Ladder",
   "ability.jujutsu_kaisen.barrier_travel": "Barrier Traversal",
@@ -488,8 +490,8 @@
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
   "cursed_technique.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
   "cursed_technique.jujutsu_kaisen.ratio": "Ratio",
-   "cursed_technique.jujutsu_kaisen.mythical_beast_amber": "Mythical Beast Amber",
-"cursed_technique.jujutsu_kaisen.brain_transplant": "Brain Transplant",
+  "cursed_technique.jujutsu_kaisen.mythical_beast_amber": "Mythical Beast Amber",
+  "cursed_technique.jujutsu_kaisen.brain_transplant": "Brain Transplant",
 
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",

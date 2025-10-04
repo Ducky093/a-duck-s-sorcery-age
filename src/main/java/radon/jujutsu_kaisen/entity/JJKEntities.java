@@ -535,6 +535,11 @@ public class JJKEntities {
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_blast")
                             .toString()));
+    public static RegistryObject<EntityType<ElectricBeamEntity>> ELECTRIC_BEAM = ENTITIES.register("electric_beam", () ->
+            EntityType.Builder.<ElectricBeamEntity>of(ElectricBeamEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "electric_beam")
+                            .toString()));
     public static RegistryObject<EntityType<EelGrappleProjectile>> EEL_GRAPPLE = ENTITIES.register("eel_grapple", () ->
             EntityType.Builder.<EelGrappleProjectile>of(EelGrappleProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)

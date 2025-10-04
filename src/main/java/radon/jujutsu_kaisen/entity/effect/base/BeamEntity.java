@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -74,6 +77,10 @@ public abstract class BeamEntity extends JujutsuProjectile {
     public abstract int getCharge();
 
     protected boolean causesFire() {
+        return false;
+    }
+
+    protected boolean causesElec() {
         return false;
     }
 
@@ -180,7 +187,17 @@ public abstract class BeamEntity extends JujutsuProjectile {
                                 if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
 
                                 this.level().destroyBlock(pos, false);
+                                 if (this.causesElec()) {
 
+                                         int count = this.random.nextInt(16); 
+                                        for (int i = 0; i < count; i++) {
+                                             double px = x + (HelperMethods.RANDOM.nextDouble() - 0.5D) ;
+                                            double py = y + HelperMethods.RANDOM.nextDouble() ;
+                                            double pz = z + (HelperMethods.RANDOM.nextDouble() - 0.5D);
+                                        ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 5),
+                                                                px, py, pz, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                                        }
+                                    }
                                 if (!this.causesFire()) continue;
 
                                 if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
