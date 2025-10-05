@@ -22,6 +22,15 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<CursedSpeechParticle.CursedSpeechParticleOptions>> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
+            new ParticleType<>(false, CursedSpeechParticle.CursedSpeechParticleOptions.DESERIALIZER) {
+                @Override
+                public @NotNull Codec<CursedSpeechParticle.CursedSpeechParticleOptions> codec() {
+                    return null;
+                }
+            });
+        // public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
+        //     new SimpleParticleType(true));
     public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
             new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
                 @Override
@@ -78,8 +87,6 @@ public class JJKParticles {
                     return null;
                 }
             });
-    public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
-            new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
             new SimpleParticleType(true));
 }
