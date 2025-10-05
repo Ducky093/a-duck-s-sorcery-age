@@ -55,7 +55,7 @@ public class WingsItem extends ArmorItem implements GeoItem {
         var result = entity.level().clip(new net.minecraft.world.level.ClipContext(
                 pos, down,
                 net.minecraft.world.level.ClipContext.Block.COLLIDER,
-                net.minecraft.world.level.ClipContext.Fluid.NONE,
+                net.minecraft.world.level.ClipContext.Fluid.ANY,
                 entity
         ));
 
