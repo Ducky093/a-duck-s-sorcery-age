@@ -80,7 +80,7 @@ public class Explode extends Ability {
             }
              cap.delayTickEvent(() -> {
              if (entity != null) {
-            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, ((EXPLOSIVE_POWER) * (this.getPower(owner)))*1.05F), 20, (this.getPower(owner) * 0.37F), owner,
+            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, ((EXPLOSIVE_POWER) * (this.getPower(owner)))*1.05F), 20, (this.getPower(owner) * 0.33F), owner,
                      JJKDamageSources.jujutsuAttack(owner, this), false);
             // ExplosionHandler.spawn(owner.level().dimension(),  entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, ((EXPLOSIVE_POWER) * (this.getPower(owner)))*1.2F), this.getPower(owner) * 0.33F, owner,
            //         JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false, false);
