@@ -122,7 +122,7 @@ public class Punch extends Ability implements Ability.ICharged{
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
-            newRange+=1.25;
+            newRange+=1.2;
         }
 
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SlaughterDemonItem) {

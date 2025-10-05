@@ -12,6 +12,8 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
@@ -71,6 +73,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 
+    // @Override
+    // public @NotNull List<Ability> getCustom() {
+    //     return List.of(JJKAbilities.QUICKDASH.get());
+    // }
+
     @Override
     protected float getFlyingSpeed() {
         float speed = super.getFlyingSpeed();
@@ -85,7 +92,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.FLYING_SPEED, 0.6D)
                 .add(Attributes.MAX_HEALTH, 6 * 18.0D)
                 .add(Attributes.ARMOR, 30.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
@@ -113,6 +120,10 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target, new HurtByTargetGoal(this));
+
+        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+        
     }
 
     @Override
@@ -193,16 +204,30 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                     this.heal(1.5F / 20);
                 }
                 int remaining = this.getOpen();
-
+                  ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 if (remaining > 0) {
                     if (--remaining == 0) {
                         this.discard();
+                        if (this.isOpen()) {
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                        }
                     }
                     this.setOpen(remaining);
                 }
 
                 if (this.getTime() >= DURATION) {
                     this.discard();
+                    if (this.isOpen()) {
+                           cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                            cap.addCooldown(JJKAbilities.RIKA.get());
+                    }
                 }
             }
         }

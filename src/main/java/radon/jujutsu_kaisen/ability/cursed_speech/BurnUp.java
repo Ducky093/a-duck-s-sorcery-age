@@ -34,7 +34,7 @@ import java.util.List;
 public class BurnUp extends Ability {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
-    private static final float DAMAGE = 7.0F;
+    private static final float DAMAGE = 11.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

@@ -32,7 +32,7 @@ import java.util.List;
 public class BlastAway extends Ability {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
-    private static final float DAMAGE = 11.0F;
+    private static final float DAMAGE = 13.0F;
     private static final double LAUNCH_POWER = 1.0D;
 
     @Override
@@ -91,7 +91,7 @@ public class BlastAway extends Ability {
                 }
                 entity.hurtMarked = true;
             }
-         }, 10);
+         }, 15);
             
         }
     }

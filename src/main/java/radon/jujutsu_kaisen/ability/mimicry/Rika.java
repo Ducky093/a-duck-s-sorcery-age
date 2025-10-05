@@ -98,6 +98,8 @@ public class Rika extends Summon<RikaEntity> {
     protected RikaEntity summon(LivingEntity owner) {
         return new RikaEntity(owner);
     }
+    
+    
 
     @Override
     public int getCooldown() {
