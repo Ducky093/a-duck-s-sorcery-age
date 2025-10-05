@@ -46,6 +46,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
     private static final int STRIKE_LENGTH = 24;
     private int strikeTimeO;
     private int strikeTime;
+    private float chant;
 
     public JacobsLadderEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -53,12 +54,12 @@ public class JacobsLadderEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public JacobsLadderEntity(LivingEntity owner, float power, Vec3 pos) {
+    public JacobsLadderEntity(LivingEntity owner, float power, Vec3 pos, float chant) {
         this(JJKEntities.JACOBS_LADDER.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
-
+        this.chant = chant;
         this.setPos(pos.x, pos.y + 1.0625F, pos.z);
     }
 
@@ -170,7 +171,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                                 if (cap.hasTrait(Trait.INCARNATED)) {
                                     mult[0] *= 2.0;
                                 }
-                                cap.setDisable((int)(10F * this.getPower() * mult[0]));
+                                cap.setDisable((int)(40F * this.chant * mult[0]));
                                 if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && entity instanceof LivingEntity living  ) { 
                                     living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 10, 0, false, false, false));
                                 }

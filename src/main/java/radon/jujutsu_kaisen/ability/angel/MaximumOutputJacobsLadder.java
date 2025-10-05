@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.entity.effect.MaximumOutputJacobsLadderEntity;
 import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -67,8 +68,9 @@ public class MaximumOutputJacobsLadder extends Ability {
             pos = target.position();
         }
 
+         float output = ChantHandler.getOutput(owner, this);
 
-        MaximumOutputJacobsLadderEntity strike = new MaximumOutputJacobsLadderEntity(owner, this.getPower(owner), pos);
+        MaximumOutputJacobsLadderEntity strike = new MaximumOutputJacobsLadderEntity(owner, this.getPower(owner), pos, output);
         owner.level().addFreshEntity(strike);
     }
 

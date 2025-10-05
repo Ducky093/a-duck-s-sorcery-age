@@ -42,6 +42,7 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
     public static final int HITBOX_START = 20;
     public static final int STRIKE_EXPLOSION = 20;
     private static final int STRIKE_LENGTH = 118;
+    private float chanted;
     private int strikeTimeO;
     private int strikeTime;
 
@@ -50,11 +51,13 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public MaximumOutputJacobsLadderEntity(LivingEntity owner, float power, Vec3 pos) {
+    public MaximumOutputJacobsLadderEntity(LivingEntity owner, float power, Vec3 pos, float chant) {
         this(JJKEntities.MAXIMUM_OUTPUT_JACOBS_LADDER.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+
+        this.chanted = chant;
 
         this.setPos(pos.x, pos.y + 1.0625F, pos.z);
     }
@@ -164,9 +167,9 @@ public class MaximumOutputJacobsLadderEntity extends JujutsuProjectile {
              
                                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                     if (cap.hasTrait(Trait.INCARNATED)) {
-                                        mult[0] *= 2.5;
+                                        mult[0] *= 2.4;
                                     }
-                                    cap.setDisable((int)(15F * this.getPower() * mult[0]));
+                                    cap.setDisable((int)(50F * this.chanted  * (mult[0] - 0.5)  ));
                                     if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && entity instanceof LivingEntity living  ) { 
                                         living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 15, 0, false, false, false));
                                     }

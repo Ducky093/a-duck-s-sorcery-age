@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.entity.effect.JacobsLadderEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -61,7 +62,10 @@ public class JacobsLadder extends Ability {
             Vec3 topCenter = Vec3.atCenterOf(this.block.getBlockPos()).add(0, 0.5, 0);
             pos = topCenter;
         }
-        JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), pos);
+        
+         float output = ChantHandler.getOutput(owner, this);
+
+        JacobsLadderEntity strike = new JacobsLadderEntity(owner, this.getPower(owner), pos, output);
         owner.level().addFreshEntity(strike);
         this.enemy = null;
         this.block = null;
