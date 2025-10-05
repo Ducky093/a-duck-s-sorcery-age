@@ -44,7 +44,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
     private static final int RANGE = 10;
     private static final int DELAY = 20;
     private static final float DAMAGE = 10.0F;
-    private static final int DURATION = 24;
+    private static final int DURATION = 25;
     private static final float RADIUS = 3.0F;
     private static final float EXPLOSIVE_POWER = 3.0F;
     private static final float MAX_EXPLOSIVE_POWER = 10.0F;

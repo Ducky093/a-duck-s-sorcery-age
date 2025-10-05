@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Spiderweb extends Ability {
-    private static final int RANGE = 6;
+    private static final int RANGE = 10;
     private static final int DELAY = 20;
     private static final float EXPLOSIVE_POWER = 3.0F;
     private static final float MAX_EXPLOSIVE_POWER = 30.0F;
@@ -76,7 +76,7 @@ public class Spiderweb extends Ability {
                     BlockPos.betweenClosedStream(bounds).forEach(pos -> {
                         if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
                             Vec3 current = pos.getCenter();
-                            owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner) * 1.05F,
+                            owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner) * 1.2F,
                                     (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, true));
                         }
                     });
@@ -98,12 +98,12 @@ public class Spiderweb extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 200.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 15 * 20;
     }
 
     @Override
