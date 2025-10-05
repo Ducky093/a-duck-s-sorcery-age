@@ -83,7 +83,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
             float f2 = Mth.clamp(k, 0.0F, 20.0F);
             damage /= 1.0F - f2 / 25.0F;
         }
-        return damage * 0.5f;
+        return damage * 0.35f;
     }
 
     @Override
