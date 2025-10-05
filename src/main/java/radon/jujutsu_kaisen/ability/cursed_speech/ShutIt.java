@@ -13,12 +13,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -63,8 +66,9 @@ public class ShutIt extends Ability {
 
         for (int i = 1; i < RANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
-            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x, dst.y, dst.z, 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
-        }
+            ((ServerLevel) owner.level()).sendParticles(new CursedSpeechParticle.CursedSpeechParticleOptions(new Vector3f(0.471F, 0.471F, 0.471F), (float)(src.distanceTo(dst) * 0.5D) ),
+                                    dst.x, dst.y, dst.z, 0, 0.0D, 0.0D, 0.0D, 1.0D);
+                                }
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         ISorcererData capSelf = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
@@ -78,7 +82,7 @@ public class ShutIt extends Ability {
                 if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent() ) return;
                        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                        if ( !cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
-                         cap.setSilenced(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,15*20) );
+                         cap.setSilenced(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 20*20,30*20) );
                        }
                }
             }, 15);
@@ -87,12 +91,12 @@ public class ShutIt extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 50.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 25 * 20;
     }
 
     @Override
