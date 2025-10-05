@@ -40,11 +40,8 @@ public class Toad extends Summon<ToadEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float normalcost = 0.4f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 10.0F;
+        float normalcost = 0.35f;
+        return this.isTamed(owner) ? normalcost : 10.0F;
     }
 
     @Override

@@ -40,11 +40,8 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float normalcost = 0.45f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return Math.max(normalcost, realcost);
+        float normalcost = 0.4f;
+        return normalcost;
     }
 
     @Override

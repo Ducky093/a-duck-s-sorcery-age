@@ -42,11 +42,8 @@ public class Nue extends Summon<NueEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float normalcost = 0.4f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 100.0F;
+        return this.isTamed(owner) ? normalcost : 100.0F;
     }
 
     @Override

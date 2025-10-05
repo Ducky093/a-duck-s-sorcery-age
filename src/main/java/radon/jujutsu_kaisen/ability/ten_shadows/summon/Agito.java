@@ -47,11 +47,8 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float normalcost = 1.0f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return Math.max(normalcost, realcost);
+        return normalcost;
     }
 
     @Override

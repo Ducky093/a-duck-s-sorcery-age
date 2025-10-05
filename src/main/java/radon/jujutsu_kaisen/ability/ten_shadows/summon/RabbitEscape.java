@@ -85,16 +85,13 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
      @Override
     public int getCooldown() {
-        return 20 * 20;
+        return 30 * 20;
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float normalcost = 0.2f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 10.0F;
+        return this.isTamed(owner) ? normalcost : 10.0F;
     }
 
 
@@ -102,7 +99,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 public void onEnabled(LivingEntity owner) {
     if (!this.triggered) {
         this.triggered = true;
-        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 6 * 20,
+        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 10 * 20,
                 0, false, false, false));
         // MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 6 * 20, 0, false, false, false);
 
