@@ -41,11 +41,8 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float normalcost = 0.75f;
-        float extracost = cap.getExperience() * 0.000075f;
-        float realcost = normalcost * extracost;
-        return this.isTamed(owner) ? Math.max(normalcost, realcost) : 250.0F;
+        return this.isTamed(owner) ? normalcost : 250.0F;
     }
 
     @Override

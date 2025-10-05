@@ -456,7 +456,7 @@ public class SorcererData implements ISorcererData {
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 22.0D) / 20) * 20) + 30;
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20) + 40;
 
             if (this.owner.getMaxHealth() < health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
@@ -507,7 +507,7 @@ public class SorcererData implements ISorcererData {
             }
 
         } else {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 17.0D) / 20) * 20) + 30;
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 15.0D) / 20) * 20) + 40;
 
             double damage = this.getRealPower() * 1.0D;
             if (this.owner instanceof Player player) {
