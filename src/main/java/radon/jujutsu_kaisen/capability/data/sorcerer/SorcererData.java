@@ -462,7 +462,7 @@ public class SorcererData implements ISorcererData {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
-            double damage = this.getRealPower() * 3.8D;
+            double damage = this.getRealPower() * 3.9D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double speed = this.getRealPower();
@@ -488,7 +488,7 @@ public class SorcererData implements ISorcererData {
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {
-                this.owner.heal(0.35F / 20);
+                this.owner.heal(0.45F / 20);
             }
 
             EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
@@ -1202,7 +1202,7 @@ public class SorcererData implements ISorcererData {
         this.lastBlackFlashTime = this.owner.level().getGameTime();
 
         this.output = this.getMaximumOutput();
-        this.energy += Math.max(750.0f, (this.getMaxEnergy() - (this.energy * 2.0f)) * 0.25f);
+        this.energy += Math.max(750.0f, (this.getMaxEnergy() - (this.energy * 2.0f)) * 0.2f);
         if (this.owner instanceof ServerPlayer player) {
             PlayerUtil.giveAdvancement(player, "black_flash");
         }
