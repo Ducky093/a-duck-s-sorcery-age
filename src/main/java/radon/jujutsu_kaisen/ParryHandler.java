@@ -37,7 +37,7 @@ public class ParryHandler {
 
                 if (angle < 1.0D) {
                     victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-                    event.setCanceled(true);
+                    //event.setCanceled(true);
                 }
             }
         }
