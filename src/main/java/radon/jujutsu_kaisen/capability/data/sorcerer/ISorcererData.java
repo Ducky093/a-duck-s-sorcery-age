@@ -170,6 +170,8 @@ public interface ISorcererData {
 
     void addCooldown(Ability ability);
 
+    void setCooldown(Ability ability, int time);
+
     int getRemainingCooldown(Ability ability);
 
     boolean isCooldownDone(Ability ability);

@@ -219,7 +219,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 movements.add(RelativeMovement.X_ROT);
                 movements.add(RelativeMovement.Y_ROT);
 
-                owner.teleportTo((ServerLevel) owner.level(), frame.x, frame.y, frame.z, movements, yaw, owner.getXRot());
+                if (owner instanceof ServerPlayer player) {
+                    player.connection.teleport(frame.x, frame.y, frame.z, yaw, owner.getXRot());
+                } else {
+                    owner.setPos(frame.x, frame.y, frame.z);
+                    owner.setYRot(yaw);
+                    //owner.teleportTo((ServerLevel) owner.level(), frame.x, frame.y, frame.z, movements, yaw, owner.getXRot());
+                }
+                //owner.teleportTo((ServerLevel) owner.level(), frame.x, frame.y, frame.z, movements, yaw, owner.getXRot());
                 owner.setDeltaMovement(owner.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
                 owner.setOnGround(true);
 

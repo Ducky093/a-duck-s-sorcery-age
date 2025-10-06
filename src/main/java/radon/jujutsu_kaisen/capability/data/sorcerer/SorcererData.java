@@ -1007,6 +1007,11 @@ public class SorcererData implements ISorcererData {
         this.cooldowns.put(ability, ability.getRealCooldown(this.owner));
     }
 
+     @Override
+    public void setCooldown(Ability ability, int time) {
+        this.cooldowns.put(ability, time);
+    }
+
     @Override
     public void clearCooldown(Ability ability) {
         this.cooldowns.put(ability, 1);

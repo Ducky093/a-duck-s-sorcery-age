@@ -208,26 +208,18 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 if (remaining > 0) {
                     if (--remaining == 0) {
                         this.discard();
-                        if (this.isOpen()) {
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                        }
+                        // if (this.isOpen()) {
+                        //     cap.setCooldown(JJKAbilities.RIKA.get(), 300);
+                        // }
                     }
                     this.setOpen(remaining);
                 }
 
                 if (this.getTime() >= DURATION) {
                     this.discard();
-                    if (this.isOpen()) {
-                           cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                            cap.addCooldown(JJKAbilities.RIKA.get());
-                    }
+                    // if (this.isOpen()) {
+                    //        cap.setCooldown(JJKAbilities.RIKA.get(), 300);
+                    // }
                 }
             }
         }
