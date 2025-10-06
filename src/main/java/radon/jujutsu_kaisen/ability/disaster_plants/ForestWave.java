@@ -23,7 +23,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         if (JJKAbilities.isChanneling(owner, this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(3) == 0;
+        return HelperMethods.RANDOM.nextInt(1) == 0;
     }
 
     @Override

@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class WaterTorrent extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target) && owner.distanceTo(target) <= WaterTorrentEntity.RANGE;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.distanceTo(target) <= WaterTorrentEntity.RANGE;
     }
 
     @Override

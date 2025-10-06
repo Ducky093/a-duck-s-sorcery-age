@@ -20,6 +20,10 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
@@ -130,7 +134,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.9D, true));
         }
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
 
@@ -195,10 +199,24 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     }
 
     @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
 
         LivingEntity passenger = this.getControllingPassenger();
+
+        if (this.getTarget() != null) {
+            this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.1f);
+        }
 
         if (passenger != null) {
             this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
@@ -219,6 +237,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target_info", JujutsuKaisen.MOD_ID)),
                     false), player);
         }
+        this.moveControl = new MoveControl(this);
     }
 
     @Override
