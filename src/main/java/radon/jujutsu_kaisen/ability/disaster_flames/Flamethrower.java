@@ -25,9 +25,9 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
         if (target == null || !owner.hasLineOfSight(target)) return false;
 
         if (JJKAbilities.isChanneling(owner, this)) {
-            return HelperMethods.RANDOM.nextInt(5) != 0;
+            return HelperMethods.RANDOM.nextInt(2) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(5) == 0 && owner.distanceTo(target) <= RANGE;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && owner.distanceTo(target) <= RANGE;
     }
 
     @Override

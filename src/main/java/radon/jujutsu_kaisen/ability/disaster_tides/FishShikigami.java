@@ -23,7 +23,7 @@ public class FishShikigami extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
     }
 
     @Override

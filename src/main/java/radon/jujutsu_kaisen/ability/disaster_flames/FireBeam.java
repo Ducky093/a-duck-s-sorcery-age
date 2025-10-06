@@ -13,7 +13,7 @@ public class FireBeam extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(3) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= FireBeamEntity.RANGE;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && owner.distanceTo(target) <= FireBeamEntity.RANGE;
     }
 
     @Override

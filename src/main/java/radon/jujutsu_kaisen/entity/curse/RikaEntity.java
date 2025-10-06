@@ -69,8 +69,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z);
 
-
-        this.moveControl = new FlyingMoveControl(this, 20, true);
+        this.moveControl = new FlyingMoveControl(this, 1, true);
     }
 
     // @Override
@@ -92,11 +91,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED, 0.6D)
-                .add(Attributes.MAX_HEALTH, 6 * 18.0D)
+                .add(Attributes.FLYING_SPEED, 0.33D)
+                .add(Attributes.MAX_HEALTH, 4 * 18.0D)
                 .add(Attributes.ARMOR, 30.0D)
-                .add(Attributes.ATTACK_DAMAGE, 1.0D)
-                .add(Attributes.FOLLOW_RANGE, 128.0D);
+                .add(Attributes.ATTACK_DAMAGE, 6 * 3.5D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     @Override
@@ -114,7 +113,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         int target = 1;
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.9D, true));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));

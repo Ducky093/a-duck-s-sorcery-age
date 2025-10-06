@@ -24,7 +24,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
     }
 
     @Override
