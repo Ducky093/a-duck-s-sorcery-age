@@ -193,7 +193,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 15.0F;
+        return 13.0F;
     }
 
     @Override

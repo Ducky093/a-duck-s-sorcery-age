@@ -109,7 +109,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
 
     @Override
     public int getCooldown() {
-        return 12 * 20;
+        return 10 * 20;
     }
 
     @Override
