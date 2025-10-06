@@ -28,7 +28,7 @@ import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import java.util.List;
 
 public class SkyStrikeEntity extends JujutsuProjectile {
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 19.0F;
 
     public static final int STRIKE_EXPLOSION = 17;
     private static final int STRIKE_LENGTH = 21;

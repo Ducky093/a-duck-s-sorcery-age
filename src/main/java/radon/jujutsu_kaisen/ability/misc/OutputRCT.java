@@ -120,7 +120,7 @@ public class OutputRCT extends Ability {
         float healMult = 1.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
-            healMult *= 28.0F;
+            healMult *= 9.3F;
         }
         if (cap.getType() == JujutsuType.SHIKIGAMI) {
             healMult *= 8.0F;
@@ -160,7 +160,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() != JujutsuType.CURSE && super.isValid(owner);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
+        return cap.hasTrait(Trait.DOCTOR_HOUSE) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 }

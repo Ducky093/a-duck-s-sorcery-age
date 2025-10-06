@@ -52,7 +52,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         if (owner instanceof Player player) {
             float healMult = 0.225F;
             if (cap.hasTrait(Trait.DOCTOR_HOUSE)) {
-                healMult *= 2.0F;
+                healMult *= 1.33F;
             }
             owner.heal(((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue()  * this.getPower(owner) * healMult * this.healMult()) + 0.75f); //the + here at the end is in conjunction w the cost
          //min between 1.0, 0.05 * math.pow(1 * 0.225, math.log(1)) * 0.225

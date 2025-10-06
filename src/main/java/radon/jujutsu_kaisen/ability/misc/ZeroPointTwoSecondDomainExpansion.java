@@ -95,7 +95,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                     if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
                         ability.onHitBlock(domain, owner, entity.blockPosition());
                     } else {
-                        ability.onHitEntity(domain, owner, entity, false);
+                        ability.onHitEntity(domain, owner, entity, true);
                     }
                 }
                   cap.delayTickEvent(() -> {

@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SkyStrike extends Ability {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 35.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {

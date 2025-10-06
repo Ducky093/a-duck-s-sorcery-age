@@ -50,7 +50,7 @@ public class BlueMotion extends Ability {
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 16 * 20;
     }
 
     @Override

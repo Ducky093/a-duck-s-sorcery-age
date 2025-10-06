@@ -55,7 +55,7 @@ public class QuickDash extends Dash {
         var result = entity.level().clip(new net.minecraft.world.level.ClipContext(
                 pos, down,
                 net.minecraft.world.level.ClipContext.Block.COLLIDER,
-                net.minecraft.world.level.ClipContext.Fluid.NONE,
+                net.minecraft.world.level.ClipContext.Fluid.ANY,
                 entity
         ));
         if (result.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
