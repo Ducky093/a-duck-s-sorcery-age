@@ -71,7 +71,7 @@ public class QuickDash extends Dash {
 
     private static boolean canDash(LivingEntity owner) {
            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (owner.hasEffect(JJKEffects.STUN.get()) || (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get()) && getDistanceGround(owner) > 4.0D)) return false;
+        if (owner.hasEffect(JJKEffects.DOMAINSTUN.get() ) || owner.hasEffect(JJKEffects.STUN.get()) || (cap.hasToggled(JJKAbilities.ANGEL_WINGS.get()) && getDistanceGround(owner) > 4.0D)) return false;
 
         boolean collision = false;
 

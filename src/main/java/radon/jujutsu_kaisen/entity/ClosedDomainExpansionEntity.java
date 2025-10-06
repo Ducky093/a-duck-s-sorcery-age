@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -261,15 +262,21 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             entity -> this.isInsideBarrier(entity.blockPosition())
         );
 
+
+
+      
+
         for (LivingEntity entity : entities) {
             entity.addEffect(new MobEffectInstance(
-                JJKEffects.STUN.get(),
+                JJKEffects.DOMAINSTUN.get(),
                 30,
                 1,
                 false,
                 false,
                 false
             ));
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30,
+                4, false, false, false));
         }
     }
 
