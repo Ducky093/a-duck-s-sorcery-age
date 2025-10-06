@@ -221,7 +221,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 15.0D)
+                .add(Attributes.ARMOR, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 7 *5.0D);
     }
     

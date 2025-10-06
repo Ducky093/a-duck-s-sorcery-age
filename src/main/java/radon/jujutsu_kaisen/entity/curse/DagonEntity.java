@@ -60,6 +60,11 @@ public class DagonEntity extends DisasterCurse {
         return PlayState.STOP;
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.ARMOR, 30.0D);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
