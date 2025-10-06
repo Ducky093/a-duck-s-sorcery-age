@@ -11,6 +11,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +31,7 @@ import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -240,6 +243,35 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
     
+    private void applyPreStun() {
+        if (this.level().isClientSide) return;
+
+        LivingEntity owner = this.getOwner();
+        if (owner == null) return;
+
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+
+        List<LivingEntity> entities = this.level().getEntitiesOfClass(
+            LivingEntity.class, 
+            new AABB(
+                center.getX() - radius, center.getY() - radius, center.getZ() - radius,
+                center.getX() + radius, center.getY() + radius, center.getZ() + radius
+            ),
+            entity -> this.isInsideBarrier(entity.blockPosition())
+        );
+
+        for (LivingEntity entity : entities) {
+            entity.addEffect(new MobEffectInstance(
+                JJKEffects.STUN.get(),
+                30,
+                1,
+                false,
+                false,
+                false
+            ));
+        }
+    }
 
     private void createBarrier(boolean instant) {
         this.total = 0;
@@ -264,7 +296,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
+                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2 + 1;
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -466,6 +498,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         if (this.getTime() - 1 == 0) {
+            this.applyPreStun();
             this.createBarrier(false);
         } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
             this.discard();
