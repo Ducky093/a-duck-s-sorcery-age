@@ -276,7 +276,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 false
             ));
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30,
-                4, false, false, false));
+                6, false, false, false));
         }
     }
 
