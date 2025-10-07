@@ -89,7 +89,8 @@ public class CyclopsCurseEntity extends CursedSpirit {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 20.0D);
+                .add(Attributes.ARMOR, 20.0D)
+            .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
     }
 
     @Override

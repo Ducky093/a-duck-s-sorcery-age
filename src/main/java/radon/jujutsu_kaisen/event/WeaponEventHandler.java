@@ -213,7 +213,7 @@ public class WeaponEventHandler {
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {
-                        event.setAmount(event.getAmount()*1.15f);
+                        event.setAmount(event.getAmount()*1.2f);
                     } else {
                         event.setAmount(event.getAmount()*1.05f);
                     }

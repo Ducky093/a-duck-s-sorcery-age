@@ -19,8 +19,6 @@ public abstract class DisasterCurse extends CursedSpirit {
     }
 
 
-
-
     @Override
     public boolean hasMeleeAttack() {
         return true;

@@ -57,7 +57,7 @@ public class Dash extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(1000) == 0;
     }
 
     @Override

@@ -36,7 +36,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class Barrage extends Ability {
     private static final double RANGE = 10.0D;
     public static int DURATION = 8;
-    private static final int STAGGER = 5;
+    private static final int STAGGER = 7;
 
 
     @Override
@@ -46,7 +46,7 @@ public class Barrage extends Ability {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
         }
-        return HelperMethods.RANDOM.nextInt(6) == 0;
+        return HelperMethods.RANDOM.nextInt(4) == 0;
     }
 
     @Override

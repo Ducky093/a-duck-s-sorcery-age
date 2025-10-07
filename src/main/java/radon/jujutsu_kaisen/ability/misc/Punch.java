@@ -65,7 +65,7 @@ public class Punch extends Ability implements Ability.ICharged{
             return false;
         }
         if (owner.distanceTo(target) > RANGE) return false;
-        return HelperMethods.RANDOM.nextInt(5) == 0;
+        return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
@@ -215,8 +215,7 @@ public class Punch extends Ability implements Ability.ICharged{
                     entity.invulnerableTime = 0;
 
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
-                    newDMG *= (float) (1+0.75
-                            *power);
+                    newDMG *= (float) (1+0.75 *power);
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
@@ -229,8 +228,14 @@ public class Punch extends Ability implements Ability.ICharged{
 
                     else {
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
-                            entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
-                                    .multiply(1.0D, 0.25D, 1.0D));
+                            if (owner instanceof Player player) {
+                                entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
+                                        .multiply(1.0D, 0.25D, 1.0D));
+                            }
+                            else {
+                                entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
+                                        .multiply(2.0D, 0.5D, 2.0D));
+                            }
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                             entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
 
