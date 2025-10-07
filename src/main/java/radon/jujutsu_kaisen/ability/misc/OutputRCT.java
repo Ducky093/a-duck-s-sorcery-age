@@ -161,6 +161,6 @@ public class OutputRCT extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
-        return cap.hasTrait(Trait.DOCTOR_HOUSE) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
+        return (cap.hasTrait(Trait.DOCTOR_HOUSE) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 }
