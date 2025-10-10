@@ -105,7 +105,7 @@ public class ServerConfig {
         this.minimumVeilSize = builder.comment("Minimum size for a veil")
                 .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
-                .defineInRange("maximumVeilSize", 64, 64, 256);
+                .defineInRange("maximumVeilSize", 64, 32, 256);
         builder.pop();
 
         builder.comment("Domains").push("domains");
@@ -162,7 +162,10 @@ public class ServerConfig {
                                 CursedTechnique.IDLE_TRANSFIGURATION.name(),
                                 CursedTechnique.TEN_SHADOWS.name(),
                                 CursedTechnique.BOOGIE_WOOGIE.name(),
-                                CursedTechnique.PROJECTION_SORCERY.name()
+                                CursedTechnique.PROJECTION_SORCERY.name(),
+                                CursedTechnique.RATIO.name(),
+                                CursedTechnique.MYTHICAL_BEAST_AMBER.name(),
+                                CursedTechnique.TECHNIQUELESS.name()
                         ),
                         ignored -> true
                 );

@@ -85,6 +85,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         return this.isDeadOrDying();
     }
 
+
+
     private void createGoals() {
         int target = 1;
         int goal = 1;
@@ -182,9 +184,12 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         }
     }
 
+
     public boolean isClone() {
         return this.entityData.get(DATA_CLONE);
     }
+
+
 
     @Override
     public void onRemovedFromWorld() {

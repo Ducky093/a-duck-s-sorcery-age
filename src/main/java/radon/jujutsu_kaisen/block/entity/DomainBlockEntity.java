@@ -55,13 +55,8 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (original != null) {
             if (original.isAir()) {
-                
-                //check tosee if this ticks while still commented
-                //if (!this.getBlockState().getFluidState().isEmpty()) {
                 this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-                //} else {
-                //    this.level.destroyBlock(this.getBlockPos(), false);
-                //}
+
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
 
@@ -74,19 +69,17 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             }
         } else {
-            if (!this.getBlockState().getFluidState().isEmpty()) {
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-            } else {
-                this.level.destroyBlock(this.getBlockPos(), false);
-            }
+            this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
         }
     }
 
-    public @Nullable UUID getIdentifier() {
+    @Nullable
+    public UUID getIdentifier() {
         return this.identifier;
     }
 
-    public @Nullable BlockState getOriginal() {
+    @Nullable
+    public BlockState getOriginal() {
         if (this.level == null) return this.original;
 
         if (this.original == null && this.deferred != null) {
@@ -111,23 +104,6 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
-
-        this.initialized = pTag.getBoolean("initialized");
-
-        if (this.initialized) {
-            this.identifier = pTag.getUUID("identifier");
-            this.death = pTag.getInt("death_time");
-            this.deferred = pTag.getCompound("original");
-
-            if (pTag.contains("saved")) {
-                this.saved = pTag.getCompound("saved");
-            }
-        }
-    }
-
-    @Override
     public void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
@@ -135,18 +111,33 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             pTag.putUUID("identifier", this.identifier);
-            pTag.putInt("death_time", this.death);
+            pTag.putInt("death", this.death);
 
-          if (this.original != null) {
+            if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
-            } else if (this.deferred != null) {
-                pTag.put("original", this.deferred);
             } else {
-                pTag.put("original", new CompoundTag()); // safe fallback
+                pTag.put("original", this.deferred);
             }
 
             if (this.saved != null) {
                 pTag.put("saved", this.saved);
+            }
+        }
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag pTag) {
+        super.load(pTag);
+
+        this.initialized = pTag.getBoolean("initialized");
+
+        if (this.initialized) {
+            this.identifier = pTag.getUUID("identifier");
+            this.death = pTag.getInt("death");
+            this.deferred = pTag.getCompound("original");
+
+            if (pTag.contains("saved")) {
+                this.saved = pTag.getCompound("saved");
             }
         }
     }

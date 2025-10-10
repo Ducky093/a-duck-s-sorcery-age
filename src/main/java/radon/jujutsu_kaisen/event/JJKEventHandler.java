@@ -15,11 +15,13 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -76,8 +78,17 @@ public class JJKEventHandler {
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
             LivingEntity entity = event.getEntity();
             Vec3 center = event.getPos().getCenter();
+            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), center.x, center.y, center.z) ) {
+                event.setCanceled(true);
+            }
+        }
 
-            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), center.x, center.y, center.z)) {
+        @SubscribeEvent
+        public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
+            Entity entity = event.getEntity();
+            ServerLevel level = (ServerLevel) event.getLevel();
+            BlockPos pos = event.getPos();
+            if (!VeilHandler.getDomains(level,pos).isEmpty()) {
                 event.setCanceled(true);
             }
         }

@@ -89,12 +89,10 @@ public class Return extends Ability {
                     }
             entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.getType() == JujutsuType.SHIKIGAMI && living instanceof SummonEntity ownable && ownable.getOwner() != null) {             
-                    
                     if (!(entity instanceof Player player)) {
-                       Summon<?> ability = ownable.getAbility();
                        LivingEntity shikiowner = ownable.getOwner();
                        if (shikiowner != null) {
-                            float cost = ability.getCost(shikiowner) * 500.0F;
+                            float cost = ownable.getCost(shikiowner) * 500.0F;
                             if (cost == 0) {
                                 cost = 1000;
                             }

@@ -19,6 +19,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     private ForgeSlider sizeSlider;
 
     private int oldFrequency;
+    private int currentFrequency;
 
     public VeilRodScreen(VeilRodMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -32,17 +33,24 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         if (size != this.oldFrequency) {
             if (this.minecraft != null && this.minecraft.player != null) {
-                PacketHandler.sendToServer(new SetSizeC2SPacket(size));
+                //PacketHandler.sendToServer(new SetSizeC2SPacket(size));
             }
             this.oldFrequency = size;
         }
     }
 
+
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == 256) {
             if (this.minecraft != null && this.minecraft.player != null) {
+                //int size = this.sizeSlider.getValueInt();
+                    //if (size != this.oldFrequency) {
+                PacketHandler.sendToServer(new SetSizeC2SPacket(this.oldFrequency));
+                    //}
+                    //this.oldFrequency = size;
                 this.minecraft.player.closeContainer();
+                    
             }
         }
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
@@ -63,6 +71,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
                 ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get(), this.menu.getSize(), true);
         this.addRenderableWidget(this.sizeSlider);
         this.setInitialFocus(this.sizeSlider);
+        this.oldFrequency = this.sizeSlider.getValueInt();
     }
 
     @Override

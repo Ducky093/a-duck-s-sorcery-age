@@ -176,6 +176,10 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         return this.cache;
     }
 
+    public float getCost(LivingEntity owner) {
+        return this.getAbility().getCost(owner);
+    }
+
     public abstract Summon<?> getAbility();
 
     protected boolean shouldToggleOnDeath() {
