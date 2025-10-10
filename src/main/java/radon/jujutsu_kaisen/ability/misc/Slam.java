@@ -118,8 +118,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     public static void slamCrater(LivingEntity owner, float distance) {
         if (owner.level().isClientSide) return;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        
         float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
         float dmgMult = 0.75F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
@@ -137,12 +136,16 @@ public class Slam extends Ability implements Ability.ICharged {
 
         }
 
+   
+         if (owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());
             if (cooldown <= 0) {
                 dmgMult = 0.7F;
                 radius = radius * 1.5f;
             }
+        }
         }
 
         owner.swing(InteractionHand.MAIN_HAND);
@@ -181,11 +184,12 @@ public class Slam extends Ability implements Ability.ICharged {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
         }
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+       
 
         double launchPower = 2.0D + (2.0D * (Math.min(20, this.getCharge(owner)) / 20));
         float checkcharge = (float) Math.min(20, this.getCharge(owner)) / 20;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (checkcharge >= 0.65f && checkcharge <= 0.75f && cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
             int cooldown = cap.getRemainingCooldown(JJKAbilities.RATIO_RULE.get());

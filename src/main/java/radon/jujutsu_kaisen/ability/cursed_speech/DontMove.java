@@ -80,8 +80,11 @@ public class DontMove extends Ability {
                 }
                 cap.delayTickEvent(() -> {
                       if (entity != null && living != null) {
-                            ISorcererData capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
-                            if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
+                               ISorcererData capHit = null;
+                                 if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                                    capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
+                                 }  
+                                if (capHit == null || !capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
                                 living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
                             }
                         }

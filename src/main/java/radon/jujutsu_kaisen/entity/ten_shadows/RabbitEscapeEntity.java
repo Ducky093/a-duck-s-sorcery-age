@@ -80,6 +80,15 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
     @Override
     protected void customServerAiStep() {
+          if (!this.original) {
+            RabbitEscapeEntity leader = this.getLeader();
+            if (leader == null || leader.isRemoved() || !leader.isAlive()) {
+                if (!this.level().isClientSide) {
+                    this.discard();
+                }
+                return;
+            }
+        }
         if (this.getTarget() != null) {
             double d0 = this.getAttributeValue(Attributes.FOLLOW_RANGE);
             AABB bounds = AABB.unitCubeFromLowerCorner(this.position()).inflate(d0, 10.0D, d0);

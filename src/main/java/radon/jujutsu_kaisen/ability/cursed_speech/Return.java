@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.cursed_speech;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,10 @@ import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -91,11 +96,17 @@ public class Return extends Ability {
                 if (cap.getType() == JujutsuType.SHIKIGAMI && living instanceof SummonEntity ownable && ownable.getOwner() != null) {             
                     if (!(entity instanceof Player player)) {
                        LivingEntity shikiowner = ownable.getOwner();
-                       if (shikiowner != null) {
+                       if (shikiowner != null && !(shikiowner == owner) ) {
                             float cost = ownable.getCost(shikiowner) * 500.0F;
+                            if (ownable instanceof RabbitEscapeEntity ) {
+                                cost /= 16;
+                            } else if (ownable instanceof DivineDogEntity ) {
+                                cost /= 2;
+                            }
+                            
                             if (cost == 0) {
                                 cost = 1000;
-                            }
+                            } //client
                             else if (cost < 0) {
                                 cost = Math.abs(cost);
                             }
@@ -103,6 +114,9 @@ public class Return extends Ability {
                                 selfCap.useEnergy(cost);
                                 ISorcererData enemyCap = shikiowner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                                 enemyCap.unsummonByClass(ownable.getClass());
+                                 if (owner instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(selfCap.serializeNBT()), player);
+                                 }
                        }
                     }            
                     
@@ -113,7 +127,7 @@ public class Return extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 100.0F;
     }
 
     @Override
