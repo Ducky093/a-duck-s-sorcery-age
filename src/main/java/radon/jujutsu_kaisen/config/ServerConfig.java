@@ -18,8 +18,11 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
+    public final ForgeConfigSpec.DoubleValue pointMultiplier;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue deathPenalty;
+    public final ForgeConfigSpec.DoubleValue pointPenalty;
+    public final ForgeConfigSpec.DoubleValue pvpGain;
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
@@ -79,8 +82,14 @@ public class ServerConfig {
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
+        this.pointMultiplier = builder.comment("Scale of ability points you gain")
+                        .defineInRange("pointMultiplier", 0.1F, 0.0F, 100.0F);
+        this.pointPenalty = builder.comment("Scale of points lost on death")
+                        .defineInRange("pointMultiplier", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.0F, 0.0F, 1.0F);
+        this.pvpGain = builder.comment("Percentage of experience gained from player kills")
+                .defineInRange("pvpGain", 1.0F, 0.0F, 999.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 150, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")

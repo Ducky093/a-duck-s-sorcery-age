@@ -95,7 +95,7 @@ public class ExperienceHandler {
 
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-       // source = event.getSource(); override logic here when body steal is enabled
+       // source = event.getSource(); override logic here when body steal is enabled?
 
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -103,8 +103,8 @@ public class ExperienceHandler {
             float penalty = (cap.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
             cap.setExperience(Math.max(0.0F, cap.getExperience() - penalty));
 
-            int points = (int) Math.floor(penalty * 0.1F);
-
+           
+            int points = (int) Math.floor(penalty * 0.1F * ConfigHolder.SERVER.pointPenalty.get().floatValue());
             if (points > 0) {
                 cap.setPoints(Math.max(0, cap.getPoints() - points));
 
@@ -227,7 +227,13 @@ public class ExperienceHandler {
             float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 5.0F
                     * (this.totalDamageDealt / this.damageDealtByOwner)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
-
+        
+            float rawExperience = Math.min(targetStrength, (targetStrength - ownerStrength) * 5.0F
+                    * (this.totalDamageDealt / this.damageDealtByOwner));
+            if (target instanceof Player targetplayer) {
+                experience *= ConfigHolder.SERVER.pvpGain.get();
+                rawExperience *= ConfigHolder.SERVER.pvpGain.get();
+            }
             if (experience < 0.1F) return;
 
             if (cap.addExperience(experience)) {
@@ -236,7 +242,7 @@ public class ExperienceHandler {
                 }
             }
 
-            int points = (int) Math.floor(experience * 0.2F);
+            int points = (int) Math.floor(rawExperience * 0.2F * ConfigHolder.SERVER.pointMultiplier.get().floatValue());
 
             if (points > 0) {
                 cap.addPoints(points);
