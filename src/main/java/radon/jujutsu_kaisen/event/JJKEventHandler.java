@@ -212,10 +212,6 @@ public class JJKEventHandler {
             
             LivingEntity victim = event.getEntity();
 
-            if (Slam.TARGETS.containsKey(victim.getUUID())) {
-                Slam.onHitGround(victim, event.getDistance());
-                event.setDamageMultiplier(0.0F);
-            }
             event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                     event.setDistance(event.getDistance() * 0.1F);
