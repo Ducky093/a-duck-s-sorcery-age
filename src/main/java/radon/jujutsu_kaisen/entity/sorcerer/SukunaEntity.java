@@ -40,7 +40,7 @@ import java.util.*;
 public class SukunaEntity extends SorcererEntity {
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
-
+    private static final int TAMING_CHANCE = 10 * 20;
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -83,18 +83,27 @@ public class SukunaEntity extends SorcererEntity {
     protected boolean targetsSorcerers() {
         return true;
     }
-
-    @Override
+ @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
 
+        if (this.getTarget() != null) return;
+
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
-            for (Entity entity : cap.getSummons()) {
+        if (cap == null) return;
+
+
+        
+    
+
+
+        if (!cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) return;
+
+         for (Entity entity : cap.getSummons()) {
                 if (entity instanceof TenShadowsSummon) return;
             }
-
+        if (this.random.nextInt(TAMING_CHANCE) == 0) {
             Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
 
             if (!mahoraga.isTamed(this)) {
@@ -108,6 +117,10 @@ public class SukunaEntity extends SorcererEntity {
                 AbilityHandler.trigger(this, ability);
             }
         }
+    }
+
+    public EntityType<?> getEntity() {
+        return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElseThrow();
     }
 
     public EntityType<?> getKey() {
@@ -165,7 +178,9 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return this.fingers * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
+        float min = SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F;
+        return min + (this.fingers * ((max - min) / 20));
     }
 
     @Override

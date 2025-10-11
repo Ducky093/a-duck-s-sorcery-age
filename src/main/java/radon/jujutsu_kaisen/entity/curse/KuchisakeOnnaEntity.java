@@ -57,6 +57,8 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         super(pType, pLevel);
     }
 
+
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -65,6 +67,11 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     @Override
     public boolean canChant() {
         return false;
+    }
+
+    @Override
+    public boolean canChangeTarget() {
+        return true;
     }
 
     @Override
@@ -187,6 +194,16 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         });
         this.reset();
     }
+    
+
+    @Override
+    public void changeTarget(LivingEntity target) {
+    if (target == null || target.isRemoved() || !target.isAlive()) return;
+        this.entityData.set(DATA_TARGET, Optional.of(target.getUUID()));
+        this.start = target.position();
+        this.setTarget(target);
+    }
+
 
     @Override
     protected void customServerAiStep() {
@@ -209,8 +226,8 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
             if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
 
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
-
-            if (JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
+            //JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) ||
+            if ( this.distanceTo(target) > RANGE) {
                 this.reset();
             } else if (Math.sqrt(target.distanceToSqr(this.start)) >= 3.0D) {
                 this.attack();
@@ -219,9 +236,10 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         LivingEntity target = this.getTarget();
 
-        if (target == null || target.isRemoved() || !target.isAlive() || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())) {
+        if (target == null || target.isRemoved() || !target.isAlive()) {
             return;
         }
+        // || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())
 
         if (!this.isOpen()) {
             if (this.cooldown > 0) return;

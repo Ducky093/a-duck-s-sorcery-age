@@ -89,7 +89,9 @@ public class SorcererGoal extends Goal {
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
                     if (!JJKAbilities.hasToggled(this.mob, ability)){
-                        AbilityHandler.trigger(this.mob, ability);
+                        if (ability != JJKAbilities.DOMAIN_AMPLIFICATION.get() || JJKAbilities.hasToggled(target, infinite) )  {
+                           AbilityHandler.trigger(this.mob, ability);
+                        }
                     }
 
                 } else if (JJKAbilities.hasToggled(this.mob, ability)) {

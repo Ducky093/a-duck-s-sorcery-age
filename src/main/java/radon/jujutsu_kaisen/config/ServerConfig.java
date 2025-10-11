@@ -23,6 +23,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
+    public final ForgeConfigSpec.BooleanValue playerBodySteal;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -86,6 +87,8 @@ public class ServerConfig {
                 .define("realisticShikigami", false);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
                 .define("realisticCurses", true);
+        this.playerBodySteal = builder.comment("When enabled Body Steal only works on players")
+                .define("playerBodySteal", false);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
