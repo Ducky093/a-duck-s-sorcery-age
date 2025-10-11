@@ -50,7 +50,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
 
     @Override public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) { 
         if (target == null) return false; 
-        if (!(target instanceof Player player)) return false;
+        if (!(target instanceof Player player) &&  (ConfigHolder.SERVER.playerBodySteal.get())  ) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false; 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
         return cap.getType() == JujutsuType.SORCERER && cap.getExperience() >= 1000; 
@@ -63,7 +63,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        return (target instanceof Player player) && ( targetCap.getType() == JujutsuType.SORCERER) &&
+        return ((target instanceof Player player) || (!ConfigHolder.SERVER.playerBodySteal.get())   ) && ( targetCap.getType() == JujutsuType.SORCERER) &&
                 (target.isDeadOrDying()) && targetCap.getExperience() >= 1000;
     }
 
@@ -109,7 +109,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
       //if (owner.level().isClientSide) return false;
       //  if (!HelperMethods.isMelee(source)) return false;
         //if (!(target instanceof Player player)) return false;
-        if (!(victim instanceof Player player)) return;
+        if (!(victim instanceof Player player) &&  (ConfigHolder.SERVER.playerBodySteal.get()) ) return;
 
         if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return ;
 
