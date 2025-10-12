@@ -58,8 +58,8 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
     private static final double SPEED = 3D;
     private static final float DAMAGE = 10.0F;
-    private static final float EXPLOSIVE_POWER = 1.0F;
-    private static final float MAX_EXPLOSION = 10.0F;
+    private static final float EXPLOSIVE_POWER = 2.0F;
+    private static final float MAX_EXPLOSION = 15.0F;
     private static final int DURATION = 3 * 20;
 
     private static final int MAX_SEGMENTS = 24;
@@ -106,7 +106,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         Vec3 dest = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2), pShooter.getZ()).add(look);
         EntityUtil.offset(this, pShooter.getLookAngle(), dest);
         this.setYRot(pShooter.getYHeadRot());
-        double speed = SPEED * (1+ (1.5 * this.souls) /10);
+        double speed = SPEED * (1+ (3.0 * this.souls) /10);
         this.setDeltaMovement(look.scale(speed));
 
         if (!(pShooter.level() instanceof ServerLevel level)) return;
@@ -248,7 +248,11 @@ private boolean isSelfOrSegment(Entity entity) {
 
             //HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 //hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit) &&
-            Vec3 pos = this.position();
+HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, target -> false); // ignore all entities
+if (hit.getType() == HitResult.Type.BLOCK && !ForgeEventFactory.onProjectileImpact(this, hit)) {
+    this.onHitBlock((BlockHitResult) hit);
+}      
+Vec3 pos = this.position();
     this.hitbox = new AABB(
         pos.x - HITBOX_RADIUS, pos.y, pos.z - HITBOX_RADIUS,
         pos.x + HITBOX_RADIUS, pos.y + HITBOX_HEIGHT, pos.z + HITBOX_RADIUS
@@ -264,7 +268,8 @@ private boolean isSelfOrSegment(Entity entity) {
             if (target == owner && !ownerCap.hasSelfHit()) return;
             // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
             if (owner instanceof LivingEntity livingOwner) {
-                ExplosionHandler.spawn(this.level().dimension(), pos, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
+                
+                ExplosionHandler.spawn(this.level().dimension(),target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSION, ((EXPLOSIVE_POWER) * (Ability.getPower(JJKAbilities.BODY_REPEL.get(),livingOwner )))*(0.05F + 0.05F * this.souls ) ),
                         20, this.getRealDamage(), livingOwner, JJKDamageSources.indirectJujutsuAttack(this, livingOwner, JJKAbilities.BODY_REPEL.get()), false);
                 this.discard();
                 return;
@@ -321,7 +326,7 @@ private boolean isSelfOrSegment(Entity entity) {
     public float getRealDamage() {
         if ((this.getOwner() instanceof LivingEntity owner)) {
             //ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return (Ability.getPower(JJKAbilities.BODY_REPEL.get(),owner ) * (0.026F * this.souls ));
+            return (Ability.getPower(JJKAbilities.BODY_REPEL.get(),owner ) * (0.2F + 0.09F * this.souls/5.0F ));
         }
         return 0.0F;
     }
@@ -342,15 +347,14 @@ private boolean isSelfOrSegment(Entity entity) {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+        if (!(this.getOwner() instanceof LivingEntity livingOwner)) return;
 
         Vec3 location = pResult.getLocation();
         // damage on explosion here
         // this might stack and hit multiple times with on hit entity IDK (from wood yes it does, im gonna reduce the dmg on direct hit)
         // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
-        ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
-                20, this.getRealDamage(), owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
+        ExplosionHandler.spawn(this.level().dimension(),location, Math.min(MAX_EXPLOSION, ((EXPLOSIVE_POWER) * (Ability.getPower(JJKAbilities.BODY_REPEL.get(),livingOwner )))*(0.05F + 0.05F * this.souls ) ),
+                        20, this.getRealDamage(), livingOwner, JJKDamageSources.indirectJujutsuAttack(this, livingOwner, JJKAbilities.BODY_REPEL.get()), false);
        
         this.discard();
     }

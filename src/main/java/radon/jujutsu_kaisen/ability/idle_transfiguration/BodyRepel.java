@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BodyRepel extends Ability implements ICharged {
     private static final int MIN_SOULS = 2;
-    private static final int MAX_SOULS = 10;
+    private static final int MAX_SOULS = 5;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
