@@ -115,6 +115,8 @@ public interface ISorcererData {
 
     float getRealPower();
 
+    float getRealPower(float exp);
+
     float getExperience();
 
     void setExperience(float experience);

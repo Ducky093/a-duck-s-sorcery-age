@@ -176,7 +176,7 @@ public class JJKBlocks {
                     .noOcclusion()));
     public static RegistryObject<Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
-                    .strength(100.0F, 14.0F)
+                    .strength(1000.0F, 3600000.0F)
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
                     .noOcclusion()));

@@ -13,18 +13,23 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.event.ForgeEventFactory;
+
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -46,6 +51,11 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
     public static EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BodyRepelEntity.class, EntityDataSerializers.INT);
 
+    private static final double HITBOX_RADIUS = 1.5D;
+    private static final double HITBOX_HEIGHT = 1.5D;
+
+    private AABB hitbox;
+
     private static final double SPEED = 3D;
     private static final float DAMAGE = 10.0F;
     private static final float EXPLOSIVE_POWER = 1.0F;
@@ -62,6 +72,16 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         this.entityData.define(DATA_TIME, 1);
     }
 
+    private void initializeSegments() {
+    Vec3 prevPos = this.position();
+    for (int i = 0; i < this.segments.length; i++) {
+        BodyRepelSegmentEntity seg = this.segments[i];
+        double offsetY = prevPos.y - (i + 1) * seg.getBbHeight();
+        seg.setPos(prevPos.x, offsetY, prevPos.z);
+        prevPos = seg.position();
+        }
+    }
+
     public BodyRepelEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
@@ -71,6 +91,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
             this.segments[i] = new BodyRepelSegmentEntity(this,i);
         }
         this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+        initializeSegments();
     }
 
     public BodyRepelEntity(LivingEntity pShooter, int souls) {
@@ -190,9 +211,17 @@ protected boolean canRide(Entity entity) {
 
 @Override
 public boolean canCollideWith(Entity entity) {
-    return false; // disables collisions with all entities
+    return true; // disables collisions with all entities
 }
 
+private boolean isSelfOrSegment(Entity entity) {
+    if (entity == this || entity == this.getOwner()) return true;
+
+    for (BodyRepelSegmentEntity seg : this.segments) {
+        if (entity == seg) return true;
+    }
+    return false;
+}
     @Override
     public void tick() {
         this.setTime(this.getTime() + 1);
@@ -204,7 +233,7 @@ public boolean canCollideWith(Entity entity) {
         } else {
             super.tick();
 
-            if (this.getTime() == 2) {
+            if (this.getTime() == 2 && owner != null) {
                 owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ALLAY_DEATH, SoundSource.MASTER, 1F, 0.5F);
                 owner.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.SOUL_ESCAPE, SoundSource.MASTER, 2F, 1F);
             }
@@ -217,13 +246,38 @@ public boolean canCollideWith(Entity entity) {
 
             this.moveSegments();
 
-            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+            //HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 //hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit) &&
-            if (  hit.getType() == HitResult.Type.ENTITY ) {
-                this.onHit(hit);
-            }
+            Vec3 pos = this.position();
+    this.hitbox = new AABB(
+        pos.x - HITBOX_RADIUS, pos.y, pos.z - HITBOX_RADIUS,
+        pos.x + HITBOX_RADIUS, pos.y + HITBOX_HEIGHT, pos.z + HITBOX_RADIUS
+    );
 
-            //this.checkInsideBlocks();
+    // Use this hitbox for collisions instead of getBoundingBox()
+    List<Entity> targets = this.level().getEntities(this, this.hitbox, this::canHitEntity);
+    if (owner != null) {
+    for (Entity target : targets) {
+      
+            if (isSelfOrSegment(target)) continue; 
+            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (target == owner && !ownerCap.hasSelfHit()) return;
+            // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
+            if (owner instanceof LivingEntity livingOwner) {
+                ExplosionHandler.spawn(this.level().dimension(), pos, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
+                        20, this.getRealDamage(), livingOwner, JJKDamageSources.indirectJujutsuAttack(this, livingOwner, JJKAbilities.BODY_REPEL.get()), false);
+                this.discard();
+                return;
+                //target.hurt(JJKDamageSources.indirectJujutsuAttack(this, livingOwner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
+            }
+            //target.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
+        }
+    }            
+//if (  hit.getType() == HitResult.Type.ENTITY ) {
+               
+  //          }
+
+            this.checkInsideBlocks();
 
             Vec3 movement = this.getDeltaMovement();
             double d0 = this.getX() + movement.x;
@@ -232,7 +286,7 @@ public boolean canCollideWith(Entity entity) {
             this.setPos(d0, d1, d2);
 
 
-            if (!(owner.level() instanceof ServerLevel level)) return;
+            if (owner == null || !(owner.level() instanceof ServerLevel level)) return;
             level.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY(), this.getZ(), 0, 0,0,0, 1.0D);
         }
     }
@@ -265,26 +319,27 @@ public boolean canCollideWith(Entity entity) {
     }
 
     public float getRealDamage() {
-
-        ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float soulscale = 10f * (this.souls/10f);
-        return (DAMAGE + soulscale) * SorcererUtil.getPower(ownerCap.getExperience());
+        if ((this.getOwner() instanceof LivingEntity owner)) {
+            //ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return (Ability.getPower(JJKAbilities.BODY_REPEL.get(),owner ) * (0.026F * this.souls ));
+        }
+        return 0.0F;
     }
+
+//     @Override
+//     protected void onHitEntity(@NotNull EntityHitResult pResult) {
+//         super.onHitEntity(pResult);
+
+//         Entity entity = pResult.getEntity();
+
+//         if (!(this.getOwner() instanceof LivingEntity owner)) return;
+//   ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+//         if (entity == owner && !ownerCap.hasSelfHit() ) return;
+//         // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
+//         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
+//     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-
-        Entity entity = pResult.getEntity();
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-  ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (entity == owner && !ownerCap.hasSelfHit() ) return;
-        // direct hit damage here and in OnHitBlock (from wood too inconsistent of a hitbox to leave in)
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), this.getRealDamage());
-    }
-
-    /*@Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
@@ -294,11 +349,11 @@ public boolean canCollideWith(Entity entity) {
         // damage on explosion here
         // this might stack and hit multiple times with on hit entity IDK (from wood yes it does, im gonna reduce the dmg on direct hit)
         // the damage on the explosion was 1 before so it was entirely unscaled and just to do terrain damage
-       // ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
-         //       20, this.getRealDamage(), owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
-
+        ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.souls),
+                20, this.getRealDamage(), owner,  JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BODY_REPEL.get()), false);
+       
         this.discard();
-    }*/
+    }
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {

@@ -208,10 +208,10 @@ public abstract class Ability {
     }
 
     public boolean isValid(LivingEntity owner) {
-        if (owner instanceof Player player && player.isSpectator()) return false;
+        if (owner == null || (owner instanceof Player player && player.isSpectator()) ) return false;
 
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
-
+         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {

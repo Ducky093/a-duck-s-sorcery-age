@@ -89,9 +89,7 @@ public class SorcererGoal extends Goal {
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
                     if (!JJKAbilities.hasToggled(this.mob, ability)){
-                        if (ability != JJKAbilities.DOMAIN_AMPLIFICATION.get() || JJKAbilities.hasToggled(target, infinite) )  {
-                           AbilityHandler.trigger(this.mob, ability);
-                        }
+                        AbilityHandler.trigger(this.mob, ability);
                     }
 
                 } else if (JJKAbilities.hasToggled(this.mob, ability)) {
@@ -102,13 +100,13 @@ public class SorcererGoal extends Goal {
                 if (success) {
                     if (!JJKAbilities.isChanneling(this.mob, ability)) {
                         AbilityHandler.trigger(this.mob, ability);
-                        if (ability != JJKAbilities.HEAL.get() && ability != JJKAbilities.RCT1.get()) {
+                        if (ability != JJKAbilities.HEAL.get() && ability != JJKAbilities.RCT1.get() && ability != JJKAbilities.RCT2.get() && ability != JJKAbilities.RCT3.get()) {
                         return;
                     }
                 }
                 } else if (JJKAbilities.isChanneling(this.mob, ability)) {
                     AbilityHandler.untrigger(this.mob, ability);
-                    if (ability != JJKAbilities.HEAL.get() && ability != JJKAbilities.RCT1.get()) {
+                    if (ability != JJKAbilities.HEAL.get() && ability != JJKAbilities.RCT1.get() && ability != JJKAbilities.RCT2.get() && ability != JJKAbilities.RCT3.get()) {
                     return;
                     }
                 }

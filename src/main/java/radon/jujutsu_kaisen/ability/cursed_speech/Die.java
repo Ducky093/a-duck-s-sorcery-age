@@ -78,12 +78,12 @@ public class Die extends Ability {
             }
         }
 
-        int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
+        // int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
 
-        if (k > 0) {
-            float f2 = Mth.clamp(k, 0.0F, 20.0F);
-            damage /= 1.0F - f2 / 25.0F;
-        }
+        // if (k > 0) {
+        //     float f2 = Mth.clamp(k, 0.0F, 20.0F);
+        //     damage /= 1.0F - f2 / 25.0F;
+        // }
         return damage;
     }
 

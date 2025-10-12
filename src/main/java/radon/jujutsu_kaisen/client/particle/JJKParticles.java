@@ -29,6 +29,14 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<SlicedEntityParticle.SliceParticleOptions>> SLICE = PARTICLES.register("slice", () ->
+        new ParticleType<>(false, SlicedEntityParticle.SliceParticleOptions.DESERIALIZER) {
+            @Override
+            public @NotNull Codec<SlicedEntityParticle.SliceParticleOptions> codec() {
+                return null;
+            }
+        });
+
         // public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
         //     new SimpleParticleType(true));
     public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->

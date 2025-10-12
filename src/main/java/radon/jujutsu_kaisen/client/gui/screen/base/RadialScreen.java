@@ -340,21 +340,21 @@ public abstract class RadialScreen extends Screen {
             }
 
            if (item.type == DisplayItem.Type.CURSE) {
-                if (this.hovered == i) {
+               // if (this.hovered == i) {
                     Entity entity = JJKAbilities.createCurse(this.minecraft.player, item.curse.getKey());
                     if (entity == null) continue;
                     
                     float height = entity.getBbHeight();
                     int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
                     renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
-                } else {
-                    int y = posY - this.font.lineHeight / 2;
-                    pGuiGraphics.pose().pushPose();
-                    pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
-                    pGuiGraphics.pose().translate(posX, y, 0.0F);
-                    pGuiGraphics.drawCenteredString(this.font, item.curse.getKey().getName(), posX, y, 0xFFFFFF);
-                    pGuiGraphics.pose().popPose();
-                }
+                // } else {
+                //     int y = posY - this.font.lineHeight / 2;
+                //     pGuiGraphics.pose().pushPose();
+                //     pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
+                //     pGuiGraphics.pose().translate(posX, y, 0.0F);
+                //     pGuiGraphics.drawCenteredString(this.font, item.curse.getKey().getName(), posX, y, 0xFFFFFF);
+                //     pGuiGraphics.pose().popPose();
+                // }
             } else if (item.ability instanceof Summon<?> summon && summon.display()) {
                 Entity entity = ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level);
                 if (entity == null) continue;

@@ -53,7 +53,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         if (!(target instanceof Player player) &&  (ConfigHolder.SERVER.playerBodySteal.get())  ) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false; 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
-        return cap.getType() == JujutsuType.SORCERER && cap.getExperience() >= 1000; 
+        return cap.getType() == JujutsuType.SORCERER && cap.getExperience() >= ConfigHolder.SERVER.minimumBodyStealEXP.get(); 
     }
 
     private static boolean canSteal(LivingEntity owner, LivingEntity target) {
@@ -64,7 +64,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return ((target instanceof Player player) || (!ConfigHolder.SERVER.playerBodySteal.get())   ) && ( targetCap.getType() == JujutsuType.SORCERER) &&
-                (target.isDeadOrDying()) && targetCap.getExperience() >= 1000;
+                (target.isDeadOrDying()) && targetCap.getExperience() >= ConfigHolder.SERVER.minimumBodyStealEXP.get();
     }
 
 
@@ -131,7 +131,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         //ownerCap.deserializeNBT(ownerCap.serializeNBT());
         //CompoundTag targetnbt = targetCap.serializeNBT();
         // Require target to have enough exp
-        if (targetCap.getExperience() <= 1000) {
+        if (targetCap.getExperience() <= ConfigHolder.SERVER.minimumBodyStealEXP.get()) {
             return;
         }
 
@@ -148,7 +148,11 @@ public class BodySteal extends Ability implements Ability.IToggled {
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
         //ownerCap.setExperience(targetCap.getExperience());
-        targetCap.setExperience(0);
+        if (ConfigHolder.SERVER.bodyStealEXPReset.get()) {
+            targetCap.setExperience(0);
+        }
+        
+       
        
         //NbtUtils.writeGameProfile(nbt, player.getGameProfile());
         //GameProfile profile = NbtUtils.readGameProfile(targetnbt);

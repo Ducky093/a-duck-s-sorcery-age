@@ -74,7 +74,7 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
-        if (parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
+        if (entity == null || parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
         if (entity.getUUID().equals(be.ownerUUID)) return true;
         if (be.modifiers == null) return false;
 

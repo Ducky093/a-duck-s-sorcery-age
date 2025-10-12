@@ -119,7 +119,7 @@ public class Slam extends Ability implements Ability.ICharged {
     public static void slamCrater(LivingEntity owner, float distance) {
         if (owner.level().isClientSide) return;
         
-        float radius = Math.min(MAX_EXPLOSION, 2.5F+8F * TARGETS.get(owner.getUUID()));
+        float radius = MAX_EXPLOSION;
         float dmgMult = 0.75F;
         if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
             dmgMult = 0.8F;

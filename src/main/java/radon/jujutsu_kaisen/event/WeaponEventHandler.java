@@ -131,7 +131,7 @@ public class WeaponEventHandler {
                         ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                            float cost = KamutokeDaggerItem.MELEE_COST; //* (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F)
                             if (attackerCap.getEnergy() < cost) return;
                             attackerCap.useEnergy(cost);
                         }

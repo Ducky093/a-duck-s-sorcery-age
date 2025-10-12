@@ -186,12 +186,12 @@ public class ExperienceHandler {
                 }
             }
 
-            int k = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), entity.damageSources().generic());
+            // int k = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), entity.damageSources().generic());
 
-            if (k > 0) {
-                float f2 = Mth.clamp(k, 0.0F, 20.0F);
-                strength /= 1.0F - f2 / 25.0F;
-            }
+            // if (k > 0) {
+            //     float f2 = Mth.clamp(k, 0.0F, 20.0F);
+            //     strength /= 1.0F - f2 / 25.0F;
+            // }
 
             strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
             strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);

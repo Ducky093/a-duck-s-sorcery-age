@@ -27,15 +27,15 @@ public class MergedFleshItem extends CursedEnergyFleshItem {
                 cap.addExtraEnergy((getGrade(pStack).ordinal() + 1) * ConfigHolder.SERVER.cursedObjectEnergyForGrade.get().floatValue() * 2.0F);
             }
 
-            if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                if (getGrade(pStack) == SorcererGrade.SPECIAL_GRADE && !cap.hasTrait(Trait.PERFECT_BODY)) {
-                    if (cap.getExperience() >= ConfigHolder.SERVER.maximumExperienceAmount.get()) {
-                        cap.addTrait(Trait.PERFECT_BODY);
-                    } else {
-                        pLivingEntity.sendSystemMessage(Component.translatable(String.format("chat.%s.not_strong_enough", JujutsuKaisen.MOD_ID)));
-                    }
-                }
-            }
+            // if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            //     if (getGrade(pStack) == SorcererGrade.SPECIAL_GRADE && !cap.hasTrait(Trait.PERFECT_BODY)) {
+            //         if (cap.getExperience() >= ConfigHolder.SERVER.maximumExperienceAmount.get()) {
+            //             cap.addTrait(Trait.PERFECT_BODY);
+            //         } else {
+            //             pLivingEntity.sendSystemMessage(Component.translatable(String.format("chat.%s.not_strong_enough", JujutsuKaisen.MOD_ID)));
+            //         }
+            //     }
+            // }
         }
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }

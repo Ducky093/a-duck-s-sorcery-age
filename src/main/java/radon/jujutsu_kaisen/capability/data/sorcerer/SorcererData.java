@@ -836,6 +836,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public float getRealPower(float exp) {
+        return SorcererUtil.getPower(exp);
+    }
+
+    @Override
     public float getExperience() {
         return this.experience;
     }
@@ -1162,14 +1167,27 @@ public class SorcererData implements ISorcererData {
         this.sync();
     }
 
-    @Override
-    public float getMaxEnergy() {
-        long time = this.owner.level().getLevelData().getDayTime();
-        boolean night = time >= 13000 && time < 24000;
-        return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
-                ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
-                        this.getRealPower() * (float) (Math.log(this.getRealPower() + 1))*0.5F) + Math.min(this.maxEnergy*0.25F, this.extraEnergy);
-    }
+   @Override
+public float getMaxEnergy() {
+    long time = this.owner.level().getLevelData().getDayTime();
+    boolean night = time >= 13000 && time < 24000;
+
+    float baseEnergy = (this.maxEnergy == 0.0F)
+            ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue()
+            : this.maxEnergy;
+
+
+    float baseCapacity = baseEnergy * this.getRealPower() * ((float) Math.log(this.getRealPower() + 1)) * 0.5F;
+    float maxEXP = this.getRealPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue() );
+    float maxCapacity = baseEnergy * maxEXP  * ((float) Math.log(maxEXP + 1)) * 0.5F;
+    float timeMultiplier = (this.bindingVows.contains(BindingVow.OVERTIME))
+            ? (night ? 1.2F : 0.9F)
+            : 1.0F;
+    
+    float finalEnergy = Math.min(maxCapacity * timeMultiplier, (baseCapacity * timeMultiplier + this.extraEnergy) );
+
+    return finalEnergy;
+}
 
     @Override
     public void setMaxEnergy(float maxEnergy) {
@@ -1585,7 +1603,6 @@ public class SorcererData implements ISorcererData {
         if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return List.of();
 
         List<AbsorbedCurse> sorted = new ArrayList<>(this.curses);
-        sorted.sort((o1, o2) -> (int) (JJKAbilities.getCurseExperience(o2) - JJKAbilities.getCurseExperience(o1)));
         return sorted;
     }
 
@@ -1636,7 +1653,9 @@ public class SorcererData implements ISorcererData {
         this.traits.remove(Trait.SIX_EYES);
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
-
+        this.traits.remove(Trait.PERFECT_BODY);
+        this.traits.remove(Trait.RCT_SPECIALIST);
+        this.traits.remove(Trait.INCARNATED);
         Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
@@ -1691,6 +1710,22 @@ public class SorcererData implements ISorcererData {
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
+
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.PERFECT_BODY)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.perfectBodyRarity.get()) == 0) {
+                this.addTrait(Trait.PERFECT_BODY);
+            }
+
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.RCT_SPECIALIST)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctSpecialistRarity.get()) == 0) {
+                this.addTrait(Trait.RCT_SPECIALIST);
+            }
+
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.INCARNATED)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.incarnatedRarity.get()) == 0) {
+                this.addTrait(Trait.INCARNATED);
+            }
+
 
             assert this.technique != null;
 

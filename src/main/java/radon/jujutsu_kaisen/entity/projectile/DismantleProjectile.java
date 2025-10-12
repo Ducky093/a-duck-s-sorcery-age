@@ -17,15 +17,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
@@ -151,7 +156,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         Entity entity = pResult.getEntity();
 
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+        if (!(this.getOwner() instanceof LivingEntity owner)  ||  !(entity instanceof LivingEntity living)) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (owner == entity && !cap.hasSelfHit() ) return;
         if (!this.canHurt) return;
@@ -159,6 +164,31 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), this.getDamage() * this.getPower());
+        //  if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
+        //  Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+
+        //     float yaw = this.getYRot();
+        //     float pitch = this.getXRot();
+        //     float roll = this.getRoll();
+
+        //     Vec3 forward = this.calculateViewVector(pitch, yaw);
+        //     Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+
+        //     Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
+        //     Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
+
+        //     int length = this.getLength();
+        //     Vec3 start = side.scale((double) length / 2);
+        //     Vec3 end = forward.subtract(start);
+
+        //     Vec3 plane = end.cross(start).normalize();
+
+        //     float distance = (float) plane.dot(center.subtract(living.position()));
+
+        //     ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), distance),
+        //             true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
+
+        //     living.setInvisible(true);
     }
 
     private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {

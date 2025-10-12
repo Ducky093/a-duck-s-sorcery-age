@@ -83,7 +83,7 @@ public class AbilityOverlay {
     private static void render(ForgeGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
         Minecraft mc = gui.getMinecraft();
 
-        if (mc.player == null) return;
+        if (mc.player == null || ability == null ) return;
 
         // DO NOT REMOVE
         if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;

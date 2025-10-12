@@ -30,7 +30,7 @@ public class ServerChantHandler {
         return messages.getOrDefault(owner.getUUID(), List.of());
     }
 
-    public static void onChant(LivingEntity owner, String word) {
+    public static boolean onChant(LivingEntity owner, String word) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Ability ability = cap.getAbility(word);
 
@@ -53,7 +53,7 @@ public class ServerChantHandler {
                 index++;
             }
 
-            if (index >= chants.size() || !chants.get(index).equals(word)) return;
+            if (index >= chants.size() || !chants.get(index).equals(word)) return true;
 
             messages.get(owner.getUUID()).add(word);
 
@@ -70,7 +70,12 @@ public class ServerChantHandler {
             if (cap.hasTrait(Trait.PERFECT_BODY)) {
                 PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
             }
+            return true;
+        } else {
+            return false;
         }
+    
+        
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -146,14 +151,27 @@ public class ServerChantHandler {
 
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
-             ServerPlayer player = event.getPlayer();
-             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasSilenced()) {
-                    event.setCanceled(true);
-                    player.displayClientMessage(Component.literal("You are silenced and cannot speak!"), true);
-                } else {
-                    onChant(player, event.getRawText().toLowerCase());
+            ServerPlayer sender = event.getPlayer();
+            String message = event.getRawText();
+            ServerLevel level = sender.serverLevel();
+            sender.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (cap.hasSilenced()) {
+                event.setCanceled(true);
+                sender.displayClientMessage(Component.literal("You are silenced and cannot speak!"), true);
+                return;
+            }
+            boolean sent = onChant(sender, message.toLowerCase());
+            if (sent) {
+                event.setCanceled(true);
+                double radius = 256.0D;
+                sender.sendSystemMessage(Component.literal("<" + sender.getName().getString() + "> " + message));
+                for (ServerPlayer other : level.players()) {
+                    if (sender != other && other.distanceTo(sender) <= radius) {
+                        if (!other.level().dimension().equals(sender.level().dimension())) continue;
+                        other.sendSystemMessage(Component.literal("<" + sender.getName().getString() + "> " + message));
+                    }
                 }
+            }
             });
         }
     }
