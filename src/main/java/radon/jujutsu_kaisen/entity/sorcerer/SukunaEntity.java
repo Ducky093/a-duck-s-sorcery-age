@@ -33,6 +33,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
@@ -104,17 +106,20 @@ public class SukunaEntity extends SorcererEntity {
                 if (entity instanceof TenShadowsSummon) return;
             }
         if (this.random.nextInt(TAMING_CHANCE) == 0) {
-            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
-
-            if (!mahoraga.isTamed(this)) {
-                AbilityHandler.trigger(this, mahoraga);
-                return;
-            }
+            
 
             for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
                 AbilityHandler.trigger(this, ability);
+                return;
+            }
+            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
+
+            if (!mahoraga.isTamed(this)) {
+                AbilityHandler.trigger(this, mahoraga);
+
+                return;
             }
         }
     }
@@ -216,6 +221,12 @@ public class SukunaEntity extends SorcererEntity {
 
         pCompound.putString("entity",  this.entityData.get(DATA_ENTITY));
         this.entityData.get(DATA_PLAYER).ifPresent(player -> pCompound.put("player", player));
+    }
+
+     @Override
+    public void init(ISorcererData data) {
+        super.init(data);
+        data.addExtraEnergy(20000);
     }
 
     @Override
