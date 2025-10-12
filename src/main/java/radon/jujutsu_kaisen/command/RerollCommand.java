@@ -26,7 +26,7 @@ public class RerollCommand {
         PlayerUtil.removeAdvancement(player, "six_eyes");
         PlayerUtil.removeAdvancement(player, "heavenly_restriction");
         PlayerUtil.removeAdvancement(player, "vessel");
-
+        PlayerUtil.removeAdvancement(player, "perfect_body");
         cap.generate(player);
 
         return 1;

@@ -20,6 +20,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue curseFleshRarity;
     public final ForgeConfigSpec.DoubleValue pointMultiplier;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
+    public final ForgeConfigSpec.DoubleValue minimumBodyStealEXP;
     public final ForgeConfigSpec.DoubleValue deathPenalty;
     public final ForgeConfigSpec.DoubleValue pointPenalty;
     public final ForgeConfigSpec.DoubleValue pvpGain;
@@ -27,12 +28,14 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
+    public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
     public final ForgeConfigSpec.BooleanValue destruction;
+    //public final ForgeConfigSpec.BooleanValue entitySlicing;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
@@ -61,6 +64,9 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue sixEyesRarity;
     public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
     public final ForgeConfigSpec.IntValue vesselRarity;
+    public final ForgeConfigSpec.IntValue rctSpecialistRarity;
+    public final ForgeConfigSpec.IntValue perfectBodyRarity;
+    public final ForgeConfigSpec.IntValue incarnatedRarity;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
@@ -82,6 +88,8 @@ public class ServerConfig {
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
+        this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
+                        .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
         this.pointMultiplier = builder.comment("Scale of ability points you gain")
                         .defineInRange("pointMultiplier", 0.1F, 0.0F, 100.0F);
         this.pointPenalty = builder.comment("Scale of points lost on death")
@@ -98,6 +106,8 @@ public class ServerConfig {
                 .define("realisticCurses", true);
         this.playerBodySteal = builder.comment("When enabled Body Steal only works on players")
                 .define("playerBodySteal", false);
+        this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
+                .define("bodyStealEXPReset", true);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
@@ -111,6 +121,8 @@ public class ServerConfig {
                 .define("uniqueTraits", true);
         this.destruction = builder.comment("When enabled abilities break blocks")
                 .define("destruction", true);
+        //this.entitySlicing = builder.comment("When enabled entities are sliced by Dismantle")
+        //        .define("entitySlicing", true);
         builder.pop();
 
         builder.comment("Veils").push("veils");
@@ -187,13 +199,19 @@ public class ServerConfig {
         this.cursedEnergyNatureRarity = builder.comment("Rarity of a cursed energy nature other than basic (bigger value = rarer)")
                 .defineInRange("cursedEnergyNatureRarity", 5, 1, 1000000);
         this.curseRarity = builder.comment("Rarity of being a curse (bigger value = rarer)")
-                .defineInRange("curseRarity", 5, 1, 1000000);
+                .defineInRange("curseRarity", 10, 1, 1000000);
         this.sixEyesRarity = builder.comment("Rarity of having six eyes (bigger value = rarer)")
-                .defineInRange("sixEyesRarity", 10, 1, 1000000);
+                .defineInRange("sixEyesRarity", 1, 1, 1000000);
         this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (bigger value = rarer)")
                 .defineInRange("heavenlyRestrictionRarity", 10, 1, 1000000);
         this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
-                .defineInRange("vesselRarity", 10, 1, 1000000);
+                .defineInRange("vesselRarity", 3, 1, 1000000);
+        this.perfectBodyRarity = builder.comment("Rarity of having a perfect body (bigger value = rarer)")
+                .defineInRange("perfectBodyRarity", 1, 1, 1000000);
+        this.incarnatedRarity = builder.comment("Rarity of being incarnated (bigger value = rarer)")
+                .defineInRange("incarnatedRarity", 10, 1, 1000000);
+        this.rctSpecialistRarity = builder.comment("Rarity of being adept at RCT (bigger value = rarer)")
+                .defineInRange("rctSpecialistRarity", 5, 1, 1000000);
         builder.pop();
     }
 

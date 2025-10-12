@@ -93,11 +93,11 @@ public class MobEventHandler {
                         AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
                     }
                     }
-                    if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                        if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                        }
-                    }
+                    // if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                    //     if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    //         AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                    //     }
+                    // }
                 }
             }
         }
@@ -125,7 +125,7 @@ public class MobEventHandler {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
                             for (ServerPlayer player : level.players()) {
-                                if (player.distanceTo(owner) > 32.0D) continue;
+                                if (player.distanceTo(owner) > 64.0D) continue;
 
                                 ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
 

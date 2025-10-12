@@ -10,7 +10,7 @@ public enum Trait {
     SIX_EYES,
     HEAVENLY_RESTRICTION,
     VESSEL,
-    DOCTOR_HOUSE,
+    RCT_SPECIALIST,
     INCARNATED,
     PERFECT_BODY,
     SIMURIAN;

@@ -47,14 +47,14 @@ public class BodyRepelSegmentEntity extends JJKPartEntity<BodyRepelEntity> imple
 
         for (Entity entity : entities) {
             if (entity.isPushable()) {
-                this.collideWithEntity(entity);
+                //this.collideWithEntity(entity);
             }
         }
     }
 
     private void collideWithEntity(Entity entity) {
         if (!(entity instanceof BodyRepelEntity)) {
-            entity.push(this);
+            //entity.push(this);
         }
     }
 

@@ -548,6 +548,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SLICE.get(), SlicedEntityParticle.Provider::new);
         }
 
         @SubscribeEvent

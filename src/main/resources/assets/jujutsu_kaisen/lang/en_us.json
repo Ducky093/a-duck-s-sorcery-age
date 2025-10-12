@@ -252,8 +252,8 @@
   "ability.jujutsu_kaisen.discharge": "Discharge",
   "ability.jujutsu_kaisen.zero_point_two_second_domain_expansion": "0.2s Domain Expansion",
   "ability.jujutsu_kaisen.switch": "Switch",
-  "ability.jujutsu_kaisen.cursed_energy_bomb": "CE Bomb",
-  "ability.jujutsu_kaisen.cursed_energy_blast": "CE Blast",
+  "ability.jujutsu_kaisen.cursed_energy_bomb": "CE Blast",
+  "ability.jujutsu_kaisen.cursed_energy_blast": "CE Bomb",
 
   "ability.jujutsu_kaisen.rct1": "Reverse Cursed Technique - Tier 1",
   "ability.jujutsu_kaisen.rct2": "Reverse Cursed Technique - Tier 2",
@@ -473,6 +473,7 @@
   "grade.jujutsu_kaisen.special_grade_1": "Special Grade 1",
   "grade.jujutsu_kaisen.special_grade": "Special Grade",
 
+  "cursed_technique.jujutsu_kaisen.techniqueless": "no technique.",
   "cursed_technique.jujutsu_kaisen.none": "None",
   "cursed_technique.jujutsu_kaisen.shockwave": "Shockwave",
   "cursed_technique.jujutsu_kaisen.sky_strike": "Sky Strike",
@@ -502,7 +503,7 @@
   "trait.jujutsu_kaisen.heavenly_restriction": "Heavenly Restriction",
   "trait.jujutsu_kaisen.vessel": "Vessel",
   "trait.jujutsu_kaisen.perfect_body": "Perfect Body",
-  "trait.jujutsu_kaisen.doctor_house": "Doctor House",
+  "trait.jujutsu_kaisen.rct_specialist": "RCT Adept",
   "trait.jujutsu_kaisen.incarnated": "Incarnated",
 
 
@@ -685,8 +686,8 @@
   "entity.jujutsu_kaisen.fire_beam": "Fire Beam",
   "entity.jujutsu_kaisen.forest_dash": "Forest Dash",
   "entity.jujutsu_kaisen.cursed_energy_imbued_item": "Cursed Energy Imbued Item",
-  "entity.jujutsu_kaisen.cursed_energy_bomb": "Cursed Energy Bomb",
-  "entity.jujutsu_kaisen.cursed_energy_blast": "Cursed Energy Blast",
+  "entity.jujutsu_kaisen.cursed_energy_bomb": "Cursed Energy Blast",
+  "entity.jujutsu_kaisen.cursed_energy_blast": "Cursed Energy Bomb",
   "entity.jujutsu_kaisen.eel_grapple": "Eel Grapple",
   "entity.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
 
