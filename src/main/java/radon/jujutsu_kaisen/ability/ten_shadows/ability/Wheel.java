@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -62,9 +63,10 @@ public class Wheel extends Summon<WheelEntity> {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
+          ISorcererData ownercap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return !ownercap.hasToggled(JJKAbilities.MAHORAGA.get()) &&
                 cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
-                (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY) && !JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                (ownercap.hasToggled(this) || cap.getMode() == TenShadowsMode.ABILITY) && ( ownercap.getExperience() >= ConfigHolder.SERVER.requiredExperienceForExperienced.get() || !ownercap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) )  ;
     }
 
     @Override
