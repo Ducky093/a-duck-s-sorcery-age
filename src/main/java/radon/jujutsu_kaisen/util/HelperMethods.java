@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
@@ -10,8 +11,12 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -25,12 +30,60 @@ public class HelperMethods {
     public static final RandomSource RANDOM = RandomSource.createThreadSafe();
 
     // TODO: move this goofy shit to config
-    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
+    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure I summon...", "Have you ever trained?"};
 
     public static boolean isMelee(DamageSource source) {
         return !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ||
                 source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() != null && jujutsu.getAbility().isMelee();
     }
+
+    private static BlockPos getTopNonCollidingPos(LevelReader level, EntityType<?> type, int x, int z) {
+        int i = level.getHeight(SpawnPlacements.getHeightmapType(type), x, z);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, i, z);
+
+        if (level.dimensionType().hasCeiling()) {
+            do {
+                pos.move(Direction.DOWN);
+            } while(!level.getBlockState(pos).isAir());
+
+            do {
+                pos.move(Direction.DOWN);
+            } while (level.getBlockState(pos).isAir() && pos.getY() > level.getMinBuildHeight());
+        }
+
+        if (SpawnPlacements.getPlacementType(type) == SpawnPlacements.Type.ON_GROUND) {
+            BlockPos below = pos.below();
+
+            if (level.getBlockState(below).isPathfindable(level, below, PathComputationType.LAND)) {
+                return below;
+            }
+        }
+        return pos.immutable();
+    }
+
+    public static BlockPos findSafePos(ServerLevel level, LivingEntity entity) {
+        BlockPos.MutableBlockPos pos = entity.blockPosition().mutable();
+
+        level.getPoiManager().ensureLoadedAndValid(level, pos, 16);
+
+        double minX = level.getWorldBorder().getMinX();
+        double maxX = level.getWorldBorder().getMaxX();
+        double minZ = level.getWorldBorder().getMinZ();
+        double maxZ = level.getWorldBorder().getMaxZ();
+
+        EntityType<?> type = entity.getType();
+
+        while (!NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos, type)) {
+            pos.set(minX + RANDOM.nextDouble() * (maxX - minX), 0, minZ + RANDOM.nextDouble() * (maxZ - minZ));
+
+            level.getPoiManager().ensureLoadedAndValid(level, pos, 16);
+
+            pos.set(getTopNonCollidingPos(level, type, pos.getX(), pos.getZ()));
+        }
+
+        return pos.immutable();
+    }
+
 
 
     public static int getRGB24(Vector3f rgb) {

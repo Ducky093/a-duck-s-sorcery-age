@@ -170,14 +170,14 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.setTime(this.getTime() + 1);
 
         Entity owner = this.getOwner();
-        float speedMult = 4F;
+        float speedMult = 5F;
         if (owner == null) {
             this.discard();
             return;
         }
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            speedMult = 8.0F;
+            speedMult = 10.0F;
         }
         
 

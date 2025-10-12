@@ -1,5 +1,10 @@
 package radon.jujutsu_kaisen.event;
 
+import java.util.Set;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -13,6 +18,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.world.dimension.JJKDimensions;
 
 public class PactEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -68,6 +75,19 @@ public class PactEventHandler {
                 ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 if (victimCap.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerCap.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
+                    victimCap.removePact(attacker.getUUID(), Pact.INVULNERABILITY);
+                        attackerCap.removePact(victim.getUUID(), Pact.INVULNERABILITY);
+
+                        MinecraftServer server = attacker.level().getServer();
+
+                        if (server != null) {
+                            ServerLevel dimension = server.getLevel(JJKDimensions.LIMBO_KEY);
+
+                            if (dimension != null) {
+                                BlockPos pos = HelperMethods.findSafePos(dimension, attacker);
+                                attacker.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), attacker.getYRot(), attacker.getXRot());
+                            }
+                        }
                     //event.setCanceled(true);
                 }
             }
