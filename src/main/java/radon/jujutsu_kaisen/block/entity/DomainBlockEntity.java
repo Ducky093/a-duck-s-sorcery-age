@@ -115,7 +115,7 @@ public class DomainBlockEntity extends BlockEntity {
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
-            } else {
+            } else if (this.deferred != null) {
                 pTag.put("original", this.deferred);
             }
 
@@ -124,6 +124,7 @@ public class DomainBlockEntity extends BlockEntity {
             }
         }
     }
+
 
     @Override
     public void load(@NotNull CompoundTag pTag) {
