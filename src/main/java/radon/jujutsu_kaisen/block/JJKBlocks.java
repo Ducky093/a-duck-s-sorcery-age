@@ -193,4 +193,9 @@ public class JJKBlocks {
                     .sound(SoundType.WOOD)
                     .isSuffocating(JJKBlocks::never)
                     .ignitedByLava()));
+    public static RegistryObject<Block> LIMBO = BLOCKS.register("limbo", () ->
+            new Block(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(1000.0F, 6.0F)));
 }

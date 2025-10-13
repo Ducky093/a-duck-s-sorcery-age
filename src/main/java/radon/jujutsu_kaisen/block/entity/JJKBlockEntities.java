@@ -65,4 +65,5 @@ public class JJKBlockEntities {
                             JJKBlocks.FAKE_WATER_DURATION.get(),
                             JJKBlocks.FAKE_WOOD.get())
                     .build(null));
+                    
 }

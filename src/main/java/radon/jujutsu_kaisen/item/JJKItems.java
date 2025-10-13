@@ -100,7 +100,8 @@ public class JJKItems {
             () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));
     public static RegistryObject<Item> ALTAR = ITEMS.register("altar",
             () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
-
+    public static RegistryObject<Item> LIMBO = ITEMS.register("limbo",
+            () -> new BlockItem(JJKBlocks.LIMBO.get(), new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 0x2d2d2d, 0xfefefe, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SATORU_GOJO_SPAWN_EGG = ITEMS.register("satoru_gojo_spawn_egg",

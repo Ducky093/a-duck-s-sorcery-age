@@ -5,6 +5,7 @@ import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -18,6 +19,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.world.dimension.JJKDimensions;
 
@@ -88,6 +91,8 @@ public class PactEventHandler {
                                 attacker.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), attacker.getYRot(), attacker.getXRot());
                             }
                         }
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), (ServerPlayer) victim);
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), (ServerPlayer) attacker);
                     //event.setCanceled(true);
                 }
             }

@@ -7,15 +7,15 @@
     "fog_color": 1514009,
     "water_color": 0,
     "water_fog_color": 0,
-    "ambient_sound": "minecraft:ambiet_basalt_deltas_loop",
+    "ambient_sound": "minecraft:ambient_basalt_deltas_loop",
     "mood_sound": {
-      "sound": "minecraft:ambiet_basalt_deltas_mood",
+      "sound": "minecraft:ambient_basalt_deltas_mood",
       "tick_delay": 6000,
       "block_search_extent": 8,
       "offset": 2
     },
     "additions_sound": {
-      "sound": "minecraft:ambiet_basalt_deltas_additions",
+      "sound": "minecraft:ambient_basalt_deltas_additions",
       "tick_chance": 0.0111
     },
     "music": {
