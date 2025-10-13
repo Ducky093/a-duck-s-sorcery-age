@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -111,11 +112,16 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource)) return;
 
             LivingEntity victim = event.getEntity();
+            
 
             for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
                 if (victim.distanceTo(simple) < simple.getRadius()) {
-                    event.setAmount(event.getAmount() * 0.5F);
-                    simple.hurt(event.getSource(), event.getAmount()*1.25F,false); //multiply dmg to be applied to simple by 2.5x
+                    DamageSource source = event.getSource();
+                    LivingEntity causingEntity = source.getEntity() instanceof LivingEntity ? (LivingEntity) source.getEntity() : null;
+                    if ( !(causingEntity == simple.getOwner()) ) {
+                        event.setAmount(event.getAmount() * 0.5F);
+                        simple.hurt(event.getSource(), event.getAmount()*1.25F,false); //multiply dmg to be applied to simple by 2.5x
+                    }
                 }
             }
         }

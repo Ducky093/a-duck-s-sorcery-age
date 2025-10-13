@@ -13,14 +13,16 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import net.minecraft.util.Mth;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
-    public static final int DURATION = 1 * 20;
+    public static final int DURATION = 3 * 20;
     private static final float RADIUS = 5.0F;
-    private static final float MAX_EXPLOSION = 25.0F;
+    private static final float MAX_EXPLOSION = 24.0F;
+    private boolean exploded;
 
     public HollowPurpleExplosion(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.noCulling = true;
+        
     }
 
     public HollowPurpleExplosion(LivingEntity owner, float power, Vec3 pos) {
@@ -30,7 +32,8 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         this.setPower(power);
 
         float radius = RADIUS * this.getPower();
-        this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
+        this.setPos(pos);
+        //this.setPos(pos.subtract(0.0D, 0.0D, 0.0D));
     }
 
     @Override
@@ -41,15 +44,37 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float radius = RADIUS * this.getPower();
-        return EntityDimensions.fixed(radius, radius);
+        return EntityDimensions.fixed(0.1F, 0.1F);
+    }
+
+    @Override
+    public boolean isPickable() {
+        // Prevents targeting by players/entities
+        return false;
+    }
+
+    @Override
+    public boolean isPushable() {
+        // Prevents it from pushing entities
+        return false;
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return false;
+    }
+
+    @Override
+    public void push(Entity entity) {
+        // Prevent entity from being pushed by this explosion
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.refreshDimensions();
-
+        //this.refreshDimensions();
+        if (this.tickCount == 1) this.refreshDimensions();
         if (this.level().isClientSide) return;
 
         if (this.getTime() >= DURATION) {
@@ -69,7 +94,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             owner.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.HOLLOW_PURPLE.get()), (this.getPower() * 5.0F)*radFactor); */
             
             ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), radius,
-                    duration, this.getPower() * 0.4F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
+                    DURATION, this.getPower() * 0.4F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
             
             
         }

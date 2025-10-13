@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -58,10 +59,9 @@ public class CursedEnergyBomb extends Ability {
         return 12 * 20;
     }
 
-
-     @Override
+    @Override
     public int getPointsCost() {
-        return 50;
+        return ConfigHolder.SERVER.ceBombCost.get();
     }
 
     

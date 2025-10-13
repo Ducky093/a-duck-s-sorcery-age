@@ -107,6 +107,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
+    public static RegistryObject<Ability> SIMPLE_DOMAIN_ENLARGEMENT = ABILITIES.register("simple_domain_enlargement", SimpleDomainEnlargement::new);
     public static RegistryObject<Ability> HOLLOW_WICKER_BASKET = ABILITIES.register("hollow_wicker_basket", HollowWickerBasket::new);
     public static RegistryObject<Ability> QUICK_DRAW = ABILITIES.register("quick_draw", QuickDraw::new);
     public static RegistryObject<Ability> FALLING_BLOSSOM_EMOTION = ABILITIES.register("falling_blossom_emotion", FallingBlossomEmotion::new);

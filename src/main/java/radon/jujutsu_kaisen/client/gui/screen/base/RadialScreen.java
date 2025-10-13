@@ -44,6 +44,9 @@ public abstract class RadialScreen extends Screen {
     protected int hovered = -1;
     private static int page;
     private int hover;
+    private long lastPageSwitchTime = 0L;
+    private static final long PAGE_SWITCH_INTERVAL_MS = 500L;
+
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));
@@ -398,48 +401,59 @@ public abstract class RadialScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (!this.getCurrent().isEmpty()) {
-            float startAngle = this.getAngleFor(-0.5F);
-            float endAngle = this.getAngleFor(this.getCurrent().size() - 0.5F);
+        if (this.getCurrent().isEmpty()) return;
 
-            while (mouseAngle < startAngle) {
-                mouseAngle += Mth.TWO_PI;
-            }
-            while (mouseAngle >= endAngle) {
-                mouseAngle -= Mth.TWO_PI;
-            }
+        float startAngle = this.getAngleFor(-0.5F);
+        float endAngle = this.getAngleFor(this.getCurrent().size() - 0.5F);
 
-            this.hovered = -1;
+        while (mouseAngle < startAngle) mouseAngle += Mth.TWO_PI;
+        while (mouseAngle >= endAngle) mouseAngle -= Mth.TWO_PI;
 
-            for (int i = 0; i < this.getCurrent().size(); i++) {
-                float currentStart = this.getAngleFor(i - 0.5F);
-                float currentEnd = this.getAngleFor(i + 0.5F);
+        this.hovered = -1;
 
-                if (mouseAngle >= currentStart && mouseAngle < currentEnd && mousePos >= RADIUS_IN) {
-                    this.hovered = i;
-                    break;
-                }
-            }
+        for (int i = 0; i < this.getCurrent().size(); i++) {
+            float currentStart = this.getAngleFor(i - 0.5F);
+            float currentEnd = this.getAngleFor(i + 0.5F);
 
-            if (mousePos < RADIUS_OUT) return;
-
-            if (this.pages.size() > 1) {
-                if (this.pages.size() - 1 > page) {
-                    if (pMouseX > (double) this.width / 2 && pMouseX < this.width && pMouseY > 0 && pMouseY < this.height) {
-                        if (++this.hover == 20) page++;
-                        return;
-                    }
-                }
-                if (page > 0) {
-                    if (pMouseX > 0 && pMouseX < (double) this.width / 2 && pMouseY > 0 && pMouseY < this.height) {
-                        if (++this.hover == 20) page--;
-                        return;
-                    }
-                }
-                if (this.hover > 0) this.hover = 0;
+            if (mouseAngle >= currentStart && mouseAngle < currentEnd && mousePos >= RADIUS_IN) {
+                this.hovered = i;
+                break;
             }
         }
+
+        if (mousePos < RADIUS_OUT) return;
+        if (this.pages.size() <= 1) return;
+
+        long now = System.currentTimeMillis();
+        boolean switched = false;
+
+        if (this.pages.size() - 1 > page &&
+            pMouseX > (double) this.width / 2 && pMouseX < this.width &&
+            pMouseY > 0 && pMouseY < this.height) {
+
+            if (now - this.lastPageSwitchTime >= PAGE_SWITCH_INTERVAL_MS) {
+                page++;
+                this.lastPageSwitchTime = now;
+                switched = true;
+            }
+        }
+
+        if (!switched && page > 0 &&
+            pMouseX > 0 && pMouseX < (double) this.width / 2 &&
+            pMouseY > 0 && pMouseY < this.height) {
+
+            if (now - this.lastPageSwitchTime >= PAGE_SWITCH_INTERVAL_MS) {
+                page--;
+                this.lastPageSwitchTime = now;
+            }
+        }
+
+        if (!(pMouseX < (double) this.width / 2 && page > 0) &&
+            !(pMouseX > (double) this.width / 2 && this.pages.size() - 1 > page)) {
+            this.lastPageSwitchTime = 0L;
+        }
     }
+
 
     private float getAngleFor(double i) {
         if (this.getCurrent().isEmpty()) {

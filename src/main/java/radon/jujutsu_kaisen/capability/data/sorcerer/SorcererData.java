@@ -597,6 +597,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void lock(Ability ability) {
+        this.unlocked.remove(ability);
+    }
+    
+    @Override
     public void unlock(Ability ability) {
         this.unlocked.add(ability);
     }
@@ -604,6 +609,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void unlockAll(List<Ability> abilities) {
         this.unlocked.addAll(abilities);
+    }
+
+    @Override
+    public void lockAll(List<Ability> abilities) {
+        this.unlocked.removeAll(abilities);
     }
 
     @Override
@@ -908,6 +918,12 @@ public class SorcererData implements ISorcererData {
     public void setTechnique(@Nullable CursedTechnique technique) {
         this.technique = technique;
         this.sync();
+        for (Ability ability : new ArrayList<>(this.unlocked)) {
+            if (!ability.isDisplayed(owner)) {
+                this.lock(ability);
+            }
+        }
+        
     }
 
     @Override

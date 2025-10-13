@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.MiniUzumakiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -62,7 +63,7 @@ public class MiniUzumaki extends Ability {
 
     @Override
     public int getPointsCost() {
-        return 5;
+        return ConfigHolder.SERVER.miniUzumakiCost.get();
     }
 
     @Nullable

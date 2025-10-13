@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
@@ -58,7 +59,7 @@ public class MaximumMeteor extends Ability {
 
     @Override
     public int getPointsCost() {
-        return 100;
+        return ConfigHolder.SERVER.maximumMeteorCost.get();
     }
 
     @Override

@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -58,7 +59,7 @@ public class MaximumUzumaki extends Ability {
 
     @Override
     public int getPointsCost() {
-        return 50;
+        return ConfigHolder.SERVER.maximumUzumakiCost.get();
     }
 
     

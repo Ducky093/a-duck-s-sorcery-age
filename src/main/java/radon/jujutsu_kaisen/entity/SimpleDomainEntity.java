@@ -32,11 +32,12 @@ public class SimpleDomainEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_ENLARGEMENT = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
 
     private static final float STRENGTH = 100.0F;
     private static final double X_STEP = 0.025D;
-    public static final float RADIUS = 2.0F;
-    private static final float MAX_RADIUS = 4.0F;
+    public static final float RADIUS = 1.5F;
+    private static final float MAX_RADIUS = 3.5F;
     private static final float DAMAGE = 3.0F;
     private boolean invuln = false;
     private boolean domainInvuln = false;
@@ -63,8 +64,14 @@ public class SimpleDomainEntity extends Entity {
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
-    public float getRadius() {
-        return this.entityData.get(DATA_RADIUS);
+    public static float getRadius(LivingEntity owner) {
+        
+         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return Math.min(MAX_RADIUS, RADIUS  * cap.getAbilityPower());
+    }
+    
+     public float getRadius() {
+        return this.entityData.get(DATA_RADIUS) * (1.0F + this.getEnlargement());
     }
 
     private void setRadius(float radius) {
@@ -92,17 +99,37 @@ public class SimpleDomainEntity extends Entity {
         return true;
     }
 
+    public float getEnlargement() {
+        return this.entityData.get(DATA_ENLARGEMENT);
+    }
+
+    public void setEnlargement(float enlargement) {
+        this.entityData.set(DATA_ENLARGEMENT, enlargement);
+    }
+
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float radius = (float) (this.getRadius() * 2.0D);
         return EntityDimensions.fixed(radius, radius);
     }
 
+    public boolean canEnlarge() {
+        LivingEntity owner = this.getOwner();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return this.getEnlargement() < Math.min(MAX_RADIUS, RADIUS * cap.getAbilityPower()) / 2 ;
+    }
+
+    public void enlarge() {
+        this.setEnlargement(this.getEnlargement() + 0.1F);
+    }
+
+
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_RADIUS, 0.0F);
         this.entityData.define(DATA_MAX_HEALTH, 0.0F);
         this.entityData.define(DATA_HEALTH, 0.0F);
+        this.entityData.define(DATA_ENLARGEMENT, 0.0F);
     }
 
     @Override
@@ -114,12 +141,15 @@ public class SimpleDomainEntity extends Entity {
     public boolean hurt(@NotNull DamageSource pSource, float pAmount, boolean isDomainAttack) {
         if (!isDomainAttack && invuln) return false;
         if (isDomainAttack && domainInvuln) return false;
+        LivingEntity owner = this.getOwner();
+        if (owner == null) return false;
+        
         if ((pSource.getEntity() instanceof LivingEntity attacker)) {
-            if (attacker == this.getOwner()) {
+            if (attacker == owner) {
                 return false;
             }
         }
-        ISorcererData cap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (isDomainAttack) {
             this.domainInvuln = true;
             cap.delayTickEvent(() -> {
@@ -176,11 +206,16 @@ public class SimpleDomainEntity extends Entity {
             }
 
             float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
+       
+
+            double circumference = Math.PI * 2 * factor;
 
             ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, (float) (this.getRadius() * 0.25D),
                     1.0F, true, 1);
 
-            for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
+            float radius = this.getRadius();
+
+            for (double phi = 0.0D; phi < circumference; phi += circumference / radius * X_STEP) {
                 double x = this.getX() + this.getRadius() * Math.cos(phi);
                 double y = this.getY();
                 double z = this.getZ() + this.getRadius() * Math.sin(phi);
@@ -218,6 +253,7 @@ public class SimpleDomainEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
+        pCompound.putFloat("enlargement", this.getEnlargement());
         pCompound.putFloat("radius", this.getRadius());
         pCompound.putFloat("max_health", this.getMaxHealth());
         pCompound.putFloat("health", this.getHealth());
@@ -229,6 +265,7 @@ public class SimpleDomainEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.setRadius(pCompound.getFloat("radius"));
+        this.setEnlargement(pCompound.getFloat("enlargement"));
         this.setMaxHealth(pCompound.getFloat("max_health"));
         this.setHealth(pCompound.getFloat("health"));
     }
@@ -238,6 +275,8 @@ public class SimpleDomainEntity extends Entity {
         Entity entity = this.getOwner();
         return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
     }
+    
+
 
     @Override
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {

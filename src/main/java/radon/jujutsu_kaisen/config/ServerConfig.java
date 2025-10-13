@@ -47,6 +47,12 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue chantSimilarityThreshold;
 
     public final ForgeConfigSpec.IntValue simpleDomainCost;
+    public final ForgeConfigSpec.IntValue simpleDomainEnlargementCost;
+    public final ForgeConfigSpec.IntValue maximumUzumakiCost;
+    public final ForgeConfigSpec.IntValue miniUzumakiCost;
+    public final ForgeConfigSpec.IntValue maximumMeteorCost;
+    public final ForgeConfigSpec.IntValue ceBombCost;
+    public final ForgeConfigSpec.IntValue ceBlastCost;
     public final ForgeConfigSpec.IntValue quickDrawCost;
     public final ForgeConfigSpec.IntValue hollowWickerBasketCost;
     public final ForgeConfigSpec.IntValue fallingBlossomEmotionCost;
@@ -151,6 +157,8 @@ public class ServerConfig {
         builder.comment("Abilities").push("abilities");
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
+        this.simpleDomainEnlargementCost = builder.comment("The amount of points simple domain enlargement costs to unlock")
+                .defineInRange("simpleDomainEnlargementCost", 100, 1, 10000);
         this.quickDrawCost = builder.comment("The amount of points quick draw costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.fallingBlossomEmotionCost = builder.comment("The amount of points falling blossom emotion costs to unlock")
@@ -163,10 +171,20 @@ public class ServerConfig {
                 .defineInRange("domainAmplificationCost", 100, 1, 10000);
         this.zeroPointTwoSecondDomainExpansionCost = builder.comment("The amount of points 0.2s domain expasnion costs to unlock")
                 .defineInRange("zeroPointTwoSecondDomainExpansionCost", 100, 1, 10000);
+        this.miniUzumakiCost = builder.comment("The amount of points Mini Uzumaki costs to unlock")
+                .defineInRange("miniUzumakiCost", 50, 1, 10000);
+        this.maximumUzumakiCost = builder.comment("The amount of points Maximum: Uzumaki costs to unlock")
+                .defineInRange("maximumUzumakiCost", 100, 1, 10000);
+        this.maximumMeteorCost = builder.comment("The amount of points Maximum: Meteor costs to unlock")
+                .defineInRange("maximumMeteorCost", 100, 1, 10000);
+        this.ceBombCost = builder.comment("The amount of points Cursed Energy Bomb costs to unlock")
+                .defineInRange("ceBombCost", 50, 1, 10000);
+        this.ceBlastCost = builder.comment("The amount of points Cursed Energy Blast costs to unlock")
+                .defineInRange("ceBlastCost", 50, 1, 10000);
         this.rct2Cost = builder.comment("The amount of points tier 2 RCT costs to unlock")
                 .defineInRange("rct2Cost", 100, 1, 10000);
         this.rct3Cost = builder.comment("The amount of points tier 3 RCT costs to unlock")
-                .defineInRange("rct2Cost", 200, 1, 10000);
+                .defineInRange("rct3Cost", 200, 1, 10000);
         this.outputRCTCost = builder.comment("The amount of points output RCT costs to unlock")
                 .defineInRange("outputRCTCost", 300, 1, 10000);
         this.maximumCopiedTechniques = builder.comment("The amount of techniques mimicry can copy")

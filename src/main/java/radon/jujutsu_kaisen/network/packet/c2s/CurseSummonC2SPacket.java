@@ -1,37 +1,49 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class CurseSummonC2SPacket {
-    private final int index;
+    private final UUID curseId;
 
-    public CurseSummonC2SPacket(int index) {
-        this.index = index;
+    public CurseSummonC2SPacket(UUID curseId) {
+        this.curseId = curseId;
     }
 
     public CurseSummonC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readInt());
+        this.curseId = buf.readUUID();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.index);
+        buf.writeUUID(this.curseId);
     }
 
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
-
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
+            if (sender == null) return;
 
-            assert sender != null;
+            // Find the curse with the matching UUID on the server
+            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (cap == null) return;
 
-            JJKAbilities.summonCurse(sender, this.index, true);
+            AbsorbedCurse curse = cap.getCurses().stream()
+                    .filter(c -> c.getUUID().equals(this.curseId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (curse != null) {
+                JJKAbilities.summonCurse(sender, curse, true);
+            }
         });
         ctx.setPacketHandled(true);
     }
