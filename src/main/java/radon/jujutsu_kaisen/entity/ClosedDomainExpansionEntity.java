@@ -233,7 +233,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             //if (block == null) return;
 
               boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
-                Block.UPDATE_CLIENTS);
+                Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
             // boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
             //         Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 

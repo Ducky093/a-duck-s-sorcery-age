@@ -12,6 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -37,6 +39,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 10;
     private static final float COST = 0.5F;
+    private int blockCursor;
 
     private int counter;
     private int size;
@@ -51,6 +54,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         this.size = ConfigHolder.SERVER.minimumVeilSize.get();
         this.modifiers = new ArrayList<>();
+        this.blockCursor = 0;
     }
 
     public boolean isValid() {
@@ -70,99 +74,99 @@ public class VeilRodBlockEntity extends BlockEntity {
         return true;
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
-        VeilHandler.veil(pLevel.dimension(), pPos);
+    public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
 
-        if (++pBlockEntity.counter != INTERVAL) return;
+    VeilHandler.addVeil(rod);
 
-        pBlockEntity.counter = 0;
 
-        if (!pBlockEntity.isValid()) return;
+    if (++rod.counter < INTERVAL) return;
+    rod.counter = 0;
 
-        if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-            return;
 
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+    if (!rod.isValid()) return;
+    if (!(level instanceof ServerLevel serverLevel)) return;
+    if (rod.ownerUUID == null) return;
 
-            float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
+    if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
+    ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+    if (ownerCap == null) return;
 
-            if (cap.getEnergy() < cost) return;
+    if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+        float cost = 0.5f * (rod.getSize() / (float) ConfigHolder.SERVER.maximumVeilSize.get());
+        //if (ownerCap.hasTrait(Trait.SIX_EYES)) cost *= 0.5f;
+        if (ownerCap.getEnergy() < cost) return;
 
-            cap.useEnergy(cost);
+        ownerCap.useEnergy(cost);
 
-            if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
-
-        BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
-
-        for (Modifier modifier : pBlockEntity.modifiers) {
-            if (modifier.getType() == Modifier.Type.COLOR) {
-                replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
-            } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
-                replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
-            }
-        }
-
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) pLevel);
-
-        for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
-            for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
-                for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-
-                    if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
-                        BlockPos pos = pPos.offset(x, y, z);
-
-                        boolean blocked = false;
-
-                        for (DomainExpansionEntity domain : domains) {
-                            LivingEntity opponent = domain.getOwner();
-
-                            if (opponent == null) continue;
-
-                            ISorcererData veilCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                            ISorcererData domainCap = opponent.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                            if (domainCap.getAbilityPower() < veilCap.getAbilityPower()) continue;
-
-                            if (domain.isInsideBarrier(pos)) {
-                                if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                                    be.destroy();
-                                }
-                                blocked = true;
-                            }
-                        }
-
-                        if (blocked) continue;
-
-                        BlockEntity existing = pLevel.getBlockEntity(pos);
-
-                        BlockState state;
-
-                        if (existing instanceof VeilBlockEntity be) {
-                            state = be.getOriginal();
-                        } else if (existing != null) {
-                            continue;
-                        } else {
-                            state = pLevel.getBlockState(pos);
-                        }
-
-                        if (!(existing instanceof VeilBlockEntity)) {
-                            pLevel.setBlock(pos, replacement,
-                                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-                        }
-
-                        if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            be.create(pPos, pBlockEntity.size, state);
-                        }
-                    }
-                }
-            }
+        if (owner instanceof ServerPlayer serverPlayer) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverPlayer);
         }
     }
+
+    BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
+    for (Modifier mod : rod.modifiers) {
+        if (mod.getType() == Modifier.Type.COLOR) {
+            replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) mod).getColor());
+        } else if (mod.getType() == Modifier.Type.TRANSPARENT) {
+            replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
+        }
+    }
+
+
+    AABB rodAABB = new AABB(pos.offset(-rod.getSize(), -rod.getSize(), -rod.getSize()),
+                            pos.offset(rod.getSize(), rod.getSize(), rod.getSize()));
+    List<DomainExpansionEntity> nearbyDomains = new ArrayList<>();
+    for (DomainExpansionEntity domain : VeilHandler.getDomains(serverLevel)) {
+        if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
+    }
+
+
+    int blocksPerTick = 20384; 
+    int size = rod.getSize();
+    int totalBlocks = (size * 2 + 1) * (size * 2 + 1) * (size * 2 + 1);
+
+    if (rod.blockCursor >= totalBlocks) rod.blockCursor = 0; // reset
+
+    for (int i = 0; i < blocksPerTick && rod.blockCursor < totalBlocks; i++, rod.blockCursor++) {
+        int cursor = rod.blockCursor;
+
+        int x = cursor % (size * 2 + 1) - size;
+        int y = (cursor / (size * 2 + 1)) % (size * 2 + 1) - size;
+        int z = (cursor / ((size * 2 + 1) * (size * 2 + 1))) - size;
+
+        double distance = Math.sqrt(x * x + y * y + z * z);
+        if (distance >= size || distance < size - 1) continue; 
+
+        BlockPos targetPos = pos.offset(x, y, z);
+
+        boolean blocked = false;
+        for (DomainExpansionEntity domain : nearbyDomains) {
+            LivingEntity domainOwner = domain.getOwner();
+            if (domainOwner == null) continue;
+
+            ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (domainCap == null) continue;
+
+            if (domainCap.getAbilityPower() >= ownerCap.getAbilityPower() && domain.isInsideBarrier(targetPos)) {
+                if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
+                blocked = true;
+                break;
+            }
+        }
+        if (blocked) continue;
+
+        BlockEntity existingBE = level.getBlockEntity(targetPos);
+        BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : level.getBlockState(targetPos);
+        if (!(existingBE instanceof VeilBlockEntity)) {
+            level.setBlock(targetPos, replacement, Block.UPDATE_SUPPRESS_DROPS);
+        }
+
+        if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
+            be.create(pos, size, currentState);
+        }
+    }
+}
+
 
     public int getSize() {
         return this.size;

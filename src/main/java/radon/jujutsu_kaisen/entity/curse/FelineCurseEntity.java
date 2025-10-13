@@ -6,10 +6,9 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -25,14 +24,12 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 
 public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_LEAP = SynchedEntityData.defineId(FelineCurseEntity.class, EntityDataSerializers.INT);
@@ -43,6 +40,9 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     private static final RawAnimation LEAP = RawAnimation.begin().thenPlay("attack.leap");
 
     private static final int LEAP_DURATION = 10;
+    private static final int LEAP_TICK_INTERVAL = 2; // only tick leap every 2 ticks
+
+    private int leapTickCounter = 0;
 
     public FelineCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -50,7 +50,6 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
 
     public FelineCurseEntity(FelineCurseEntity leader) {
         this(JJKEntities.FELINE_CURSE.get(), leader.level());
-
         this.setLeader(leader);
     }
 
@@ -62,20 +61,15 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
                 pPlayer.setXRot(this.getXRot());
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide);
-        } else {
-            return super.mobInteract(pPlayer, pHand);
         }
+        return super.mobInteract(pPlayer, pHand);
     }
 
     @Nullable
     @Override
     public LivingEntity getControllingPassenger() {
         Entity entity = this.getFirstPassenger();
-
-        if (entity instanceof LivingEntity living) {
-            return living;
-        }
-        return null;
+        return entity instanceof LivingEntity living ? living : null;
     }
 
     private Vec2 getRiddenRotation(LivingEntity pEntity) {
@@ -89,166 +83,108 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
 
     @Override
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        if (pPlayer.xxa != 0 || pPlayer.zza != 0) { // only update rotation when moving
+            Vec2 vec2 = this.getRiddenRotation(pPlayer);
+            this.setRot(vec2.y, vec2.x);
+            this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
+        }
         super.tickRidden(pPlayer, pTravelVector);
-
-        Vec2 vec2 = this.getRiddenRotation(pPlayer);
-        this.setRot(vec2.y, vec2.x);
-        this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
     }
 
     @Override
     protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         float f = pPlayer.xxa * 0.5F;
-        float f1 = pPlayer.zza;
-
-        if (f1 <= 0.0F) {
-            f1 *= 0.25F;
-        }
+        float f1 = pPlayer.zza <= 0 ? pPlayer.zza * 0.25F : pPlayer.zza;
         return new Vec3(f, 0.0D, f1);
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return this.getBbHeight();
-    }
+    public double getPassengersRidingOffset() { return this.getBbHeight(); }
+    @Override
+    public float getStepHeight() { return 1.0F; }
 
     @Override
-    public float getStepHeight() {
-        return 1.0F;
-    }
+    public int getMinCount() { return 1; }
+    @Override
+    public int getMaxCount() { return 4; }
 
     @Override
-    public int getMinCount() {
-        return 1;
-    }
-
-    @Override
-    public int getMaxCount() {
-        return 4;
-    }
-
-    @Override
-    protected PackCursedSpirit spawn() {
-        return new FelineCurseEntity(this);
-    }
+    protected PackCursedSpirit spawn() { return new FelineCurseEntity(this); }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-
         this.entityData.define(DATA_LEAP, 0);
     }
 
     @Override
     protected void registerGoals() {
-        int target = 1;
         int goal = 1;
+        int target = 1;
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-
-        if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        }
+        if (this.hasMeleeAttack()) this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(goal++, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false, true));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false, true));
 
-        if (this.targetsSorcerers()) {
-            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
-        }
-        if (this.targetsCurses()) {
-            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
-        }
+        if (this.targetsSorcerers()) this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
+        if (this.targetsCurses()) this.targetSelector.addGoal(target++, new NearestAttackableCurseGoal(this, true));
     }
 
     @Override
-    protected boolean isCustom() {
-        return true;
+    protected boolean isCustom() { return true; }
+    @Override
+    public boolean hasMeleeAttack() { return true; }
+    @Override
+    public boolean hasArms() { return false; }
+    @Override
+    public boolean canJump() { return false; }
+    @Override
+    public boolean canChant() { return false; }
+    @Override
+    public float getExperience() { return SorcererGrade.GRADE_3.getRequiredExperience(); }
+    @Override
+    public @Nullable CursedTechnique getTechnique() { return null; }
+
+    /** Combined Animation Controller for all movement & leap */
+    private PlayState movementPredicate(AnimationState<FelineCurseEntity> state) {
+        if (this.entityData.get(DATA_LEAP) > 0) return state.setAndContinue(LEAP);
+        if (state.isMoving()) return state.setAndContinue(this.isSprinting() ? RUN : WALK);
+        return state.setAndContinue(IDLE);
     }
 
     @Override
-    public boolean hasMeleeAttack() {
-        return true;
-    }
-
-    @Override
-    public boolean hasArms() {
-        return false;
-    }
-
-    @Override
-    public boolean canJump() {
-        return false;
-    }
-
-    @Override
-    public boolean canChant() {
-        return false;
-    }
-
-    @Override
-    public float getExperience() {
-        return SorcererGrade.GRADE_3.getRequiredExperience();
-    }
-
-    @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return null;
-    }
-
-
-    private PlayState walkRunIdlePredicate(AnimationState<FelineCurseEntity> animationState) {
-        if (animationState.isMoving()) {
-            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
-        } else {
-            return animationState.setAndContinue(IDLE);
-        }
-    }
-
-    private PlayState leapPredicate(AnimationState<FelineCurseEntity> animationState) {
-        if (this.entityData.get(DATA_LEAP) > 0) {
-            return animationState.setAndContinue(LEAP);
-        }
-        animationState.getController().forceAnimationReset();
-        return PlayState.STOP;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Leap", this::leapPredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
+        registrar.add(new AnimationController<>(this, "movement", this::movementPredicate));
     }
 
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        int leap = this.entityData.get(DATA_LEAP);
-
-        if (leap > 0) {
-            this.entityData.set(DATA_LEAP, --leap);
+        // Only decrement leap every 2 ticks
+        if (leapTickCounter++ >= LEAP_TICK_INTERVAL) {
+            int leap = this.entityData.get(DATA_LEAP);
+            if (leap > 0) this.entityData.set(DATA_LEAP, leap - 1);
+            leapTickCounter = 0;
         }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 5 * 5.0D);
+        return SorcererEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 25.0D);
     }
 
     private class CustomLeapAtTargetGoal extends LeapAtTargetGoal {
-        public CustomLeapAtTargetGoal(Mob pMob, float pYd) {
-            super(pMob, pYd);
-        }
-
+        public CustomLeapAtTargetGoal(Mob pMob, float pYd) { super(pMob, pYd); }
         @Override
-        public void start() {
-            super.start();
-
-            FelineCurseEntity.this.entityData.set(DATA_LEAP, LEAP_DURATION);
+        public void start() { 
+            super.start(); 
+            FelineCurseEntity.this.entityData.set(DATA_LEAP, LEAP_DURATION); 
         }
     }
 }

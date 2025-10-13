@@ -73,7 +73,7 @@ public abstract class DomainExpansionEntity extends Entity {
         super.onAddedToWorld();
 
         if (!this.level().isClientSide) {
-            VeilHandler.domain(this.level().dimension(), this.getUUID());
+            VeilHandler.addDomain(this.level().dimension(), this.getUUID());
         }
     }
 

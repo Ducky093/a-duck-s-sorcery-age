@@ -1,16 +1,13 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -19,138 +16,86 @@ import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class VeilHandler {
 
-    // Map dimension -> chunk -> set of veil centers
-    private static final Map<ResourceKey<Level>, Map<ChunkPos, Set<BlockPos>>> veilsByChunk = new HashMap<>();
-    private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashSetMap<>();
 
-    private static int cleanupCounter = 0;
+    private static final Map<ResourceKey<Level>, Map<ChunkPos, Set<VeilRodBlockEntity>>> veilsByChunk = new HashMap<>();
 
-    /** Register a new veil */
-    public static void veil(ResourceKey<Level> dimension, BlockPos pos) {
-        Map<ChunkPos, Set<BlockPos>> chunkMap = veilsByChunk.computeIfAbsent(dimension, k -> new HashMap<>());
-        ChunkPos chunk = new ChunkPos(pos);
-        chunkMap.computeIfAbsent(chunk, k -> new HashSet<>()).add(pos);
+
+    private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashMap<>();
+
+
+
+    public static void addVeil(VeilRodBlockEntity rod) {
+        ResourceKey<Level> dimension = rod.getLevel().dimension();
+        ChunkPos chunk = new ChunkPos(rod.getBlockPos());
+
+        veilsByChunk
+            .computeIfAbsent(dimension, k -> new HashMap<>())
+            .computeIfAbsent(chunk, k -> new HashSet<>())
+            .add(rod);
     }
 
-    /** Register a domain entity */
-    public static void domain(ResourceKey<Level> dimension, UUID identifier) {
-        domains.computeIfAbsent(dimension, k -> new HashSet<>()).add(identifier);
+    public static void removeVeil(VeilRodBlockEntity rod) {
+        ResourceKey<Level> dimension = rod.getLevel().dimension();
+        ChunkPos chunk = new ChunkPos(rod.getBlockPos());
+
+        Map<ChunkPos, Set<VeilRodBlockEntity>> chunkMap = veilsByChunk.get(dimension);
+        if (chunkMap != null) {
+            Set<VeilRodBlockEntity> rods = chunkMap.get(chunk);
+            if (rods != null) {
+                rods.remove(rod);
+                if (rods.isEmpty()) chunkMap.remove(chunk);
+            }
+            if (chunkMap.isEmpty()) veilsByChunk.remove(dimension);
+        }
     }
 
-    /** Get all domains in a level */
+
+    public static void addDomain(ResourceKey<Level> dimension, UUID id) {
+        domains.computeIfAbsent(dimension, k -> new HashSet<>()).add(id);
+    }
+
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level) {
         Set<DomainExpansionEntity> result = new HashSet<>();
         Set<UUID> ids = domains.get(level.dimension());
         if (ids == null) return result;
 
         for (UUID id : ids) {
-            Entity e = level.getEntity(id);
-            if (e instanceof DomainExpansionEntity domain) result.add(domain);
+            if (level.getEntity(id) instanceof DomainExpansionEntity domain) {
+                result.add(domain);
+            }
         }
         return result;
     }
 
-    /** Get all domains intersecting a position */
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
         Set<DomainExpansionEntity> result = new HashSet<>();
         Set<UUID> ids = domains.get(level.dimension());
         if (ids == null) return result;
 
         for (UUID id : ids) {
-            Entity e = level.getEntity(id);
-            if (e instanceof DomainExpansionEntity domain && domain.isInsideBarrier(pos)) {
+            if (level.getEntity(id) instanceof DomainExpansionEntity domain && domain.isInsideBarrier(pos)) {
                 result.add(domain);
             }
         }
         return result;
     }
 
-    /** Get all domains intersecting a bounding box */
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, AABB bounds) {
         Set<DomainExpansionEntity> result = new HashSet<>();
         Set<UUID> ids = domains.get(level.dimension());
         if (ids == null) return result;
 
         for (UUID id : ids) {
-            Entity e = level.getEntity(id);
-            if (e instanceof DomainExpansionEntity domain && bounds.intersects(domain.getBounds())) {
+            if (level.getEntity(id) instanceof DomainExpansionEntity domain && bounds.intersects(domain.getBounds())) {
                 result.add(domain);
             }
         }
         return result;
-    }
-
-    /** Can this mob spawn at the given position? */
-    public static boolean canSpawn(Mob mob, double x, double y, double z) {
-        BlockPos target = BlockPos.containing(x, y, z);
-        Map<ChunkPos, Set<BlockPos>> chunkMap = veilsByChunk.get(mob.level().dimension());
-        if (chunkMap == null) return true;
-
-        ChunkPos chunk = new ChunkPos(target);
-        Set<BlockPos> veils = chunkMap.get(chunk);
-        if (veils == null) return true;
-
-        for (BlockPos pos : veils) {
-            if (!(mob.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
-            int radius = be.getSize();
-            if (target.distSqr(pos) < radius * radius) {
-                return false; //VeilBlockEntity.isAllowed(pos, mob);
-            }
-        }
-        return true;
-    }
-
-    
-                  
-
- 
-    public static boolean canDestroy(@Nullable LivingEntity entity, Level level, double x, double y, double z) {
-        BlockPos target = BlockPos.containing(x, y, z);
-        Map<ChunkPos, Set<BlockPos>> chunkMap = veilsByChunk.get(level.dimension());
-        if (chunkMap == null) return true;
-
-        ChunkPos chunk = new ChunkPos(target);
-        Set<BlockPos> veils = chunkMap.get(chunk);
-        if (veils == null) return true;
-
-        for (BlockPos pos : veils) {
-            if (target.equals(pos)) continue;
-             // So that veil rods can still be broken
-            if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
-
-            int radius = be.getSize();
-            if (target.distSqr(pos) >= radius * radius) continue;
-            if (entity != null && be.ownerUUID == entity.getUUID()) continue;
-
-            for (Modifier modifier : be.modifiers) {
-                if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static boolean isProtected(Level level, BlockPos target) {
-        Map<ChunkPos, Set<BlockPos>> chunkMap = veilsByChunk.get(level.dimension());
-        if (chunkMap == null) return false;
-
-        ChunkPos chunk = new ChunkPos(target);
-        Set<BlockPos> veils = chunkMap.get(chunk);
-        if (veils == null) return false;
-
-        for (BlockPos pos : veils) {
-            if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
-            int radius = be.getSize();
-            if (target.distSqr(pos) < radius * radius) return true;
-        }
-        return false;
     }
 
     @SubscribeEvent
@@ -162,30 +107,76 @@ public class VeilHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase != TickEvent.Phase.END || event.level.isClientSide)
-            return;
 
-        cleanupCounter++;
-        if (cleanupCounter < 20) return;
-        cleanupCounter = 0;
 
-        for (Map.Entry<ResourceKey<Level>, Map<ChunkPos, Set<BlockPos>>> entry : veilsByChunk.entrySet()) {
-            Map<ChunkPos, Set<BlockPos>> chunkMap = entry.getValue();
-            for (Map.Entry<ChunkPos, Set<BlockPos>> chunkEntry : chunkMap.entrySet()) {
-                chunkEntry.getValue().removeIf(pos -> {
-                    var be = event.level.getBlockEntity(pos);
-                    return !(be instanceof VeilRodBlockEntity rod) || !rod.isValid();
-                });
-            }
+    public static boolean canSpawn(Mob mob, double x, double y, double z) {
+        BlockPos target = BlockPos.containing(x, y, z);
+        Map<ChunkPos, Set<VeilRodBlockEntity>> chunkMap = veilsByChunk.get(mob.level().dimension());
+        if (chunkMap == null) return true;
+
+        ChunkPos chunk = new ChunkPos(target);
+        Set<VeilRodBlockEntity> veils = chunkMap.get(chunk);
+        if (veils == null) return true;
+
+        for (VeilRodBlockEntity rod : veils) {
+            if (!rod.isValid()) continue;
+            int radius = rod.getSize();
+            if (target.distSqr(rod.getBlockPos()) < radius * radius) return false;
         }
+        return true;
     }
 
-    private static class HashSetMap<K, V> extends HashMap<K, Set<V>> {
-        @Override
-        public Set<V> computeIfAbsent(K key, java.util.function.Function<? super K, ? extends Set<V>> mappingFunction) {
-            return super.computeIfAbsent(key, mappingFunction);
+    public static boolean canDestroy(LivingEntity entity, Level level, double x, double y, double z) {
+        BlockPos target = BlockPos.containing(x, y, z);
+        Map<ChunkPos, Set<VeilRodBlockEntity>> chunkMap = veilsByChunk.get(level.dimension());
+        if (chunkMap == null) return true;
+
+        ChunkPos chunk = new ChunkPos(target);
+        Set<VeilRodBlockEntity> veils = chunkMap.get(chunk);
+        if (veils == null) return true;
+
+        for (VeilRodBlockEntity rod : veils) {
+            if (!rod.isValid() || target.equals(rod.getBlockPos())) continue;
+            int radius = rod.getSize();
+            if (target.distSqr(rod.getBlockPos()) >= radius * radius) continue;
+            if (entity != null && rod.ownerUUID.equals(entity.getUUID())) continue;
+
+            for (Modifier modifier : rod.modifiers) {
+                if (modifier.getAction() == Modifier.Action.DENY &&
+                    modifier.getType() == Modifier.Type.GRIEFING) return false;
+            }
         }
+        return true;
+    }
+
+    public static boolean isProtected(Level level, BlockPos target) {
+        Map<ChunkPos, Set<VeilRodBlockEntity>> chunkMap = veilsByChunk.get(level.dimension());
+        if (chunkMap == null) return false;
+
+        ChunkPos chunk = new ChunkPos(target);
+        Set<VeilRodBlockEntity> veils = chunkMap.get(chunk);
+        if (veils == null) return false;
+
+        for (VeilRodBlockEntity rod : veils) {
+            if (!rod.isValid()) continue;
+            int radius = rod.getSize();
+            if (target.distSqr(rod.getBlockPos()) < radius * radius) return true;
+        }
+        return false;
+    }
+
+
+
+    public static void cleanupChunk(ResourceKey<Level> dimension, ChunkPos chunk) {
+        Map<ChunkPos, Set<VeilRodBlockEntity>> chunkMap = veilsByChunk.get(dimension);
+        if (chunkMap == null) return;
+
+        Set<VeilRodBlockEntity> veils = chunkMap.get(chunk);
+        if (veils == null) return;
+
+        veils.removeIf(rod -> !rod.isValid());
+
+        if (veils.isEmpty()) chunkMap.remove(chunk);
+        if (chunkMap.isEmpty()) veilsByChunk.remove(dimension);
     }
 }
