@@ -5,7 +5,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -35,7 +41,7 @@ public class HajimeKashimoEntity extends SorcererEntity {
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return null;
+        return CursedTechnique.MYTHICAL_BEAST_AMBER;
     }
 
     @Override
@@ -46,6 +52,11 @@ public class HajimeKashimoEntity extends SorcererEntity {
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.HOLLOW_WICKER_BASKET.get());
     }
 
     @Override

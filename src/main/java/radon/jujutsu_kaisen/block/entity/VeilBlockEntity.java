@@ -39,15 +39,15 @@ public class VeilBlockEntity extends BlockEntity {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
-        if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
+    // public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
+    //     if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
 
-        pBlockEntity.counter = 0;
+    //     pBlockEntity.counter = 0;
 
-        if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
-            pBlockEntity.destroy();
-        }
-    }
+    //     if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
+    //         pBlockEntity.destroy();
+    //     }
+    // }
 
     public void destroy() {
         if (this.level == null) return;
@@ -56,11 +56,11 @@ public class VeilBlockEntity extends BlockEntity {
 
         if (original != null) {
             if (original.isAir()) {
-                if (!this.getBlockState().getFluidState().isEmpty()) {
+                //if (!this.getBlockState().getFluidState().isEmpty()) {
                     this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-                } else {
-                    this.level.destroyBlock(this.getBlockPos(), false);
-                }
+                //} else {
+               //     this.level.destroyBlock(this.getBlockPos(), false);
+               // }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
             }

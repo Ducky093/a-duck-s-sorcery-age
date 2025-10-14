@@ -57,7 +57,13 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return technique != null && technique.getDomain() != null && technique.getDomain().isValid(owner) && super.isValid(owner);
+        if (technique == null) return false;
+        Ability domain = technique.getDomain();
+        if (domain == null) return false;
+
+        //DomainExpansionEntity domainEntity = cap.getSummonByClass(DomainExpansionEntity.class);
+//domainEntity == null
+        return domain.isValid(owner) && super.isValid(owner);
     }
 
     @Override

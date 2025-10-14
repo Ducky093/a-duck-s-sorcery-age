@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -48,12 +49,31 @@ public class VeilHandler {
             Set<VeilRodBlockEntity> rods = chunkMap.get(chunk);
             if (rods != null) {
                 rods.remove(rod);
+                 int radius = rod.getSize();
+            BlockPos center = rod.getBlockPos();
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y <= radius; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        BlockPos pos = center.offset(x, y, z);
+                        BlockEntity be = rod.getLevel().getBlockEntity(pos);
+
+                        if (be instanceof radon.jujutsu_kaisen.block.entity.VeilBlockEntity veil) {
+                            BlockPos parent = veil.getParent();
+                            if (parent != null && parent.equals(center)) {
+                                veil.destroy();
+                            }
+                        }
+                    }
+                }
+            }
                 if (rods.isEmpty()) chunkMap.remove(chunk);
             }
             if (chunkMap.isEmpty()) veilsByChunk.remove(dimension);
         }
     }
 
+    
 
     public static void addDomain(ResourceKey<Level> dimension, UUID id) {
         domains.computeIfAbsent(dimension, k -> new HashSet<>()).add(id);

@@ -11,9 +11,13 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -28,6 +32,20 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
+    }
+
+    public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!targetCap.hasTrait(Trait.VESSEL) || targetCap.getFingers() == 0) return false;
+
+        float experience = targetCap.getFingers() * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
+        if (experience <= ownerCap.getExperience()) return false;
+
+        ((IDomainAttack) JJKAbilities.CLEAVE.get()).performEntity(target, owner, null);
+
+        return true;
     }
 
     @Override

@@ -38,23 +38,28 @@ public class DomainBlockEntity extends BlockEntity {
         super(pType, pPos, pBlockState);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
-        if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
-            pBlockEntity.death--;
-        }
+    // public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
+    //     if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
+    //         pBlockEntity.death--;
+    //     }
 
-        if (pBlockEntity.death <= 0) {
-            pBlockEntity.destroy();
-        }
-    }
+    //     if (pBlockEntity.death <= 0) {
+    //         pBlockEntity.destroy();
+    //     }
+    // }
 
     public void destroy() {
         if (this.level == null) return;
 
         BlockState original = this.getOriginal();
-
+         BlockPos pos = this.getBlockPos();
+         
         if (original != null) {
             if (original.isAir()) {
+                if (this.level.getBlockEntity(pos) != null) {
+                    this.level.removeBlockEntity(pos);
+                }
+
                 this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
 
             } else {
@@ -66,9 +71,16 @@ public class DomainBlockEntity extends BlockEntity {
                     if (be != null) {
                         be.load(this.saved);
                     }
+                 
                 }
+                   if (this.level.getBlockEntity(pos) != null) {
+                        this.level.removeBlockEntity(pos);
+                    }
             }
         } else {
+             if (this.level.getBlockEntity(pos) != null) {
+                    this.level.removeBlockEntity(pos);
+                }
             this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
         }
     }

@@ -76,6 +76,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
 
+    
     VeilHandler.addVeil(rod);
 
 
@@ -121,7 +122,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
 
-    int blocksPerTick = 20384; 
+    int blocksPerTick = 61152; 
     int size = rod.getSize();
     int totalBlocks = (size * 2 + 1) * (size * 2 + 1) * (size * 2 + 1);
 
@@ -173,13 +174,26 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public void setSize(int size) {
+        if (!this.level.isClientSide) {
+            VeilHandler.removeVeil(this);
+        }
         this.size = size;
         this.setChanged();
+        
     }
 
     public void setOwner(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
         this.setChanged();
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+
+        if (!this.level.isClientSide) {
+            VeilHandler.removeVeil(this);
+        }
     }
 
     @Override

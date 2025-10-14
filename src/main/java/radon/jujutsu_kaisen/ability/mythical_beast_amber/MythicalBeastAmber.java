@@ -32,6 +32,8 @@ import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
@@ -63,9 +65,12 @@ public class MythicalBeastAmber extends Transformation {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, this)) {
-            return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
+            return true;
         }
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
+        if (target == null || !(target instanceof SukunaEntity sukun && target instanceof HeianSukunaEntity bigsuku) ) return false;
+        //ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return true;
     }
 
     @Override

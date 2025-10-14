@@ -31,6 +31,8 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
+        if (IdleTransfiguration.checkSukuna(owner, entity)) return;
+        
         float attackerStrength = IdleTransfiguration.calculateStrength(owner);
         float victimStrength = IdleTransfiguration.calculateStrength(entity);
 

@@ -29,8 +29,8 @@ public class UnlimitedVoidBlock extends DomainBlock implements EntityBlock {
         return JJKBlockEntities.UNLIMITED_VOID.get().create(pPos, pState);
     }
 
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.UNLIMITED_VOID.get(), DomainBlockEntity::tick);
-    }
+    // @Override
+    // public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    //     return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.UNLIMITED_VOID.get(), DomainBlockEntity::tick);
+    // }
 }
