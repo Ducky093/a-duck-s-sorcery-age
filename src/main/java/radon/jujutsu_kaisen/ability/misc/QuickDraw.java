@@ -181,7 +181,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 4.0F);
+        return new Vec2(5.0F, 5.0F);
     }
 
     @Override
