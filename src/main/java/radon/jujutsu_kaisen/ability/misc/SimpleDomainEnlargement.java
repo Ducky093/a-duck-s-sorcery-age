@@ -143,7 +143,7 @@ public class SimpleDomainEnlargement extends Ability implements Ability.IChannel
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 5.0F);
+        return new Vec2(4.0F, 4.0F);
     }
 
     @Override
