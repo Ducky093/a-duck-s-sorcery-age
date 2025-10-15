@@ -36,6 +36,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!targetCap.hasTrait(Trait.VESSEL) || targetCap.getFingers() == 0) return false;

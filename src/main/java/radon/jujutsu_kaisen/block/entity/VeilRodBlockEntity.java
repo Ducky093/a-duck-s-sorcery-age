@@ -76,7 +76,9 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
 
-    
+    if (VeilHandler.checkIntersect(level, rod.getBlockPos(), rod.getSize())) {
+        return;
+    }
     VeilHandler.addVeil(rod);
 
 
@@ -141,24 +143,24 @@ public class VeilRodBlockEntity extends BlockEntity {
         BlockPos targetPos = pos.offset(x, y, z);
 
         boolean blocked = false;
-        for (DomainExpansionEntity domain : nearbyDomains) {
-            LivingEntity domainOwner = domain.getOwner();
-            if (domainOwner == null) continue;
+        // for (DomainExpansionEntity domain : nearbyDomains) {
+        //     LivingEntity domainOwner = domain.getOwner();
+        //     if (domainOwner == null) continue;
 
-            ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            if (domainCap == null) continue;
+        //     ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        //     if (domainCap == null) continue;
 
-            if (domainCap.getAbilityPower() >= ownerCap.getAbilityPower() && domain.isInsideBarrier(targetPos)) {
-                if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
-                blocked = true;
-                break;
-            }
-        }
-        if (blocked) continue;
+        //     if (domainCap.getAbilityPower() >= ownerCap.getAbilityPower() && domain.isInsideBarrier(targetPos)) {
+        //         if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
+        //         blocked = true;
+        //         break;
+        //     }
+        // }
+        // if (blocked) continue;
 
         BlockEntity existingBE = level.getBlockEntity(targetPos);
         BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : level.getBlockState(targetPos);
-        if (!(existingBE instanceof VeilBlockEntity)) {
+        if (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity) ) {
             level.setBlock(targetPos, replacement, Block.UPDATE_SUPPRESS_DROPS);
         }
 

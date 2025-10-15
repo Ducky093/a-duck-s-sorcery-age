@@ -16,6 +16,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.*;
@@ -32,6 +34,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Slam;
+import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.block.VeilRodBlock;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -82,6 +86,28 @@ public class JJKEventHandler {
                 event.setCanceled(true);
             }
         }
+
+        @SubscribeEvent
+        public static void onBlockBreak(BlockEvent.BreakEvent event) {
+            Player player = event.getPlayer();
+            BlockPos pos = event.getPos();
+            Level level = (Level) event.getLevel();
+             BlockState state = level.getBlockState(pos);
+            Block block = state.getBlock();
+              if (block instanceof VeilRodBlock || block instanceof VeilBlock) {
+                return; 
+            }
+            Vec3 center = pos.getCenter();
+            if (!VeilHandler.canDestroy(player, level, center.x, center.y, center.z)) {
+                event.setCanceled(true);
+
+                // Optional: re-sync block state to client so it doesn’t look broken
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
+                }
+            }
+        }
+
 
         @SubscribeEvent
         public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {

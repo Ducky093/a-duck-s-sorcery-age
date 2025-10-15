@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -168,9 +169,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
      BlockEntity existing = this.level().getBlockEntity(pos) ;
       CompoundTag saved = null;
-         if (existing instanceof VeilBlockEntity be) {
+         if (existing instanceof VeilBlockEntity be ) {
                 be.destroy();
                 state = this.level().getBlockState(pos);
+            } else if (existing instanceof VeilRodBlockEntity vrbe ) {
+                this.level().destroyBlock(pos, true);
+                state = this.level().getBlockState(pos);
+
+            
+            
             } else if (existing instanceof DomainBlockEntity be) {
                 BlockState original = be.getOriginal();
                 state = original;
@@ -432,16 +439,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.remove(pReason);
 
         Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
-
+       
         for (DomainExpansionEntity domain : domains) {
             if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
-
             closed.createBarrier(true);
         }
 
         for (Map.Entry<UUID, Vec3> entry : this.positions.entrySet()) {
             UUID identifier = entry.getKey();
-
+            boolean stillWithin = false;
             Entity entity = ((ServerLevel) this.level()).getEntity(identifier);
 
             if (entity == null) continue;
@@ -449,8 +455,16 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (!this.isInsideBarrier(entity.blockPosition())) continue;
 
             Vec3 pos = entry.getValue();
-
-            entity.teleportTo(pos.x, pos.y, pos.z);
+            for (DomainExpansionEntity domain : domains) {
+                if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
+                    if (closed.isInsideBarrier(entity.blockPosition())) {
+                        stillWithin = true;
+                        break;
+                    }
+                }
+            if (!stillWithin) {
+                entity.teleportTo(pos.x, pos.y, pos.z);
+            }
         }
 
         ServerLevel serverLevel = (ServerLevel) this.level();
