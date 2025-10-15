@@ -44,7 +44,12 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner || !domain.hasSureHitEffect()) continue;
+            if (domain.getOwner() == owner) {
+                return false;
+            }
+            if (!domain.hasSureHitEffect())  {
+                 continue;
+            }
             return true;
         }
         return false;

@@ -13,6 +13,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -54,6 +56,11 @@ public class SukunaEntity extends SorcererEntity {
     @Nullable
     private GameType original;
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 128.0D)
+                .add(Attributes.ARMOR, 60.0D);
+    }
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
 
@@ -196,7 +203,7 @@ public class SukunaEntity extends SorcererEntity {
     @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
-                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
+                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.QUICKDASH.get() );
     }
 
     @Override
@@ -226,7 +233,7 @@ public class SukunaEntity extends SorcererEntity {
      @Override
     public void init(ISorcererData data) {
         super.init(data);
-        data.addExtraEnergy(20000);
+        data.setAdditionalEnergy(getMaxEnergy() * 2.0F);
     }
 
     @Override

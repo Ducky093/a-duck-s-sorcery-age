@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -16,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -57,6 +59,11 @@ public class HajimeKashimoEntity extends SorcererEntity {
     @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.HOLLOW_WICKER_BASKET.get());
+    }
+
+    @Override
+    public @NotNull List<Trait> getTraits() {
+        return List.of(Trait.INCARNATED);
     }
 
     @Override

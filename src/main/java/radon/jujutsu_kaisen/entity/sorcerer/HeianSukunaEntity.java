@@ -7,12 +7,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -47,6 +53,12 @@ public class HeianSukunaEntity extends SukunaEntity {
 
     public void setBarrage(int barrage) {
         this.entityData.set(DATA_BARRAGE, barrage);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return HeianSukunaEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 128.0D)
+                .add(Attributes.ARMOR, 80.0D);
     }
 
     @Override
@@ -113,6 +125,12 @@ public class HeianSukunaEntity extends SukunaEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Sit", this::walkRunSitPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+    }
+
+     @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.HOLLOW_WICKER_BASKET.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
+                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
     }
 
     @Override

@@ -559,14 +559,14 @@ public class JJKEntities {
     @SubscribeEvent
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
-        event.put(SUKUNA.get(), SorcererEntity.createAttributes().build());
-        event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
+        event.put(SUKUNA.get(), SukunaEntity.createAttributes().build());
+        event.put(SATORU_GOJO.get(), SatoruGojoEntity.createAttributes().build());
         event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
-        event.put(HEIAN_SUKUNA.get(), SorcererEntity.createAttributes().build());
+        event.put(HEIAN_SUKUNA.get(), HeianSukunaEntity.createAttributes().build());
         event.put(NAOYA_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
         event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());

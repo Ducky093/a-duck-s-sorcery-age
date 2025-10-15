@@ -153,7 +153,7 @@
   "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
   "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
   "item.jujutsu_kaisen.feline_curse_spawn_egg": "Spawn Feline Curse",
-  "item.jujutsu_kaisen.fugly_curse_spawn_egg": "Spawn Fugly Curse",
+  "item.jujutsu_kaisen.fugly_curse_spawn_egg": "Spawn Mantis Curse",
   "item.jujutsu_kaisen.bird_curse_spawn_egg": "Spawn Bird Curse",
   "item.jujutsu_kaisen.finger_bearer_spawn_egg": "Spawn Finger Bearer",
   "item.jujutsu_kaisen.rainbow_dragon_spawn_egg": "Spawn Rainbow Dragon",
@@ -504,9 +504,8 @@
   "trait.jujutsu_kaisen.heavenly_restriction": "Heavenly Restriction",
   "trait.jujutsu_kaisen.vessel": "Vessel",
   "trait.jujutsu_kaisen.perfect_body": "Perfect Body",
-  "trait.jujutsu_kaisen.rct_specialist": "RCT Specialist",
+  "trait.jujutsu_kaisen.rct_output": "RCT Output",
   "trait.jujutsu_kaisen.incarnated": "Incarnated",
-
 
   "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
   "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
@@ -596,7 +595,7 @@
   "entity.jujutsu_kaisen.zomba_curse": "Zomba Curse",
   "entity.jujutsu_kaisen.worm_curse": "Worm Curse",
   "entity.jujutsu_kaisen.feline_curse": "Feline Curse",
-  "entity.jujutsu_kaisen.fugly_curse": "Fugly Curse",
+  "entity.jujutsu_kaisen.fugly_curse": "Mantis Curse",
   "entity.jujutsu_kaisen.bird_curse": "Bird Curse",
   "entity.jujutsu_kaisen.finger_bearer": "Finger Bearer",
   "entity.jujutsu_kaisen.rainbow_dragon": "Rainbow Dragon",

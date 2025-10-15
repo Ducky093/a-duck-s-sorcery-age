@@ -10,10 +10,10 @@ public enum Trait {
     SIX_EYES,
     HEAVENLY_RESTRICTION,
     VESSEL,
-    RCT_SPECIALIST,
+    RCT_OUTPUT,
     INCARNATED,
     PERFECT_BODY,
-    SIMURIAN;
+    SIMURIAN,
 
     public Component getName() {
         return Component.translatable(String.format("trait.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));

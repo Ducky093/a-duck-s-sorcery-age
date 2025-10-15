@@ -70,7 +70,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue sixEyesRarity;
     public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
     public final ForgeConfigSpec.IntValue vesselRarity;
-    public final ForgeConfigSpec.IntValue rctSpecialistRarity;
+    public final ForgeConfigSpec.IntValue rctOutputRarity;
     public final ForgeConfigSpec.IntValue perfectBodyRarity;
     public final ForgeConfigSpec.IntValue incarnatedRarity;
 
@@ -228,8 +228,8 @@ public class ServerConfig {
                 .defineInRange("perfectBodyRarity", 1, 1, 1000000);
         this.incarnatedRarity = builder.comment("Rarity of being incarnated (bigger value = rarer)")
                 .defineInRange("incarnatedRarity", 10, 1, 1000000);
-        this.rctSpecialistRarity = builder.comment("Rarity of being adept at RCT (bigger value = rarer)")
-                .defineInRange("rctSpecialistRarity", 5, 1, 1000000);
+        this.rctOutputRarity = builder.comment("Rarity of being adept at RCT (bigger value = rarer)")
+                .defineInRange("rctOutputRarity", 5, 1, 1000000);
         builder.pop();
     }
 

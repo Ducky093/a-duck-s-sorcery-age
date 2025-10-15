@@ -39,16 +39,20 @@ public class Rika extends Summon<RikaEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (target != null) {    
+                return true;
+            }
+        // ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (ownerCap.hasToggled(this)) return target != null;
+        // if (ownerCap.hasToggled(this)) return target != null;
 
-        if (target != null) {
-            if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return SorcererUtil.getGrade(targetCap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
-        }
+        // if (target != null) {
+        //     if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
+        //     if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        //     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //     return SorcererUtil.getGrade(targetCap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
+        // }
+        // return false;
         return false;
     }
 

@@ -91,6 +91,7 @@ public class SorcererData implements ISorcererData {
     private int shieldTicks = 0;
     private float maxEnergy;
     private float extraEnergy;
+    private float additionalEnergy;
 
     private JujutsuType type;
     private int silenced;
@@ -612,8 +613,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void lockAll(List<Ability> abilities) {
-        this.unlocked.removeAll(abilities);
+    public void lockAll() {
+        this.unlocked.clear();
     }
 
     @Override
@@ -1201,6 +1202,7 @@ public float getMaxEnergy() {
             : 1.0F;
     
     float finalEnergy = Math.min(maxCapacity * timeMultiplier, (baseCapacity * timeMultiplier + this.extraEnergy) );
+    finalEnergy += this.additionalEnergy;
 
     return finalEnergy;
 }
@@ -1218,6 +1220,16 @@ public float getMaxEnergy() {
     @Override
     public void setEnergy(float energy) {
         this.energy = energy;
+    }
+
+    @Override
+    public float getAdditionalEnergy() {
+        return this.additionalEnergy;
+    }
+
+    @Override
+    public void setAdditionalEnergy(float additionalEnergy) {
+        this.additionalEnergy = additionalEnergy;
     }
 
     @Override
@@ -1670,7 +1682,7 @@ public float getMaxEnergy() {
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
         this.traits.remove(Trait.PERFECT_BODY);
-        this.traits.remove(Trait.RCT_SPECIALIST);
+        this.traits.remove(Trait.RCT_OUTPUT);
         this.traits.remove(Trait.INCARNATED);
         Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
@@ -1732,9 +1744,9 @@ public float getMaxEnergy() {
                 this.addTrait(Trait.PERFECT_BODY);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.RCT_SPECIALIST)) &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctSpecialistRarity.get()) == 0) {
-                this.addTrait(Trait.RCT_SPECIALIST);
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.RCT_OUTPUT)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctOutputRarity.get()) == 0) {
+                this.addTrait(Trait.RCT_OUTPUT);
             }
 
             if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.INCARNATED)) &&
@@ -1859,6 +1871,7 @@ public float getMaxEnergy() {
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("extra_energy", this.extraEnergy);
+        nbt.putFloat("additional_energy", this.additionalEnergy);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
@@ -2051,6 +2064,7 @@ public float getMaxEnergy() {
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
         this.extraEnergy = nbt.getFloat("extra_energy");
+        this.additionalEnergy = nbt.getFloat("additional_energy");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.disable = nbt.getInt("disable");

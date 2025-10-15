@@ -75,13 +75,13 @@ public class OutputRCT extends Ability {
     @Override
     public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(Trait.RCT_SPECIALIST) && super.canUnlock(owner);
+        return cap.hasTrait(Trait.RCT_OUTPUT) && super.canUnlock(owner);
     }
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(Trait.RCT_SPECIALIST) && super.isDisplayed(owner);
+        return cap.hasTrait(Trait.RCT_OUTPUT) && super.isDisplayed(owner);
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
@@ -119,7 +119,7 @@ public class OutputRCT extends Ability {
         }
         float healMult = 1.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (cap.hasTrait(Trait.RCT_SPECIALIST)) {
+        if (cap.hasTrait(Trait.RCT_OUTPUT)) {
             healMult *= 9.3F;
         }
         if (cap.getType() == JujutsuType.SHIKIGAMI) {
@@ -161,6 +161,6 @@ public class OutputRCT extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
-        return (cap.hasTrait(Trait.RCT_SPECIALIST) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
+        return (cap.hasTrait(Trait.RCT_OUTPUT) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 }

@@ -56,7 +56,7 @@ public interface ISorcererData {
 
     void lock(Ability ability);
 
-    void lockAll(List<Ability> abilities);
+    void lockAll();
 
     void createPact(UUID recipient, Pact pact);
 
@@ -86,12 +86,13 @@ public interface ISorcererData {
 
     int getRemainingCooldown(BindingVow vow);
 
+    float getAdditionalEnergy();
 
+    void setAdditionalEnergy(float additionalEnergy);
 
     int getShieldTicks();
 
     void setShieldTicks(int ticks);
-    
 
     boolean isCooldownDone(BindingVow vow);
 

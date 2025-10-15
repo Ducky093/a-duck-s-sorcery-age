@@ -49,7 +49,7 @@ public class RCTEventHandler {
 
             int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
 
-            if (cap.hasTrait(Trait.RCT_SPECIALIST)) {
+            if (cap.hasTrait(Trait.RCT_OUTPUT)) {
                 chance = 2;
             }
 

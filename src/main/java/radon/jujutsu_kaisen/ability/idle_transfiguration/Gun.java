@@ -23,10 +23,11 @@ public class Gun extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (JJKAbilities.hasToggled(owner, this)) {
-            return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
-        }
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
+        // if (JJKAbilities.hasToggled(owner, this)) {
+        //     return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
+        // }
+        return false;
+       // return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override
