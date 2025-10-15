@@ -74,7 +74,7 @@ public class MiniUzumaki extends Ability {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(-3.0F, 3.0F);
+        return new Vec2(-1.0F, 3.0F);
     }
 
     @Override
