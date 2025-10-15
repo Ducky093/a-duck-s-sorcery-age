@@ -136,9 +136,12 @@ public class VeilRodBlockEntity extends BlockEntity {
         int x = cursor % (size * 2 + 1) - size;
         int y = (cursor / (size * 2 + 1)) % (size * 2 + 1) - size;
         int z = (cursor / ((size * 2 + 1) * (size * 2 + 1))) - size;
-
-        double distance = Math.sqrt(x * x + y * y + z * z);
-        if (distance >= size || distance < size - 1) continue; 
+        double distSqr = x * x + y * y + z * z;
+        double minSqr = (size - 0.5) * (size - 0.5);
+        double maxSqr = (size + 0.5) * (size + 0.5);
+        if (distSqr < minSqr || distSqr > maxSqr) continue;
+      //  double distance = Math.sqrt(x * x + y * y + z * z);
+        //if (distance >= size || distance < size - 1) continue; 
 
         BlockPos targetPos = pos.offset(x, y, z);
 
