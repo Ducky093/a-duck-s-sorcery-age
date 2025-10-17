@@ -10,13 +10,15 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import net.minecraft.world.phys.Vec2;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class FireArrow extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null) return false;       
+        return owner.getHealth() / owner.getMaxHealth() < 0.9F && target.getHealth() / target.getMaxHealth() < 0.4F && owner.hasLineOfSight(target);
     }
 
     @Override

@@ -9,9 +9,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -49,29 +52,53 @@ public class VeilBlockEntity extends BlockEntity {
     //     }
     // }
 
+    // public void destroy() {
+    //     if (this.level == null) return;
+
+    //     BlockState original = this.getOriginal();
+
+    //     if (original != null) {
+    //         if (original.isAir() || original.getBlock()  == JJKBlocks.DOMAIN_AIR.get() ) {
+    //             //if (!this.getBlockState().getFluidState().isEmpty()) {
+    //                 this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+    //             //} else {
+    //            //     this.level.destroyBlock(this.getBlockPos(), false);
+    //            // }
+    //         } else {
+    //             this.level.setBlockAndUpdate(this.getBlockPos(), original);
+    //         }
+    //     } else {
+    //         if (!this.getBlockState().getFluidState().isEmpty()) {
+    //             this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+    //         } else {
+    //             this.level.destroyBlock(this.getBlockPos(), false);
+    //         }
+    //     }
+    // }
+
     public void destroy() {
         if (this.level == null) return;
 
+        BlockPos pos = this.getBlockPos();
         BlockState original = this.getOriginal();
 
-        if (original != null) {
-            if (original.isAir()) {
-                //if (!this.getBlockState().getFluidState().isEmpty()) {
-                    this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-                //} else {
-               //     this.level.destroyBlock(this.getBlockPos(), false);
-               // }
-            } else {
-                this.level.setBlockAndUpdate(this.getBlockPos(), original);
-            }
-        } else {
-            if (!this.getBlockState().getFluidState().isEmpty()) {
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-            } else {
-                this.level.destroyBlock(this.getBlockPos(), false);
-            }
+        // if (this.level.getBlockEntity(pos) == this) {
+        //     this.level.removeBlockEntity(pos);
+        // }
+
+        if (original == null || original.isAir() || original.getBlock() == JJKBlocks.DOMAIN_AIR.get()) {
+            this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            return;
         }
+
+        // if (original.getBlock() instanceof EntityBlock) {
+        //     this.level.removeBlockEntity(pos);
+        // }
+
+        this.level.setBlockAndUpdate(pos, original);
     }
+
+
 
     public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
         if (entity == null || parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
@@ -114,6 +141,9 @@ public class VeilBlockEntity extends BlockEntity {
     public void create(BlockPos parent, int size, BlockState original) {
         this.parent = parent;
         this.size = size;
+        if (original.getBlock() == JJKBlocks.DOMAIN_AIR.get()) {
+            original = Blocks.AIR.defaultBlockState();
+        }
         this.original = original;
         this.sendUpdates();
     }

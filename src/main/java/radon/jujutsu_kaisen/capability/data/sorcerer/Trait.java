@@ -13,7 +13,7 @@ public enum Trait {
     RCT_OUTPUT,
     INCARNATED,
     PERFECT_BODY,
-    SIMURIAN,
+    SIMURIAN;
 
     public Component getName() {
         return Component.translatable(String.format("trait.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
@@ -8,6 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -16,16 +18,30 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 3.0D) return false;
+         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 20.0D || JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
+         
+         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            boolean hasDomainUp = false;
+            boolean opponentDomainUp = false;
+         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (domain.getOwner() == owner && domain.hasSureHitEffect()) {
+                hasDomainUp = true;
+                continue;
+            }
+            else if (domain.getOwner() == target)  {
+                 opponentDomainUp = true;
+                 continue;
+            }
+        }
 
-        return target.getCapability(SorcererDataHandler.INSTANCE)
-             .map(cap -> cap.hasToggled(JJKAbilities.INFINITY.get()))
-            
-             .orElse(false);
+
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return (!hasDomainUp || opponentDomainUp) && cap.hasToggled(JJKAbilities.INFINITY.get());
     }
    
     @Override

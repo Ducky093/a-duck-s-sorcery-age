@@ -39,6 +39,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     private int total;
     private final Map<UUID, Vec3> positions = new HashMap<>();
+    private final List<BlockPos> blockPositions = new ArrayList<>();  
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -110,6 +112,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             this.positions.put(nbt.getUUID("identifier"), new Vec3(nbt.getDouble("pos_x"),
                     nbt.getDouble("pos_y"), nbt.getDouble("pos_z")));
         }
+        this.blockPositions.clear();
+        ListTag blockList = pCompound.getList("block_positions", Tag.TAG_COMPOUND);
+        for (Tag tag : blockList) {
+            CompoundTag nbt = (CompoundTag) tag;
+            BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+            this.blockPositions.add(pos);
+        }
     }
 
     @Override
@@ -132,6 +141,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             positionsTag.add(nbt);
         }
         pCompound.put("positions", positionsTag);
+        ListTag blockList = new ListTag();
+        for (BlockPos pos : this.blockPositions) {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("x", pos.getX());
+            tag.putInt("y", pos.getY());
+            tag.putInt("z", pos.getZ());
+            blockList.add(tag);
+        }
+        pCompound.put("block_positions", blockList);
     }
 
     public int getRadius() {
@@ -143,7 +161,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
+        return relative.distSqr(Vec3i.ZERO) < (radius) * (radius);
+    }
+
+    public boolean isWithinBarrier(BlockPos pos) {
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return relative.distSqr(Vec3i.ZERO) < (radius-1) * (radius-1);
     }
 
     
@@ -170,10 +195,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
      BlockEntity existing = this.level().getBlockEntity(pos) ;
       CompoundTag saved = null;
          if (existing instanceof VeilBlockEntity be ) {
+               
+                //state = be.getOriginal();
+                
                 be.destroy();
                 state = this.level().getBlockState(pos);
+                //this.level().removeBlockEntity(pos);
+                //this.level().destroyBlock(pos, false); test on veil, fix air
             } else if (existing instanceof VeilRodBlockEntity vrbe ) {
-                this.level().destroyBlock(pos, true);
+                this.level().destroyBlock(pos, false);
                 state = this.level().getBlockState(pos);
 
             
@@ -193,7 +223,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             List<Block> floor = domain.getFloorBlocks();
             List<Block> decoration = domain.getDecorationBlocks();
 
-            Block block = null;
+            Block block = JJKBlocks.DOMAIN_AIR.get();
 
             // if (distance >= radius - 1) {
             //     block = JJKBlocks.DOMAIN.get();
@@ -215,18 +245,20 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             //     }
             // }
             BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+             
             if (distance >= radius - 1) {
-                 block = JJKBlocks.DOMAIN.get();
-            } else {
-                if (distance >= radius - 2) {
-                    block = blocks.get(this.random.nextInt(blocks.size()));
-                } else if (pos.getY() < center.getY()) {
-                    block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
-                } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
-                    block = decoration.get(this.random.nextInt(decoration.size()));
-                } else {
-                    block = JJKBlocks.DOMAIN_AIR.get();
+                block = JJKBlocks.DOMAIN.get(); // outer shell
+            } else if (distance >= radius - 2) {
+                block = blocks.get(this.random.nextInt(blocks.size())); // inner shell layer
+            } else if (pos.getY() <= center.getY() - 1) {
+                // below center: floor or fill
+                if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
+                    block = floor.get(this.random.nextInt(floor.size()));
+                } else if (!fill.isEmpty()) {
+                    block = fill.get(this.random.nextInt(fill.size()));
                 }
+            } else if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos) && pos.getY() == center.getY()) {
+                block = decoration.get(this.random.nextInt(decoration.size()));
             }
             
              if (existing instanceof DomainBlockEntity be) {
@@ -240,17 +272,26 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
            
             //if (block == null) return;
-
+             // owner.level().removeBlockEntity(pos);
+                this.blockPositions.add(pos.immutable());
+              //BlockEntity be = owner.level().getBlockEntity(pos);
+                // if (be != null) {
+                //     owner.level().removeBlockEntity(pos);
+                // }
               boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
-                Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);  
-                owner.level().removeBlockEntity(pos);
+                                                Block.UPDATE_ALL);
+              //(pos, block.defaultBlockState(),
+              //Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS );  
+               
+         
             // boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
             //         Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
             if (distance >= radius - 1 && success) this.total++;
 
-            if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                be.create(this.uuid, delay, state, saved);
+            if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity dmnbe) {
+                dmnbe.create(this.uuid, delay, state, saved);
+                
             }
         }
     
@@ -469,26 +510,47 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         ServerLevel serverLevel = (ServerLevel) this.level();
     int radius = this.getRadius();
-    BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+   //BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
-    for (int x = -radius; x <= radius; x++) {
-        for (int y = -radius; y <= radius; y++) {
-            for (int z = -radius; z <= radius; z++) {
-                double distance = Math.sqrt(x * x + y * y + z * z);
-                if (distance > radius) continue;
+    // for (int x = -radius; x <= radius; x++) {
+    //     for (int y = -radius; y <= radius; y++) {
+    //         for (int z = -radius; z <= radius; z++) {
+    //             double distance = Math.sqrt(x * x + y * y + z * z);
+    //             if (distance > radius) continue;
 
-                BlockPos pos = center.offset(x, y, z);
-                BlockEntity be = serverLevel.getBlockEntity(pos);
-                if (be instanceof DomainBlockEntity domainBe) {
-                    UUID id = domainBe.getIdentifier();
-                    if (id != null && id.equals(this.getUUID())) {
-                        domainBe.destroy();
-                    }
-                }
+    //             BlockPos pos = center.offset(x, y, z);
+    //             BlockEntity be = serverLevel.getBlockEntity(pos);
+    //             if (be instanceof DomainBlockEntity domainBe) {
+    //                 UUID id = domainBe.getIdentifier();
+    //                 if (id != null && id.equals(this.getUUID())) {
+    //                     domainBe.destroy();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    for (BlockPos pos : this.blockPositions) {
+        BlockEntity be = serverLevel.getBlockEntity(pos);
+        if (be instanceof DomainBlockEntity domainBe) {
+            UUID id = domainBe.getIdentifier();
+            if (id != null && id.equals(this.getUUID())) {
+                domainBe.destroy();
             }
+        } else if (be instanceof VeilBlockEntity veilBe) {
+            veilBe.destroy();
+            
+        } else {
+            //serverLevel.destroyBlock(pos, false); 
+            serverLevel.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            //serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
+        
     }
-        positions.clear();
+    
+
+
+        this.blockPositions.clear();
+        this.positions.clear();
     }
 
     
@@ -538,7 +600,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, 16, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ,
                     (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-                if (!this.isInsideBarrier(pos)) continue;
+                if (!this.isWithinBarrier(pos)) continue;
                 Vec3 center = pos.getCenter();
                 ((ServerLevel) this.level()).sendParticles(particle, center.x, center.y, center.z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }

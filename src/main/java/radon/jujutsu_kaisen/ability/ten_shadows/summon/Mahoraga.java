@@ -43,7 +43,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
         }
 
         if (JJKAbilities.hasToggled(owner, this)) {
-            return HelperMethods.RANDOM.nextInt(20) != 0;
+            return true;
         }
 
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -55,7 +55,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                 }
             }
         }
-        return HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(8) == 0;
     }
 
     @Override

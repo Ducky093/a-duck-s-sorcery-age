@@ -30,7 +30,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.5F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
     }
 
     @Override
@@ -60,6 +60,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         super.init(data);
 
         data.copy(CursedTechnique.CURSED_SPEECH);
+        data.setAdditionalEnergy(data.getMaxEnergy());
     }
 
     @Override

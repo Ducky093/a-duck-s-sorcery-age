@@ -81,6 +81,7 @@ public class MiniUzumaki extends Ability {
     public int getCooldown() {
         return 5 * 20;
     }
+    
 
     @Override
     public MenuType getMenuType() {

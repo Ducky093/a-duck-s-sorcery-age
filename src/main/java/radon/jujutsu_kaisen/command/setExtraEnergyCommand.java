@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 
-public class setExtraEnergyCommand {
+public class SetExtraEnergyCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setextraenergy")
                 .requires((player) -> player.hasPermission(2))

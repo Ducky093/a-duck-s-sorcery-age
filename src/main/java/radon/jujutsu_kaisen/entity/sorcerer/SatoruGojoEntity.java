@@ -45,6 +45,8 @@ public class SatoruGojoEntity extends SorcererEntity {
 
      public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.ARMOR, 60.0D)
                 .add(Attributes.FOLLOW_RANGE, 128.0D);
     }
@@ -62,7 +64,7 @@ public class SatoruGojoEntity extends SorcererEntity {
     @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.UNLIMITED_VOID.get(),
-                JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.DASH.get());
+                JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.QUICKDASH.get());
     }
 
     @Override

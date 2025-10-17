@@ -1071,16 +1071,19 @@ public class SorcererData implements ISorcererData {
 
      @Override
     public void setDisable(int duration) {
+        if (this.getDisable() >= duration) return;
         this.disable = duration;
     }
     
     @Override
     public void setDisarmed(int disarmed) {
+        if (this.getDisarmed() >= disarmed) return;
         this.disarmed = disarmed;
     }
 
     @Override
     public void setSilenced(int silenced) {
+        if (this.getSilenced() >= silenced) return;
         this.silenced = silenced;
     }
 

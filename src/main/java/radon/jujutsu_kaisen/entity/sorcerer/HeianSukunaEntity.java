@@ -57,6 +57,8 @@ public class HeianSukunaEntity extends SukunaEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return HeianSukunaEntity.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 128.0D)
                 .add(Attributes.ARMOR, 80.0D);
     }
@@ -130,7 +132,7 @@ public class HeianSukunaEntity extends SukunaEntity {
      @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.HOLLOW_WICKER_BASKET.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
-                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
+                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.DASH.get());
     }
 
     @Override

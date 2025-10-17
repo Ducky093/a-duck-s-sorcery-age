@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -44,7 +45,7 @@ import java.util.*;
 public class SukunaEntity extends SorcererEntity {
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
-    private static final int TAMING_CHANCE = 10 * 20;
+    private static final int TAMING_CHANCE = 4 * 20;
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -58,7 +59,9 @@ public class SukunaEntity extends SorcererEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
-                .add(Attributes.FOLLOW_RANGE, 128.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 256.0D)
                 .add(Attributes.ARMOR, 60.0D);
     }
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
@@ -107,11 +110,11 @@ public class SukunaEntity extends SorcererEntity {
     
 
 
-        if (!cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) return;
+        //if (cap.getSummonByClass(TenShadowsSummon.class) != null) return;
 
          for (Entity entity : cap.getSummons()) {
                 if (entity instanceof TenShadowsSummon) return;
-            }
+        }
         if (this.random.nextInt(TAMING_CHANCE) == 0) {
             
 
@@ -119,13 +122,16 @@ public class SukunaEntity extends SorcererEntity {
                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
                 AbilityHandler.trigger(this, ability);
+                TenShadowsSummon shadow = cap.getSummonByClass(TenShadowsSummon.class);
+                this.setTarget(shadow);
                 return;
             }
             Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
 
             if (!mahoraga.isTamed(this)) {
                 AbilityHandler.trigger(this, mahoraga);
-
+                TenShadowsSummon shadow = cap.getSummonByClass(TenShadowsSummon.class);
+                this.setTarget(shadow);
                 return;
             }
         }
@@ -233,7 +239,7 @@ public class SukunaEntity extends SorcererEntity {
      @Override
     public void init(ISorcererData data) {
         super.init(data);
-        data.setAdditionalEnergy(getMaxEnergy() * 2.0F);
+        data.setAdditionalEnergy( (getMaxEnergy() * 4.0F) * (this.fingers / 20) );
     }
 
     @Override

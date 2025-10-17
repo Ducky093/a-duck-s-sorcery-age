@@ -18,8 +18,11 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -30,7 +33,7 @@ import java.util.List;
 public class RunAway extends Ability {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
-    private static final int DURATION = 40;
+    private static final int DURATION = 35;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -74,7 +77,10 @@ public class RunAway extends Ability {
                 living.addEffect(new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 1, false, false, false));
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 5, false, false, false));
                 living.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 0, false, false, false));
-
+                if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cap.setDisarmed(Math.round(DURATION * this.getPower(owner)));
+                }
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.run_away", JujutsuKaisen.MOD_ID), owner.getName()));
             }
@@ -88,7 +94,7 @@ public class RunAway extends Ability {
 
     @Override
     public int getCooldown() {
-        return 20 * 20;
+        return 24 * 20;
     }
 
     @Override

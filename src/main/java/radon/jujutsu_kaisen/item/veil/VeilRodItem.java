@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
 
@@ -67,6 +69,8 @@ public class VeilRodItem extends BlockItem {
     protected boolean updateCustomBlockEntityTag(@NotNull BlockPos pPos, @NotNull Level pLevel, @Nullable Player pPlayer, @NotNull ItemStack pStack, @NotNull BlockState pState) {
         if (pPlayer != null && pLevel.getBlockEntity(pPos) instanceof VeilRodBlockEntity be) {
             be.setOwner(pPlayer.getUUID());
+            ISorcererData cap = pPlayer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            be.setExperience(cap.getExperience());
         }
         return super.updateCustomBlockEntityTag(pPos, pLevel, pPlayer, pStack, pState);
     }

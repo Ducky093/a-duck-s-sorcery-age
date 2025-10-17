@@ -83,8 +83,8 @@ public class SorcererGoal extends Goal {
 
         for (Ability ability : abilities) {
             boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
-            LivingEntity target = this.mob.getTarget();
-            Ability infinite = JJKAbilities.INFINITY.get();
+            //LivingEntity target = this.mob.getTarget();
+            //Ability infinite = JJKAbilities.INFINITY.get();
 
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
@@ -128,7 +128,7 @@ public class SorcererGoal extends Goal {
    @Override
    public boolean canUse() {
         long i = this.mob.level().getGameTime();
-        if (i - this.lastCanUseCheck > 10L) {
+        if (i - this.lastCanUseCheck > 8L) {
             this.lastCanUseCheck = i;
             return true;
         } else {

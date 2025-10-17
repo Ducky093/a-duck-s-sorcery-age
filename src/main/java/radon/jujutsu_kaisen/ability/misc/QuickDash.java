@@ -40,6 +40,10 @@ public class QuickDash extends Dash {
     private static final float DASH = 2.0F;
     private static final float MAX_DASH = 3.0F;
 
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return owner.getTarget() != null && owner.hasLineOfSight(owner.getTarget()) && owner.distanceTo(owner.getTarget()) >= 6.0D;
+    }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {

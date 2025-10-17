@@ -67,7 +67,7 @@ public class MythicalBeastAmber extends Transformation {
         if (JJKAbilities.hasToggled(owner, this)) {
             return true;
         }
-        if (target == null || !(target instanceof SukunaEntity sukun && target instanceof HeianSukunaEntity bigsuku) ) return false;
+        if (target == null || !(target instanceof SukunaEntity sukun || target instanceof HeianSukunaEntity bigsuku) ) return false;
         //ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return true;

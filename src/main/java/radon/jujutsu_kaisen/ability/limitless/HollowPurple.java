@@ -20,7 +20,7 @@ public class HollowPurple extends Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
-                owner.getHealth() / owner.getMaxHealth() < 0.8F || target.getHealth() > owner.getHealth() * 2;
+                owner.getHealth() / owner.getMaxHealth() < 0.8F || (target.getHealth() / target.getMaxHealth()) > (owner.getHealth() / owner.getMaxHealth()) * 1.5;
     }
 
     @Override

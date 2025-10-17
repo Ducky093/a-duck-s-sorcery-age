@@ -68,32 +68,31 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         } else {
             if (target == null) return false;
 
-            if (this instanceof DomainExpansion.IClosedDomain closed) {
-                 int radius = Math.round(closed.getRadius(owner));
+            // if (this instanceof DomainExpansion.IClosedDomain closed) {
+            //      int radius = Math.round(closed.getRadius(owner));
 
-                float yaw = RotationUtil.getTargetAdjustedYRot(owner);
-                Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-                Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - DomainExpansionEntity.OFFSET));
-                BlockPos center = BlockPos.containing(behind.x, behind.y, behind.z).offset(0, radius, 0);
-                BlockPos relative = target.blockPosition().subtract(center);
+            //     if (target.blockPosition().distSqr(owner.blockPosition()) >= (radius - 1) * (radius - 1)) {
+            //         return false;
+            //     }
+            // }
 
-                if (relative.distSqr(Vec3i.ZERO) >= (radius - 1) * (radius - 1)) {
-                    return false;
-                }
-            }
 
-            boolean result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
-                    owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
-
+            boolean result = cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
+                    owner.getHealth() / owner.getMaxHealth() < 0.3F || (target.getHealth()/target.getMaxHealth()) > (owner.getHealth()/owner.getMaxHealth()) * 1.5;
+            boolean isInDomain = false;
             for (DomainExpansionEntity ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-                result = true;
+                if (owner.distanceTo(target) < 40.0D) {
+                    isInDomain = true;
+                }
                 break;
             }
+
+            if (result == true && isInDomain == false && (owner.level() != target.level() || owner.distanceTo(target) > 30.0D) ) return false;
 
             Status status = this.getStatus(owner);
 
             if (result && (status == Status.SUCCESS)) {
-                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && cap.getExperience() > ConfigHolder.SERVER.requiredExperienceForExperienced.get()) {
                     cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }

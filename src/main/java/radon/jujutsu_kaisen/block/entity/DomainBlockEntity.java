@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
@@ -48,42 +50,117 @@ public class DomainBlockEntity extends BlockEntity {
     //     }
     // }
 
-    public void destroy() {
-        if (this.level == null) return;
+    // public void destroy() {
+    //     if (this.level == null) return;
 
-        BlockState original = this.getOriginal();
-         BlockPos pos = this.getBlockPos();
+    //     BlockState original = this.getOriginal();
+    //      BlockPos pos = this.getBlockPos();
          
-        if (original != null) {
-            if (original.isAir()) {
-                if (this.level.getBlockEntity(pos) != null) {
-                    this.level.removeBlockEntity(pos);
-                }
+    //     if (original != null) {
+    //         if (original.isAir()) {
+    //             if (this.level.getBlockEntity(pos) != null) {
+    //                 this.level.removeBlockEntity(pos);
+    //             }
 
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+    //             this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
 
-            } else {
-                this.level.setBlockAndUpdate(this.getBlockPos(), original);
+    //         } else {
+    //             this.level.setBlockAndUpdate(this.getBlockPos(), original);
 
-                if (this.saved != null) {
-                    BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
+    //             if (this.saved != null) {
+    //                 BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
 
-                    if (be != null) {
-                        be.load(this.saved);
-                    }
+    //                 if (be != null) {
+    //                     be.load(this.saved);
+    //                 }
                  
-                }
-                   if (this.level.getBlockEntity(pos) != null) {
-                        this.level.removeBlockEntity(pos);
-                    }
-            }
-        } else {
-             if (this.level.getBlockEntity(pos) != null) {
-                    this.level.removeBlockEntity(pos);
-                }
-            this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+    //             }
+    //                if (this.level.getBlockEntity(pos) != null) {
+    //                     this.level.removeBlockEntity(pos);
+    //                 }
+    //         }
+    //     } else {
+    //          if (this.level.getBlockEntity(pos) != null) {
+    //                 this.level.removeBlockEntity(pos);
+    //             }
+    //         this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+    //     }
+    // }
+    // public void destroy() {
+    //     if (this.level == null) return;
+
+    //     BlockPos pos = this.getBlockPos();
+    //     BlockState original = this.getOriginal();
+
+    //     if (original == null || original.isAir() || original.getBlock() == JJKBlocks.DOMAIN_AIR.get()) {
+    //         if (this.level.getBlockEntity(pos) != null) {
+    //             this.level.removeBlockEntity(pos);
+    //         }
+    //         this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+           
+    //         return;
+    //     }
+
+    //     this.level.setBlockAndUpdate(pos, original);
+
+    //     if (this.saved != null) {
+    //         BlockEntity be = this.level.getBlockEntity(pos);
+    //         if (be != null) {
+    //             be.load(this.saved);
+    //         }
+    //     }
+
+    //     if (this.level.getBlockEntity(pos) == this) {
+    //         this.level.removeBlockEntity(pos);
+    //     }
+    // }
+
+    public void destroy() {
+    if (this.level == null) return;
+
+    BlockPos pos = this.getBlockPos();
+    BlockState original = this.getOriginal();
+
+    if (original == null || original.isAir() ) {
+        // if (this.level.getBlockEntity(pos) == this) {
+        //     this.level.removeBlockEntity(pos);
+        // }
+        this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        
+        return;
+    }
+
+
+    // boolean createsBE = original.hasBlockEntity();
+
+
+    // if (createsBE) {
+    //     if (this.level.getBlockEntity(pos) == this) {
+    //         this.level.removeBlockEntity(pos);
+    //     }
+    // }
+
+    
+    this.level.setBlockAndUpdate(pos, original);
+    
+
+    if (this.saved != null) {
+        BlockEntity restored = this.level.getBlockEntity(pos);
+        if (restored != null && !(restored instanceof VeilBlockEntity)) {
+            restored.load(this.saved);
         }
     }
+
+
+    // if (!createsBE) {
+    //     BlockEntity leftover = this.level.getBlockEntity(pos);
+    //     if (leftover == this) {
+    //         this.level.removeBlockEntity(pos);
+    //     }
+    // }
+}
+
+
 
     @Nullable
     public UUID getIdentifier() {

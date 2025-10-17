@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.block.domain.DomainAirBlock;
+import radon.jujutsu_kaisen.block.domain.DomainBlock;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -38,12 +40,13 @@ import java.util.UUID;
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 10;
-    private static final float COST = 0.5F;
+    private static final float COST = 0.1F;
     private int blockCursor;
 
     private int counter;
     private int size;
-
+    private float experience;
+    private float storedEnergy;
     public List<Modifier> modifiers;
 
     @Nullable
@@ -55,22 +58,24 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.size = ConfigHolder.SERVER.minimumVeilSize.get();
         this.modifiers = new ArrayList<>();
         this.blockCursor = 0;
+        this.storedEnergy = 0.0F;
     }
 
     public boolean isValid() {
         if (!(this.level instanceof ServerLevel serverLevel)) return false;
         if (this.ownerUUID == null) return false;
 
-        if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-            return false;
+        //if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+         //   return false;
+       // if ((serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner)) {
+           // if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+         //       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                //float cost = ConfigHolder.SERVER.veilCost.get() * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get());
 
-            float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
-
-            return cap.getEnergy() >= cost;
-        }
+               // return cap.getEnergy() >= cost;
+      //      }
+    //    }
         return true;
     }
 
@@ -90,21 +95,21 @@ public class VeilRodBlockEntity extends BlockEntity {
     if (!(level instanceof ServerLevel serverLevel)) return;
     if (rod.ownerUUID == null) return;
 
-    if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
-    ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-    if (ownerCap == null) return;
+    //if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
+    //ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+   // if (ownerCap == null) return;
 
-    if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-        float cost = 0.5f * (rod.getSize() / (float) ConfigHolder.SERVER.maximumVeilSize.get());
+   // if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+       // float cost = 0.1f * (rod.getSize() / (float) ConfigHolder.SERVER.maximumVeilSize.get());
         //if (ownerCap.hasTrait(Trait.SIX_EYES)) cost *= 0.5f;
-        if (ownerCap.getEnergy() < cost) return;
+        //if (ownerCap.getEnergy() < cost) return;
 
-        ownerCap.useEnergy(cost);
+        //ownerCap.useEnergy(cost);
 
-        if (owner instanceof ServerPlayer serverPlayer) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverPlayer);
-        }
-    }
+        //if (owner instanceof ServerPlayer serverPlayer) {
+        //    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverPlayer);
+        //}
+    //} replace with system where you seep energy in veils over time while near and they drain that energy passively. 1 hr recharge = 
 
     BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
     for (Modifier mod : rod.modifiers) {
@@ -116,12 +121,12 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
 
-    AABB rodAABB = new AABB(pos.offset(-rod.getSize(), -rod.getSize(), -rod.getSize()),
-                            pos.offset(rod.getSize(), rod.getSize(), rod.getSize()));
-    List<DomainExpansionEntity> nearbyDomains = new ArrayList<>();
-    for (DomainExpansionEntity domain : VeilHandler.getDomains(serverLevel)) {
-        if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
-    }
+    // AABB rodAABB = new AABB(pos.offset(-rod.getSize(), -rod.getSize(), -rod.getSize()),
+    //                         pos.offset(rod.getSize(), rod.getSize(), rod.getSize()));
+    // List<DomainExpansionEntity> nearbyDomains = new ArrayList<>();
+    // for (DomainExpansionEntity domain : VeilHandler.getDomains(serverLevel)) {
+    //     if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
+    // }
 
 
     int blocksPerTick = 61152; 
@@ -145,7 +150,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         BlockPos targetPos = pos.offset(x, y, z);
 
-        boolean blocked = false;
+        // boolean blocked = false;
         // for (DomainExpansionEntity domain : nearbyDomains) {
         //     LivingEntity domainOwner = domain.getOwner();
         //     if (domainOwner == null) continue;
@@ -153,23 +158,31 @@ public class VeilRodBlockEntity extends BlockEntity {
         //     ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
         //     if (domainCap == null) continue;
 
-        //     if (domainCap.getAbilityPower() >= ownerCap.getAbilityPower() && domain.isInsideBarrier(targetPos)) {
+        //     if (domainCap.getExperience() >= rod.experience && domain.isInsideBarrier(targetPos)) {
         //         if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
         //         blocked = true;
         //         break;
         //     }
         // }
         // if (blocked) continue;
-
+        BlockState targetState = level.getBlockState(targetPos);
         BlockEntity existingBE = level.getBlockEntity(targetPos);
-        BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : level.getBlockState(targetPos);
-        if (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity) ) {
-            level.setBlock(targetPos, replacement, Block.UPDATE_SUPPRESS_DROPS);
+        BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : targetState;
+        Block b = targetState.getBlock();
+        if (b instanceof DomainBlock || b instanceof DomainAirBlock || b instanceof VeilBlock ) {
+            continue;
         }
+        // if (existingBE == null || (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity))  ) {
+        //    hadBarrier = false;
+        level.setBlockAndUpdate(targetPos, replacement);
+            //level.setBlock(targetPos, replacement, Block.UPDATE_ALL);
+       // }
 
-        if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
-            be.create(pos, size, currentState);
-        }
+       // if (hadBarrier == false) {
+            if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
+              be.create(pos, size, currentState);
+            }
+       // }
     }
 }
 
@@ -187,6 +200,11 @@ public class VeilRodBlockEntity extends BlockEntity {
         
     }
 
+    public void setExperience(float experience) {
+        this.experience = experience;
+        this.setChanged();
+    }
+
     public void setOwner(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
         this.setChanged();
@@ -200,6 +218,17 @@ public class VeilRodBlockEntity extends BlockEntity {
             VeilHandler.removeVeil(this);
         }
     }
+
+        @Override
+    public void onLoad() {
+        super.onLoad();
+        if (!this.level.isClientSide) {
+            if (this.level != null) {
+                VeilHandler.addVeil(this);
+            }
+        }
+    }
+
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -220,7 +249,8 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
         pTag.putInt("counter", this.counter);
         pTag.putInt("size", this.size);
-
+        pTag.putFloat("experience", this.experience);
+        pTag.putFloat("storedEnergy", this.storedEnergy);
         if (this.modifiers != null) {
             pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
         }
@@ -235,7 +265,8 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
         this.counter = pTag.getInt("counter");
         this.size = pTag.getInt("size");
-
+        this.experience = pTag.getFloat("experience");
+        this.storedEnergy = pTag.getFloat("storedEnergy");
         if (pTag.contains("modifiers")) {
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
         }

@@ -105,9 +105,9 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
          if (!this.original) {
             RabbitEscapeEntity leader = this.getLeader();
             if (leader == null || leader.isRemoved() || !leader.isAlive()) {
-                if (!this.level().isClientSide) {
+                //if (!this.level().isClientSide) {
                     this.discard();
-                }
+                //}
                 return;
             }
         }

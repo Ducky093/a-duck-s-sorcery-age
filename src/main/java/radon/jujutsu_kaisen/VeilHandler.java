@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
@@ -22,6 +24,7 @@ public class VeilHandler {
 
     private static final Map<ResourceKey<Level>, Set<VeilRodBlockEntity>> veilsByDimension = new HashMap<>();
     private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashMap<>();
+    //private final Map<BlockPos, CompoundTag> placedBlocks = new HashMap<>();
 
     public static boolean checkIntersect(Level level, BlockPos center, int radius) {
     Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
@@ -41,6 +44,7 @@ public class VeilHandler {
     }
     return false;
 }
+
 
 
     public static void addVeil(VeilRodBlockEntity rod) {
@@ -65,7 +69,7 @@ public class VeilHandler {
                     BlockPos pos = center.offset(x, y, z);
                     BlockEntity be = level.getBlockEntity(pos);
 
-                    if (be instanceof radon.jujutsu_kaisen.block.entity.VeilBlockEntity veil) {
+                    if (be instanceof VeilBlockEntity veil) {
                         BlockPos parent = veil.getParent();
                         if (parent != null && parent.equals(center)) {
                             veil.destroy();

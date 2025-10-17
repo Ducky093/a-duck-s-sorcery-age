@@ -53,6 +53,8 @@ public class Wheel extends Summon<WheelEntity> {
             for (CursedTechnique technique : targetCap.getTechniques()) {
                 if (!ownerCap.isAdaptedTo(technique)) {
                     return true;
+                } else if (JJKAbilities.hasToggled(owner, this) ) {
+                    return true;
                 }
             }
         }
@@ -68,6 +70,7 @@ public class Wheel extends Summon<WheelEntity> {
                 cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
                 (ownercap.hasToggled(this) || cap.getMode() == TenShadowsMode.ABILITY) && ( ownercap.getExperience() >= ConfigHolder.SERVER.requiredExperienceForExperienced.get() || !ownercap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) )  ;
     }
+    
 
     @Override
     public List<EntityType<?>> getTypes() {

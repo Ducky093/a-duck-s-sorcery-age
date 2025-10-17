@@ -93,6 +93,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         if (this.targetsCurses()) {
             this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
         }
+        
     }
 
     @Override
