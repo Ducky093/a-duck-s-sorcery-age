@@ -117,13 +117,12 @@ public class ServerConfig {
                 .define("playerBodySteal", false);
         this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
                 .define("bodyStealEXPReset", true);
-        builder.pop();
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
                 .define("MBAEXPReset", true);
-        builder.pop();
         this.hrRequiredForISOH = builder.comment("Whether Heavenly Restriction is required to use the Inverted Spear of Heaven")
                 .define("hrRequiredForISOH", false);
         builder.pop();
+    
 
         builder.comment("Miscellaneous").push("misc");
         this.sorcererHealingAmount = builder.comment("The maximum amount of health sorcerers can heal per tick (scales with experience)")
