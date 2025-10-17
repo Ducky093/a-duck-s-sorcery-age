@@ -19,6 +19,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -91,10 +93,10 @@ public class HelperMethods {
     }
 
     public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos) {
-        if (!ConfigHolder.SERVER.destruction.get()) return false;
+        if (!ConfigHolder.SERVER.destruction.get() ) return false;
 
-        if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
-
+        if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)  ) return false;
+        if (source != null && VeilHandler.canDestroy(source, source.level(),(double) pos.getX(),(double) pos.getY(), (double)pos.getZ()) == false) return false;
         BlockState state = getter.getBlockState(pos);
         boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
 

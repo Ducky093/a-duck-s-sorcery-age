@@ -171,12 +171,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius-1) * (radius-1);
     }
 
-    
+       
 
-    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
-        if (distance > radius) return;
 
-        if (!this.level().isInWorldBounds(pos)) return;
+    private void createBlock(int delay, BlockPos pos, int radius, double distance, BlockEntity existing) {
+        
+
+       
 
         BlockState state = null;
         if (!this.level().isEmptyBlock(pos)) {
@@ -192,20 +193,21 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (owner == null) return;
 
-     BlockEntity existing = this.level().getBlockEntity(pos) ;
       CompoundTag saved = null;
          if (existing instanceof VeilBlockEntity be ) {
                
                 //state = be.getOriginal();
                 
-                be.destroy();
-                state = this.level().getBlockState(pos);
+                //be.destroy();
+                //state = this.level().getBlockState(pos);
+                return;
+
                 //this.level().removeBlockEntity(pos);
                 //this.level().destroyBlock(pos, false); test on veil, fix air
             } else if (existing instanceof VeilRodBlockEntity vrbe ) {
-                this.level().destroyBlock(pos, false);
-                state = this.level().getBlockState(pos);
-
+            //    this.level().destroyBlock(pos, false);
+            //    state = this.level().getBlockState(pos);
+                return;
             
             
             } else if (existing instanceof DomainBlockEntity be) {
@@ -291,7 +293,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity dmnbe) {
                 dmnbe.create(this.uuid, delay, state, saved);
-                
             }
         }
     
@@ -351,17 +352,29 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
                     if (distance > radius) continue;
-
+                    
                     BlockPos pos = center.offset(x, y, z);
-
+                    if (!this.level().isInWorldBounds(pos)) continue;
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2 + 1;
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+                    
                     if (instant) {
-                        this.createBlock(radius - delay, pos, radius, distance);
+                        BlockEntity existing = this.level().getBlockEntity(pos) ;
+                         if (existing instanceof VeilBlockEntity be && !this.checkVeil(pos, owner)) {
+                            this.discard();
+                            return;
+                        }
+                        this.createBlock(radius - delay, pos, radius, distance, existing);
                     } else {
-                        cap.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
+                        cap.delayTickEvent(() -> {
+                            BlockEntity existing = this.level().getBlockEntity(pos);
+                            if (existing instanceof VeilBlockEntity be && !this.checkVeil(pos, owner)) {
+                                this.discard();
+                                return;
+                            }
+                            this.createBlock(radius - delay, pos, radius, distance, existing);
+                        }, delay);
                     }
                 }
             }
@@ -536,8 +549,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (id != null && id.equals(this.getUUID())) {
                 domainBe.destroy();
             }
-        } else if (be instanceof VeilBlockEntity veilBe) {
-            veilBe.destroy();
             
         } else {
             //serverLevel.destroyBlock(pos, false); 

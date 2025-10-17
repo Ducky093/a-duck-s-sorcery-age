@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
@@ -63,6 +66,30 @@ public abstract class DomainExpansionEntity extends Entity {
             this.scale = cap.getDomainSize();
     }
 
+     public boolean checkVeil(BlockPos pos, LivingEntity domainOwner) {
+            BlockEntity be = this.level().getBlockEntity(pos);
+            if (!(be instanceof VeilBlockEntity veilBe)) return false;
+
+            BlockPos parentPos = veilBe.getParent();
+            if (parentPos == null) return false;
+
+            BlockEntity parentBE = this.level().getBlockEntity(parentPos);
+            if (!(parentBE instanceof VeilRodBlockEntity rodBE)) return false;
+          
+
+            ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            
+
+            if (domainCap == null) return false;
+
+  
+            if (domainCap.getExperience() >= rodBE.getExperience() ) {
+                this.level().destroyBlock(rodBE.getBlockPos(), true);
+                return true;
+            }
+            return false;
+    }
+    
     @Override
     public boolean ignoreExplosion() {
         return true;

@@ -31,17 +31,19 @@ public class VeilHandler {
     if (rods == null) return false;
 
     for (VeilRodBlockEntity rod : rods) {
-        if (!rod.isValid() || rod.getBlockPos().equals(center)) continue;
-
         BlockPos otherPos = rod.getBlockPos();
-        int otherRadius = rod.getSize();
-        double distSqr = center.distSqr(otherPos);
+        if (!rod.isValid()) continue;
+        if (otherPos.equals(center)) continue;
 
-        double combined = radius + otherRadius;
-        if (distSqr <= combined * combined) {
+        int otherRadius = rod.getSize();
+        double dist = Math.sqrt(center.distSqr(otherPos));
+
+        // Check if borders intersect
+        if (dist <= radius + otherRadius && dist >= Math.abs(radius - otherRadius)) {
             return true;
         }
     }
+
     return false;
 }
 

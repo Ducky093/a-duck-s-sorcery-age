@@ -30,6 +30,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
@@ -185,7 +187,10 @@ public void run(LivingEntity owner) {
         glowingEntities.clear();
     //}
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ownerCap.setExperience(0);
+      
+        if (ConfigHolder.SERVER.MBAEXPReset.get()) {
+            ownerCap.setExperience(0);
+        }
         int color = FastColor.ARGB32.color(255, Math.round(this.r), Math.round(this.g), Math.round(this.b));
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
         cap.setCursedEnergyColor(color);

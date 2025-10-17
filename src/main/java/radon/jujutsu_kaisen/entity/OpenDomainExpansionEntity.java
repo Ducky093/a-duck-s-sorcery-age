@@ -10,12 +10,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -57,7 +59,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isAffected(BlockPos pos) {
-        if (VeilHandler.isProtected(this.level(), pos)) return false;
+        if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity veilBe && this.checkVeil(pos, this.getOwner())) return false;
+        if ( VeilHandler.isProtected(this.level(), pos)) return false;
 
         Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), pos);
 

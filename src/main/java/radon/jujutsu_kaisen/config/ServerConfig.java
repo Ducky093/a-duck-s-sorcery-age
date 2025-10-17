@@ -29,6 +29,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue realisticCurses;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
+    public final ForgeConfigSpec.BooleanValue MBAEXPReset;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -114,6 +115,9 @@ public class ServerConfig {
                 .define("playerBodySteal", false);
         this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
                 .define("bodyStealEXPReset", true);
+        builder.pop();
+        this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
+                .define("MBAEXPReset", true);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");

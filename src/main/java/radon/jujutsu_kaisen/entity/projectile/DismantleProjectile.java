@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
@@ -237,6 +238,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             for (int x = 0; x < length; x++) {
                 BlockPos current = BlockPos.containing(start.add(end.subtract(start).scale((1.0D / length) * x).add(forward.scale(z))));
 
+              
                 AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
                 for (Entity entity : this.level().getEntities(this, bounds)) {
@@ -247,7 +249,12 @@ public class DismantleProjectile extends JujutsuProjectile {
                 if (!this.canHurt) continue;
 
                 BlockState state = this.level().getBlockState(current);
-
+  
+                if (state.getBlock() instanceof VeilBlock) {
+                    this.discard();
+                    this.destroyed += 15;
+                    return hits;
+                }
                 if (HelperMethods.isDestroyable(this.level(), owner, current)) {
                     boolean destroyed;
 

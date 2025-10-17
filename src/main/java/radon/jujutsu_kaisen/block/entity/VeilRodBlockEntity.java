@@ -204,6 +204,10 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.experience = experience;
         this.setChanged();
     }
+    
+    public float getExperience() {
+        return this.experience;
+    }
 
     public void setOwner(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
@@ -219,13 +223,25 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
     }
 
-        @Override
+    //     @Override
+    // public void onLoad() {
+    //     super.onLoad();
+    //     if (!this.level.isClientSide) {
+    //         if (this.level != null) {
+    //             VeilHandler.addVeil(this);
+    //         }
+    //     }
+    // }
+
+    @Override
     public void onLoad() {
         super.onLoad();
-        if (!this.level.isClientSide) {
-            if (this.level != null) {
-                VeilHandler.addVeil(this);
-            }
+        if (!this.level.isClientSide && this.level instanceof ServerLevel serverLevel) {
+            serverLevel.getServer().execute(() -> {
+                if (!this.isRemoved() && this.ownerUUID != null) {
+                    VeilHandler.addVeil(this);
+                }
+            });
         }
     }
 
