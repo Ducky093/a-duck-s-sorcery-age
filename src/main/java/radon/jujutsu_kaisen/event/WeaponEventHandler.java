@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
@@ -90,7 +91,7 @@ public class WeaponEventHandler {
                     attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
                 }
 
-                if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()) && (!ConfigHolder.SERVER.hrRequiredForISOH.get()  || JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) )  ) {
                    
                     /* 
                     if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

@@ -1371,7 +1371,7 @@ public float getMaxEnergy() {
             stolen.remove(technique);
         }
         stolen.add(technique);
-        if (stolen.size() > 2) { 
+        if (stolen.size() > ConfigHolder.SERVER.maximumStolenTechniques.get()) { 
             CursedTechnique first = stolen.iterator().next(); 
             if (this.owner.level().isClientSide()) { 
                 PacketHandler.sendToServer(new UnstealAbilityC2SPacket(first));

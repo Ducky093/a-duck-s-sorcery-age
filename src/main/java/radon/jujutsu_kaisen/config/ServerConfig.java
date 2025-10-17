@@ -30,6 +30,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
+    public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -64,6 +65,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue rct3Cost;
     public final ForgeConfigSpec.IntValue outputRCTCost;
     public final ForgeConfigSpec.IntValue maximumCopiedTechniques;
+    public final ForgeConfigSpec.IntValue maximumStolenTechniques;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
 
     public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
@@ -118,6 +120,9 @@ public class ServerConfig {
         builder.pop();
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
                 .define("MBAEXPReset", true);
+        builder.pop();
+        this.hrRequiredForISOH = builder.comment("Whether Heavenly Restriction is required to use the Inverted Spear of Heaven")
+                .define("hrRequiredForISOH", false);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
@@ -193,6 +198,8 @@ public class ServerConfig {
                 .defineInRange("outputRCTCost", 300, 1, 10000);
         this.maximumCopiedTechniques = builder.comment("The amount of techniques mimicry can copy")
                 .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
+        this.maximumStolenTechniques = builder.comment("The amount of techniques that can be stolen")
+                .defineInRange("maximumStolenTechniques", 2, 1, 10000);
         this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
                 .defineList("unlockableTechniques", () -> List.of(
                                 CursedTechnique.CURSE_MANIPULATION.name(),
