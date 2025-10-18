@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -12,6 +14,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.WoodShieldEntity;
 
@@ -82,9 +85,9 @@ public class WoodShield extends Summon<WoodShieldEntity> {
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             WoodShieldEntity shield = cap.getSummonByClass(WoodShieldEntity.class);
-
-            if (shield != null) {
-                shield.hurt(event.getSource(), event.getAmount());
+            DamageSource source = event.getSource();
+            if (shield != null &&  (!source.is(JJKDamageSources.SOUL) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ) {
+                shield.hurt(source, event.getAmount());
                 event.setCanceled(true);
             }
         }

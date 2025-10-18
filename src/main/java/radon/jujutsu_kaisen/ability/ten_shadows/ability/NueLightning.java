@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +23,8 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.JetBlackShadowSwordItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -54,6 +57,9 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof JetBlackShadowSwordItem) {
+            return 10.0F;
+        }
         return 15.0F;
     }
 

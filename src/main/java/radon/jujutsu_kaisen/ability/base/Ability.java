@@ -258,7 +258,7 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+        if (!(owner instanceof Player player && (player.getAbilities().instabuild  || ConfigHolder.SERVER.turboMode.get() ) )) {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
             }

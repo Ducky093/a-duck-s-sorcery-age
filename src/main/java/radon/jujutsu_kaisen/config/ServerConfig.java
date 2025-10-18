@@ -37,6 +37,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
     public final ForgeConfigSpec.BooleanValue destruction;
+    public final ForgeConfigSpec.BooleanValue turboMode;
     //public final ForgeConfigSpec.BooleanValue entitySlicing;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
@@ -100,7 +101,7 @@ public class ServerConfig {
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
                         .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
         this.pointMultiplier = builder.comment("Scale of ability points you gain")
-                        .defineInRange("pointMultiplier", 0.1F, 0.0F, 100.0F);
+                        .defineInRange("pointMultiplier", 0.8F, 0.0F, 100.0F);
         this.pointPenalty = builder.comment("Scale of points lost on death")
                         .defineInRange("pointMultiplier", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
@@ -135,6 +136,8 @@ public class ServerConfig {
                 .define("uniqueTraits", true);
         this.destruction = builder.comment("When enabled abilities break blocks")
                 .define("destruction", true);
+        this.turboMode = builder.comment("When enabled abilities have no cooldowns for players")
+                .define("turboMode", false);
         //this.entitySlicing = builder.comment("When enabled entities are sliced by Dismantle")
         //        .define("entitySlicing", true);
         builder.pop();

@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.item.JetBlackShadowSwordItem;
+import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -97,6 +99,9 @@ public class ShadowTravel extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
+         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof JetBlackShadowSwordItem) {
+            return 20.0F;
+         }
         return 40.0F;
     }
 
