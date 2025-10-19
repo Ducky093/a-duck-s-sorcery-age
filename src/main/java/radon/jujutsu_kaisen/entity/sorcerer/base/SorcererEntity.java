@@ -16,12 +16,18 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
@@ -80,7 +86,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.75D, true));
         }
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
@@ -144,6 +150,16 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
     public void aiStep() {
         this.updateSwingTime();
 
@@ -156,6 +172,15 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         LivingEntity passenger = this.getControllingPassenger();
 
+        if (this.getTarget() != null) {
+            this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.0f);
+            ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (HelperMethods.RANDOM.nextInt(7) == 0 || cap.hasBurnout()) {
+                this.moveControl.setWantedPosition(this.getTarget().getX() * -2.0F, this.getTarget().getY() * -2.0F, this.getTarget().getZ() * -2.0F, 2.0f);
+            }
+        }
+
         if (passenger != null) {
             this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
         } else {
@@ -165,7 +190,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 96.0D);
     }

@@ -5,6 +5,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.VeilHandler;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -22,6 +28,22 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.UNLIMITED_VOID.get());
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (domain.getOwner() == target) {
+                return true;
+            }
+            else if (domain.getOwner() == owner) {
+                return HelperMethods.RANDOM.nextInt(500000000) == 0;
+            }
+        }
+
+
+        return target != null && owner.distanceTo(target) <= 30.0D && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

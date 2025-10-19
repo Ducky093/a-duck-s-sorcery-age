@@ -258,9 +258,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     @Override
     public void tick() {
 
-        //if (this.getTime() == 0) {
-            //this.playSound(JJKSounds.HOLLOW_PURPLE.get(), 3.0F, 1.0F);
-        //}
+        if (this.getTime() == 0) {
+            this.playSound(JJKSounds.HOLLOW_PURPLE.get(), 3.0F, 1.0F);
+        }
 
         super.tick();
 

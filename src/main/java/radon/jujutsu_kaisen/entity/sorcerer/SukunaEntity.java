@@ -59,10 +59,9 @@ public class SukunaEntity extends SorcererEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 256.0D)
-                .add(Attributes.ARMOR, 60.0D);
+                .add(Attributes.ARMOR, 40.0D);
     }
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);

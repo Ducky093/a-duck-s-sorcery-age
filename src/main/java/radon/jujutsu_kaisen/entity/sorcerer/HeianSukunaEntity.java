@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -55,13 +56,20 @@ public class HeianSukunaEntity extends SukunaEntity {
         this.entityData.set(DATA_BARRAGE, barrage);
     }
 
+    @Override
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 5.0F;
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return HeianSukunaEntity.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.FOLLOW_RANGE, 128.0D)
-                .add(Attributes.ARMOR, 80.0D);
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR, 40.0D);
     }
+
+    @Override
+    public float getStepHeight() { return 5.0F; }
 
     @Override
     protected void defineSynchedData() {
@@ -132,7 +140,7 @@ public class HeianSukunaEntity extends SukunaEntity {
      @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.HOLLOW_WICKER_BASKET.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
-                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.DASH.get());
+                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.DASH.get(), JJKAbilities.FIRE_ARROW.get());
     }
 
     @Override

@@ -21,12 +21,12 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target)) return false;
+        if (target == null) return false;
 
         if (JJKAbilities.isChanneling(owner, this)) {
-            return HelperMethods.RANDOM.nextInt(5) != 0;
+            return HelperMethods.RANDOM.nextInt(1) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(3) == 0;
+        return HelperMethods.RANDOM.nextInt(2) == 0;
     }
 
     @Override

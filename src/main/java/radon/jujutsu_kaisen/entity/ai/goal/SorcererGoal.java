@@ -113,7 +113,7 @@ public class SorcererGoal extends Goal {
 
             } else if (success) {
                 AbilityHandler.trigger(this.mob, ability);
-                if (ability != JJKAbilities.QUICKDASH.get() && ability != JJKAbilities.DASH.get() && ability != JJKAbilities.SLAM.get() && ability != JJKAbilities.PUNCH.get())  {
+               if (ability != JJKAbilities.QUICKDASH.get() && ability != JJKAbilities.DASH.get() && ability != JJKAbilities.SLAM.get() && ability != JJKAbilities.PUNCH.get())  {
                 return;
                 }
                 }
@@ -128,7 +128,7 @@ public class SorcererGoal extends Goal {
    @Override
    public boolean canUse() {
         long i = this.mob.level().getGameTime();
-        if (i - this.lastCanUseCheck > 8L) {
+        if (i - this.lastCanUseCheck > 25L) {
             this.lastCanUseCheck = i;
             return true;
         } else {

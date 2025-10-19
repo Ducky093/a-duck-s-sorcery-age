@@ -45,16 +45,18 @@ public class SatoruGojoEntity extends SorcererEntity {
 
      public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.ARMOR, 60.0D)
-                .add(Attributes.FOLLOW_RANGE, 128.0D);
+                .add(Attributes.ARMOR, 30.0D)
+                .add(Attributes.FOLLOW_RANGE, 140.0D);
     }
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.LIMITLESS;
     }
+
+    @Override
+    public float getStepHeight() { return 5.0F; }
 
     @Override
     public @NotNull List<Trait> getTraits() {

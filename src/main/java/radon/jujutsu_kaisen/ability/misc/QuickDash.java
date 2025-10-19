@@ -42,7 +42,7 @@ public class QuickDash extends Dash {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getTarget() != null && owner.hasLineOfSight(owner.getTarget()) && owner.distanceTo(owner.getTarget()) >= 6.0D;
+        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

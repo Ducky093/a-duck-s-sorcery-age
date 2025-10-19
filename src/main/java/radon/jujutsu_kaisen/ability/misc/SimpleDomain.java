@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -42,6 +43,14 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             if (!domain.hasSureHitEffect())  {
                  continue;
             }
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            CursedTechnique ct = cap.getTechnique();
+
+            if (ct.getDomain() != null) {
+                return false;
+            }
+
             return true;
         }
         return false;

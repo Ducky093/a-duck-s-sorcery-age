@@ -24,7 +24,7 @@ public class Heal extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getHealth() < owner.getMaxHealth();
+        return owner.getHealth() < (owner.getMaxHealth() * 0.65F);
     }
 
     @Override

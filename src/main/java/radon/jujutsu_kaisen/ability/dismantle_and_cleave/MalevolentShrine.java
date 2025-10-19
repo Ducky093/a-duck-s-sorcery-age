@@ -1,10 +1,15 @@
 package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
@@ -14,6 +19,21 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
     public static final int DELAY = 2 * 20;
     private static final int INTERVAL = 5;
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (domain.getOwner() == target) {
+                return true;
+            } else if (domain.getOwner() == owner) {
+                return HelperMethods.RANDOM.nextInt(500000000) == 0;
+            }
+
+        }
+
+        return target != null && owner.distanceTo(target) <= 30.0D && HelperMethods.RANDOM.nextInt(10) == 0;
+    }
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {

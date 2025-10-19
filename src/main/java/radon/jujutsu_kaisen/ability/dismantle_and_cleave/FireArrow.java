@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -17,8 +18,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 public class FireArrow extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;       
-        return owner.getHealth() / owner.getMaxHealth() < 0.9F && target.getHealth() / target.getMaxHealth() < 0.4F && owner.hasLineOfSight(target);
+        return target != null && HelperMethods.RANDOM.nextInt(4) == 0;
     }
 
     @Override
