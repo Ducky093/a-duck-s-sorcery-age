@@ -209,7 +209,7 @@ public class ServerConfig {
                 .defineList("unlockableTechniques", () -> List.of(
                                 CursedTechnique.CURSE_MANIPULATION.name(),
                                 CursedTechnique.LIMITLESS.name(),
-                                CursedTechnique.DISMANTLE_AND_CLEAVE.name(),
+                                CursedTechnique.SHRINE.name(),
                                 CursedTechnique.CURSED_SPEECH.name(),
                                 CursedTechnique.MIMICRY.name(),
                                 CursedTechnique.DISASTER_FLAMES.name(),

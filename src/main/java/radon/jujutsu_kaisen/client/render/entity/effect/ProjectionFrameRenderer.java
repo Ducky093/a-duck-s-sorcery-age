@@ -18,6 +18,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
@@ -44,77 +46,45 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
-        MixinData.isFakeRender = true;
-
         pPoseStack.pushPose();
         pPoseStack.scale(1.0F, 1.0F, 0.02F);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
-        float yRot = victim.getYRot();
-        float yRotO = victim.yRotO;
-
-        float yHeadRot = victim.yHeadRot;
-        float yHeadRotO = victim.yHeadRotO;
-
-        float yBodyRot = victim.yBodyRot;
-        float yBodyRotO = victim.yBodyRotO;
-
-        victim.setYRot(yaw);
-        victim.yRotO = yaw;
-
-        victim.yHeadRot = yaw;
-        victim.yHeadRotO = yaw;
-
-        victim.yBodyRot = yaw;
-        victim.yBodyRotO = yaw;
-
-        EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
-        EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
-        renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-
-        victim.yBodyRotO = yBodyRotO;
-        victim.yBodyRot = yBodyRot;
-
-        victim.yHeadRotO = yHeadRotO;
-        victim.yHeadRot = yHeadRot;
-
-        victim.yRotO = yRotO;
-        victim.setYRot(yRot);
-
-        MixinData.isFakeRender = false;
+        FakeEntityRenderer renderer = new FakeEntityRenderer(victim);
+        renderer.setFullRotation(yaw, 0.0F);
+        renderer.render(pPoseStack, pPartialTick);
 
         pPoseStack.popPose();
 
-        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
-        float scale = Math.max(victim.getBbWidth(), victim.getBbHeight() / 2.0F + 0.3F);
+        pPoseStack.translate(0.0D, victim.getBbHeight() / 2, 0.0D);
+        float scale = Math.max(victim.getBbWidth(), victim.getBbHeight() / 2 + 0.3F);
         pPoseStack.scale(scale, scale, 1.0F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
-        Matrix4f pose = pPoseStack.last().pose();
+        Matrix4f matrix4f = pPoseStack.last().pose();
 
-        consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
+        consumer.vertex(matrix4f, -SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -SIZE, 0.0F, SIZE)
+        consumer.vertex(matrix4f, -SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, SIZE)
+        consumer.vertex(matrix4f, SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, -SIZE)
+        consumer.vertex(matrix4f, SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

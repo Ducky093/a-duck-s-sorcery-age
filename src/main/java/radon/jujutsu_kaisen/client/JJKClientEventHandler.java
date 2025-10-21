@@ -476,6 +476,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), WorldSlashRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), FireArrowRenderer::new);
             event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);

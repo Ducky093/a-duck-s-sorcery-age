@@ -41,6 +41,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
@@ -231,6 +233,10 @@ public class JJKEventHandler {
             if (owner instanceof Player player) {
                 player.getFoodData().setFoodLevel(20);
             }
+
+            if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+            ITenShadowsData shadowCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            shadowCap.tick(owner);
         }
 
         @SubscribeEvent

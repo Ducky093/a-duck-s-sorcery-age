@@ -19,7 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.ability.shrine.MalevolentShrine;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;

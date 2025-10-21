@@ -15,7 +15,7 @@ public enum CursedTechnique {
             JJKAbilities.MAXIMUM_UZUMAKI.get(), JJKAbilities.MINI_UZUMAKI.get(), JJKAbilities.WORM_CURSE_GRAB.get(),JJKAbilities.FISH_SWARM.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE_STILL.get(),
             JJKAbilities.BLUE_MOTION.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get(), JJKAbilities.FLY.get()),
-    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_NET.get(), JJKAbilities.DISMANTLE_SKATING.get(), JJKAbilities.CLEAVE.get(),
+    SHRINE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_NET.get(), JJKAbilities.DISMANTLE_SKATING.get(), JJKAbilities.CLEAVE.get(),
             JJKAbilities.SPIDERWEB.get(), JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null,JJKAbilities.RETURN.get(),JJKAbilities.SHUT_IT.get(),JJKAbilities.BLINK.get(),JJKAbilities.BURN_UP.get() ,JJKAbilities.RUN_AWAY.get(), JJKAbilities.DONT_MOVE.get(), JJKAbilities.GET_CRUSHED.get(), JJKAbilities.BLAST_AWAY.get(), JJKAbilities.EXPLODE.get(), JJKAbilities.DIE.get()),
     MIMICRY(null, JJKAbilities.RIKA.get(), JJKAbilities.MIMICRY.get(), JJKAbilities.COMMAND_PURE_LOVE.get()),

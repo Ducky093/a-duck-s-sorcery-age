@@ -34,7 +34,6 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.body_swap.BodySteal;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
-import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.ratio.*;
@@ -42,7 +41,7 @@ import radon.jujutsu_kaisen.ability.ratio.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
+import radon.jujutsu_kaisen.ability.shrine.*;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
@@ -141,6 +140,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
+    public static RegistryObject<Ability> WORLD_SLASH = ABILITIES.register("world_slash", WorldSlash::new);
     public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static RegistryObject<Ability> DISMANTLE_SKATING = ABILITIES.register("dismantle_skating", DismantleSkating::new);
     public static RegistryObject<Ability> CLEAVE = ABILITIES.register("cleave", Cleave::new);

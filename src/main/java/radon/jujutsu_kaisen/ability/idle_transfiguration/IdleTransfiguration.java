@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
+import radon.jujutsu_kaisen.ability.shrine.Cleave;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;

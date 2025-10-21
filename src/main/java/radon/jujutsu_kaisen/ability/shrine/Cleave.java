@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
+package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;

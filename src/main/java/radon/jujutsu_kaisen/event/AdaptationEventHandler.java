@@ -92,6 +92,7 @@ public class AdaptationEventHandler {
                     event.setAmount(event.getAmount() * process);
                     }
                     case COUNTER -> {
+                           event.setAmount(event.getAmount() * process);
                         if (HelperMethods.RANDOM.nextInt(Math.max(2, Math.round(20 * process))) == 0) {
                         Entity attacker = source.getEntity();
 
@@ -100,8 +101,10 @@ public class AdaptationEventHandler {
                             victim.swing(InteractionHand.MAIN_HAND);
 
                             victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-
-                            event.setCanceled(true);
+                            if (victim.doHurtTarget(attacker)) {
+                                victim.invulnerableTime = 0;
+                            }
+                            //event.setCanceled(true);
                             /* 
                              * 
                              * if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
@@ -166,7 +169,8 @@ public class AdaptationEventHandler {
                         if (ability instanceof IOpenDomain) continue;
                         if (!shadowCap.isAdaptedTo(ability)) continue;
                          victimCap.disrupt(ability, DISRUPTION_DURATION * shadowCap.getAdaptation(ability));
-                        //victimCap.toggle(ability);
+                        victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.BLAZE_SHOOT, SoundSource.MASTER, 1.0F, 1.0F);
+                         //victimCap.toggle(ability);
                     }
 
                     Ability channeled = victimCap.getChanneled();

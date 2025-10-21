@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
 import radon.jujutsu_kaisen.client.JJKRenderers;
 import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -35,7 +37,7 @@ public class EntityRenderDispatcherMixin<E extends Entity> {
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     public void shouldRender(E pEntity, Frustum pFrustum, double pCamX, double pCamY, double pCamZ, CallbackInfoReturnable<Boolean> cir) {
-        if (!MixinData.isFakeRender) {
+        if (!FakeEntityRenderer.isFakeRender) {
             if (pEntity instanceof LivingEntity living && living.hasEffect(JJKEffects.INVISIBILITY.get())) {
                 cir.setReturnValue(false);
                 return;

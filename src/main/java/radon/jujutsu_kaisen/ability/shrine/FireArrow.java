@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
+package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,7 +62,7 @@ public class FireArrow extends Ability {
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return (technique == CursedTechnique.DISMANTLE_AND_CLEAVE || cap.hasStolen(CursedTechnique.DISMANTLE_AND_CLEAVE )  ) && super.isDisplayed(owner);
+        return (technique == CursedTechnique.SHRINE || cap.hasStolen(CursedTechnique.SHRINE )  ) && super.isDisplayed(owner);
     }
 
     @Override

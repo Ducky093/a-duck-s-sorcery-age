@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -168,6 +169,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
 
        if (!living.isDeadOrDying() ) return;
+        
+        
         //  if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
          Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
@@ -191,8 +194,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), distance),
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
-
             living.setInvisible(true);
+           
                     }
     }
 
