@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AdaptationEventHandler {
+      private static final int DISRUPTION_DURATION = 20;
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class AdaptationEventHandlerForgeEvents {
         @SubscribeEvent
@@ -125,7 +126,7 @@ public class AdaptationEventHandler {
         }
         }
 
-        @SubscribeEvent(receiveCanceled = true)
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -164,7 +165,16 @@ public class AdaptationEventHandler {
                     for (Ability ability : toggled) {
                         if (ability instanceof IOpenDomain) continue;
                         if (!shadowCap.isAdaptedTo(ability)) continue;
-                        victimCap.toggle(ability);
+                         victimCap.disrupt(ability, DISRUPTION_DURATION * shadowCap.getAdaptation(ability));
+                        //victimCap.toggle(ability);
+                    }
+
+                    Ability channeled = victimCap.getChanneled();
+
+                    if (channeled != null) {
+                        if (shadowCap.isAdaptedTo(channeled)) {
+                            victimCap.disrupt(channeled, DISRUPTION_DURATION * shadowCap.getAdaptation(channeled));
+                        }
                     }
 
                     if (victim instanceof ServerPlayer player) {

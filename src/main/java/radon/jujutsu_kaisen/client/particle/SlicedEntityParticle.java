@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -123,10 +124,10 @@ public class SlicedEntityParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-
+        
     }
 
-    public void actuallyRender(float partialTicks) {
+    public void actuallyRender(PoseStack poseStack, float partialTicks) {
         if (this.entity == null || this.renderer == null) return;
 
         if (this.parts.isEmpty()) {
@@ -169,7 +170,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
 
         int packedLight = dispatcher.getPackedLightCoords(this.entity, partialTicks);
 
-        for (RigidBody part : this.parts) part.render(packedLight, partialTicks);
+        for (RigidBody part : this.parts) part.render(poseStack, packedLight, partialTicks);
     }
 
     @Override

@@ -181,6 +181,8 @@ public interface ISorcererData {
 
     int getRemainingCooldown(Ability ability);
 
+    void disrupt(Ability ability, int duration);
+
     boolean isCooldownDone(Ability ability);
 
     void addDuration(Ability ability);

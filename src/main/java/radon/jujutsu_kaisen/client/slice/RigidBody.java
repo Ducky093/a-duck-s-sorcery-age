@@ -385,10 +385,10 @@ public class RigidBody {
         this.bounds = new AABB(tMinX, tMinY, tMinZ, tMaxX, tMaxY, tMaxZ);
     }
 
-    public void render(int packedLight, float partialTicks) {
-        Minecraft mc = Minecraft.getInstance();
+        public void render(PoseStack poseStack, int packedLight, float partialTicks) {
+        poseStack.pushPose();
 
-        PoseStack poseStack = new PoseStack();
+        Minecraft mc = Minecraft.getInstance();
 
         double d0 = Mth.lerp(partialTicks, this.prevPosition.x, this.position.x);
         double d1 = Mth.lerp(partialTicks, this.prevPosition.y, this.position.y);
@@ -417,12 +417,12 @@ public class RigidBody {
 
         for (RigidBody.CutModelData data : this.chunk) {
             if (data.cap == null) continue;
-
             RenderType type = RenderType.entityCutoutNoCull(BLOOD);
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
             data.cap.tessellate(builder, matrix4f, packedLight);
             type.end(builder, RenderSystem.getVertexSorting());
         }
+        poseStack.popPose();
     }
 
     public static class CutModelData {

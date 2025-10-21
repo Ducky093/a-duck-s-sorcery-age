@@ -38,7 +38,7 @@ public class SlicedEntityRenderer {
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
             for (SlicedEntityParticle sliced : SlicedEntityParticle.getAll()) {
-                sliced.actuallyRender(event.getPartialTick());
+                sliced.actuallyRender(event.getPoseStack(), event.getPartialTick());
             }
     }
 }

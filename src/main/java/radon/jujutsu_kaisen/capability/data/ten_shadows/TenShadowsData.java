@@ -5,6 +5,8 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -48,36 +50,39 @@ public class TenShadowsData implements ITenShadowsData {
         if (!cap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
         Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
-
+  
         while (iter.hasNext()) {
             Map.Entry<Adaptation, Integer> entry = iter.next();
 
             int timer = entry.getValue();
+
             int newtimer = timer+1;
+            entry.setValue(newtimer);      
            
-             if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.2 && timer < JJKConstants.REQUIRED_ADAPTATION / 0.2) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && timer < JJKConstants.REQUIRED_ADAPTATION / 0.4) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && timer < JJKConstants.REQUIRED_ADAPTATION / 0.6) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && timer < JJKConstants.REQUIRED_ADAPTATION / 0.8) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            }
+            //  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.2 && timer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && timer < JJKConstants.REQUIRED_ADAPTATION * 0.4) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && timer < JJKConstants.REQUIRED_ADAPTATION * 0.6) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // } else  if (newtimer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && timer < JJKConstants.REQUIRED_ADAPTATION * 0.8) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // }
             if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
                 iter.remove();
+                  this.owner.level().playSound(null, this.owner.getX(), this.owner.getY(), this.owner.getZ(), SoundEvents.ANVIL_PLACE, SoundSource.MASTER, 3.0F, 1.0F);
 
                 //this.adapted.add(entry.getKey());
 
@@ -105,9 +110,9 @@ public class TenShadowsData implements ITenShadowsData {
             this.owner = owner;
         }
 
-        if (!this.owner.level().isClientSide) {
+      //  if (!this.owner.level().isClientSide) {
             this.updateAdaptation();
-        }
+       // }
     }
 
     @Override
@@ -336,27 +341,27 @@ public class TenShadowsData implements ITenShadowsData {
             int oldtimer = timer;
                timer += JJKConstants.ADAPTATION_STEP;
              ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-             if (timer >= JJKConstants.REQUIRED_ADAPTATION  *0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.4) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.6) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.8) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            }
+            //  if (timer >= JJKConstants.REQUIRED_ADAPTATION  *0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.4) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.6) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.8) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // }
          
             this.adapting.put(adaptation, timer);
         }
@@ -378,27 +383,27 @@ public class TenShadowsData implements ITenShadowsData {
           
               ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                    
-              if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.4) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.6) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.8) {
-                WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
-                if (wheel != null) {
-                    wheel.spin();
-                }  
-            }
+            //   if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.4 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.4) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.6 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.6) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // } else  if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.8 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.8) {
+            //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
+            //     if (wheel != null) {
+            //         wheel.spin();
+            //     }  
+            // }
       
             this.adapting.put(adaptation, timer);
         }
