@@ -31,23 +31,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SlicedEntityRenderer {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
-        PoseStack poseStack = event.getPoseStack();
-Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-double camX = camera.getPosition().x;
-double camY = camera.getPosition().y;
-double camZ = camera.getPosition().z;
-       for (SlicedEntityParticle sliced : SlicedEntityParticle.getAll()) {
-    poseStack.pushPose();
-    poseStack.translate(-camX, -camY, -camZ); // world → camera space
-    sliced.actuallyRender(event.getPartialTick());
-    poseStack.popPose();
-}
-        
+            for (SlicedEntityParticle sliced : SlicedEntityParticle.getAll()) {
+                sliced.actuallyRender(event.getPartialTick());
+            }
     }
 }

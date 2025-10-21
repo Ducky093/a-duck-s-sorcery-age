@@ -27,9 +27,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.ability.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -37,7 +43,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
 
-public class Infinity extends Ability implements Ability.IToggled {
+public class Infinity extends Ability implements Ability.IToggled, IAdditionalAdaptation {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -71,6 +77,11 @@ public class Infinity extends Ability implements Ability.IToggled {
     @Override
     public void onEnabled(LivingEntity owner) {
 
+    }
+    
+    @Override
+    public int getAdditional() {
+        return 0;
     }
 
     @Override
@@ -287,6 +298,14 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
                 if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                     return;
+                } 
+            }
+            if (source.getEntity() instanceof LivingEntity living ) {
+                if (living.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+                ITenShadowsData cap = living.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                    if (cap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                        return;
+                    }
                 }
             }
 

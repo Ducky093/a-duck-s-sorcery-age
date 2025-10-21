@@ -22,17 +22,15 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
             if (domain.getOwner() == target) {
                 return true;
             } else if (domain.getOwner() == owner) {
-                return HelperMethods.RANDOM.nextInt(500000000) == 0;
+                return target != null && owner.distanceTo(target) <= 128.0D;
             }
 
         }
-
-        return target != null && owner.distanceTo(target) <= 30.0D && HelperMethods.RANDOM.nextInt(10) == 0;
+        return target != null && (owner.distanceTo(target) <= 30.0D) && owner.getHealth() / owner.getMaxHealth() < 0.9F;
     }
 
     @Override

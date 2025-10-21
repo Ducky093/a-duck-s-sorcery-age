@@ -165,6 +165,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), this.getDamage() * this.getPower());
+       // if (!living.isDeadOrDying() ) return;
         //  if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
         //  Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 

@@ -86,7 +86,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     }
     @Override
     public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
+        return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
     }
 
 
@@ -94,10 +94,10 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     // public @Nullable ParticleOptions getEnvironmentParticle() {
     //     return ParticleTypes.SQUID_INK;
     // }
-    // @Override
-    // public List<Block> getDecorationBlocks() {
-    //     return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
-    // }
+    @Override
+    public List<Block> getDecorationBlocks() {
+        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
+    }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ChimeraShadowGardenForgeEvents {

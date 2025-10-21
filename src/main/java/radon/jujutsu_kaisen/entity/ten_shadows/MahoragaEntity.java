@@ -5,12 +5,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import net.minecraft.world.level.Level;
@@ -328,6 +324,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public void tick() {
         super.tick();
+         //if (this.healing) {
         if (this.getHealth() != this.getMaxHealth()) {
             this.heal(1.0F / 20);
         }

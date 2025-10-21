@@ -38,9 +38,9 @@ public interface ITenShadowsData {
 
     void revive(boolean full);
 
-    Set<Adaptation> getAdapted();
+    Map<Adaptation, Integer> getAdapted();
 
-    void addAdapted(Set<Adaptation> adaptations);
+    void addAdapted(Map<Adaptation, Integer> adaptations);
 
     Map<Adaptation, Integer> getAdapting();
 
@@ -62,7 +62,9 @@ public interface ITenShadowsData {
 
     Adaptation.Type getAdaptationType(Adaptation adaptation);
 
-    Map<Adaptation.Type, Float> getAdaptationTypes();
+    int getAdaptation(Ability ability);
+
+    //Map<Adaptation.Type, Float> getAdaptationTypes();
 
     boolean isAdaptedTo(DamageSource source);
 

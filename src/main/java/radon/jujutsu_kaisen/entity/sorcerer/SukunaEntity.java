@@ -97,8 +97,11 @@ public class SukunaEntity extends SorcererEntity {
  @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-
-        if (this.getTarget() != null) return;
+        if (this.getTarget() != null && (this.getTarget() instanceof TenShadowsSummon summon ) && this.getTarget().isDeadOrDying()) {
+            this.setTarget(null);
+        }
+        else if (this.getTarget() != null && !(this.getTarget() instanceof TenShadowsSummon summon ) ) return;
+        
 
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -111,9 +114,19 @@ public class SukunaEntity extends SorcererEntity {
 
         //if (cap.getSummonByClass(TenShadowsSummon.class) != null) return;
 
-         for (Entity entity : cap.getSummons()) {
-                if (entity instanceof TenShadowsSummon) return;
-        }
+        //  for (Entity entity : cap.getSummons()) {
+
+        //         if (entity instanceof TenShadowsSummon summon ) return;
+        // }
+        // this.setTarget(null);
+          for (Entity entity : cap.getSummons()) {
+
+                 if (entity instanceof TenShadowsSummon summon && !summon.isDeadOrDying() && !summon.isTame() ) {
+                    this.setTarget(summon);
+                    return;
+                 } 
+         }
+        this.setTarget(null);
         if (this.random.nextInt(TAMING_CHANCE) == 0) {
             
 
@@ -121,17 +134,20 @@ public class SukunaEntity extends SorcererEntity {
                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
                 AbilityHandler.trigger(this, ability);
-                TenShadowsSummon shadow = cap.getSummonByClass(TenShadowsSummon.class);
-                this.setTarget(shadow);
-                return;
+                TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
+                if (newshadow != null) {
+                    this.setTarget(newshadow);
+                    return;
+                }
             }
             Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
-
             if (!mahoraga.isTamed(this)) {
                 AbilityHandler.trigger(this, mahoraga);
-                TenShadowsSummon shadow = cap.getSummonByClass(TenShadowsSummon.class);
-                this.setTarget(shadow);
-                return;
+                TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
+                if (newshadow != null) {
+                    this.setTarget(newshadow);
+                    return;
+                }
             }
         }
     }
@@ -208,7 +224,7 @@ public class SukunaEntity extends SorcererEntity {
     @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
-                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.QUICKDASH.get() );
+                JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.QUICKDASH.get(), JJKAbilities.FIRE_ARROW.get() );
     }
 
     @Override

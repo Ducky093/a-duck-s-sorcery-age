@@ -25,8 +25,8 @@ public class Adaptation {
     public Adaptation(CompoundTag nbt) {
         this.key = new ResourceLocation(nbt.getString("name"));
 
-        if (nbt.contains("ability")) {
-            this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("ability")));
+        if (nbt.contains("technique")) {
+            this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("technique")));
         }
     }
 
@@ -41,13 +41,14 @@ public class Adaptation {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putString("key", this.key.toString());
+        nbt.putString("ability", this.key.toString());
 
         if (this.ability != null) {
-            nbt.putString("ability", JJKAbilities.getKey(this.ability).toString());
+            nbt.putString("technique", JJKAbilities.getKey(this.ability).toString());
         }
         return nbt;
     }
+
 
     @Override
     public boolean equals(Object obj) {

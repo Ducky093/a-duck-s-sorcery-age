@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -13,12 +14,15 @@ import net.minecraft.world.phys.Vec2;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class FireArrow extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && HelperMethods.RANDOM.nextInt(4) == 0;
+        if (target == null) return false;       
+        return owner.getHealth() / owner.getMaxHealth() < 0.9F && target.getHealth() / target.getMaxHealth() < 0.5F && owner.hasLineOfSight(target);
+        //return target != null && HelperMethods.RANDOM.nextInt(4) == 0;
     }
 
     @Override

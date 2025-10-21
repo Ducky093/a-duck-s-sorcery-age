@@ -31,6 +31,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
     public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
+    public final ForgeConfigSpec.BooleanValue playerRequiredForRCT;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -122,6 +123,8 @@ public class ServerConfig {
                 .define("MBAEXPReset", true);
         this.hrRequiredForISOH = builder.comment("Whether Heavenly Restriction is required to use the Inverted Spear of Heaven")
                 .define("hrRequiredForISOH", false);
+        this.playerRequiredForRCT = builder.comment("Whether Players must kill you in order for you to unlock RCT")
+                .define("playerRequiredForRCT", false);
         builder.pop();
     
 

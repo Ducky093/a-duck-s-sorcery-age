@@ -37,7 +37,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getHealth() < (owner.getMaxHealth() * 0.5F);
+        return (owner.getHealth() / owner.getMaxHealth()) <= 0.6F;
     }
 
     @Override

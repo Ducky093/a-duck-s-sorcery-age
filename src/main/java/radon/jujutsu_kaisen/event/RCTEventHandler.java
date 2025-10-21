@@ -5,6 +5,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -30,10 +31,12 @@ public class RCTEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
 
-            if (!(source.getEntity() instanceof LivingEntity)) return;
+            if (!(source.getEntity() instanceof LivingEntity) ) return;
 
             LivingEntity victim = event.getEntity();
-
+            if (!(source.getEntity() instanceof Player player) && ConfigHolder.SERVER.playerRequiredForRCT.get() ) {
+                return;
+            }
             if (victim.level().isClientSide) return;
 
             if (victim.getHealth() - event.getAmount() > 0.0F) return;

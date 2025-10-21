@@ -249,19 +249,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
              
             if (distance >= radius - 1) {
-                block = JJKBlocks.DOMAIN.get(); // outer shell
-            } else if (distance >= radius - 2) {
-                block = blocks.get(this.random.nextInt(blocks.size())); // inner shell layer
-            } else if (pos.getY() <= center.getY() - 1) {
-                // below center: floor or fill
-                if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
-                    block = floor.get(this.random.nextInt(floor.size()));
-                } else if (!fill.isEmpty()) {
-                    block = fill.get(this.random.nextInt(fill.size()));
+                 block = JJKBlocks.DOMAIN.get();
+            } else {
+                if (distance >= radius - 2) {
+                    block = blocks.get(this.random.nextInt(blocks.size()));
+                } else if (pos.getY() < center.getY()) {
+                    block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
+                } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
+                    block = decoration.get(this.random.nextInt(decoration.size()));
+                // } else {
+                //     block = JJKBlocks.DOMAIN_AIR.get();
                 }
-            } else if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos) && pos.getY() == center.getY()) {
-                block = decoration.get(this.random.nextInt(decoration.size()));
-            }
+                }
             
              if (existing instanceof DomainBlockEntity be) {
                  UUID identifier = be.getIdentifier();
