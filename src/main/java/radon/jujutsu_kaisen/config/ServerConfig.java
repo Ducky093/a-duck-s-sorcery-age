@@ -142,8 +142,8 @@ public class ServerConfig {
                 .define("destruction", true);
         this.turboMode = builder.comment("When enabled abilities have no cooldowns for players")
                 .define("turboMode", false);
-        this.entitySlicing = builder.comment("When enabled entities are sliced by Dismantle")
-                .define("entitySlicing", true);
+        this.entitySlicing = builder.comment("When enabled entities are sliced by Dismantle (may cause shader/mod incompat)")
+                .define("entitySlicing", false);
         this.chantRequiredForWCS = builder.comment("When enabled WCS must be chanted to 150%")
                 .define("chantRequiredForWCS", true);
         builder.pop();

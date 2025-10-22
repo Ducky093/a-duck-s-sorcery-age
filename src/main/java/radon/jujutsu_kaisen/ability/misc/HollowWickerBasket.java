@@ -41,8 +41,8 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
         super(HollowWickerBasketEntity.class);
     }
 
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        @Override
+        public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
             if (domain.getOwner() == owner) {
                 return false;
@@ -50,6 +50,14 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
             if (!domain.hasSureHitEffect())  {
                  continue;
             }
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            CursedTechnique ct = cap.getTechnique();
+
+            if (ct.getDomain() != null && !cap.hasBurnout() ) {
+                return false;
+            }
+
             return true;
         }
         return false;

@@ -183,7 +183,11 @@ public class JJKEventHandler {
                 newCap.resetExtraEnergy();
                 newCap.resetSpeedStacks();
                 newCap.resetDash();
-
+               
+                if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+                    ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                    shadowCap.resetAdaptations();
+                }
                 if (!player.level().isClientSide) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
                 }

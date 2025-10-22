@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -47,7 +48,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             CursedTechnique ct = cap.getTechnique();
 
-            if (ct.getDomain() != null) {
+            if (ct.getDomain() != null && !cap.hasBurnout() ) {
                 return false;
             }
 
@@ -55,6 +56,19 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
         }
         return false;
     }
+
+     @Override
+    public boolean canUnlock(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS ) && super.canUnlock(owner);
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS ) && super.isDisplayed(owner);
+    }
+
 
     @Override
     public boolean isTechnique() {

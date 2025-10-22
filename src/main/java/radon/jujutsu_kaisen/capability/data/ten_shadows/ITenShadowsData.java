@@ -64,6 +64,8 @@ public interface ITenShadowsData {
 
     int getAdaptation(Ability ability);
 
+    void resetAdaptations();
+
     //Map<Adaptation.Type, Float> getAdaptationTypes();
 
     boolean isAdaptedTo(DamageSource source);

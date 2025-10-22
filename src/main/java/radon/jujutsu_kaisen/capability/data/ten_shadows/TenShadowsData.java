@@ -46,6 +46,11 @@ public class TenShadowsData implements ITenShadowsData {
         this.shadowInventory = new ArrayList<>();
     }
 
+    @Override
+    public void resetAdaptations() {
+        this.adapted.clear();
+    }
+
     private void updateAdaptation() {
         ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
