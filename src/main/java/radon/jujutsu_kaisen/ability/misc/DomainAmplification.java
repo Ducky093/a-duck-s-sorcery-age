@@ -44,7 +44,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         ISorcererData ownercap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
          if (opponentDomainUp && ownercap.hasToggled(this)) {
-             System.out.println("TURN THIS OFF");
+             //System.out.println("TURN THIS OFF");
              return false;
          }
          else {

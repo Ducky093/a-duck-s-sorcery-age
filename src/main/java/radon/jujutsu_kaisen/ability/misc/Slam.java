@@ -197,7 +197,7 @@ public class Slam extends Ability implements Ability.ICharged {
             if (cooldown <= 0) {
                 launchPower = 16.0D;
                 cap.moreBlackFlash(true);
-                System.out.println(this.getCharge(owner));
+                //System.out.println(this.getCharge(owner));
 
                 cap.delayTickEvent(() -> {
                     cap.moreBlackFlash(false);
