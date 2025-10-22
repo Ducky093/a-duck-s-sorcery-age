@@ -65,9 +65,8 @@ public class DagonEntity extends DisasterCurse {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 30.0D)
-                .add(Attributes.MAX_HEALTH, 2 * 12.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 15.0D);
+                .add(Attributes.ARMOR, 20.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D);
     }
 
     @Override

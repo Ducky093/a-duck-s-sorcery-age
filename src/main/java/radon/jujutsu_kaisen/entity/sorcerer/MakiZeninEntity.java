@@ -4,7 +4,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -29,6 +33,24 @@ public class MakiZeninEntity extends SorcererEntity {
     @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
+    }
+
+    @Override
+    public float getStepHeight() { return 5.0F; }
+
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return MakiZeninEntity.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 16.0D)
+                .add(Attributes.ARMOR, 24.0D);
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.QUICKDASH.get());
     }
 
     @Override

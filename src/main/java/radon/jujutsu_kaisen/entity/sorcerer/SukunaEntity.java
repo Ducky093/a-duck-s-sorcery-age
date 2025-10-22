@@ -299,6 +299,10 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
+    public float getStepHeight() { return 5.0F; }
+
+
+    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 

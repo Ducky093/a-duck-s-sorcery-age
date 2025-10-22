@@ -3,6 +3,8 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -22,6 +24,14 @@ public class NaoyaZeninEntity extends SorcererEntity {
     @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE_1.getRequiredExperience();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return NaoyaZeninEntity.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ARMOR, 20.0D);
     }
 
     @Override
