@@ -9,6 +9,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +25,7 @@ import org.joml.Quaternionf;
 
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -111,6 +114,25 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         }
     }
 
+    private Vec3[] getWideSlicePositions(Vec3 center, Vec3 forward, Vec3 up, double radius, int samples) {
+        Vec3 side = forward.cross(up).normalize();
+        Vec3 trueUp = side.cross(forward).normalize(); 
+
+        Vec3[] positions = new Vec3[samples * samples];
+        int index = 0;
+
+        for (int i = 0; i < samples; i++) {
+            double offsetSide = ((double)i / (samples - 1) - 0.5) * 2.0 * radius;
+            for (int j = 0; j < samples; j++) {
+                double offsetUp = ((double)j / (samples - 1) - 0.5) * 2.0 * radius;
+                positions[index++] = center
+                    .add(side.scale(offsetSide))
+                    .add(trueUp.scale(offsetUp));
+            }
+        }
+        return positions;
+    }
+
     public Set<Entity> getHits() {
         if (!(this.getOwner() instanceof LivingEntity)) return Set.of();
 
@@ -136,19 +158,34 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
         for (int z = 0; z < depth; z++) {
             for (int x = 0; x < length; x++) {
-                BlockPos current = BlockPos.containing(start.add(end.subtract(start).scale((1.0D / length) * x).add(forward.scale(z))));
+               double radius = 0.25D * Math.pow(this.getPower(), 2);
+                int samples = 3;
 
-                AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
+                
+                Vec3[] slicePositions = getWideSlicePositions(
+                    start.add(forward.scale(z)).add(end.subtract(start).scale((double) x / length)),
+                    forward,
+                    up,
+                    radius,
+                    samples
+                );
 
-                hits.addAll(this.level().getEntities(this, bounds));
 
-                BlockState state = this.level().getBlockState(current);
+                for (Vec3 pos : slicePositions) {
+                    BlockPos current = BlockPos.containing(pos);
 
-                this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                    AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
-                if (!state.isAir()) {
-                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
-                            0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    hits.addAll(this.level().getEntities(this, bounds));
+
+                    BlockState state = this.level().getBlockState(current);
+
+                    this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+
+                    if (!state.isAir()) {
+                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
+                                0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    }
                 }
             }
         }
@@ -204,8 +241,10 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
             ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), dist),
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
-            living.setInvisible(true);
-           
+            //living.setInvisible(true);
+            living.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
+             living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
+
                 }
             }
         }

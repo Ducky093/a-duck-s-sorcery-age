@@ -43,7 +43,7 @@ public class WorldSlashRenderer extends EntityRenderer<WorldSlashProjectile> {
         pPoseStack.mulPose(Axis.YP.rotationDegrees(pEntity.getRoll()));
 
         float factor = (float) pEntity.getLength() / WorldSlashProjectile.MAX_LENGTH;
-        pPoseStack.scale(1.0F, 1.0F, 0.2F + (0.2F * factor));
+        pPoseStack.scale(0.5F + (0.5F * (float) Math.pow(pEntity.getPower(), 2) ), 1.0F, 0.2F + (0.2F * factor));
 
         RenderType type = JJKRenderTypes.glow(this.getTextureLocation(pEntity));
 

@@ -37,6 +37,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.effect.base.JJKEffect;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -236,7 +237,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (!cap.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !cap.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
-            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile)) return;
+            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile) || event.getSource().getDirectEntity() instanceof WorldSlashProjectile ) return;
 
             ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
 

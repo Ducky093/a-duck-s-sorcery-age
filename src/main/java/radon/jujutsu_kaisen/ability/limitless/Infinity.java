@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -208,6 +209,10 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
 
     private static boolean canBlock(LivingEntity owner, Projectile projectile) {
         if (projectile.getOwner() == owner) return false;
+
+         if (projectile instanceof WorldSlashProjectile slash) {
+            return false;
+        }
 
         if (projectile instanceof ThrownChainProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;

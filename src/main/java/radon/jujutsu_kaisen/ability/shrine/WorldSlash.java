@@ -67,6 +67,15 @@ public class WorldSlash extends Ability {
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        if (owner instanceof Player && ChantHandler.getOutput(owner, this) < 1.5F ) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
+    }
+
+
+    @Override
     public boolean isValid(LivingEntity owner) {
       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -112,7 +121,7 @@ public class WorldSlash extends Ability {
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
-
+        
         if (owner.level().isClientSide) return;
 
                 float output = ChantHandler.getOutput(owner, this);
@@ -126,7 +135,7 @@ public class WorldSlash extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 500.0F;
+        return 750.0F;
     }
 
 

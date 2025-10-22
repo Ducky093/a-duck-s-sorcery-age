@@ -9,6 +9,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -194,7 +197,10 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), distance),
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
-            living.setInvisible(true);
+            //living.setInvisible(true);
+            living.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
+             living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
+
            
                     }
     }
