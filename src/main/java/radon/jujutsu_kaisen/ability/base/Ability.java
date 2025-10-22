@@ -85,6 +85,10 @@ public abstract class Ability {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
     }
 
+    public boolean isChantable() {
+        return false;
+    }
+
     protected boolean isNotDisabledFromDA() {
         return false;
     }
@@ -385,7 +389,7 @@ public abstract class Ability {
         }
         if (output > 0) {
             output = Mth.clamp(output*0.8F,1.0F,100.0F);
-	    cost*=(this.isScalable(owner) ? output : 1.0F);
+	        cost *= (this.isScalable(owner) || this.isChantable() ? output : 1.0F);
         }
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost ));
     }

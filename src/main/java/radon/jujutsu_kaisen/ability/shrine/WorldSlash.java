@@ -47,6 +47,11 @@ public class WorldSlash extends Ability {
         return true;
     }
 
+     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;

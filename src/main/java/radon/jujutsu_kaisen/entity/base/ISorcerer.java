@@ -88,7 +88,7 @@ public interface ISorcerer {
 
         if (this.canChant()) {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
-                if (!ability.isTechnique() || !ability.isScalable((LivingEntity) this)) continue;
+                if ((!ability.isTechnique() && !ability.isChantable() ) || !ability.isScalable((LivingEntity) this)) continue;
 
                 Set<String> chants = HelperMethods.getRandomWordCombo(5);
 
