@@ -93,7 +93,7 @@ public class AdaptationEventHandler {
                     }
                     case COUNTER -> {
                            event.setAmount(event.getAmount() * process);
-                        if (HelperMethods.RANDOM.nextInt(Math.max(2, Math.round(20 * process))) == 0) {
+                        if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
                         Entity attacker = source.getEntity();
 
                         if (attacker != null) {

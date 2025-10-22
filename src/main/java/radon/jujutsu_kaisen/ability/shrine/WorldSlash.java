@@ -62,13 +62,19 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (!(owner instanceof MahoragaEntity) && (!(owner instanceof Player player) || !player.getAbilities().instabuild)  ) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+      ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        // if (!(owner instanceof MahoragaEntity) && (!(owner instanceof Player player) || !player.getAbilities().instabuild)  ) {
 
-            if (!cap.hasTechnique(CursedTechnique.SHRINE)) return false;
+        //     if (!cap.hasTechnique(CursedTechnique.SHRINE)) return false;
+        // }
+        //  if (!cap.hasTechnique(CursedTechnique.SHRINE)) return false;
+        if (!(owner instanceof MahoragaEntity) && (!cap.hasTechnique(CursedTechnique.SHRINE))) {
+            return false;
         }
-        return super.isValid(owner);
+        else {
+             return super.isValid(owner);
+        }
     }
      @Override
     public boolean isUnlockable() {
@@ -81,7 +87,7 @@ public class WorldSlash extends Ability {
             ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
             if (cap.getAdaptation(JJKAbilities.INFINITY.get()) > 1) return true;
         }
-        else if (((owner instanceof Player player) && player.getAbilities().instabuild)) {
+        else if (((owner instanceof Player player) && player.getAbilities().instabuild)   ) {
             return true;
         }
         return super.isUnlocked(owner);
