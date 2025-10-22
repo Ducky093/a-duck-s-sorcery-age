@@ -103,9 +103,9 @@ public class ServerConfig {
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
                         .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
         this.pointMultiplier = builder.comment("Scale of ability points you gain")
-                        .defineInRange("pointMultiplier", 1.0F, 0.0F, 100.0F);
+                        .defineInRange("pointMultiplier", 0.1F, 0.0F, 100.0F);
         this.pointPenalty = builder.comment("Scale of points lost on death")
-                        .defineInRange("pointMultiplier", 0.0F, 0.0F, 100.0F);
+                        .defineInRange("pointPenalty", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.0F, 0.0F, 1.0F);
         this.pvpGain = builder.comment("Percentage of experience gained from player kills")
