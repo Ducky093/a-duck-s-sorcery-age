@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
@@ -113,9 +114,11 @@ public class WorldSlash extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (owner.level().isClientSide) return;
+
+                float output = ChantHandler.getOutput(owner, this);
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-    
-        WorldSlashProjectile slash = new WorldSlashProjectile(owner, cap.getOutput(), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
+        output *= cap.getOutput();
+        WorldSlashProjectile slash = new WorldSlashProjectile(owner, output, (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
         slash.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
         owner.level().addFreshEntity(slash);
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.MASTER, 1.0F, 1.0F);

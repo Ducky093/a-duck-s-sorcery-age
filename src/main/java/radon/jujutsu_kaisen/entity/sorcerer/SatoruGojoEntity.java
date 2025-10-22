@@ -69,6 +69,12 @@ public class SatoruGojoEntity extends SorcererEntity {
                 JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.QUICKDASH.get());
     }
 
+    // @Override
+    // public void init(ISorcererData data) {
+    //     super.init(data);
+    //     data.setAdditionalEnergy( (data.getMaxEnergy()) );
+    // }
+
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;

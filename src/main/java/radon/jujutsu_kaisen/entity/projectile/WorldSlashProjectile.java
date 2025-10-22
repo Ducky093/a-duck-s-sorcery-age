@@ -33,12 +33,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class WorldSlashProjectile extends JujutsuProjectile {
-    public static final int MIN_LENGTH = 6;
-    public static final int MAX_LENGTH = 24;
+    public static final int MIN_LENGTH = 3;
+    public static final int MAX_LENGTH = 30;
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.INT);
     private static final int DURATION = 10;
-    private static final int SCALAR = 6;
+    private static final float SCALAR = 6.0F;
 
     public WorldSlashProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -73,7 +73,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
     public int getLength() {
         int length = this.entityData.get(DATA_LENGTH);
-        return length > 0 ? length : Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, Mth.floor(SCALAR * this.getPower())));
+        return length > 0 ? length : Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, Mth.floor(SCALAR * Math.pow(this.getPower(), 2) )));
     }
 
     private void setLength(int length) {
@@ -177,7 +177,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
                     distance = 0.0F;
                 }
                 float strength = 1.0F - (Math.min(living.getBbHeight(), distance) / living.getBbHeight());
-                if (living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength)) {
+                if (living.hurt(JJKDamageSources.worldSlash(this, owner), (living.getMaxHealth() * strength) * this.getPower() ) ) {
                   if (!living.isDeadOrDying() ) return;
         
         

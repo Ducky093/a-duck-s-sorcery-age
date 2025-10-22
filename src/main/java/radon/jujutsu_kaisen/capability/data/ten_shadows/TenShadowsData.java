@@ -88,11 +88,11 @@ public class TenShadowsData implements ITenShadowsData {
 
                 //this.adapted.add(entry.getKey());
 
-                if (this.owner instanceof MahoragaEntity mahoraga) {
-                    if (!this.adapted.containsKey(entry.getKey())) {
-                        mahoraga.onAdaptation();
-                    }
-                }
+                // if (this.owner instanceof MahoragaEntity mahoraga) {
+                //     if (!this.adapted.containsKey(entry.getKey())) {
+                //         mahoraga.onAdaptation();
+                //     }
+                // }
                 this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
 
                 WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
