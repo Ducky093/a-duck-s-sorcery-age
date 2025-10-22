@@ -42,7 +42,7 @@ public class QuickDash extends Dash {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
+        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

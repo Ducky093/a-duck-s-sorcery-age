@@ -84,10 +84,13 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return ((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 9.0f;
-            // 8.5 min, 0.05 * math.pow(1, math.log(1)) * 8 (lvl 3)
+            if (owner instanceof Player player) {
+                return ((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 9.0f;
+                // 8.5 min, 0.05 * math.pow(1, math.log(1)) * 8 (lvl 3)
+            }
+            return ((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 4.5f;
         }
-        return 0;
+        return 0.0F;
     }
 
     @Override

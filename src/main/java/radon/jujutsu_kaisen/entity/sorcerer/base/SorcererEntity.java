@@ -172,12 +172,15 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         LivingEntity passenger = this.getControllingPassenger();
 
-        if (this.getTarget() != null) {
-            this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.0f);
+        if (this.getTarget() != null ) {
             ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (HelperMethods.RANDOM.nextInt(7) == 0 || cap.hasBurnout()) {
-                this.moveControl.setWantedPosition(this.getTarget().getX() * -2.0F, this.getTarget().getY() * -2.0F, this.getTarget().getZ() * -2.0F, 2.0f);
+            if (!cap.hasBurnout()) {
+                this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 0.9f);
+            }
+
+            if (HelperMethods.RANDOM.nextInt(5) == 0 || cap.hasBurnout() && HelperMethods.RANDOM.nextInt(2) == 0) {
+                this.moveControl.setWantedPosition(this.getTarget().getX() * -1.5F, this.getTarget().getY() * -1.1F, this.getTarget().getZ() * -1.1F, 1.4f);
             }
         }
 

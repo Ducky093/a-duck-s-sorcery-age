@@ -28,9 +28,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             } else if (domain.getOwner() == owner) {
                 return target != null && owner.distanceTo(target) <= 128.0D;
             }
-
         }
-        return target != null && (owner.distanceTo(target) <= 30.0D) && owner.getHealth() / owner.getMaxHealth() < 0.9F;
+        return target != null && owner.distanceTo(target) <= 30.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F;
     }
 
     @Override

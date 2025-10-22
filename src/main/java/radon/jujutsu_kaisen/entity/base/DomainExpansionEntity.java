@@ -258,8 +258,9 @@ public abstract class DomainExpansionEntity extends Entity {
     }
 
     public boolean shouldCollapse(float strength) {
-        return (strength / this.getStrength()) > 3.0F;
+        return (strength / this.getStrength()) > 2.5F;
     }
+
     @Override
     public boolean shouldRenderAtSqrDistance(double pDistance) {
         double d0 = this.getBoundingBox().getSize() * 10.0D;

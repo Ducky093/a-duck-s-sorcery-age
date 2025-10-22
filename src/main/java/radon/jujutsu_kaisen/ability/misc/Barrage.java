@@ -46,7 +46,7 @@ public class Barrage extends Ability {
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
         }
-        return HelperMethods.RANDOM.nextInt(4) == 0;
+        return HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

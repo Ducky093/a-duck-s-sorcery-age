@@ -64,8 +64,7 @@ public class Punch extends Ability implements Ability.ICharged{
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
         }
-        if (owner.distanceTo(target) > RANGE) return false;
-        return HelperMethods.RANDOM.nextInt(3) == 0;
+        return (owner.distanceTo(target) > RANGE);
     }
 
     @Override
