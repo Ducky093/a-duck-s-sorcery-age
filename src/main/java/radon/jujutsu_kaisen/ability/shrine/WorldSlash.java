@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
@@ -68,7 +69,7 @@ public class WorldSlash extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (owner instanceof Player && ChantHandler.getOutput(owner, this) < 1.5F ) {
+        if (ConfigHolder.SERVER.chantRequiredForWCS.get() && owner instanceof Player && ChantHandler.getOutput(owner, this) < 1.5F ) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);

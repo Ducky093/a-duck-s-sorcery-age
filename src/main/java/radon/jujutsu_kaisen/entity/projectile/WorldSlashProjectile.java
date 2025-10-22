@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -215,10 +216,10 @@ public class WorldSlashProjectile extends JujutsuProjectile {
                 }
                 float strength = 1.0F - (Math.min(living.getBbHeight(), distance) / living.getBbHeight());
                 if (living.hurt(JJKDamageSources.worldSlash(this, owner), (living.getMaxHealth() * strength) * this.getPower() ) ) {
-                  if (!living.isDeadOrDying() ) return;
+                 // if (!living.isDeadOrDying() ) return;
         
         
-        //  if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
+         if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
          Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
             float yaw = this.getYRot();

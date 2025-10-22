@@ -40,6 +40,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue destruction;
     public final ForgeConfigSpec.BooleanValue turboMode;
     public final ForgeConfigSpec.BooleanValue entitySlicing;
+    public final ForgeConfigSpec.BooleanValue chantRequiredForWCS;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
@@ -143,6 +144,8 @@ public class ServerConfig {
                 .define("turboMode", false);
         this.entitySlicing = builder.comment("When enabled entities are sliced by Dismantle")
                 .define("entitySlicing", true);
+        this.chantRequiredForWCS = builder.comment("When enabled WCS must be chanted to 150%")
+                .define("chantRequiredForWCS", true);
         builder.pop();
 
         builder.comment("Veils").push("veils");
