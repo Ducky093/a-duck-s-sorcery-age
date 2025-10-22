@@ -20,10 +20,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
+
+import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.HashSet;
@@ -174,7 +177,36 @@ public class WorldSlashProjectile extends JujutsuProjectile {
                     distance = 0.0F;
                 }
                 float strength = 1.0F - (Math.min(living.getBbHeight(), distance) / living.getBbHeight());
-                living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
+                if (living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength)) {
+                  if (!living.isDeadOrDying() ) return;
+        
+        
+        //  if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
+         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+
+            float yaw = this.getYRot();
+            float pitch = this.getXRot();
+            float roll = this.getRoll();
+
+            Vec3 forward = this.calculateViewVector(pitch, yaw);
+            Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+
+            Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
+            Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
+
+            int length = this.getLength();
+            Vec3 start = side.scale((double) length / 2);
+            Vec3 end = forward.subtract(start);
+
+            Vec3 plane = end.cross(start).normalize();
+
+            float dist = (float) plane.dot(center.subtract(living.position()));
+
+            ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), dist),
+                    true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
+            living.setInvisible(true);
+           
+                }
             }
         }
 

@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -42,6 +43,11 @@ public class WorldSlash extends Ability {
     private static final double RANGE = 64.0D;
 
     @Override
+    public boolean isScalable(LivingEntity owner) {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
         if (!owner.hasLineOfSight(target)) return false;
@@ -56,7 +62,7 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (!(owner instanceof MahoragaEntity)) {
+        if (!(owner instanceof MahoragaEntity) && (!(owner instanceof Player player) || !player.getAbilities().instabuild)  ) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
 
@@ -71,9 +77,12 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
-        if (owner instanceof MahoragaEntity) {
+        if (owner instanceof MahoragaEntity ) {
             ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
             if (cap.getAdaptation(JJKAbilities.INFINITY.get()) > 1) return true;
+        }
+        else if (((owner instanceof Player player) && player.getAbilities().instabuild)) {
+            return true;
         }
         return super.isUnlocked(owner);
     }

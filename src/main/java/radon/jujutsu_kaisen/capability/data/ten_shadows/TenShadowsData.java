@@ -31,6 +31,8 @@ public class TenShadowsData implements ITenShadowsData {
     private final List<ItemStack> shadowInventory;
     private final Map<Adaptation, Integer> adapted;
     private final Map<Adaptation, Integer> adapting;
+    private final Map<Adaptation, Integer> adaptationCD = new HashMap<>();
+
     private TenShadowsMode mode;
 
     private LivingEntity owner;
@@ -100,6 +102,16 @@ public class TenShadowsData implements ITenShadowsData {
                 }
             } else {
                 entry.setValue(timer);
+            }
+        }
+        Iterator<Map.Entry<Adaptation, Integer>> cdIter = this.adaptationCD.entrySet().iterator();
+        while (cdIter.hasNext()) {
+            Map.Entry<Adaptation, Integer> cdEntry = cdIter.next();
+            int cd = cdEntry.getValue() - 1;
+            if (cd <= 0) {
+                cdIter.remove();
+            } else {
+                cdEntry.setValue(cd);
             }
         }
     }
@@ -333,14 +345,16 @@ public class TenShadowsData implements ITenShadowsData {
 
         Adaptation adaptation = new Adaptation(types.getKey(source.type()),
                 source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
-       
+        if (this.adaptationCD.containsKey(adaptation)) {
+            return;
+        }
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);    
         } else {
             int timer = this.adapting.get(adaptation); 
-            int oldtimer = timer;
+            //int oldtimer = timer;
                timer += JJKConstants.ADAPTATION_STEP;
-             ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+             // ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             //  if (timer >= JJKConstants.REQUIRED_ADAPTATION  *0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
             //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
             //     if (wheel != null) {
@@ -365,23 +379,26 @@ public class TenShadowsData implements ITenShadowsData {
          
             this.adapting.put(adaptation, timer);
         }
+         this.adaptationCD.put(adaptation, JJKConstants.ADAPT_CD_TIME);
     }
 
     @Override
     public void tryAdapt(Ability ability) {
         Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
 
-        if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1))
+        if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || (this.adapted != null &&  this.adapted.get(adaptation) != null && this.adapted.get(adaptation) >= additional.getAdditional() + 1)) )
             return;
-
+        if (this.adaptationCD.containsKey(adaptation)) {
+            return;
+        }
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);
         } else {
             int timer = this.adapting.get(adaptation);
-            int oldtimer = timer;
+        //  int oldtimer = timer;
             timer += JJKConstants.ADAPTATION_STEP;
           
-              ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+              //ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                    
             //   if (timer >= JJKConstants.REQUIRED_ADAPTATION * 0.2 && oldtimer < JJKConstants.REQUIRED_ADAPTATION * 0.2) {
             //     WheelEntity wheel = cap.getSummonByClass(WheelEntity.class);
@@ -407,6 +424,7 @@ public class TenShadowsData implements ITenShadowsData {
       
             this.adapting.put(adaptation, timer);
         }
+           this.adaptationCD.put(adaptation, JJKConstants.ADAPT_CD_TIME);
     }
 
     @Override

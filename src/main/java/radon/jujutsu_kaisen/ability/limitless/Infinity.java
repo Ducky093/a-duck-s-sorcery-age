@@ -300,14 +300,14 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
                     return;
                 } 
             }
-            if (source.getEntity() instanceof LivingEntity living ) {
-                if (living.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
-                ITenShadowsData cap = living.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-                    if (cap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
-                        return;
-                    }
-                }
-            }
+            // if (source.getEntity() instanceof LivingEntity living ) {
+            //     if (living.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+            //     ITenShadowsData cap = living.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            //         if (cap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+            //             return;
+            //         }
+            //     }
+            // }
 
             // We don't want to play the sound in-case it's a stopped projectile
             if (!(source.getDirectEntity() instanceof Projectile)) {

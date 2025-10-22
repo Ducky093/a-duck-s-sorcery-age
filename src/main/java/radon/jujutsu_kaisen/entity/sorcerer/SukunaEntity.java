@@ -254,7 +254,7 @@ public class SukunaEntity extends SorcererEntity {
      @Override
     public void init(ISorcererData data) {
         super.init(data);
-        data.setAdditionalEnergy( (getMaxEnergy() * 4.0F) * (this.fingers / 20) );
+        data.setAdditionalEnergy( (data.getMaxEnergy() * 4.0F) * (this.fingers / 20) );
     }
 
     @Override

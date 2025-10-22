@@ -257,7 +257,10 @@ public class SorcererData implements ISorcererData {
         List<Ability> remove = new ArrayList<>();
 
         for (Ability ability : new ArrayList<>(this.toggled)) {
-            if (this.disrupted.containsKey(ability)) continue;
+            if (this.disrupted.containsKey(ability)) {
+                remove.add(ability);
+                continue;
+            }
             Ability.Status status = ability.isStillUsable(this.owner);
 
             if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
