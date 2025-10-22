@@ -138,9 +138,10 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
         for (Entity entity : entities) {
              if (!(entity instanceof LivingEntity target)) continue;
+                if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent() ) {
                     ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity == owner && !cap.hasSelfHit())) continue;
-
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity == owner && !cap.hasSelfHit())) continue;
+                }
             if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                 entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
                 entity.hurtMarked = true;
