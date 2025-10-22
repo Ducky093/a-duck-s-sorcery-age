@@ -6,6 +6,6 @@
 5. Create new pull request
 
 ### Mod Links
-https://www.curseforge.com/minecraft/mc-mods/sorcery-age
+https://curseforge.com/minecraft/mc-mods/sorcery-age
 
 https://modrinth.com/mod/sorcery-age
