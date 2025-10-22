@@ -57,6 +57,10 @@ public class Dash extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            return HelperMethods.RANDOM.nextInt(3) == 0;
+        }
         return HelperMethods.RANDOM.nextInt(30) == 0;
     }
 

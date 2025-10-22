@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -128,6 +129,15 @@ public class TojiFushiguroEntity extends SorcererEntity {
             return null;
         }
     }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.QUICKDASH.get());
+    }
+
+    @Override
+    public float getStepHeight() { return 5.0F; }
+
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {

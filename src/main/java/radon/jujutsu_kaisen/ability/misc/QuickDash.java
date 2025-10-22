@@ -42,7 +42,14 @@ public class QuickDash extends Dash {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
+        if (target == null) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            return HelperMethods.RANDOM.nextInt(2) == 0;
+        }
+
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

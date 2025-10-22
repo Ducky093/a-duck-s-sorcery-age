@@ -55,7 +55,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                 }
             }
         }
-        return HelperMethods.RANDOM.nextInt(8) == 0;
+        return HelperMethods.RANDOM.nextInt(4) == 0;
     }
 
     @Override

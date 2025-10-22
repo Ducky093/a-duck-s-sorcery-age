@@ -564,19 +564,19 @@ public class JJKEntities {
 
     @SubscribeEvent
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
+        event.put(TOJI_FUSHIGURO.get(), MakiZeninEntity.createAttributes().build());
         event.put(SUKUNA.get(), SukunaEntity.createAttributes().build());
         event.put(SATORU_GOJO.get(), SatoruGojoEntity.createAttributes().build());
-        event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
-        event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
-        event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
-        event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
-        event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
+        event.put(MEGUMI_FUSHIGURO.get(), MegumiFushiguroEntity.createAttributes().build());
+        event.put(YUTA_OKKOTSU.get(), YutaOkkotsuEntity.createAttributes().build());
+        event.put(YUJI_ITADORI.get(), YujiItadoriEntity.createAttributes().build());
+        event.put(TOGE_INUMAKI.get(), TogeInumakiEntity.createAttributes().build());
+        event.put(SUGURU_GETO.get(), SuguruGetoEntity.createAttributes().build());
         event.put(HEIAN_SUKUNA.get(), HeianSukunaEntity.createAttributes().build());
-        event.put(NAOYA_ZENIN.get(), SorcererEntity.createAttributes().build());
-        event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
-        event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
-        event.put(AOI_TODO.get(), SorcererEntity.createAttributes().build());
+        event.put(NAOYA_ZENIN.get(), NaoyaZeninEntity.createAttributes().build());
+        event.put(HAJIME_KASHIMO.get(), HajimeKashimoEntity.createAttributes().build());
+        event.put(MAKI_ZENIN.get(), MakiZeninEntity.createAttributes().build());
+        event.put(AOI_TODO.get(), AoiTodoEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 
@@ -600,10 +600,10 @@ public class JJKEntities {
         event.put(TRANSFIGURED_SOUL_LARGE.get(), TransfiguredSoulLargeEntity.createAttributes().build());
         event.put(POLYMORPHIC_SOUL_ISOMER.get(), PolymorphicSoulIsomerEntity.createAttributes().build());
 
-        event.put(JOGO.get(), SorcererEntity.createAttributes().build());
+        event.put(JOGO.get(), JogoEntity.createAttributes().build());
         event.put(JOGOAT.get(), SorcererEntity.createAttributes().build());
-        event.put(DAGON.get(), SorcererEntity.createAttributes().build());
-        event.put(HANAMI.get(), SorcererEntity.createAttributes().build());
+        event.put(DAGON.get(), DagonEntity.createAttributes().build());
+        event.put(HANAMI.get(), HanamiEntity.createAttributes().build());
 
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());

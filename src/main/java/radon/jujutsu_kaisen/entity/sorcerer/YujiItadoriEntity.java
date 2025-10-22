@@ -4,6 +4,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +57,14 @@ public class YujiItadoriEntity extends SorcererEntity {
     @Override
     public float getExperience() {
         return SorcererGrade.GRADE_1.getRequiredExperience();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return YujiItadoriEntity.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ARMOR, 20.0D);
     }
 
     @Override

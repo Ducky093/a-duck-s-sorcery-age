@@ -3,6 +3,8 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
@@ -34,6 +36,14 @@ public class SuguruGetoEntity extends SorcererEntity {
     @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SuguruGetoEntity.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ARMOR, 20.0D);
     }
 
     @Override
