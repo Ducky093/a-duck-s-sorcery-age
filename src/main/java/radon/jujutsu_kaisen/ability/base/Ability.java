@@ -37,6 +37,7 @@ import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import java.util.List;
 import java.util.Locale;
 
@@ -211,10 +212,11 @@ public abstract class Ability {
         return MenuType.RADIAL;
     }
 
-    public boolean isValid(LivingEntity owner) {
+       public boolean isValid(LivingEntity owner) {
         if (owner == null || (owner instanceof Player player && player.isSpectator()) ) return false;
 
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
+
          if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
@@ -34,6 +35,10 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             }
         }
         if (enemyDomain == true) {
+             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get() )) {
+                cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            }
             return true;
         }
         else if (selfDomain != null) {

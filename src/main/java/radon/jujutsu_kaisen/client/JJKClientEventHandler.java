@@ -269,7 +269,7 @@ public class JJKClientEventHandler {
 
             LivingEntity target = event.getEntity();
 
-            ClientVisualHandler.ClientData data = ClientVisualHandler.get(target);
+            ClientVisualHandler.ClientData  data = ClientVisualHandler.get(target);
 
             if (data == null) return;
 
@@ -287,9 +287,9 @@ public class JJKClientEventHandler {
 
                     double threshold = 1.0D;
 
-                    if (target.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItemTags.CURSED_TOOL) ||
-                            target.getItemInHand(InteractionHand.OFF_HAND).is(JJKItemTags.CURSED_TOOL)) {
-                        threshold = 1.0D;
+                    if (!target.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItemTags.CURSED_TOOL) ||
+                            !target.getItemInHand(InteractionHand.OFF_HAND).is(JJKItemTags.CURSED_TOOL)) {
+                        threshold = 0.9D;
                     }
 
                     if (angle > threshold) {

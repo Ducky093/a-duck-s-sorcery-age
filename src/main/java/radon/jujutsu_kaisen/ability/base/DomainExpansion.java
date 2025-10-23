@@ -163,7 +163,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
+         MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 
     public abstract void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos);

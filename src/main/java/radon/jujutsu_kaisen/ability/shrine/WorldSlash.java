@@ -9,8 +9,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -155,8 +161,21 @@ public class WorldSlash extends Ability {
         return MenuType.J2TSU;
     }
 
-     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static boolean hasVisualOn(Level level, LivingEntity viewer, LivingEntity target) {
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(viewer);
+        Vec3 start = viewer.getEyePosition();
+        Vec3 result = target.getEyePosition().subtract(start);
+        double angle = Math.acos(look.normalize().dot(result.normalize()));
+        double threshold = 1.0D;
+        if (angle <= threshold) {
+            return true;
+        }
+        return false;
+    }  
+
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class WorldSlashForgeEvents {
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
             Ability ability = event.getAbility();
@@ -166,14 +185,18 @@ public class WorldSlash extends Ability {
             LivingEntity owner = event.getEntity();
 
             for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
-                if (!(entity instanceof LivingEntity living) || !living.hasLineOfSight(owner)) continue;
+                if (!(entity instanceof LivingEntity living) || !hasVisualOn(owner.level(), living, owner) ) continue;
+// || !ray(owner.level(),owner, living)
 
-                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-
-                if (JJKAbilities.WORLD_SLASH.get().isUnlocked(owner)) continue;
-
-                cap.unlock(JJKAbilities.WORLD_SLASH.get());
+                if (!living.getCapability(SorcererDataHandler.INSTANCE).isPresent() ) {
+                   continue;
+                }
+            
+                ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (cap.isUnlocked(JJKAbilities.WORLD_SLASH.get())) continue;
+                 living.level().playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                 
+                 cap.unlock(JJKAbilities.WORLD_SLASH.get());
 
                 if (entity instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

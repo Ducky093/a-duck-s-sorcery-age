@@ -15,9 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
+
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
@@ -101,6 +104,16 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (!this.level().isClientSide) {
             VeilHandler.addDomain(this.level().dimension(), this.getUUID());
+
+        //     LivingEntity owner = this.getOwner();
+
+        // if (owner == null) return;
+
+        // for (LivingEntity entity : this.getAffected()) {
+        //     MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this.ability, owner));
+        // }
+
+
         }
     }
 

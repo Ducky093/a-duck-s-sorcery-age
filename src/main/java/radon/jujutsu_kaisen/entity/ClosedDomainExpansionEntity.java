@@ -301,23 +301,23 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         LivingEntity owner = this.getOwner();
         if (owner == null) return;
 
-        //int radius = this.getRadius();
-        //BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
-        // List<LivingEntity> entities = this.level().getEntitiesOfClass(
-        //     LivingEntity.class, 
-        //     new AABB(
-        //         center.getX() - radius, center.getY() - radius, center.getZ() - radius,
-        //         center.getX() + radius, center.getY() + radius, center.getZ() + radius
-        //     ),
-        //     entity -> this.isInsideBarrier(entity.blockPosition())
-        // );
+        List<LivingEntity> entities = this.level().getEntitiesOfClass(
+            LivingEntity.class, 
+            new AABB(
+                center.getX() - radius, center.getY() - radius, center.getZ() - radius,
+                center.getX() + radius, center.getY() + radius, center.getZ() + radius
+            ),
+            entity -> this.isInsideBarrier(entity.blockPosition())
+        );
 
 
 
       
 
-        for (LivingEntity entity : this.getAffected()) {
+        for (LivingEntity entity : entities ) {
             entity.addEffect(new MobEffectInstance(
                 JJKEffects.DOMAINSTUN.get(),
                 30,

@@ -949,7 +949,7 @@ public class SorcererData implements ISorcererData {
         this.technique = technique;
         this.sync();
         for (Ability ability : new ArrayList<>(this.unlocked)) {
-            if (!ability.isDisplayed(owner)) {
+            if (!ability.isDisplayed(owner) && ability != JJKAbilities.WORLD_SLASH.get() ) {
                 this.lock(ability);
             }
         }
