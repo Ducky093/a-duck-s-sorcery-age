@@ -57,10 +57,10 @@ public class BodySteal extends Ability implements Ability.IToggled {
     }
 
     private static boolean canSteal(LivingEntity owner, LivingEntity target) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        //if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return ((target instanceof Player player) || (!ConfigHolder.SERVER.playerBodySteal.get())   ) && ( targetCap.getType() == JujutsuType.SORCERER) &&

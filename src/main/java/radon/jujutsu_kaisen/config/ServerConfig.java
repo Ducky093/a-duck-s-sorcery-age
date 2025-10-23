@@ -27,6 +27,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
+    public final ForgeConfigSpec.BooleanValue playerMimicry;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
@@ -118,6 +119,8 @@ public class ServerConfig {
                 .define("realisticCurses", true);
         this.playerBodySteal = builder.comment("When enabled Body Steal only works on players")
                 .define("playerBodySteal", false);
+        this.playerMimicry = builder.comment("When enabled Mimicry only works on players")
+                .define("playerMimicry", false);
         this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
                 .define("bodyStealEXPReset", true);
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
