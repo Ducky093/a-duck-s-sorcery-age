@@ -94,63 +94,101 @@ public class SukunaEntity extends SorcererEntity {
     protected boolean targetsSorcerers() {
         return true;
     }
- @Override
+
+    @Override
+    protected boolean targetsShikigami() {
+        return true;
+    }
+
+     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.getTarget() != null && (this.getTarget() instanceof TenShadowsSummon summon ) && this.getTarget().isDeadOrDying()) {
-            this.setTarget(null);
-        }
-        else if (this.getTarget() != null && !(this.getTarget() instanceof TenShadowsSummon summon ) ) return;
-        
+
+        if (this.getTarget() != null) return;
 
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap == null) return;
+        if (!cap.hasTechnique(CursedTechnique.TEN_SHADOWS )) {
+            return;
+        }
+
+        for (Entity entity : cap.getSummons()) {
+            if (entity instanceof TenShadowsSummon) return;
+        }
+
+        if (this.random.nextInt(TAMING_CHANCE) == 0) {
+            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
+
+            
+
+            for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
+                if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+                AbilityHandler.trigger(this, ability);
+                return;
+            }
+            if (!mahoraga.isTamed(this)) {
+                AbilityHandler.trigger(this, mahoraga);
+                return;
+            }
+        }
+    }
+//  @Override
+//     protected void customServerAiStep() {
+//         super.customServerAiStep();
+//         if (this.getTarget() != null && (this.getTarget() instanceof TenShadowsSummon summon ) && this.getTarget().isDeadOrDying()) {
+//             this.setTarget(null);
+//         }
+//         else if (this.getTarget() != null && !(this.getTarget() instanceof TenShadowsSummon summon ) ) return;
+        
+
+//         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+//         if (cap == null) return;
 
 
         
     
 
 
-        //if (cap.getSummonByClass(TenShadowsSummon.class) != null) return;
+//         //if (cap.getSummonByClass(TenShadowsSummon.class) != null) return;
 
-        //  for (Entity entity : cap.getSummons()) {
+//         //  for (Entity entity : cap.getSummons()) {
 
-        //         if (entity instanceof TenShadowsSummon summon ) return;
-        // }
-        // this.setTarget(null);
-          for (Entity entity : cap.getSummons()) {
+//         //         if (entity instanceof TenShadowsSummon summon ) return;
+//         // }
+//         // this.setTarget(null);
+//           for (Entity entity : cap.getSummons()) {
 
-                 if (entity instanceof TenShadowsSummon summon && !summon.isDeadOrDying() && !summon.isTame() ) {
-                    this.setTarget(summon);
-                    return;
-                 } 
-         }
-        this.setTarget(null);
-        if (this.random.nextInt(TAMING_CHANCE) == 0) {
+//                  if (entity instanceof TenShadowsSummon summon && !summon.isDeadOrDying() && !summon.isTame() ) {
+//                     this.setTarget(summon);
+//                     return;
+//                  } 
+//          }
+//         this.setTarget(null);
+//         if (this.random.nextInt(TAMING_CHANCE) == 0) {
             
 
-            for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
-                if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+//             for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
+//                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
-                AbilityHandler.trigger(this, ability);
-                TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
-                if (newshadow != null) {
-                    this.setTarget(newshadow);
-                    return;
-                }
-            }
-            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
-            if (!mahoraga.isTamed(this)) {
-                AbilityHandler.trigger(this, mahoraga);
-                TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
-                if (newshadow != null) {
-                    this.setTarget(newshadow);
-                    return;
-                }
-            }
-        }
-    }
+//                 AbilityHandler.trigger(this, ability);
+//                 TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
+//                 if (newshadow != null) {
+//                     this.setTarget(newshadow);
+//                     return;
+//                 }
+//             }
+//             Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
+//             if (!mahoraga.isTamed(this)) {
+//                 AbilityHandler.trigger(this, mahoraga);
+//                 TenShadowsSummon newshadow = cap.getSummonByClass(TenShadowsSummon.class);
+//                 if (newshadow != null) {
+//                     this.setTarget(newshadow);
+//                     return;
+//                 }
+//             }
+//         }
+//     }
 
     public EntityType<?> getEntity() {
         return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElseThrow();

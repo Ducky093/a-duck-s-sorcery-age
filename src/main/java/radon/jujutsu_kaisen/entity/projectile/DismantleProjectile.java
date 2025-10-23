@@ -197,7 +197,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), distance),
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
-            //living.setInvisible(true);
+            living.setInvisible(true);
             living.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
              living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
 

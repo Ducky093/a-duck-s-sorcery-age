@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -22,12 +23,21 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        boolean enemyDomain = false;
+        DomainExpansionEntity selfDomain = null;
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == target) {
-                return true;
-            } else if (domain.getOwner() == owner) {
-                return (target != null && owner.distanceTo(target) <= 128.0D) || (target == null && HelperMethods.RANDOM.nextInt(20) == 0  );
+            if (domain.getOwner() == owner) {
+                selfDomain = domain;
             }
+            else {
+                enemyDomain = true;
+            }
+        }
+        if (enemyDomain == true) {
+            return true;
+        }
+        else if (selfDomain != null) {
+            return (target != null && selfDomain.distanceTo(target) <= 128.0D) || (target == null && HelperMethods.RANDOM.nextInt(16) != 0  );
         }
         return target != null && owner.distanceTo(target) <= 30.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F;
     }
@@ -49,6 +59,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
         Ability dismantle = JJKAbilities.DISMANTLE.get();
         ((IDomainAttack) dismantle).performBlock(owner, domain, pos);
     }
+
+   
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {

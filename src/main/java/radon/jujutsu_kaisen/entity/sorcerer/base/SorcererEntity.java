@@ -78,6 +78,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     protected boolean targetsCurses() { return true; }
     protected boolean targetsSorcerers() { return false; }
+    protected boolean targetsShikigami() { return false; }
 
     private void createGoals() {
         int target = 1;
@@ -98,6 +99,9 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         }
         if (this.targetsCurses()) {
             this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+        }
+         if (this.targetsShikigami()) {
+            this.targetSelector.addGoal(target, new NearestAttackableShikigamiGoal(this, true));
         }
         
     }
