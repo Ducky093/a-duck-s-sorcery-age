@@ -66,6 +66,13 @@ public class CyclopsCurseEntity extends CursedSpirit {
         this.entityData.define(DATA_SMASH, 0);
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return CyclopsCurseEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 15.0D);
+    }
+
     private PlayState walkPredicate(AnimationState<CyclopsCurseEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
@@ -87,11 +94,6 @@ public class CyclopsCurseEntity extends CursedSpirit {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 20.0D)
-            .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
-    }
 
     @Override
     public float getExperience() {

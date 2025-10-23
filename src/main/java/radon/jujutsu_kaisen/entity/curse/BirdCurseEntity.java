@@ -74,6 +74,9 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 15.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 

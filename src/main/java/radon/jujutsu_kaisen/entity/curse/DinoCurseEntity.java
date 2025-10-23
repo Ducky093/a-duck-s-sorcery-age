@@ -143,6 +143,13 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
         return null;
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return DinoCurseEntitya.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 15.0D);
+    }
+
     private Vec2 getRiddenRotation(LivingEntity pEntity) {
         return new Vec2(pEntity.getXRot() * 0.5F, pEntity.getYRot());
     }
@@ -218,12 +225,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.BLUE_FIRE.get());
     }
-    
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 7 *5.0D);
-    }
+
     
     @Override
     public void setDown(boolean down) {

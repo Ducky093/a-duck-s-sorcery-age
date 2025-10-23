@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -58,6 +60,13 @@ public class FingerBearerEntity extends CursedSpirit {
     @Override
     public boolean canChant() {
         return true;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return FingerBearerEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 15.0D);
     }
 
     @Override
