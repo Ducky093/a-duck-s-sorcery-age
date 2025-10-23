@@ -20,15 +20,19 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.joml.Math;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExperienceHandler {
@@ -235,6 +239,20 @@ public class ExperienceHandler {
                 rawExperience *= ConfigHolder.SERVER.pvpGain.get();
             }
             if (experience < 0.1F) return;
+
+
+          
+
+            if (ConfigHolder.SERVER.playerRequiredForGradeUp.get() && target instanceof Player targetplayer   ) {
+                SorcererGrade previous = SorcererUtil.getGrade(cap.getExperience());
+                SorcererGrade current = SorcererUtil.getGrade(experience);
+                if (previous != current) {
+                    experience = previous.getNext().getRequiredExperience()-0.01f - (cap.getExperience());
+                }
+            }
+
+           
+
 
             if (cap.addExperience(experience)) {
                 if (owner instanceof Player player) {

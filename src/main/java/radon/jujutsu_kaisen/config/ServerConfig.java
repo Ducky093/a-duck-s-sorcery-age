@@ -33,6 +33,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
     public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
     public final ForgeConfigSpec.BooleanValue playerRequiredForRCT;
+    public final ForgeConfigSpec.BooleanValue playerRequiredForGradeUp;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -129,6 +130,8 @@ public class ServerConfig {
                 .define("hrRequiredForISOH", false);
         this.playerRequiredForRCT = builder.comment("Whether Players must kill you in order for you to unlock RCT")
                 .define("playerRequiredForRCT", false);
+        this.playerRequiredForGradeUp = builder.comment("Whether Players must kill other players in order to Rank Up ")
+                .define("playerRequiredForGradeUp", false);
         builder.pop();
     
 

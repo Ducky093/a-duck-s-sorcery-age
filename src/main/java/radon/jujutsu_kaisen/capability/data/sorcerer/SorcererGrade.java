@@ -1,9 +1,8 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
+
 import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.config.ConfigHolder;
-
 
 public enum SorcererGrade {
     GRADE_4(0.0F),
@@ -27,5 +26,15 @@ public enum SorcererGrade {
 
     public Component getName() {
         return Component.translatable(String.format("grade.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
+    }
+
+    public SorcererGrade getNext() {
+        SorcererGrade[] grades = SorcererGrade.values();
+        int index = this.ordinal();
+        if (index < grades.length - 1) {
+            return grades[index + 1];
+        } else {
+            return grades[index];
+        }
     }
 }
