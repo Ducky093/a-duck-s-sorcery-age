@@ -91,6 +91,15 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         super.tickRidden(pPlayer, pTravelVector);
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return FelineCurseEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ATTACK_DAMAGE, 6 * 6.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 15.0D);
+    }
+
+
     @Override
     protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         float f = pPlayer.xxa * 0.5F;
@@ -175,9 +184,6 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         }
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 25.0D);
-    }
 
     private class CustomLeapAtTargetGoal extends LeapAtTargetGoal {
         public CustomLeapAtTargetGoal(Mob pMob, float pYd) { super(pMob, pYd); }

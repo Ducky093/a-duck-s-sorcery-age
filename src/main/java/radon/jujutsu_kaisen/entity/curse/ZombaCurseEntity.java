@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -59,6 +61,13 @@ public class ZombaCurseEntity extends CursedSpirit {
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.SKY_STRIKE;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return ZombaCurseEntity.createAttributes()
+                .add(Attributes.ARMOR, 15.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 6 * 5.0D);
     }
 
     @Override

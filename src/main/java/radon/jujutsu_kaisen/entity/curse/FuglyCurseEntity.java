@@ -76,9 +76,10 @@ public class FuglyCurseEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 25.0D)
-            .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
+        return FuglyCurseEntity.createAttributes()
+                .add(Attributes.FOLLOW_RANGE, 100.0D)
+                .add(Attributes.ARMOR, 15.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
     }
 
     @Override

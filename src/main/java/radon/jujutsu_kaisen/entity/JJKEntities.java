@@ -13,6 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.effect.*;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
@@ -605,18 +606,18 @@ public class JJKEntities {
         event.put(DAGON.get(), DagonEntity.createAttributes().build());
         event.put(HANAMI.get(), HanamiEntity.createAttributes().build());
 
-        event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(RUGBY_FIELD_CURSE.get(), RugbyFieldCurseEntity.createAttributes().build());
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
-        event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(CYCLOPS_CURSE.get(), CyclopsCurseEntity.createAttributes().build());
         event.put(KUCHISAKE_ONNA.get(), KuchisakeOnnaEntity.createAttributes().build());
-        event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
-        event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
-        event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
-        event.put(FUGLY_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(ZOMBA_CURSE.get(), ZombaCurseEntity.createAttributes().build());
+        event.put(WORM_CURSE.get(), WormCurseEntity.createAttributes().build());
+        event.put(FELINE_CURSE.get(), FelineCurseEntity.createAttributes().build());
+        event.put(FUGLY_CURSE.get(), FuglyCurseEntity.createAttributes().build());
         event.put(BIRD_CURSE.get(), BirdCurseEntity.createAttributes().build());
-        event.put(FINGER_BEARER.get(), SorcererEntity.createAttributes().build());
+        event.put(FINGER_BEARER.get(), FingerBearerEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
-        event.put(DINO_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(DINO_CURSE.get(), DinoCurseEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
