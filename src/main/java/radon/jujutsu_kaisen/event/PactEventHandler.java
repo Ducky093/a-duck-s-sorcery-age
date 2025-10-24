@@ -1,22 +1,31 @@
 package radon.jujutsu_kaisen.event;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -27,6 +36,40 @@ import radon.jujutsu_kaisen.world.dimension.JJKDimensions;
 public class PactEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class PactEventHandlerForgeEvents {
+        @SubscribeEvent
+        public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
+            Ability ability = event.getAbility();
+            if (ability.isTechnique() == false) return;
+            LivingEntity owner = event.getEntity();
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
+                Map<UUID, Set<Pact>> acceptedPacts = ownerCap.getAcceptedPacts();
+
+                for (Map.Entry<UUID, Set<Pact>> entry : acceptedPacts.entrySet()) {
+                    UUID partnerId = entry.getKey();
+                    Set<Pact> pacts = entry.getValue();
+                    if (pacts.contains(Pact.TECHNIQUE)) {
+                        Player partner = ownerCap.getPactPartner(partnerId, Pact.TECHNIQUE);
+
+                        if (partner != null && partner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                            ISorcererData partnerCap = partner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                            ownerCap.removePact(partnerId, Pact.TECHNIQUE);
+                            partnerCap.removePact(owner.getUUID(), Pact.TECHNIQUE);
+
+                            ownerCap.setTechnique(CursedTechnique.TECHNIQUELESS);
+                            //ownerCap.setDisable(24000);
+
+                            if (owner instanceof Player playerOwner) {
+                                playerOwner.sendSystemMessage(Component.literal("Your pact with " + partner.getName().getString() + " has been broken!"));
+                            }
+                            partner.sendSystemMessage(Component.literal("Your pact with " + owner.getName().getString() + " has been broken!"));
+                        }
+                    }
+                }
+            });
+        }
+
+        
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
@@ -41,10 +84,22 @@ public class PactEventHandler {
             if (source.is(JJKDamageSources.JUJUTSU)) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+                    float bindingVowMult = 1.0F;
                     if (cap.hasBindingVow(BindingVow.RECOIL)) {
                         attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
-                        event.setAmount(event.getAmount() * 1.15F);
+                        bindingVowMult += 0.15F;
+                    }
+                    // if (cap.hasBindingVow(BindingVow.RISK)) {
+                    //     if (attacker.getHealth()/attacker.getMaxHealth() > 0.25F ) {
+                    //        bindingVowMult -= 0.3F;
+                    //     }
+                    //     else {
+                    //         bindingVowMult += 0.4F;
+                    //     }
+                        
+                    // }
+                    if (bindingVowMult != 1.0F) {
+                        event.setAmount(event.getAmount() * bindingVowMult);
                     }
                 }
             }

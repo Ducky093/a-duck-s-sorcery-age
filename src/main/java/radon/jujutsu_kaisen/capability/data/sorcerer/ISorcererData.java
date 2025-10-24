@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
@@ -60,7 +61,11 @@ public interface ISorcererData {
 
     void createPact(UUID recipient, Pact pact);
 
+    Map<UUID, Set<Pact>> getAcceptedPacts();
+
     boolean hasPact(UUID recipient, Pact pact);
+
+    Player getPactPartner(UUID recipient, Pact pact);
 
     void removePact(UUID recipient, Pact pact);
 

@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import net.minecraft.util.Mth;
+import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 
 import net.minecraft.nbt.CompoundTag;
@@ -269,6 +270,8 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
             if (this.isTechnique() && this.canDisable() && cap.hasDisable()) {
+            
+            if (this.isTechnique() && ( (this.canDisable() && cap.hasDisable() ) ||  (owner.getHealth()/owner.getMaxHealth() > 0.25F && cap.hasBindingVow(BindingVow.RISK) ) ) ) {
                 return Status.DISABLE;
             }
             if ((this.usesHands() && !this.isDomain() ) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {

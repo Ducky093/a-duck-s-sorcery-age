@@ -477,7 +477,7 @@
   "grade.jujutsu_kaisen.special_grade_1": "Special Grade 1",
   "grade.jujutsu_kaisen.special_grade": "Special Grade",
 
-  "cursed_technique.jujutsu_kaisen.techniqueless": "no technique.",
+  "cursed_technique.jujutsu_kaisen.techniqueless": "no",
   "cursed_technique.jujutsu_kaisen.none": "None",
   "cursed_technique.jujutsu_kaisen.shockwave": "Shockwave",
   "cursed_technique.jujutsu_kaisen.sky_strike": "Sky Strike",
@@ -518,6 +518,9 @@
 
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
   "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
+
+  "binding_vow.jujutsu_kaisen.risk": "Risk",
+  "binding_vow.jujutsu_kaisen.risk.description": "Your Cursed Technique lays dormant unless your Health drops below a threshold. In exchange, it is empowered.",
 
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",

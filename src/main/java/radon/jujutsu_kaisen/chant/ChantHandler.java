@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.chant;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
@@ -17,7 +18,12 @@ public class ChantHandler {
 
     public static float getOutput(LivingEntity owner, Ability ability) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getOutput() + (getChant(owner, ability));
+        float outputMod = 0.0F;
+        if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
+            outputMod += 0.3;
+                    //     if  {
+        }
+        return cap.getOutput() + (getChant(owner, ability)) + outputMod ;
     }
 
     public static float getChant(LivingEntity owner, Ability ability) {

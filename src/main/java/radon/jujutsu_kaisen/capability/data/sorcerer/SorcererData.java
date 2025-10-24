@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
@@ -677,6 +678,25 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean hasPact(UUID recipient, Pact pact) {
         return this.acceptedPacts.getOrDefault(recipient, Set.of()).contains(pact);
+    }
+
+    @Override
+    @Nullable
+    public Player getPactPartner(UUID recipient, Pact pact) {
+        if (!this.acceptedPacts.getOrDefault(recipient, Set.of()).contains(pact)) {
+            return null;
+        }
+
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return null;
+
+        ServerPlayer partner = server.getPlayerList().getPlayer(recipient);
+        return partner;
+    }
+
+    @Override
+    public Map<UUID, Set<Pact>> getAcceptedPacts() {
+        return this.acceptedPacts;
     }
 
     @Override

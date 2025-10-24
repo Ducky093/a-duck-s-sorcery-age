@@ -247,7 +247,7 @@ public class ExperienceHandler {
                 SorcererGrade previous = SorcererUtil.getGrade(cap.getExperience());
                 SorcererGrade current = SorcererUtil.getGrade(experience);
                 if (previous != current) {
-                    experience = previous.getNext().getRequiredExperience()-0.01f - (cap.getExperience());
+                    experience = Math.max(previous.getNext().getRequiredExperience()-0.01f - (cap.getExperience()), 0);
                 }
             }
 
