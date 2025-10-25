@@ -20,7 +20,7 @@ public class ChantHandler {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float outputMod = 0.0F;
         if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
-            outputMod += 0.3;
+            outputMod += 0.4;
                     //     if  {
         }
         return cap.getOutput() + (getChant(owner, ability)) + outputMod ;

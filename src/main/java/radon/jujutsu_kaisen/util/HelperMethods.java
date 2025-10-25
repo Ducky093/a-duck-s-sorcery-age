@@ -32,7 +32,12 @@ public class HelperMethods {
     public static final RandomSource RANDOM = RandomSource.createThreadSafe();
 
     // TODO: move this goofy shit to config
-    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure I summon...", "Have you ever trained?"};
+    private static final String[] WORDS = {"blossoms", "thorns", "roots", "petals", "embers", "ashes", "seeds", "vines", "branches", "stones", "crystals", "mist", "bloom", "dew", "tide", "drift", "flame", "soil", 
+    "omens", "sigils", "wards", "bindings", "seals", "echoes", "spirits", "whispers", "truths", "mirrors", "phantoms", "visions", "relics", "runes", "shadows", "dreams", "grace", "essence", "fate", "threshold", 
+    "judgments", "chains", "ropes", "knives", "crowns", "blades", "scars", "brands", "vows", "marks", "wounds", "oaths", "banners", "arrows", "rings", "keys", "grips", "callings", "rifts", "trials", 
+    "silence", "memory", "echo", "stillness", "pulse", "void", "origin", "fracture", "balance", "cycle", "breath", "motion", "reflection", "spark", "moment", "hollow", "weight", "current", "name", "end", 
+    "rot", "decay", "curse", "wither", "lament", "sin", "hunger", "feast", "shroud", "wrath", "abyss", "void", "grief", "scar", "torment", "ruin", "dread", "flesh", "night"
+    };
 
     public static boolean isMelee(DamageSource source) {
         return !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ||

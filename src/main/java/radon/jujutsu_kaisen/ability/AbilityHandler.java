@@ -22,7 +22,13 @@ public class AbilityHandler {
             }
         }
            else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
-               boolean enemyDomain = false;
+             if (owner instanceof ServerPlayer player) {    
+                if (cap.hasToggled(ability)) {
+                    cap.toggle(ability);
+                }
+                return;
+            } 
+            boolean enemyDomain = false;
 
             for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
                 if (domain.getOwner() != owner) {
@@ -30,10 +36,7 @@ public class AbilityHandler {
                 }
             }
                     if (cap.hasToggled(ability)) {
-                        if (owner instanceof ServerPlayer player) {
-                            cap.toggle(ability);
-                        }
-                        else if (enemyDomain == false) {
+                        if (enemyDomain == false) {
                             cap.toggle(ability);
                         }
                     }
