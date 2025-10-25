@@ -138,6 +138,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         // no more digging
         return relative.distSqr(Vec3i.ZERO) < width * width;
     }
+
+    @Override
+    public boolean shouldCollapse(float strength) {
+        return (strength / this.getStrength()) > 2.75F;
+    }
     
     @Override
     public boolean checkSureHitEffect() {

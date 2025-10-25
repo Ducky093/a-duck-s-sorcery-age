@@ -27,28 +27,36 @@ public class SwitchMode extends Ability {
         if (target == null) return false;
 
         ITenShadowsData ownerCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+    ISorcererData ownerRealCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (JJKAbilities.hasTamed(owner, JJKEntities.MAHORAGA.get())) {
+            if (JJKAbilities.hasTamed(owner, JJKEntities.MAHORAGA.get()) && !ownerRealCap.hasToggled(JJKAbilities.MAHORAGA.get())) {
                 if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
-                    if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                        return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
-                    }
-
-                    if (targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                        return true;
-                    }
-                } else {
-                    if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                        return ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
-                    }
-
-                    if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                        return false;
-                    }
+                    return true;
                 }
+                else {
+                    return targetCap.hasToggled(JJKAbilities.WHEEL.get() );
+                }
+                
+                // if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
+                //     if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                //         return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
+                //     }
+
+                //     if (targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique())) {
+                //         return true;
+                //     }
+                // } else {
+                //     if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                //         return ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
+                //     }
+
+                //     if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
+                //         return false;
+                //     }
+                // }
             }
         }
         return HelperMethods.RANDOM.nextInt(10) == 0;

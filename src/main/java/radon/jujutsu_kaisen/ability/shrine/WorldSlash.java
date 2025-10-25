@@ -185,7 +185,8 @@ public class WorldSlash extends Ability {
             LivingEntity owner = event.getEntity();
 
             for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
-                if (!(entity instanceof LivingEntity living) || !hasVisualOn(owner.level(), living, owner) ) continue;
+                if (!(entity instanceof LivingEntity living)) continue;
+                if (living instanceof Player && !hasVisualOn(owner.level(), living, owner)) continue;
 // || !ray(owner.level(),owner, living)
 
                 if (!living.getCapability(SorcererDataHandler.INSTANCE).isPresent() ) {

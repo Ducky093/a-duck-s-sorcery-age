@@ -44,21 +44,21 @@ public class Wheel extends Summon<WheelEntity> {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;
+        return true;
+        // ITenShadowsData ownerCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
-        ITenShadowsData ownerCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        // if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+        //     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            for (CursedTechnique technique : targetCap.getTechniques()) {
-                if (!ownerCap.isAdaptedTo(technique)) {
-                    return true;
-                } else if (JJKAbilities.hasToggled(owner, this) ) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        //     for (CursedTechnique technique : targetCap.getTechniques()) {
+        //         if (!ownerCap.isAdaptedTo(technique)) {
+        //             return true;
+        //         } else if (JJKAbilities.hasToggled(owner, this) ) {
+        //             return true;
+        //         }
+        //     }
+        // }
+        // return false;
     }
 
     @Override
