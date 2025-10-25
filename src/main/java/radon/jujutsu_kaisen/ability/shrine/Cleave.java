@@ -31,7 +31,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
+        return true;
     }
 
     @Override
