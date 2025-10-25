@@ -61,7 +61,11 @@ public class PactEventHandler {
 
                             if (owner instanceof Player playerOwner) {
                                 playerOwner.sendSystemMessage(Component.literal("Your pact with " + partner.getName().getString() + " has been broken!"));
+                                //
                             }
+                             if (owner instanceof ServerPlayer serverplayerOwner) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverplayerOwner);
+                             }
                             partner.sendSystemMessage(Component.literal("Your pact with " + owner.getName().getString() + " has been broken!"));
                         }
                     }
