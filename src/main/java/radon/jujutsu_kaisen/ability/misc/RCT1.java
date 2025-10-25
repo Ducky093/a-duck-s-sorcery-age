@@ -58,7 +58,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
          //min between 1.0, 0.05 * math.pow(1 * 0.225, math.log(1)) * 0.225
         }
         else {
-            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.175F, Math.log(this.getPower(owner))) * 0.15F) + 0.25f);
+            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.175F, Math.log(this.getPower(owner))) * 0.15F) + 0.1f);
         }
         if (!(owner.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < 2; i++) {

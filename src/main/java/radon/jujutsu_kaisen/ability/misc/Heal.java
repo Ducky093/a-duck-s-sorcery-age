@@ -52,7 +52,7 @@ public class Heal extends Ability implements Ability.IChannelened {
         }
         //min between 1.0, 0.075 * math.pow(1 * 0.225, math.log(1)) * 0.225
         else {
-            owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .175f) + 0.15f);
+            owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .175f) + 0.05f);
         }
         if (!(owner.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < 2; i++) {
