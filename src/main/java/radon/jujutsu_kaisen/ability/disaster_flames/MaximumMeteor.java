@@ -29,7 +29,7 @@ public class MaximumMeteor extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
                 !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
-                (cap.getType() == JujutsuType.CURSE && HelperMethods.RANDOM.nextInt(10) == 0 || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+                (cap.getType() == JujutsuType.CURSE && HelperMethods.RANDOM.nextInt(10) == 0 || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.6F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 
     @Override
