@@ -21,15 +21,16 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 20.0D || JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
+         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 15.0D || JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
          
          if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             boolean hasDomainUp = false;
             boolean opponentDomainUp = false;
          for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner) {
+            if (domain.getOwner() == owner  && domain.hasSureHitEffect()) {
                 hasDomainUp = true;
                 continue;
             }
@@ -42,17 +43,20 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData ownercap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-         if (opponentDomainUp && ownercap.hasToggled(this)) {
-             //System.out.println("TURN THIS OFF");
-             return false;
-         }
-         else {
-             if (!opponentDomainUp) {
-                 return (!hasDomainUp && cap.hasToggled(JJKAbilities.INFINITY.get()));
-             }
-             return false;
-         }
+        if (hasDomainUp && !(cap.getExperience() >= ConfigHolder.SERVER.requiredExperienceForExperienced.get())) {
+            return false;
+        }
+        return (opponentDomainUp || !hasDomainUp ) && cap.hasToggled(JJKAbilities.INFINITY.get());
+        //  if (opponentDomainUp && ownercap.hasToggled(this)) {
+        //      //System.out.println("TURN THIS OFF");
+        //      return false;
+        //  }
+        //  else {
+        //      if (!opponentDomainUp) {
+        //          return (!hasDomainUp && cap.hasToggled(JJKAbilities.INFINITY.get()));
+        //      }
+        //      return false;
+        //  }
 
     }
    
