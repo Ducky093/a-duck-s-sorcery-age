@@ -4,6 +4,27 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.VeilHandler;
+import net.minecraft.world.level.block.Block;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -26,8 +47,51 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
     }
 
     @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        boolean enemyDomain = false;
+        DomainExpansionEntity selfDomain = null;
+        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (domain.getOwner() == owner) {
+                selfDomain = domain;
+            }
+            else if (domain.getOwner() != owner) {
+                enemyDomain = true;
+            }
+        }
+
+        if (enemyDomain == true) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!cap.hasToggled(this)) {
+                return true;
+            }
+
+            if (cap.hasToggled(this)) {
+                return false;
+            }
+        }
+
+        else if (selfDomain != null && enemyDomain != true) {
+            if (target != null) {
+                return (selfDomain.distanceTo(target) >= 60.0D);
+            }
+
+            if (target == null) {
+                return HelperMethods.RANDOM.nextInt(15) == 0;
+            }
+
+        }
+        return target != null && owner.distanceTo(target) <= 25.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F && HelperMethods.RANDOM.nextInt(4) == 0;
+    }
+
+    @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
 
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.DOMAIN;
     }
 
     @Override

@@ -68,8 +68,8 @@ public class JogoEntity extends DisasterCurse {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 16.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
+                .add(Attributes.ARMOR, 20.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 12.0D);
     }
 
     @Override

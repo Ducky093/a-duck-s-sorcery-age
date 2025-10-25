@@ -39,7 +39,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         return YutaOkkotsuEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 15.0D)
                 .add(Attributes.ARMOR, 20.0D);
     }
 

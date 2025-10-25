@@ -35,10 +35,17 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     }
 
+
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
 
     }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.DOMAIN;
+    }
+
   @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

@@ -29,6 +29,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         boolean enemyDomain = false;
@@ -56,7 +57,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
 
         else if (selfDomain != null && enemyDomain != true) {
             if (target != null) {
-                return (selfDomain.distanceTo(target) >= 96.0D);
+                return (selfDomain.distanceTo(target) >= 60.0D);
             }
 
             if (target == null) {

@@ -108,7 +108,7 @@ public class HanamiEntity extends DisasterCurse {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.ARMOR, 22.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 16.0D);
+                .add(Attributes.ARMOR_TOUGHNESS, 17.0D);
     }
 
     @Override
