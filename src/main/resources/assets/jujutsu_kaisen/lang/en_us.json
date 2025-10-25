@@ -208,6 +208,8 @@
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
+  "ability.jujutsu_kaisen.fail.disable": "Unable to use your technique.",
+
 
   "ability.jujutsu_kaisen.shockwave": "Shockwave",
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
@@ -513,6 +515,10 @@
   "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
   "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
 
+  "pact.jujutsu_kaisen.technique": "Technique",
+  "pact.jujutsu_kaisen.technique.description": "A pact in which both parties vow to not utilize cursed techniques.",
+
+
   "binding_vow.jujutsu_kaisen.overtime": "Overtime",
   "binding_vow.jujutsu_kaisen.overtime.description": "Your cursed energy is limited to 80-90% during the day, but increases to 110-120% during the night.",
 
@@ -520,7 +526,7 @@
   "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
   "binding_vow.jujutsu_kaisen.risk": "Risk",
-  "binding_vow.jujutsu_kaisen.risk.description": "Your Cursed Technique lays dormant unless your Health drops below a threshold. In exchange, it is empowered.",
+  "binding_vow.jujutsu_kaisen.risk.description": "Your cursed technique lays dormant unless your health drops below a threshold. In exchange, the output of the technique is empowered.",
 
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",

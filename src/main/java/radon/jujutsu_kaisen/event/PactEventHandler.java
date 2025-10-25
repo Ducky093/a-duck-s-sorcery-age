@@ -50,7 +50,7 @@ public class PactEventHandler {
                     if (pacts.contains(Pact.TECHNIQUE)) {
                         Player partner = ownerCap.getPactPartner(partnerId, Pact.TECHNIQUE);
 
-                        if (partner != null && partner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                        if (partner != null  && partner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                             ISorcererData partnerCap = partner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                             ownerCap.removePact(partnerId, Pact.TECHNIQUE);
@@ -65,6 +65,9 @@ public class PactEventHandler {
                             }
                              if (owner instanceof ServerPlayer serverplayerOwner) {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverplayerOwner);
+                             }
+                             if (partner instanceof ServerPlayer serverplayerPartner) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(partnerCap.serializeNBT()), serverplayerPartner);
                              }
                             partner.sendSystemMessage(Component.literal("Your pact with " + owner.getName().getString() + " has been broken!"));
                         }
