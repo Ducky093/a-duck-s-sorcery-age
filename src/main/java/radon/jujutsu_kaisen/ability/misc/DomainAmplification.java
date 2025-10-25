@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 15.0D || JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
+         if (target == null || target.isDeadOrDying() || owner.distanceTo(target) > 20.0D || JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
          
          if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             boolean hasDomainUp = false;

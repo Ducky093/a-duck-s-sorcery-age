@@ -58,13 +58,14 @@ public class HeianSukunaEntity extends SukunaEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 5.0F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.5F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return HeianSukunaEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 20.0D)
                 .add(Attributes.ARMOR, 40.0D);
     }
 

@@ -40,13 +40,14 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 5.0F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.5F;
     }
 
      public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.ARMOR, 30.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 20.0D)
                 .add(Attributes.FOLLOW_RANGE, 140.0D);
     }
 

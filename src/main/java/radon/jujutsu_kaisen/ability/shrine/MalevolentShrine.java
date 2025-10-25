@@ -16,7 +16,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
     public static final int DELAY = 2 * 20;
@@ -26,26 +25,48 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         boolean enemyDomain = false;
         DomainExpansionEntity selfDomain = null;
+       // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
             if (domain.getOwner() == owner) {
                 selfDomain = domain;
             }
-            else {
+            else if (domain.getOwner() != owner) {
                 enemyDomain = true;
             }
         }
+
         if (enemyDomain == true) {
-             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get() )) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
             }
-            return true;
+            if (!cap.hasToggled(this)) {
+                return true;
+            }
+
+            if (cap.hasToggled(this)) {
+                return false;
+            }
         }
-        else if (selfDomain != null) {
-            return (target != null && selfDomain.distanceTo(target) <= 128.0D) || (target == null && HelperMethods.RANDOM.nextInt(16) != 0  );
+
+        else if (selfDomain != null && enemyDomain != true) {
+            if (target != null) {
+                return (selfDomain.distanceTo(target) >= 96.0D);
+            }
+
+            if (target == null) {
+                return HelperMethods.RANDOM.nextInt(15) == 0;
+            }
+
         }
-        return target != null && owner.distanceTo(target) <= 30.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F;
+        return target != null && owner.distanceTo(target) <= 25.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F && HelperMethods.RANDOM.nextInt(4) == 0;
     }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.DOMAIN;
+    }
+
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {

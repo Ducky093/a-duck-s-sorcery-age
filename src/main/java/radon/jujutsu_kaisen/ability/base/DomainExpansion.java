@@ -112,6 +112,9 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
+        if (owner instanceof ServerPlayer player) {
+            return true;
+        }
         return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && ((technique != null && technique.getDomain() == this ) || (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && cap.getLastStolen() != null && cap.getLastStolen().getDomain() == this  ) ) && (super.isValid(owner));
     }
 

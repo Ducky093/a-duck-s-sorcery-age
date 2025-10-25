@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -63,9 +64,10 @@ public class FingerBearerEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return FingerBearerEntity.createMobAttributes()
+        return SorcererEntity.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 100.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ATTACK_DAMAGE, 6 * 5.0D)
                 .add(Attributes.ARMOR, 15.0D);
     }
 

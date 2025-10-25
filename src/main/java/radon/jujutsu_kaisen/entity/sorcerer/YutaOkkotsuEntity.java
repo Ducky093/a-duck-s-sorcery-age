@@ -32,7 +32,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -56,7 +56,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     @Override
     public List<Ability> getUnlocked() {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(),
-                JJKAbilities.OUTPUT_RCT.get());
+                JJKAbilities.OUTPUT_RCT.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 
     @Override

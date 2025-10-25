@@ -59,9 +59,9 @@ public class Dash extends Ability {
         if (target == null) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            return HelperMethods.RANDOM.nextInt(3) == 0;
+            return HelperMethods.RANDOM.nextInt(2) == 0;
         }
-        return HelperMethods.RANDOM.nextInt(30) == 0;
+        return HelperMethods.RANDOM.nextInt(15) == 0;
     }
 
     @Override

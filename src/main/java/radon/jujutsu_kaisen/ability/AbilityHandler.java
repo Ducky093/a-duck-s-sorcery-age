@@ -1,20 +1,45 @@
 package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import net.minecraft.server.level.ServerLevel;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
 
 public class AbilityHandler {
     public static void untrigger(LivingEntity owner,Ability ability) {
+
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
         if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (cap.hasToggled(ability)) {
                 cap.toggle(ability);
             }
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
+        }
+           else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
+               boolean enemyDomain = false;
+
+            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+                if (domain.getOwner() != owner) {
+                    enemyDomain = true;
+                }
+            }
+                    if (cap.hasToggled(ability)) {
+                        if (owner instanceof ServerPlayer player) {
+                            cap.toggle(ability);
+                        }
+                        else if (enemyDomain == false) {
+                            cap.toggle(ability);
+                        }
+                    }
+
+        }
+           else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (cap.isChanneling(ability)) {
                 cap.channel(ability);
             }
@@ -26,7 +51,9 @@ public class AbilityHandler {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Ability.Status status = ability.isTriggerable(owner);
-        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+
+
+        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT ) {
             if (status == Ability.Status.SUCCESS) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
@@ -40,7 +67,18 @@ public class AbilityHandler {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
+
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
+            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                cap.toggle(ability);
+                System.out.println(ability);
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+            }
+            return status;
+        }
+
+        else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.channel(ability);

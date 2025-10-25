@@ -47,7 +47,8 @@ public abstract class Ability {
     public enum ActivationType {
         INSTANT,
         TOGGLED,
-        CHANNELED
+        CHANNELED,
+        DOMAIN
     }
 
     public enum Status {
@@ -221,6 +222,10 @@ public abstract class Ability {
          if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        if (this.isDomain() && (!(owner instanceof Player player))) {
+            return true;
+        }
+
         if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             if (!this.isNotDisabledFromDA() || !cap.hasToggled(this)) {
                 return false;
@@ -270,23 +275,22 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
             if (this.isTechnique() && this.canDisable() && cap.hasDisable()) {
-            
-            if (this.isTechnique() && ( (this.canDisable() && cap.hasDisable() ) ||  (owner.getHealth()/owner.getMaxHealth() > 0.25F && cap.hasBindingVow(BindingVow.RISK) ) ) ) {
-                return Status.DISABLE;
-            }
-            if ((this.usesHands() && !this.isDomain() ) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY) ) {
-                return Status.DISARMED;
-            }
-            
+
+                if (this.isTechnique() && ((this.canDisable() && cap.hasDisable()) || (owner.getHealth() / owner.getMaxHealth() > 0.25F && cap.hasBindingVow(BindingVow.RISK)))) {
+                    return Status.DISABLE;
+                }
+                if ((this.usesHands() && !this.isDomain()) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY)) {
+                    return Status.DISARMED;
+                }
 
 
+                if (!cap.isCooldownDone(this)) {
+                    return Status.COOLDOWN;
+                }
 
-            if (!cap.isCooldownDone(this)) {
-                return Status.COOLDOWN;
-            }
-
-            if (!this.checkCost(owner)) {
-                return Status.ENERGY;
+                if (!this.checkCost(owner)) {
+                    return Status.ENERGY;
+                }
             }
         }
         return Status.SUCCESS;

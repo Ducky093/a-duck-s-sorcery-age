@@ -29,20 +29,46 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-
+        boolean enemyDomain = false;
+        DomainExpansionEntity selfDomain = null;
+        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == target) {
-                return true;
+            if (domain.getOwner() == owner) {
+                selfDomain = domain;
             }
-            else if (domain.getOwner() == owner) {
-                return target != null && owner.distanceTo(target) <= 128.0D;
+            else if (domain.getOwner() != owner) {
+                enemyDomain = true;
             }
         }
-        return target != null && owner.distanceTo(target) <= 30.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F;
+
+        if (enemyDomain == true) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!cap.hasToggled(this)) {
+                return true;
+            }
+
+            if (cap.hasToggled(this)) {
+                return false;
+            }
+        }
+
+        else if (selfDomain != null && enemyDomain != true) {
+            if (target != null) {
+                return (selfDomain.distanceTo(target) >= 96.0D);
+            }
+
+            if (target == null) {
+                return HelperMethods.RANDOM.nextInt(15) == 0;
+            }
+
+        }
+        return target != null && owner.distanceTo(target) <= 25.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F && HelperMethods.RANDOM.nextInt(4) == 0;
     }
+
+
+
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
@@ -65,6 +91,11 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
                 }
             }
         }
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.DOMAIN;
     }
 
     @Override

@@ -60,7 +60,8 @@ public class SukunaEntity extends SorcererEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.FOLLOW_RANGE, 256.0D)
+                .add(Attributes.FOLLOW_RANGE, 140.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 20.0D)
                 .add(Attributes.ARMOR, 40.0D);
     }
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
@@ -250,7 +251,7 @@ public class SukunaEntity extends SorcererEntity {
     @Override
     public float getExperience() {
         float min = SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
-        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F;
+        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.5F;
         return min + (this.fingers * ((max - min) / 20));
     }
 

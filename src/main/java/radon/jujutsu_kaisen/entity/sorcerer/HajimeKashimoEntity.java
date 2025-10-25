@@ -35,7 +35,7 @@ public class HajimeKashimoEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.5F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
     }
 
     @Override
