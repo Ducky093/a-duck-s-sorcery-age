@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
+import net.minecraftforge.event.level.NoteBlockEvent.Play;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +47,7 @@ import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -318,7 +320,12 @@ if (attackerEntity instanceof Projectile projectile) {
 }
 
 if (!(attackerEntity instanceof LivingEntity attacker)) return;
-
+if (!(attackerEntity instanceof Player) && attackerEntity instanceof CursedSpirit ) {
+    event.setAmount(event.getAmount() * ConfigHolder.SERVER.curseDamageMult.get().floatValue() );
+}
+if (!(victim instanceof Player) && victim instanceof CursedSpirit ) {
+    event.setAmount(event.getAmount() * ConfigHolder.SERVER.curseDefenseMult.get().floatValue() );
+}
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(capSelf -> {
         if (HelperMethods.isMelee(source) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
@@ -336,11 +343,18 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             float armor = SorcererUtil.getDefense(cap.getExperience());
-
+      
+            if (victim instanceof Player) {
+                armor*=ConfigHolder.SERVER.jujutsuDefenseMult.get().floatValue();
+            }
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
 		        armor = SorcererUtil.getDefenseHR(cap.getExperience());
+                if (victim instanceof Player) {
+                   armor*=ConfigHolder.SERVER.hrDefenseMult.get().floatValue();
+                }
             }
-
+           
+          
 
             float blocked = event.getAmount()/armor;
             event.setAmount(blocked);

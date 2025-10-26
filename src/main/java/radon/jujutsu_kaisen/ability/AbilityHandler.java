@@ -22,14 +22,14 @@ public class AbilityHandler {
             }
         }
            else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
-             if (owner instanceof ServerPlayer player) {    
+             if (owner instanceof Player player) {    
                 if (cap.hasToggled(ability)) {
                     cap.toggle(ability);
                 }
                 return;
             } 
             boolean enemyDomain = false;
-
+            if (owner.level().isClientSide) return;
             for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
                 if (domain.getOwner() != owner) {
                     enemyDomain = true;

@@ -37,6 +37,11 @@ public class ServerConfig {
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
+    public final ForgeConfigSpec.DoubleValue curseDamageMult;
+    public final ForgeConfigSpec.DoubleValue curseDefenseMult;
+    public final ForgeConfigSpec.DoubleValue jujutsuDefenseMult;
+    public final ForgeConfigSpec.DoubleValue hrDefenseMult;
+
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
     public final ForgeConfigSpec.BooleanValue destruction;
@@ -140,6 +145,14 @@ public class ServerConfig {
                 .defineInRange("sorcererHealingAmount", 0.1F, 0.0F, 2.5F);
         this.curseHealingAmount = builder.comment("The maximum amount of health curses can heal per tick (scales with experience)")
                 .defineInRange("curseHealingAmount", 0.15F, 0.0F, 2.5F);
+        this.curseDamageMult = builder.comment("The multiplier on the damage NPC curses deal to you")
+                .defineInRange("curseDamageMult", 0.8F, 0.0F, 9999.0F);
+        this.curseDefenseMult = builder.comment("The multiplier on damage NPC curses take from you")
+                .defineInRange("curseDefenseMult", 1.0F, 0.0F, 9999.0F);
+        this.jujutsuDefenseMult = builder.comment("The multiplier to standard players' defense")
+                .defineInRange("jujutsuDefenseMult", 1.0F, 0.0F, 9999.0F);
+        this.hrDefenseMult = builder.comment("The multiplier to Heavenly Restriction players's defense (already higher outside of config)")
+                .defineInRange("hrDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
