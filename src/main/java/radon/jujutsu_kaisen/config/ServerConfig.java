@@ -18,6 +18,10 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
+    public final ForgeConfigSpec.IntValue sorcererVillageSpawnRate;
+    public final ForgeConfigSpec.IntValue curseVillageSpawnRate;
+    public final ForgeConfigSpec.IntValue displayCaseSpawnRate;
+public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.DoubleValue pointMultiplier;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue minimumBodyStealEXP;
@@ -44,6 +48,8 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue hrDefenseMult;
     public final ForgeConfigSpec.DoubleValue limitlessNoSixEyesMult;
     public final ForgeConfigSpec.DoubleValue sixEyesMult;
+
+
 
 
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
@@ -109,6 +115,14 @@ public class ServerConfig {
                 .defineInRange("sorcererFleshRarity", 20, 0, 100000);
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare)")
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
+        this.curseVillageSpawnRate = builder.comment("Rarity of curses spawning in villages (bigger value means more rare)")
+                .defineInRange("curseVillageSpawnRate", 8, 0, 100000);
+        this.sorcererVillageSpawnRate = builder.comment("Rarity of sorcerers spawning in villages (bigger value means more rare)")
+                .defineInRange("sorcererVillageSpawnRate", 6, 0, 100000);
+        this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare)")
+                .defineInRange("displayCaseRarity", 8, 0, 100000);
+        this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare)")
+                .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
@@ -163,6 +177,7 @@ public class ServerConfig {
                 .defineInRange("limitlessNoSixEyesMult", 1.0F, 0.0F, 9999.0F);
         this.sixEyesMult = builder.comment("The multiplier of drain decreases given to Six Eyes.")
                 .defineInRange("sixEyesMult", 0.5F, 0.0F, 9999.0F);
+
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")

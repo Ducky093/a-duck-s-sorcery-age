@@ -18,6 +18,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -147,15 +149,14 @@ public class ClientAbilityHandler {
             }
         }
 
-        @SubscribeEvent
-        public static void onKeyInput(InputEvent.Key event) {
-            Minecraft mc = Minecraft.getInstance();
+          private static void handleInput(int inputObj, int action) {
+ Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
 
-            if (event.getKey() == KeyEvent.VK_SPACE) {
-                if (event.getAction() == InputConstants.PRESS || event.getAction() == InputConstants.RELEASE) {
-                    boolean down = event.getAction() == InputConstants.PRESS;
+            if (inputObj == KeyEvent.VK_SPACE || inputObj == GLFW.GLFW_KEY_SPACE) {
+                if (action == InputConstants.PRESS || action == InputConstants.RELEASE) {
+                    boolean down = action == InputConstants.PRESS;
 
                     if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
                         listener.setJump(down);
@@ -167,7 +168,7 @@ public class ClientAbilityHandler {
                 }
             }
 
-            if (event.getAction() == InputConstants.PRESS) {
+            if (action == InputConstants.PRESS) {
                 if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
                     Ability ability = AbilityOverlay.getSelected();
 
@@ -225,12 +226,12 @@ public class ClientAbilityHandler {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.QUICKDASH.get())));
                     }
                 }
-            } else if (event.getAction() == InputConstants.RELEASE) {
+            } else if (action == InputConstants.RELEASE) {
                 if (current != null) {
                     boolean possiblyChanneling = channeled != null;
 
                     if (possiblyChanneling) {
-                        if (event.getKey() == current.getKey().getValue()) {
+                        if (inputObj == current.getKey().getValue()) {
                             AbilityHandler.untrigger(mc.player, channeled);
                             PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
 
@@ -240,14 +241,26 @@ public class ClientAbilityHandler {
                         }
                     }
                 }
-                if ((event.getKey() == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
-                        (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
-                        (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
+                if ((inputObj == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
+                        (inputObj == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
+                        (inputObj == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
                     mc.screen.onClose();
                 }
             }
         }
+         
+    @SubscribeEvent
+    public static void onKeyInput(InputEvent.Key event) {
+        handleInput(event.getKey(), event.getAction());
     }
+
+    @SubscribeEvent
+    public static void onMouseInput(InputEvent.MouseButton event) {
+        handleInput(event.getButton(), event.getAction());
+    }
+    }
+
+      
 
     public static boolean isSuccess(Ability ability, Ability.Status status) {
         Minecraft mc = Minecraft.getInstance();
@@ -265,7 +278,7 @@ public class ClientAbilityHandler {
                             Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
             case BURNOUT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                            cap.getBurnout() / 20), false);
+                        cap.getBurnout() / 20), false);
             case DISABLE ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
             case FAILURE ->

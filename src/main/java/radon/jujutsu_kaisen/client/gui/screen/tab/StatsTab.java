@@ -123,7 +123,7 @@ public class StatsTab extends JJKTab {
             component.append("\n");
         }
         else if (technique == null || technique == CursedTechnique.TECHNIQUELESS) {
-            component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), String.format("gui.%s.stats.cursed_technique.none", JujutsuKaisen.MOD_ID ) ));
+            component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), Component.translatable(String.format("gui.%s.stats.cursed_technique.none", JujutsuKaisen.MOD_ID )) ));
             component.append("\n");
         }
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {

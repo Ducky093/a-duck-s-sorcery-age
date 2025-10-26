@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -52,8 +53,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
-    private static final int RARITY = 10;
-
+    //rarity 10
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Nullable
@@ -91,7 +91,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.isInVillage()) {
-                if (this.random.nextInt(Mth.floor(RARITY * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
+                if (this.random.nextInt(Mth.floor(ConfigHolder.SERVER.curseVillageSpawnRate.get()  * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
                 if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return false;
             } else if (!this.isInFortress()) {
                 return false;

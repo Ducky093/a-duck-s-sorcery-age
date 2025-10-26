@@ -326,6 +326,7 @@ if (!(attackerEntity instanceof Player) && attackerEntity instanceof CursedSpiri
 if (!(victim instanceof Player) && victim instanceof CursedSpirit ) {
     event.setAmount(event.getAmount() * ConfigHolder.SERVER.curseDefenseMult.get().floatValue() );
 }
+
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(capSelf -> {
         if (HelperMethods.isMelee(source) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {

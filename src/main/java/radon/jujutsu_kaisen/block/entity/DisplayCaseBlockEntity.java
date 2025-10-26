@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
@@ -43,7 +44,7 @@ import java.util.Optional;
 
 
 public class DisplayCaseBlockEntity extends BlockEntity {
-    private static final int RARITY = 10;
+    //private static final int RARITY = 10;
     private static final int SPAWN_RANGE = 8;
 
     private ItemStack stack = ItemStack.EMPTY;
@@ -167,7 +168,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         if (!(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
 
-        int rng = Mth.floor((energy * RARITY)) / (pLevel.isNight() ? 2 : 1);
+        int rng = Mth.floor((energy * ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 2 : 1);
 
         if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
