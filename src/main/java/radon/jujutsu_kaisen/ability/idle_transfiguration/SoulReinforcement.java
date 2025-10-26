@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -97,7 +98,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                 if (domain.getOwner() == source.getEntity()) return;
             }
 
-            float cost = event.getAmount() * 12.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = event.getAmount() * 12.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? ConfigHolder.SERVER.sixEyesMult.get().floatValue() : 1.0F);
             if (victimCap.getEnergy() < cost) return;
             victimCap.useEnergy(cost);
 

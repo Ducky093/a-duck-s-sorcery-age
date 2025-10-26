@@ -229,7 +229,7 @@ public void run(LivingEntity owner) {
                 if (domain.getOwner() == source.getEntity()) return;
             }
 
-            float cost = event.getAmount() * 10.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = event.getAmount() * 10.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? ConfigHolder.SERVER.sixEyesMult.get().floatValue() : 1.0F);
             if (victimCap.getEnergy() < cost) return;
             victimCap.useEnergy(cost);
 

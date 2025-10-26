@@ -30,6 +30,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue playerMimicry;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
+    public final ForgeConfigSpec.BooleanValue mimicryBodyStealCompat;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
     public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
     public final ForgeConfigSpec.BooleanValue playerRequiredForRCT;
@@ -41,6 +42,9 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue curseDefenseMult;
     public final ForgeConfigSpec.DoubleValue jujutsuDefenseMult;
     public final ForgeConfigSpec.DoubleValue hrDefenseMult;
+    public final ForgeConfigSpec.DoubleValue limitlessNoSixEyesMult;
+    public final ForgeConfigSpec.DoubleValue sixEyesMult;
+
 
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
@@ -127,6 +131,8 @@ public class ServerConfig {
                 .define("playerBodySteal", false);
         this.playerMimicry = builder.comment("When enabled Mimicry only works on players")
                 .define("playerMimicry", false);
+        this.mimicryBodyStealCompat = builder.comment("When enabled Mimicry and Body Steal may steal from each other.")
+                .define("mimicryBodyStealCompat", true);
         this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
                 .define("bodyStealEXPReset", true);
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
@@ -153,6 +159,10 @@ public class ServerConfig {
                 .defineInRange("jujutsuDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.hrDefenseMult = builder.comment("The multiplier to Heavenly Restriction players's defense (already higher outside of config)")
                 .defineInRange("hrDefenseMult", 1.0F, 0.0F, 9999.0F);
+        this.limitlessNoSixEyesMult = builder.comment("The multiplier to Limitless's costs without Six Eyes")
+                .defineInRange("limitlessNoSixEyesMult", 1.0F, 0.0F, 9999.0F);
+        this.sixEyesMult = builder.comment("The multiplier of drain decreases given to Six Eyes.")
+                .defineInRange("sixEyesMult", 0.5F, 0.0F, 9999.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
