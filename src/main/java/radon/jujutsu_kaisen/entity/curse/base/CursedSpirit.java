@@ -34,6 +34,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Math;
+
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -91,7 +93,10 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.isInVillage()) {
-                if (this.random.nextInt(Mth.floor(ConfigHolder.SERVER.curseVillageSpawnRate.get()  * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
+                if (ConfigHolder.SERVER.curseVillageSpawnRate.get() == 0) {
+                    return false;
+                }
+                if (this.random.nextInt(Math.max(1, Mth.floor(ConfigHolder.SERVER.curseVillageSpawnRate.get()  * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 2.0F : 1.0F)))) != 0) return false;
                 if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return false;
             } else if (!this.isInFortress()) {
                 return false;

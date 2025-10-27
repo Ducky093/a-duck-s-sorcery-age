@@ -15,6 +15,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
+    public final ForgeConfigSpec.IntValue totemRCTChanceMult;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
@@ -107,8 +108,10 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                 .defineInRange("maximumExperienceAmount", 20000.0F, 1.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
-        this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
+        this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance)")
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
+        this.totemRCTChanceMult = builder.comment("The amount the chance is divided by when holding a totem (raises chances of obtaining rct the higher it is) ")
+                .defineInRange("totemRCTChanceMult", 4, 1, 1000);
         this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)")
                 .defineInRange("requiredExperienceForExperienced", 5000.0F, 1.0F, 100000.0F);
         this.sorcererFleshRarity = builder.comment("Rarity of sorcerers dropping flesh (bigger value means more rare)")
