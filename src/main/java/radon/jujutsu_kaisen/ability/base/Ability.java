@@ -274,8 +274,7 @@ public abstract class Ability {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
             }
-            if (this.isTechnique() && this.canDisable() && cap.hasDisable()) {
-
+            
                 if (this.isTechnique() && ((this.canDisable() && cap.hasDisable()) || (owner.getHealth() / owner.getMaxHealth() > 0.25F && cap.hasBindingVow(BindingVow.RISK)))) {
                     return Status.DISABLE;
                 }
@@ -284,13 +283,13 @@ public abstract class Ability {
                 }
 
 
-                if (!cap.isCooldownDone(this)) {
-                    return Status.COOLDOWN;
-                }
 
-                if (!this.checkCost(owner)) {
-                    return Status.ENERGY;
-                }
+            if (!cap.isCooldownDone(this)) {
+                return Status.COOLDOWN;
+            }
+
+            if (!this.checkCost(owner)) {
+                return Status.ENERGY;
             }
         }
         return Status.SUCCESS;
@@ -394,7 +393,12 @@ public abstract class Ability {
             cost *= 1.5F;
         }
         if (cap.hasTrait(Trait.SIX_EYES) && (this.isTechnique() || this.isDomain() ) ) {
-            cost *= 0.5F;
+            cost *= ConfigHolder.SERVER.sixEyesMult.get().floatValue();
+        }
+        else if (!cap.hasTrait(Trait.SIX_EYES) && (this.isTechnique() || this.isDomain()) ) {
+            if (JJKAbilities.getTechnique(this) == CursedTechnique.LIMITLESS) {
+               cost *= ConfigHolder.SERVER.limitlessNoSixEyesMult.get().floatValue();
+            }
         }
         if (output > 0) {
             output = Mth.clamp(output*0.8F,1.0F,100.0F);
