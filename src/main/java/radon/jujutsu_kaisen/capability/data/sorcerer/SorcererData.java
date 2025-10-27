@@ -499,6 +499,11 @@ public class SorcererData implements ISorcererData {
 
             double movement = this.getRealPower() * 0.3D;
 
+            if (this.getOutput() < 1) {
+                movement *= (0.5 * this.getOutput());
+                damage *= this.getOutput();
+            }
+
             if (ratio <= 0.5 && ratio > 0.35) {
                 movement *= 0.4;
             }
