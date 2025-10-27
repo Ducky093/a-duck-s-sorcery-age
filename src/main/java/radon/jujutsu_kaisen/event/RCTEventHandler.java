@@ -60,11 +60,11 @@ public class RCTEventHandler {
                 ItemStack stack = victim.getItemInHand(hand);
 
                 if (stack.is(Items.TOTEM_OF_UNDYING)) {
-                    chance /= 2;
+                    chance /= ConfigHolder.SERVER.totemRCTChanceMult.get();
                 }
             }
 
-            if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
+            if ( chance != 0 && HelperMethods.RANDOM.nextInt(chance) != 0 ) return;
 
             victim.setHealth(victim.getMaxHealth() / 2);
             cap.unlock(JJKAbilities.RCT1.get());

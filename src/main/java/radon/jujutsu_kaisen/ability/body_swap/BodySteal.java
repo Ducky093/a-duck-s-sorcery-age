@@ -143,8 +143,9 @@ public class BodySteal extends Ability implements Ability.IToggled {
         if (current == steal || (steal == CursedTechnique.MIMICRY && !ConfigHolder.SERVER.mimicryBodyStealCompat.get() ) ) return;
 
         
-        
-        ownerCap.addStolen(steal);
+        if (steal != null) {
+            ownerCap.addStolen(steal);
+        }
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
         //ownerCap.setExperience(targetCap.getExperience());

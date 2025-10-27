@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-
+//     pOutput.accept(JJKItems.RED_HANDLE_KATANA.get());
 public class JJKCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, JujutsuKaisen.MOD_ID);
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("main", () ->
@@ -27,7 +27,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.STEEL_GAUNTLET.get());
 
                         pOutput.accept(JJKItems.GREEN_HANDLE_KATANA.get());
-                        pOutput.accept(JJKItems.RED_HANDLE_KATANA.get());
+                   
                         pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
 
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
