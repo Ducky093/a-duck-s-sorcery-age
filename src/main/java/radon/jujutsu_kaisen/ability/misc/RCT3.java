@@ -30,7 +30,7 @@ public class RCT3 extends RCT2 {
 
         int burnout = cap.getBurnout();
 
-        if (burnout > 0) {
+        if (burnout > 0 && owner.isShiftKeyDown()) {
             cap.setBurnout(Math.max(0, burnout - 5));
 
             if (this.getCharge(owner) % 20 == 0) {
@@ -56,7 +56,7 @@ public class RCT3 extends RCT2 {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getBurnout() > 0) {
+        if (cap.getBurnout() > 0 && owner.isShiftKeyDown()) {
             cost += 100.0F / 20;
         }
         return cost;

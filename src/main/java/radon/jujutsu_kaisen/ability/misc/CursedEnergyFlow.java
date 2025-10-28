@@ -194,6 +194,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             if (ratio <= 0.15) {
                 newSpeed *= 0.65;
             }
+
+            if (cap.getBurnout() > 0) {
+                newSpeed *= 0.8;
+            }
+
                 EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION); 
             

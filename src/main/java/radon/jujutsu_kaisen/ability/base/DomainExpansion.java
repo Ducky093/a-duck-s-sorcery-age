@@ -32,7 +32,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public abstract class DomainExpansion extends Ability implements Ability.IToggled {
-    public static final int BURNOUT = 30 * 20;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -131,7 +130,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+        return ActivationType.DOMAIN;
     }
 
     @Override
@@ -139,6 +138,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         DomainExpansionEntity domain = this.createBarrier(owner);
         cap.addSummon(domain);
+
     }
 
     
@@ -148,7 +148,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (!owner.level().isClientSide) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             cap.unsummonByClass(DomainExpansionEntity.class);
-
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
@@ -162,7 +161,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 3.5F;
+        return 2.5F;
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {

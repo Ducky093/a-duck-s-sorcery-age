@@ -27,7 +27,8 @@ public class AbilityHandler {
                     cap.toggle(ability);
                 }
                 return;
-            } 
+            }
+
             boolean enemyDomain = false;
             if (owner.level().isClientSide) return;
             for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
@@ -75,7 +76,6 @@ public class AbilityHandler {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
-                System.out.println(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;

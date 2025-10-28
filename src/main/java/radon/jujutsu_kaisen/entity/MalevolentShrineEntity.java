@@ -71,13 +71,6 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        for (LivingEntity entity : this.getAffected()) {
-            if (!(entity instanceof ServerPlayer player)) continue;
-
-            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
-            player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
-                    player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
-        }
     }
 
     @Override
@@ -153,11 +146,19 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     public void tick() {
         super.tick();
 
+        if (this.getTime() == 1) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
+                if (!(entity instanceof ServerPlayer player)) continue;
+                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
+                player.level().playSound(null,  player.getX(), player.getY(), player.getZ(), JJKSounds.MALEVOLENT_SHRINE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            }
+        }
+
         if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0) {
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                 if (!(entity instanceof ServerPlayer player)) continue;
 
-                PacketHandler.sendToClient(new CameraShakeS2CPacket(0.5F, 5.0F, 20), player);
+                PacketHandler.sendToClient(new CameraShakeS2CPacket(0.1F, 3.0F, 20), player);
             }
         }
     }

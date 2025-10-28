@@ -437,6 +437,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         @Override
         public void onRemovedFromWorld() {
+            int burnout = Math.max(15 * 20, this.getTime());
+            if (burnout > 45 * 20) {
+                burnout = 45 * 20;
+            }
+
+            int realburnout = burnout;
             super.onRemovedFromWorld();
 
             if (!this.level().isClientSide) {
@@ -444,7 +450,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                 if (owner != null) {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.setBurnout(DomainExpansion.BURNOUT);
+                        cap.setBurnout(realburnout);
                         cap.resetSpeedStacks();
 
                         if (owner instanceof ServerPlayer player) {
@@ -603,6 +609,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (completed) {
             if (this.getTime() % 20 == 0) {
                 this.check();
+                System.out.println(this.getTime());
             }
         }
 

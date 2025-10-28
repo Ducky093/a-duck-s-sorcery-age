@@ -163,8 +163,16 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
             LivingEntity owner = this.getOwner();
 
             if (owner != null) {
+                int burnout = Math.max(15 * 20, this.getTime());
+
+                if (burnout > 45 * 20) {
+                    burnout = 45 * 20;
+                }
+
+                int realburnout = burnout;
+
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setBurnout(DomainExpansion.BURNOUT);
+                    cap.setBurnout(realburnout);
                     cap.resetSpeedStacks();
 
                     if (owner instanceof ServerPlayer player) {

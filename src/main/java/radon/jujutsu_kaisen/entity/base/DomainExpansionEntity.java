@@ -41,6 +41,7 @@ public abstract class DomainExpansionEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
 
     public static final int OFFSET = 5;
+    public static final int INITIAL_COST = 1000;
 
     @Nullable
     private UUID ownerUUID;
@@ -125,6 +126,7 @@ public abstract class DomainExpansionEntity extends Entity {
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }
+
 
     public void setTime(int time) {
         this.entityData.set(DATA_TIME, time);
@@ -221,6 +223,12 @@ public abstract class DomainExpansionEntity extends Entity {
         this.setTime(this.getTime() + 1);
 
         LivingEntity owner = this.getOwner();
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap != null && this.getTime() == 1) {
+            cap.useEnergy(INITIAL_COST);
+        }
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, this.ability))) {
             this.discard();

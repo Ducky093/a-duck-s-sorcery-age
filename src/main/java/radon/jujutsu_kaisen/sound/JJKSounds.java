@@ -16,6 +16,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")));
     public static RegistryObject<SoundEvent> HOLLOW_PURPLE = SOUNDS.register("hollow_purple", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")));
+    public static RegistryObject<SoundEvent> UNLIMITED_VOID = SOUNDS.register("unlimited_void", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "unlimited_void")));
             public static RegistryObject<SoundEvent> COLLAPSE = SOUNDS.register("collapse", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "collapse")));
               public static RegistryObject<SoundEvent> RATIO_RULE = SOUNDS.register("ratio_rule", () ->
