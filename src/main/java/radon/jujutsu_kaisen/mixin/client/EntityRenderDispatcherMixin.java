@@ -45,7 +45,7 @@ public class EntityRenderDispatcherMixin<E extends Entity> {
             for (ProjectionFrameEntity frame : pEntity.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(pEntity.position(),
                     8.0D, 8.0D, 8.0D))) {
                 if (frame.getVictim() == pEntity) {
-                    cir.setReturnValue(false);
+                    cir.setReturnValue(true);
                 }
             }
         }
