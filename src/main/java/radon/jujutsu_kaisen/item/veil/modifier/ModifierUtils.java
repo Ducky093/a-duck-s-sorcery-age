@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.item.veil.modifier;
 
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,6 +22,7 @@ public class ModifierUtils {
             case CURSE -> new CurseModifier(nbt);
             case SORCERER -> new SorcererModifier(nbt);
             case GRIEFING -> new GriefingModifier(nbt);
+            case VIOLENCE -> new ViolenceModifier(nbt);
         };
     }
 
@@ -36,12 +38,12 @@ public class ModifierUtils {
             ListTag modifiersTag = new ListTag();
 
             for (int i = 0; i < MAX_MODIFIERS; i++) {
-                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serialize());
+                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serializeNBT());
             }
             nbt.put("modifiers", modifiersTag);
         }
         ListTag modifiersTag = nbt.getList("modifiers", Tag.TAG_COMPOUND);
-        modifiersTag.set(index, modifier.serialize());
+        modifiersTag.set(index, modifier.serializeNBT());
     }
 
     public static List<Modifier> deserialize(ListTag modifiersTag) {
@@ -58,7 +60,7 @@ public class ModifierUtils {
         ListTag modifiersTag = new ListTag();
 
         for (Modifier modifier : modifiers) {
-            modifiersTag.add(modifier.serialize());
+            modifiersTag.add(modifier.serializeNBT());
         }
         return modifiersTag;
     }

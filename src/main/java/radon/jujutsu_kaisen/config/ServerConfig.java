@@ -32,6 +32,9 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
+    public final ForgeConfigSpec.BooleanValue sorcererSaturation;
+    public final ForgeConfigSpec.BooleanValue curseSaturation;
+    public final ForgeConfigSpec.BooleanValue foodCERegen;
     public final ForgeConfigSpec.BooleanValue playerMimicry;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
@@ -45,6 +48,8 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseDamageMult;
     public final ForgeConfigSpec.DoubleValue curseDefenseMult;
+    public final ForgeConfigSpec.DoubleValue sorcererDamageMult;
+    public final ForgeConfigSpec.DoubleValue sorcererDefenseMult;
     public final ForgeConfigSpec.DoubleValue jujutsuDefenseMult;
     public final ForgeConfigSpec.DoubleValue hrDefenseMult;
     public final ForgeConfigSpec.DoubleValue limitlessNoSixEyesMult;
@@ -144,6 +149,12 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                 .define("realisticShikigami", false);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
                 .define("realisticCurses", true);
+        this.sorcererSaturation = builder.comment("When enabled Sorcerers will always have their hunger filled.")
+                .define("sorcererSaturation", true);
+        this.curseSaturation = builder.comment("When enabled Curses will always have their hunger filled.")
+                .define("curseSaturation", true);
+        this.foodCERegen = builder.comment("When enabled Cursed Energy regeneration speed will scale off hunger.")
+                .define("foodCERegen", true);
         this.playerBodySteal = builder.comment("When enabled Body Steal only works on players")
                 .define("playerBodySteal", false);
         this.playerMimicry = builder.comment("When enabled Mimicry only works on players")
@@ -172,6 +183,10 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                 .defineInRange("curseDamageMult", 0.8F, 0.0F, 9999.0F);
         this.curseDefenseMult = builder.comment("The multiplier on damage NPC curses take from you")
                 .defineInRange("curseDefenseMult", 1.0F, 0.0F, 9999.0F);
+        this.sorcererDamageMult = builder.comment("The multiplier on the damage NPC sorcerers deal to you")
+                .defineInRange("sorcererDamageMult", 0.8F, 0.0F, 9999.0F);
+        this.sorcererDefenseMult = builder.comment("The multiplier on damage NPC sorcerers take from you")
+                .defineInRange("sorcererDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.jujutsuDefenseMult = builder.comment("The multiplier to standard players' defense")
                 .defineInRange("jujutsuDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.hrDefenseMult = builder.comment("The multiplier to Heavenly Restriction players's defense (already higher outside of config)")

@@ -121,7 +121,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                     if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                                         owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
 
                                         if (this.random.nextInt(10) == 0) {
                                             ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
@@ -139,11 +139,13 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
         int size = width * height / 4;
         AABB bounds = this.getBounds();
-
+        int blockcount = 0;
         for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             if (!this.isAffected(pos)) continue;
-
-            this.ability.onHitBlock(this, owner, pos);
+            blockcount++;
+            if (blockcount % 2 == 0) { 
+                this.ability.onHitBlock(this, owner, pos);
+            }
         }
     }
 
@@ -155,7 +157,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                 if (!(entity instanceof ServerPlayer player)) continue;
 
-                PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, 20), player);
+                PacketHandler.sendToClient(new CameraShakeS2CPacket(0.5F, 5.0F, 20), player);
             }
         }
     }

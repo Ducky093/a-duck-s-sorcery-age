@@ -193,6 +193,6 @@ public class AgitoEntity extends TenShadowsSummon {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
+        return List.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get(), JJKAbilities.QUICKDASH.get());
     }
 }

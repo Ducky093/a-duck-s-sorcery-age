@@ -279,8 +279,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 // if (be != null) {
                 //     owner.level().removeBlockEntity(pos);
                 // }
-              boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
-                                                Block.UPDATE_ALL);
+            //   boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
+            //                                     Block.UPDATE_ALL);
+            boolean success =   owner.level().setBlock(pos, block.defaultBlockState(),
+                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                              
               //(pos, block.defaultBlockState(),
               //Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS );  
                

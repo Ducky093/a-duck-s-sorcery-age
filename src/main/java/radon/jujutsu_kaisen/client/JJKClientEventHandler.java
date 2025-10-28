@@ -268,11 +268,14 @@ public class JJKClientEventHandler {
             assert mc.player != null;
 
             LivingEntity target = event.getEntity();
-
+            // if (target.hasEffect(JJKEffects.INVISIBILITY.get())) {
+            //    event.setCanceled(true);
+            //    return;
+            // }
             ClientVisualHandler.ClientData  data = ClientVisualHandler.get(target);
 
             if (data == null) return;
-
+         
             if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
                 if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity viewer)) return;
 

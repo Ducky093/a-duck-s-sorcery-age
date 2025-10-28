@@ -4,6 +4,8 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
+import cpw.mods.modlauncher.api.ITransformationService.Resource;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -13,9 +15,15 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 public class JJKRenderTypes extends RenderType {
+    private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
+
      private static final Function<ResourceLocation, RenderType> HOLLOW_WICKER_BASKET = Util.memoize((pLocation) ->
             create("hollow_wicker_basket", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, CompositeState.builder()
                   .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
@@ -108,5 +116,15 @@ public class JJKRenderTypes extends RenderType {
 
     public static @NotNull RenderType lightning() {
         return LIGHTNING;
+    }
+
+    @Nullable
+    private static TextureTarget fallback;
+
+    public static TextureTarget get(ResourceLocation domain) {
+        if (!cached.containsKey(domain)) {
+            return fallback;
+        }
+        return cached.get(domain);
     }
 }

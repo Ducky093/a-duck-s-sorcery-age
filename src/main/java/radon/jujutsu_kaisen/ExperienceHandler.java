@@ -112,14 +112,14 @@ public class ExperienceHandler {
             if (points > 0) {
                 cap.setPoints(Math.max(0, cap.getPoints() - points));
 
-                if (entity instanceof ServerPlayer player) {
+                if ( ConfigHolder.SERVER.pointPenalty.get().floatValue() != 0.0 && entity instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), points));
 
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }
             }
 
-            if (entity instanceof ServerPlayer player) {
+            if ( ConfigHolder.SERVER.deathPenalty.get().floatValue() != 0.0 && entity instanceof ServerPlayer player ) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
 
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

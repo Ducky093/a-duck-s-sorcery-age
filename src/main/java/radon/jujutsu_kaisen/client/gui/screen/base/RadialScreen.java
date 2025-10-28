@@ -52,6 +52,7 @@ public abstract class RadialScreen extends Screen {
         super(Component.nullToEmpty(null));
     }
 
+    
     @Override
     public boolean isPauseScreen() {
         return false;

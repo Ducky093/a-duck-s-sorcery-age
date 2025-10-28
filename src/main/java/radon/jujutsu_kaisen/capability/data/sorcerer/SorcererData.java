@@ -479,7 +479,7 @@ public class SorcererData implements ISorcererData {
             this.silenced--;
         }
 
-        this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
+        this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * ((this.owner instanceof Player player && ConfigHolder.SERVER.foodCERegen.get()) ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = (Math.ceil(((this.getRealPower() - 1.0F) * 15.0D) / 20) * 20) + 40;
@@ -1791,7 +1791,7 @@ public float getMaxEnergy() {
                 this.addTrait(Trait.VESSEL);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.SIX_EYES)) &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.SIX_EYES)) && this.type == JujutsuType.SORCERER  &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }

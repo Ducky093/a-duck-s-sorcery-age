@@ -51,6 +51,7 @@ import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.CursedEnergyFleshItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -237,7 +238,10 @@ public class JJKEventHandler {
             owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
 
             if (owner instanceof Player player) {
-                player.getFoodData().setFoodLevel(20);
+                if ( (cap.getType() == JujutsuType.SORCERER && ConfigHolder.SERVER.sorcererSaturation.get()) || (cap.getType() == JujutsuType.CURSE && ConfigHolder.SERVER.curseSaturation.get()) ) {
+                    player.getFoodData().setFoodLevel(20);
+                }
+               
             }
 
             if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
@@ -325,6 +329,13 @@ if (!(attackerEntity instanceof Player) && attackerEntity instanceof CursedSpiri
 }
 if (!(victim instanceof Player) && victim instanceof CursedSpirit ) {
     event.setAmount(event.getAmount() * ConfigHolder.SERVER.curseDefenseMult.get().floatValue() );
+}
+
+if (!(attackerEntity instanceof Player) && attackerEntity instanceof SorcererEntity sorc && sorc.getJujutsuType() == JujutsuType.SORCERER ) {
+    event.setAmount(event.getAmount() * ConfigHolder.SERVER.sorcererDamageMult.get().floatValue() );
+}
+if (!(victim instanceof Player) && victim instanceof SorcererEntity sorc && sorc.getJujutsuType() == JujutsuType.SORCERER ) {
+    event.setAmount(event.getAmount() * ConfigHolder.SERVER.sorcererDefenseMult.get().floatValue() );
 }
 
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {

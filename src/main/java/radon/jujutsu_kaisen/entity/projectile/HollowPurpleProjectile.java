@@ -10,6 +10,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -94,7 +95,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         if (distance <= radius) {
                             if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                                 if (state.getFluidState().isEmpty()) {
-                                    this.level().destroyBlock(pos, false);
+                                    //this.level().destroyBlock(pos, false);
+                                    owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                        Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
                                 } else {
                                     this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                                 }
