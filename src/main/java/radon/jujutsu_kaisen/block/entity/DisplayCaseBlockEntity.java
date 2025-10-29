@@ -59,20 +59,39 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         for (EntityType<?> type : level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE)) {
             if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
-                    SorcererUtil.getPower(sorcerer.getExperience()) <= energy) {
+                   sorcerer.getExperience() <= energy) {
                 pool.add(entity);
             }
         }
         return pool.isEmpty() ? null : pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
     }
 
+        public boolean hasItem() {
+            if (this.stack.getItem() instanceof CursedObjectItem obj) {
+                return true;
+            }
+            return false;
+        }
+
+//    public float getEnergy() {
+//     if (this.stack.getItem() instanceof CursedObjectItem obj) {
+//         int ordinal = obj.getGrade().ordinal(); 
+//         float base = 500.0F;
+//         float multiplier = 1.5F;
+//         // Scale energy exponentially or linearly depending on what you want
+//         return base * (ordinal * multiplier + 1.0F);
+//     }
+//     return 0.0F;
+// }
     public float getEnergy() {
         if (this.stack.getItem() instanceof CursedObjectItem obj) {
-            int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
-            return SorcererUtil.getPower(SorcererGrade.values()[index].getRequiredExperience());
+            int index = obj.getGrade().ordinal();
+           // int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
+            return SorcererGrade.values()[index].getRequiredExperience();
         }
         return 0.0F;
     }
+
 
     private static boolean isRightDistanceToPlayerAndSpawnPoint(ServerLevel pLevel, ChunkAccess pChunk, BlockPos.MutableBlockPos pPos, double pDistance) {
         if (pDistance <= 576.0D) {
@@ -129,14 +148,24 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         return mobsAt(pLevel, pStructureManager, pGenerator, pCategory, pPos, null).unwrap().contains(pData);
     }
 
-    private static BlockPos getRandomPosWithin(Level pLevel, LevelChunk pChunk) {
-        ChunkPos pos = pChunk.getPos();
-        int i = pos.getMinBlockX() + HelperMethods.RANDOM.nextInt(16);
-        int j = pos.getMinBlockZ() + HelperMethods.RANDOM.nextInt(16);
-        int k = pChunk.getHeight(Heightmap.Types.WORLD_SURFACE, i, j) + 1;
-        int l = Mth.randomBetweenInclusive(HelperMethods.RANDOM, pLevel.getMinBuildHeight(), k);
+    // private static BlockPos getRandomPosWithin(Level pLevel, LevelChunk pChunk) {
+    //     ChunkPos pos = pChunk.getPos();
+    //     int i = pos.getMinBlockX() + HelperMethods.RANDOM.nextInt(16);
+    //     int j = pos.getMinBlockZ() + HelperMethods.RANDOM.nextInt(16);
+    //     int k = pChunk.getHeight(Heightmap.Types.WORLD_SURFACE, i, j) + 1;
+    //     int l = Mth.randomBetweenInclusive(HelperMethods.RANDOM, pLevel.getMinBuildHeight(), k);
+    //     return new BlockPos(i, l, j);
+    // }
+    private static BlockPos getRandomPosWithin(Level pLevel, LevelChunk pChunk, BlockPos center, int yRange) {
+        ChunkPos chunkPos = pChunk.getPos();
+        int i = chunkPos.getMinBlockX() + HelperMethods.RANDOM.nextInt(16);
+        int j = chunkPos.getMinBlockZ() + HelperMethods.RANDOM.nextInt(16);
+        int minY = Math.max(pLevel.getMinBuildHeight(), center.getY() - yRange);
+        int maxY = Math.min(pLevel.getMaxBuildHeight(), center.getY() + yRange);
+        int l = HelperMethods.RANDOM.nextInt(maxY - minY + 1) + minY;
         return new BlockPos(i, l, j);
     }
+
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DisplayCaseBlockEntity pBlockEntity) {
         pBlockEntity.rotTick();
@@ -145,9 +174,9 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         float energy = pBlockEntity.getEnergy();
 
-        int centerX = pPos.getX() >> 4;
-        int centerZ = pPos.getZ() >> 4;
-
+         int centerX = pPos.getX() >> 4;
+         int centerZ = pPos.getZ() >> 4;
+         int displayCaseCount = 0;
         for (int x = centerX - 1; x <= centerX + 1; x++) {
             for (int z = centerZ - 1; z <= centerZ + 1; z++) {
                 ChunkAccess chunk = pLevel.getChunk(x, z);
@@ -160,22 +189,31 @@ public class DisplayCaseBlockEntity extends BlockEntity {
                     if (!state.is(JJKBlocks.DISPLAY_CASE.get())) continue;
 
                     if (pLevel.getBlockEntity(pos) instanceof DisplayCaseBlockEntity be) {
-                        energy += be.getEnergy();
+                        if (be.hasItem()) {
+                            displayCaseCount++;
+                        }
+                        //energy += be.getEnergy();
+                       
+                        //return be.getEnergy();
                     }
                 }
             }
         }
+        if (displayCaseCount >= 8) {
+            return;
+        }
 
         if (!(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
 
-        int rng = Math.max(1, Mth.floor((energy * ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 2 : 1));
+        int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 2 : 1));
 
         if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
         EntityType<?> type = curse.getType();
 
-        BlockPos pos = getRandomPosWithin(pLevel, pLevel.getChunk((int) (centerX + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * SPAWN_RANGE)),
-                (int) (centerZ + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * SPAWN_RANGE))));
+        BlockPos pos = getRandomPosWithin(pLevel, pLevel.getChunk((int) (centerX + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * ConfigHolder.SERVER.displayCaseSpawnRange.get())),
+                (int) (centerZ + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * ConfigHolder.SERVER.displayCaseSpawnRange.get())))
+            ,pPos, 5);
 
         if (pos.getY() < pLevel.getMinBuildHeight() + 1) return;
 

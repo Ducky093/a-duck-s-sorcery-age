@@ -103,7 +103,8 @@ public class SorcererData implements ISorcererData {
     private int burnout;
     private int brainDamage;
     private int brainDamageTimer;
-
+    private int throatDamage;
+    
     private long lastBlackFlashTime;
     private boolean addBlackFlash;
 
@@ -469,6 +470,9 @@ public class SorcererData implements ISorcererData {
         if (this.disable > 0) {
             this.disable--;
         }
+        if (this.throatDamage > 0) {
+            this.throatDamage--;
+        }
         if (this.selfHit > 0) {
             this.selfHit--;
         }
@@ -571,6 +575,21 @@ public class SorcererData implements ISorcererData {
     @Override
     public void disrupt(Ability ability, int duration) {
         this.disrupted.put(ability, duration);
+    }
+
+    @Override
+    public void hurtThroat(int damage) {
+        this.throatDamage = damage;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return this.throatDamage;
+    }
+
+    @Override
+    public boolean isThroatDamaged() {
+        return this.throatDamage > 0;
     }
 
     @Override
@@ -1744,7 +1763,7 @@ public float getMaxEnergy() {
         Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
-        if (ConfigHolder.SERVER.uniqueTraits.get() || ConfigHolder.SERVER.uniqueTraits.get()) {
+        if (ConfigHolder.SERVER.uniqueTraits.get()) {
             GameProfileCache cache = owner.server.getProfileCache();
 
             if (cache == null) throw new NullPointerException();
@@ -1781,32 +1800,38 @@ public float getMaxEnergy() {
             this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
 
             if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
-                this.nature = HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
+                if (this.technique == CursedTechnique.MYTHICAL_BEAST_AMBER) {
+                    this.nature = CursedEnergyNature.LIGHTNING;
+                }
+                else {
+                    this.nature = HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
+                }
+                
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
             }
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
                 this.addTrait(Trait.VESSEL);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.SIX_EYES)) && this.type == JujutsuType.SORCERER  &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.SIX_EYES)) && this.type == JujutsuType.SORCERER  &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.PERFECT_BODY)) &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.PERFECT_BODY)) &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.perfectBodyRarity.get()) == 0) {
                 this.addTrait(Trait.PERFECT_BODY);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.RCT_OUTPUT)) &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.RCT_OUTPUT)) &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctOutputRarity.get()) == 0) {
                 this.addTrait(Trait.RCT_OUTPUT);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.INCARNATED)) &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.INCARNATED)) &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.incarnatedRarity.get()) == 0) {
                 this.addTrait(Trait.INCARNATED);
             }
@@ -1814,8 +1839,13 @@ public float getMaxEnergy() {
 
             assert this.technique != null;
 
+            
             owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
 
+            for (Trait t : this.traits ) {
+                  owner.sendSystemMessage(Component.translatable(String.format("chat.%s.trait.%s", JujutsuKaisen.MOD_ID, t.getRawName())));
+            }
+          
             if (this.type == JujutsuType.CURSE) {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
             } else {
@@ -1935,6 +1965,7 @@ public float getMaxEnergy() {
         nbt.putInt("disarmed", this.disarmed);
         nbt.putInt("silenced", this.silenced);
         nbt.putInt("self_hit", this.selfHit);
+        nbt.putInt("throat_damage", this.throatDamage);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
         nbt.putInt("charge", this.charge);
@@ -2139,6 +2170,7 @@ public float getMaxEnergy() {
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.disable = nbt.getInt("disable");
+        this.throatDamage = nbt.getInt("throat_damage");
         this.brainDamage = nbt.getInt("brain_damage");
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.charge = nbt.getInt("charge");

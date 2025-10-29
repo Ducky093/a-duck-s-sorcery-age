@@ -14,6 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
@@ -150,6 +151,9 @@ public class VeilHandler {
     }
 
     public static boolean canDestroy(LivingEntity entity, Level level, double x, double y, double z) {
+        if (!ConfigHolder.SERVER.destruction.get() ) { 
+            return false;
+        }
         BlockPos target = BlockPos.containing(x, y, z);
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return true;

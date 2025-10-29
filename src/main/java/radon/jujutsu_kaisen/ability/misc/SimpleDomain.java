@@ -48,7 +48,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             CursedTechnique ct = cap.getTechnique();
 
-            if (ct.getDomain() != null && !cap.hasBurnout() ) {
+            if (ct != null && ct.getDomain() != null && !cap.hasBurnout() ) {
                 return false;
             }
 

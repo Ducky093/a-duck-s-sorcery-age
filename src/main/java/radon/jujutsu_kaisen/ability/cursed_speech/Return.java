@@ -39,13 +39,14 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class Return extends Ability {
+public class Return extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return getEntities(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        return false;
+        //return getEntities(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -138,6 +139,11 @@ public class Return extends Ability {
     @Override
     public Classification getClassification() {
         return Classification.CURSED_SPEECH;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 5 * 20;
     }
 
      @Override

@@ -47,8 +47,8 @@ public class HajimeKashimoEntity extends SorcererEntity {
         return HajimeKashimoEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 18.0D)
-                .add(Attributes.ARMOR, 25.0D);
+                .add(Attributes.ARMOR_TOUGHNESS, 7.0D)
+                .add(Attributes.ARMOR, 16.0D);
     }
 
     @Override

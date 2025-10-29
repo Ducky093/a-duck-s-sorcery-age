@@ -7,6 +7,7 @@
   "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.transfigured_souls": "Transfigured souls: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.cooldown": "%1$s cooldown: %2$fs",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.burnout": "Burnout: %1$fs",
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
@@ -14,6 +15,8 @@
   "gui.jujutsu_kaisen.ability_overlay.cooldown": "Cooldown: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.soul_cost": "Soul Cost: %1$d",
+  "gui.jujutsu_kaisen.ability_overlay.throat_damage": "Throat Damage: %1$d",
+
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
@@ -209,6 +212,8 @@
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
+  "ability.jujutsu_kaisen.fail.throat": "Your throat is still damaged for %1$d seconds",
+  "ability.jujutsu_kaisen.fail.chant": "Must be chanted above 150%",
   "ability.jujutsu_kaisen.fail.disable": "Unable to use your technique.",
 
 
@@ -492,7 +497,7 @@
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
-  "cursed_technique.jujutsu_kaisen.angel": "Angel",
+  "cursed_technique.jujutsu_kaisen.angel": "Technique Extinguishment",
   "cursed_technique.jujutsu_kaisen.idle_transfiguration": "Idle Transfiguration",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
@@ -531,7 +536,13 @@
 
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",
-
+  "chat.jujutsu_kaisen.trait.perfect_body": "You achieved a Perfect Body.",
+  "chat.jujutsu_kaisen.trait.incarnated": "You were Incarnated as a Sorcerer.",
+  "chat.jujutsu_kaisen.trait.heavenly_restriction": "Your physically gifted body lacks any Cursed Energy.",
+  "chat.jujutsu_kaisen.trait.rct_output": "You hold a unique way to output your Cursed Energy.",
+  "chat.jujutsu_kaisen.trait.vessel": "You were born with the potential to serve as a Vessel.",
+  "chat.jujutsu_kaisen.trait.six_eyes": "You were born with the Six Eyes. The balance of the world has shifted.",
+  "chat.jujutsu_kaisen.trait.simurian": "You were born in another world.",
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",

@@ -179,7 +179,10 @@ public class ExplosionHandler {
                                 BlockPos pos = new BlockPos(x, y, z);
                                 Vec3 center = pos.getCenter();
 
-                                if (!VeilHandler.canDestroy(explosion.instigator, event.level, center.x, center.y, center.z)) {
+                                       
+                                
+                                //if (!VeilHandler.canDestroy(explosion.instigator, event.level, center.x, center.y, center.z)) {
+                                if (!HelperMethods.isDestroyable(event.level, explosion.instigator, pos)) { 
                                     continue;
                                 }
 
@@ -207,9 +210,16 @@ public class ExplosionHandler {
                                                     .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
                                                     .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
                                                     .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
+
+                                            //block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
+                                         if (!JJKAbilities.hasToggled(explosion.instigator,JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                                             block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
-                                            block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
+                                            for (ItemStack stack : block.getDrops(params)) {
+                                                addBlockDrops(drops, stack, imm);
+                                            }
                                         }
+                                        }
+                                       
                                         block.onBlockExploded(event.level, pos, current);
 
                                         if (HelperMethods.RANDOM.nextInt(10) == 0) {

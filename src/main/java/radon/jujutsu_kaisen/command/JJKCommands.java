@@ -24,7 +24,9 @@ public class JJKCommands {
         PactRemovalDeclineCommand.register(event.getDispatcher());
         AddPointsCommand.register(event.getDispatcher());
         RefillCommand.register(event.getDispatcher());
-        LockCommand.register(event.getDispatcher());
+        AbilityCommand.register(event.getDispatcher());
+        UnlockAllCommand.register(event.getDispatcher());
+        LockAllCommand.register(event.getDispatcher());
         SetExtraEnergyCommand.register(event.getDispatcher());
     }
 }

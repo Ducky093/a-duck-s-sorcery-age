@@ -71,13 +71,12 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.05F;
     }
-
+       //         .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.FOLLOW_RANGE, 100.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
-                .add(Attributes.ARMOR, 15.0D)
-                .add(Attributes.ATTACK_DAMAGE, 6 * 5.0D)
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4 * 5.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 

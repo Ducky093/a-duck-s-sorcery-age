@@ -33,7 +33,7 @@ import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
 
-public class Die extends Ability {
+public class Die extends CursedSpeech {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
     private static final float DAMAGE = 28.0F;
@@ -142,6 +142,11 @@ public class Die extends Ability {
     @Override
     public int getCooldown() {
         return 30 * 20;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 5 * 20;
     }
 
     @Override

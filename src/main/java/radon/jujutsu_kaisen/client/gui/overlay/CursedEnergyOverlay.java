@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -77,6 +79,12 @@ public class CursedEnergyOverlay {
         }
 
         List<Component> below = new ArrayList<>();
+
+        int burnout = cap.getBurnout();
+
+        if (burnout > 0) {
+            below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.burnout", JujutsuKaisen.MOD_ID), Math.round((float) burnout / 20)).withStyle(ChatFormatting.DARK_RED));
+        }
 
         for (Ability ability : cap.getToggled()) {
             if (!(ability instanceof Ability.IAttack)) continue;

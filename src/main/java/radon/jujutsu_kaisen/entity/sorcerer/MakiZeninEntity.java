@@ -42,10 +42,10 @@ public class MakiZeninEntity extends SorcererEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return MakiZeninEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 16.0D)
-                .add(Attributes.ARMOR, 24.0D);
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR, 20.0D);
     }
 
     @Override

@@ -33,18 +33,37 @@ public class ModifierUtils {
         return deserialize(modifiersTag);
     }
 
-    public static void setModifier(CompoundTag nbt, int index, Modifier modifier) {
-        if (!nbt.contains("modifiers")) {
-            ListTag modifiersTag = new ListTag();
+    // public static void setModifier(CompoundTag nbt, int index, Modifier modifier) {
+    //     if (!nbt.contains("modifiers")) {
+    //         ListTag modifiersTag = new ListTag();
 
-            for (int i = 0; i < MAX_MODIFIERS; i++) {
-                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serializeNBT());
-            }
-            nbt.put("modifiers", modifiersTag);
+    //         for (int i = 0; i < MAX_MODIFIERS; i++) {
+    //             modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serializeNBT());
+    //         }
+    //         nbt.put("modifiers", modifiersTag);
+    //     }
+    //     ListTag modifiersTag = nbt.getList("modifiers", Tag.TAG_COMPOUND);
+    //     modifiersTag.set(index, modifier.serializeNBT());
+    // }
+    public static void setModifier(CompoundTag nbt, int index, Modifier modifier) {
+        if (index < 0 || index >= MAX_MODIFIERS) {
+            return;
         }
-        ListTag modifiersTag = nbt.getList("modifiers", Tag.TAG_COMPOUND);
+
+        ListTag modifiersTag;
+        if (!nbt.contains("modifiers", Tag.TAG_LIST)) {
+            modifiersTag = new ListTag();
+        } else {
+            modifiersTag = nbt.getList("modifiers", Tag.TAG_COMPOUND);
+        }
+
+        while (modifiersTag.size() < MAX_MODIFIERS) {
+            modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serializeNBT());
+        }
+
         modifiersTag.set(index, modifier.serializeNBT());
-    }
+        nbt.put("modifiers", modifiersTag);
+    }       
 
     public static List<Modifier> deserialize(ListTag modifiersTag) {
         List<Modifier> modifiers = new ArrayList<>();

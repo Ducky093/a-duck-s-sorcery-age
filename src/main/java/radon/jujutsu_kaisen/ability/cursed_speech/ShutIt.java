@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class ShutIt extends Ability {
+public class ShutIt extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
     private static final int DURATION = 35;
@@ -107,5 +107,10 @@ public class ShutIt extends Ability {
     @Override
     public MenuType getMenuType() {
         return MenuType.J2TSU;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 1 * 20;
     }
 }

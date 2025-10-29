@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.chant.ServerChantHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -39,7 +40,7 @@ public class AddChantC2SPacket {
 
             assert sender != null;
 
-            if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get()) return;
+            if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get() || this.chant.length() < ConfigHolder.SERVER.minimumChantLength.get()) return;
 
             Ability ability = JJKAbilities.getValue(this.key);
 
@@ -61,6 +62,7 @@ public class AddChantC2SPacket {
                 return;
 
             cap.addChant(ability, text);
+            ServerChantHandler.clearMessages(sender);
         });
         ctx.setPacketHandled(true);
     }

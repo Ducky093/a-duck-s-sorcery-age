@@ -20,6 +20,8 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.authlib.GameProfile;
@@ -34,6 +36,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -41,6 +44,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class BodySteal extends Ability implements Ability.IToggled {
     @Override
@@ -148,6 +152,20 @@ public class BodySteal extends Ability implements Ability.IToggled {
         }
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
+
+        if (ConfigHolder.SERVER.bodyStealTraits.get()) { 
+            for (Trait t : ownerCap.getTraits()) {
+                if (t != Trait.RCT_OUTPUT ) {
+                    ownerCap.removeTrait(t);
+                }
+            }
+            for (Trait t : targetCap.getTraits()) {
+                if (t != Trait.RCT_OUTPUT && t != Trait.HEAVENLY_RESTRICTION) {
+                    ownerCap.addTrait(t);
+                }
+            }
+        }
+
         //ownerCap.setExperience(targetCap.getExperience());
         if (ConfigHolder.SERVER.bodyStealEXPReset.get()) {
             targetCap.setExperience(0);
@@ -159,6 +177,10 @@ public class BodySteal extends Ability implements Ability.IToggled {
         //GameProfile profile = NbtUtils.readGameProfile(targetnbt);
        // 
         if (attacker instanceof ServerPlayer servOwner ) {
+            if (ConfigHolder.SERVER.bodyStealReroll.get()) {
+                targetCap.generate(servOwner);
+            }
+        
             attacker.sendSystemMessage(Component.translatable(
                 String.format("chat.%s.bodysteal", JujutsuKaisen.MOD_ID),
                 victim.getName()

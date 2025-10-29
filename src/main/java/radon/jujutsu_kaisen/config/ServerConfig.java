@@ -22,13 +22,16 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue sorcererVillageSpawnRate;
     public final ForgeConfigSpec.IntValue curseVillageSpawnRate;
     public final ForgeConfigSpec.IntValue displayCaseSpawnRate;
-public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
+    public final ForgeConfigSpec.IntValue displayCaseSpawnRange;
+    public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.DoubleValue pointMultiplier;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue minimumBodyStealEXP;
     public final ForgeConfigSpec.DoubleValue deathPenalty;
     public final ForgeConfigSpec.DoubleValue pointPenalty;
     public final ForgeConfigSpec.DoubleValue pvpGain;
+    public final ForgeConfigSpec.DoubleValue minEXP;
+    public final ForgeConfigSpec.DoubleValue maxEXP;
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
@@ -39,7 +42,11 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.BooleanValue playerBodySteal;
     public final ForgeConfigSpec.BooleanValue bodyStealEXPReset;
     public final ForgeConfigSpec.BooleanValue mimicryBodyStealCompat;
+    public final ForgeConfigSpec.BooleanValue bodyStealTraits;
+    public final ForgeConfigSpec.BooleanValue bodyStealReroll;
+    public final ForgeConfigSpec.BooleanValue MBAReroll;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
+    public final ForgeConfigSpec.BooleanValue wcsCutAnything;
     public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
     public final ForgeConfigSpec.BooleanValue playerRequiredForRCT;
     public final ForgeConfigSpec.BooleanValue playerRequiredForGradeUp;
@@ -71,6 +78,7 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
     public final ForgeConfigSpec.DoubleValue maximumDomainSize;
 
     public final ForgeConfigSpec.IntValue maximumChantCount;
+    public final ForgeConfigSpec.IntValue minimumChantLength;
     public final ForgeConfigSpec.IntValue maximumChantLength;
     public final ForgeConfigSpec.DoubleValue chantSimilarityThreshold;
 
@@ -119,17 +127,19 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                 .defineInRange("totemRCTChanceMult", 4, 1, 1000);
         this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)")
                 .defineInRange("requiredExperienceForExperienced", 5000.0F, 1.0F, 100000.0F);
-        this.sorcererFleshRarity = builder.comment("Rarity of sorcerers dropping flesh (bigger value means more rare)")
+        this.sorcererFleshRarity = builder.comment("Rarity of sorcerers dropping flesh (bigger value means more rare, 0 to disable)")
                 .defineInRange("sorcererFleshRarity", 20, 0, 100000);
-        this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare)")
+        this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare, 0 to disable)")
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
-        this.curseVillageSpawnRate = builder.comment("Rarity of curses spawning in villages (bigger value means more rare)")
+        this.curseVillageSpawnRate = builder.comment("Rarity of curses spawning in villages (bigger value means more rare, 0 to disable)")
                 .defineInRange("curseVillageSpawnRate", 8, 0, 100000);
-        this.sorcererVillageSpawnRate = builder.comment("Rarity of sorcerers spawning in villages (bigger value means more rare)")
+        this.sorcererVillageSpawnRate = builder.comment("Rarity of sorcerers spawning in villages (bigger value means more rare, 0 to disable)")
                 .defineInRange("sorcererVillageSpawnRate", 6, 0, 100000);
-        this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare)")
+        this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare, 0 to disable)")
                 .defineInRange("displayCaseRarity", 8, 0, 100000);
-        this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare)")
+        this.displayCaseSpawnRange = builder.comment("Range in chunks curses can spawn from display cases (bigger value means more rare, 0 to disable)")
+                .defineInRange("displayCaseSpawnRange", 8, 0, 100000);
+        this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")
                 .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
@@ -141,6 +151,10 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                         .defineInRange("pointPenalty", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.0F, 0.0F, 1.0F);
+        this.minEXP = builder.comment("Minimum experience gained from battles")
+                .defineInRange("minExp", 1.0F, 0.0F, 9999999.0F);
+        this.maxEXP = builder.comment("Maximum experience gained from battles (0 to disable)")
+                .defineInRange("maxExp", 0.0F, 0.0F, 9999999.0F);
         this.pvpGain = builder.comment("Percentage of experience gained from player kills")
                 .defineInRange("pvpGain", 1.0F, 0.0F, 999.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
@@ -161,10 +175,18 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
                 .define("playerMimicry", false);
         this.mimicryBodyStealCompat = builder.comment("When enabled Mimicry and Body Steal may steal from each other.")
                 .define("mimicryBodyStealCompat", true);
+        this.bodyStealTraits = builder.comment("Whether Body Steal should steal traits, besides RCT Output and Heavenly Restriction.")
+                .define("bodyStealTraits", true);
         this.bodyStealEXPReset = builder.comment("Whether Body Steal should reset the EXP of the stolen player")
                 .define("bodyStealEXPReset", true);
+        this.bodyStealReroll = builder.comment("Whether Body Steal should reroll the player.")
+                .define("bodyStealReroll", false);
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
                 .define("MBAEXPReset", true);
+        this.MBAReroll = builder.comment("Whether Mythical Beast Amber should reroll the player.")
+                .define("MBAReroll", false);
+        this.wcsCutAnything = builder.comment("Whether World Cutting Slash truly cuts the world (destroys indestructible blocks).")
+                .define("wcsCutAnything", true);
         this.hrRequiredForISOH = builder.comment("Whether Heavenly Restriction is required to use the Inverted Spear of Heaven")
                 .define("hrRequiredForISOH", false);
         this.playerRequiredForRCT = builder.comment("Whether Players must kill you in order for you to unlock RCT")
@@ -180,11 +202,11 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
         this.curseHealingAmount = builder.comment("The maximum amount of health curses can heal per tick (scales with experience)")
                 .defineInRange("curseHealingAmount", 0.15F, 0.0F, 2.5F);
         this.curseDamageMult = builder.comment("The multiplier on the damage NPC curses deal to you")
-                .defineInRange("curseDamageMult", 0.8F, 0.0F, 9999.0F);
+                .defineInRange("curseDamageMult", 0.7F, 0.0F, 9999.0F);
         this.curseDefenseMult = builder.comment("The multiplier on damage NPC curses take from you")
                 .defineInRange("curseDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.sorcererDamageMult = builder.comment("The multiplier on the damage NPC sorcerers deal to you")
-                .defineInRange("sorcererDamageMult", 0.8F, 0.0F, 9999.0F);
+                .defineInRange("sorcererDamageMult", 0.7F, 0.0F, 9999.0F);
         this.sorcererDefenseMult = builder.comment("The multiplier on damage NPC sorcerers take from you")
                 .defineInRange("sorcererDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.jujutsuDefenseMult = builder.comment("The multiplier to standard players' defense")
@@ -227,6 +249,8 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
         builder.comment("Chants").push("chants");
         this.maximumChantCount = builder.comment("Maximum count for chants")
                 .defineInRange("maximumChantCount", 5, 1, 16);
+        this.minimumChantLength = builder.comment("Maximum length for a chant")
+                .defineInRange("minimumChantLength", 2, 1, 256);
         this.maximumChantLength = builder.comment("Maximum length for a chant")
                 .defineInRange("maximumChantLength", 24, 1, 256);
         this.chantSimilarityThreshold = builder.comment("Minimum difference between chants for them to be valid")
@@ -296,21 +320,21 @@ public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
 
         builder.comment("Rarity").push("rarity");
         this.cursedEnergyNatureRarity = builder.comment("Rarity of a cursed energy nature other than basic (bigger value = rarer)")
-                .defineInRange("cursedEnergyNatureRarity", 5, 1, 1000000);
+                .defineInRange("cursedEnergyNatureRarity", 10, 1, 1000000);
         this.curseRarity = builder.comment("Rarity of being a curse (bigger value = rarer)")
-                .defineInRange("curseRarity", 10, 1, 1000000);
+                .defineInRange("curseRarity", 4, 1, 1000000);
         this.sixEyesRarity = builder.comment("Rarity of having six eyes (bigger value = rarer)")
-                .defineInRange("sixEyesRarity", 1, 1, 1000000);
+                .defineInRange("sixEyesRarity", 100, 1, 1000000);
         this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (bigger value = rarer)")
                 .defineInRange("heavenlyRestrictionRarity", 10, 1, 1000000);
         this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
-                .defineInRange("vesselRarity", 3, 1, 1000000);
+                .defineInRange("vesselRarity", 50, 1, 1000000);
         this.perfectBodyRarity = builder.comment("Rarity of having a perfect body (bigger value = rarer)")
-                .defineInRange("perfectBodyRarity", 1, 1, 1000000);
+                .defineInRange("perfectBodyRarity", 100, 1, 1000000);
         this.incarnatedRarity = builder.comment("Rarity of being incarnated (bigger value = rarer)")
-                .defineInRange("incarnatedRarity", 10, 1, 1000000);
+                .defineInRange("incarnatedRarity", 5, 1, 1000000);
         this.rctOutputRarity = builder.comment("Rarity of being adept at RCT (bigger value = rarer)")
-                .defineInRange("rctOutputRarity", 5, 1, 1000000);
+                .defineInRange("rctOutputRarity", 10, 1, 1000000);
         builder.pop();
     }
 

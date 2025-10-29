@@ -195,6 +195,13 @@ public interface ISorcererData {
     void increaseBrainDamage();
     int getBrainDamage();
     
+    void hurtThroat(int cooldown);
+    
+    int getThroatDamage();
+
+    boolean isThroatDamaged();
+
+    
     void setBurnout(int duration);
 
     void setDisable(int duration);

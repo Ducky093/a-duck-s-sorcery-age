@@ -12,6 +12,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
@@ -303,11 +304,15 @@ public class MeteorEntity extends JujutsuProjectile {
 
                     if (distance > radius) continue;
                     if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
-
                     if (!state.getFluidState().isEmpty()) {
-                        this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                        this.level().levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
+                            owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                        Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                            this.level().levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
                     }
+                    // if (!state.getFluidState().isEmpty()) {
+                    //     this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    //     this.level().levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
+                    // }
                 }
             }
         }

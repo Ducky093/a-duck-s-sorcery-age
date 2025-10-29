@@ -103,12 +103,17 @@ public class ChantTab extends JJKTab {
         String text = this.text.getValue().toLowerCase();
 
         boolean unique = true;
-
+       
         if (!text.isEmpty() && !text.isBlank()) {
-            for (ChantListWidget.Entry chant : this.chants.children()) {
-                if (HelperMethods.strcmp(chant.get(), text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
-                    unique = false;
-                    break;
+            if (text.length() < ConfigHolder.SERVER.minimumChantLength.get()) {
+                unique = false;
+            }
+            else {
+                for (ChantListWidget.Entry chant : this.chants.children()) {
+                    if (HelperMethods.strcmp(chant.get(), text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
+                        unique = false;
+                        break;
+                    }
                 }
             }
         }

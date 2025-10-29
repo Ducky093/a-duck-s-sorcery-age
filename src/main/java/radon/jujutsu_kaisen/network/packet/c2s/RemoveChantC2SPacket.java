@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.chant.ServerChantHandler;
 
 import java.util.function.Supplier;
 
@@ -43,6 +45,7 @@ public class RemoveChantC2SPacket {
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             cap.removeChant(ability, this.chant);
+            ServerChantHandler.clearMessages(sender);
         });
         ctx.setPacketHandled(true);
     }

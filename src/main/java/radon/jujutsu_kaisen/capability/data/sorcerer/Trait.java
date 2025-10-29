@@ -18,4 +18,8 @@ public enum Trait {
     public Component getName() {
         return Component.translatable(String.format("trait.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
+
+    public String getRawName() {
+        return this.name().toLowerCase();
+    }
 }

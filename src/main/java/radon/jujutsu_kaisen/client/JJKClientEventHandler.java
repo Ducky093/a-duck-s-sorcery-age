@@ -328,6 +328,7 @@ public class JJKClientEventHandler {
             event.register((pState, pLevel, pPos, pTintIndex) -> GrassColor.getDefaultColor(),
                     JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
         }
+        
 
         @SubscribeEvent
         public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {

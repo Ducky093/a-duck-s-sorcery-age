@@ -194,6 +194,11 @@ public void run(LivingEntity owner) {
         int color = FastColor.ARGB32.color(255, Math.round(this.r), Math.round(this.g), Math.round(this.b));
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow(); 
         cap.setCursedEnergyColor(color);
+        if (owner instanceof ServerPlayer play) {
+            if (ConfigHolder.SERVER.MBAReroll.get()) {
+                cap.generate(play);
+            }
+        }
         owner.kill();
     }
 

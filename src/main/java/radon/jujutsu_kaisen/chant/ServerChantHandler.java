@@ -30,18 +30,38 @@ public class ServerChantHandler {
         return messages.getOrDefault(owner.getUUID(), List.of());
     }
 
+    public static void clearMessages(LivingEntity owner) {
+        messages.remove(owner.getUUID());
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new ClearChantsC2SPacket(), player);
+        }
+    }
+
+
     public static boolean onChant(LivingEntity owner, String word) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Ability ability = cap.getAbility(word);
 
         if (ability != null) {
-            if (!messages.containsKey(owner.getUUID())) {
-                messages.put(owner.getUUID(), new ArrayList<>());
+            UUID id = owner.getUUID();
+            if (messages.containsKey(id) && !messages.get(id).isEmpty()) {
+                List<String> current = messages.get(id);
+                String firstWord = current.get(0);
+                Ability currentAbility = cap.getAbility(firstWord);
+                if (currentAbility != null && currentAbility != ability) {
+                    clearMessages(owner);
+                }
             }
+
+
+            if (!messages.containsKey(id)) {
+                messages.put(id, new ArrayList<>());
+            }
+            
 
             List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
 
-            List<String> latest = messages.get(owner.getUUID());
+            List<String> latest = messages.get(id);
 
             int index = 0;
 
@@ -55,12 +75,12 @@ public class ServerChantHandler {
 
             if (index >= chants.size() || !chants.get(index).equals(word)) return true;
 
-            messages.get(owner.getUUID()).add(word);
+            messages.get(id).add(word);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new AddChantS2CPacket(word), player);
             }
-            timers.put(owner.getUUID(), CLEAR_INTERVAL);
+            timers.put(id, CLEAR_INTERVAL);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
@@ -68,7 +88,7 @@ public class ServerChantHandler {
             }
 
             if (cap.hasTrait(Trait.PERFECT_BODY)) {
-                PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
+                PacketHandler.broadcast(new SyncMouthS2CPacket(id));
             }
             return true;
         } else {

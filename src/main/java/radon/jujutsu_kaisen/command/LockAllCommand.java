@@ -12,17 +12,17 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.PlayerUtil;
 
-public class LockCommand {
+public class LockAllCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("lock")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("lockall")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        lock(EntityArgument.getPlayer(ctx, "player")))));
+                        lockall(EntityArgument.getPlayer(ctx, "player")))));
 
-        dispatcher.register(Commands.literal("lock").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("lockall").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int lock(ServerPlayer player) {
+    public static int lockall(ServerPlayer player) {
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.lockAll();
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

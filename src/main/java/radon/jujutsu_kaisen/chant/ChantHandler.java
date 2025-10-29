@@ -31,7 +31,7 @@ public class ChantHandler {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        Set<String> chants = cap.getFirstChants(ability);
+        List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
 
         if (chants.isEmpty()) return 0.0F;
 
@@ -40,10 +40,19 @@ public class ChantHandler {
         int count = 0;
         int length = 0;
 
-        Iterator<String> iter = chants.iterator();
+        //Iterator<String> iter = chants.iterator();
+        int index = 0;
+        // for (String chant : messages) {
+        //     if (!iter.hasNext() || !chant.equals(iter.next())) break;
 
-        for (String chant : messages) {
-            if (!iter.hasNext() || !chant.equals(iter.next())) break;
+        //     count++;
+        //     length += chant.length();
+        // }
+         for (String chant : messages) {
+            if (index == chants.size()) break;
+            if (!chant.equals(chants.get(index))) continue;
+
+            index++;
 
             count++;
             length += chant.length();

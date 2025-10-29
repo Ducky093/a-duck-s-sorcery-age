@@ -35,7 +35,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class GetCrushed extends Ability {
+public class GetCrushed extends CursedSpeech {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
     private static final float DAMAGE = 17.0F;
@@ -143,6 +143,11 @@ public class GetCrushed extends Ability {
     @Override
     public int getCooldown() {
         return 12 * 20;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 2 * 20;
     }
 
     @Override

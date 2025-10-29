@@ -283,7 +283,12 @@ public class ClientAbilityHandler {
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
             case FAILURE ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
-        }
+            case CHANT ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID)), false);
+            case THROAT ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID), 
+                    Math.max(1, cap.getThroatDamage() / 20)), false);
+            }
         return status == Ability.Status.SUCCESS;
     }
 

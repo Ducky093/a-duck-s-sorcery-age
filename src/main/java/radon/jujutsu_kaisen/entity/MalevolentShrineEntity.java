@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -113,9 +114,16 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                                             1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
 
                                     if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                                        owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
-
+                                        BlockState state = owner.level().getBlockState(pos);
+                                        //owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                         //     Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                          if (state.getFluidState().isEmpty()) {
+                                    //this.level().destroyBlock(pos, false);
+                                            owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                                Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                        } else {
+                                            this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                                        }
                                         if (this.random.nextInt(10) == 0) {
                                             ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
                                                     0.0D, 0.0D, 0.0D, 0.0D);

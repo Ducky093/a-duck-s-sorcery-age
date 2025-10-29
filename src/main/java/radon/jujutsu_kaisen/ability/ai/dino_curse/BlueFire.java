@@ -35,7 +35,7 @@ import java.util.Optional;
 public class BlueFire extends Ability implements Ability.IChannelened, Ability.IDurationable {
     public static final double RANGE = 32;
     private static final float SCALE = 5.0F;
-    private static final float DAMAGE = 9.0F;
+    private static final float DAMAGE = 7.0F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {

@@ -28,7 +28,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class Explode extends Ability {
+public class Explode extends CursedSpeech {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
     private static final float EXPLOSIVE_POWER = 3.5F;
@@ -98,6 +98,11 @@ public class Explode extends Ability {
     @Override
     public int getCooldown() {
         return 15 * 20;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 3 * 20;
     }
 
     @Override

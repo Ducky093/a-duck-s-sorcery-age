@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class DontMove extends Ability {
+public class DontMove extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
     private static final int DURATION = 15;
@@ -95,6 +95,11 @@ public class DontMove extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 200.0F;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 20;
     }
 
     @Override

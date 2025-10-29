@@ -30,14 +30,14 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class RunAway extends Ability {
+public class RunAway extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
     private static final int DURATION = 35;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return getEntities(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        return false;
     }
 
     @Override
@@ -72,6 +72,8 @@ public class RunAway extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
+        //ISorcererData selfCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //boolean hitTarget = false;
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living)) continue;
                 living.addEffect(new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 1, false, false, false));
@@ -81,10 +83,16 @@ public class RunAway extends Ability {
                     ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     cap.setDisarmed(Math.round(DURATION * this.getPower(owner)));
                 }
+               // selfCap.hurtThroat(this.getThroatDamage());
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.run_away", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         }
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 2 * 20;
     }
 
     @Override

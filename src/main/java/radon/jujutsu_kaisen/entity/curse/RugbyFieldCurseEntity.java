@@ -76,10 +76,10 @@ public class RugbyFieldCurseEntity extends CursedSpirit implements PlayerRideabl
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 8.0D)
+                .add(Attributes.ARMOR, 12.0D)
                 .add(Attributes.FOLLOW_RANGE, 100.0D)
-                .add(Attributes.ATTACK_DAMAGE, 6 * 5.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 6.0D);
+                .add(Attributes.ATTACK_DAMAGE, 5 * 5.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D);
     }
 
     @Override

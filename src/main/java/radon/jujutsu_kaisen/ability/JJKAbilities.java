@@ -80,6 +80,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class JJKAbilities {
     public static DeferredRegister<Ability> ABILITIES = DeferredRegister.create(
@@ -423,6 +424,12 @@ public class JJKAbilities {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.hasTrait(trait);
+    }
+
+    public static List<Ability> getAbilities() {
+        return ABILITIES.getEntries().stream()
+                .map(RegistryObject::get)
+                .collect(Collectors.toList());
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {

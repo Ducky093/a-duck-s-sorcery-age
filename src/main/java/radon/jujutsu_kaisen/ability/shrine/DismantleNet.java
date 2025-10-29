@@ -42,19 +42,20 @@ public class DismantleNet extends Ability {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         Vec3 center = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
-
+        Vec3 xAxis = owner.getUpVector(1.0F);
+        Vec3 yAxis = look.cross(xAxis).normalize();
         float power = this.getPower(owner)*1.9F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
                 double xOffset = (i - (count - 1) / 2.0D) * (double) size / count;
                 double yOffset = (j - (count - 1) / 2.0D) * (double) size / count;
 
-                Vec3 xAxis = owner.getUpVector(1.0F);
-                Vec3 yAxis = look.cross(xAxis).normalize();
+     
 
                 Vec3 position = center.add(xAxis.scale(xOffset)).add(yAxis.scale(yOffset));
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                
                 DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
                 DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
                 horizontal.setDuration(10+STARTUP);
@@ -67,6 +68,7 @@ public class DismantleNet extends Ability {
                     horizontal.setCanHurt(true);
                     vertical.setCanHurt(true);
                 }, STARTUP);
+
                 horizontal.setDeltaMovement(look.scale(0));
                 vertical.setDeltaMovement(look.scale(0));
 

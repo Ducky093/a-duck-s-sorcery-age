@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -136,7 +137,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
     public Set<Entity> getHits() {
         if (!(this.getOwner() instanceof LivingEntity)) return Set.of();
-
+        LivingEntity owner = (LivingEntity) this.getOwner();
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
 
         float yaw = this.getYRot();
@@ -180,8 +181,9 @@ public class WorldSlashProjectile extends JujutsuProjectile {
                     hits.addAll(this.level().getEntities(this, bounds));
 
                     BlockState state = this.level().getBlockState(current);
-
-                    this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                    if (ConfigHolder.SERVER.wcsCutAnything.get() || HelperMethods.isDestroyable(owner.level(),owner, current)) {
+                        this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                    }
 
                     if (!state.isAir()) {
                         ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,

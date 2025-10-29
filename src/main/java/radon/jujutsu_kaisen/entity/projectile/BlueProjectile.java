@@ -13,6 +13,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -105,11 +106,18 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     if (distance <= this.getRadius()) {
                         if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                            if (state.getFluidState().isEmpty()) {
-                                this.level().destroyBlock(pos, false);
-                            } else {
-                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                            }
+                             if (state.getFluidState().isEmpty()) {
+                                    owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                        Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                } else {
+                                    this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                                }
+                            // if (state.getFluidState().isEmpty()) {
+                            //     this.level().destroyBlock(pos, false);
+                            // } else {
+                            //     this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                            // }
+                            
                         }
                     }
                 }

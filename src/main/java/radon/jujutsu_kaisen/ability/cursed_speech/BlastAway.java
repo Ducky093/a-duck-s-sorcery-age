@@ -29,7 +29,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class BlastAway extends Ability {
+public class BlastAway extends CursedSpeech {
     private static final double RANGE = 30.0D;
     private static final double RADIUS = 2.5D;
     private static final float DAMAGE = 13.0F;
@@ -68,7 +68,7 @@ public class BlastAway extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         owner.level().playSound(null, src.x, src.y, src.z, SoundEvents.VEX_CHARGE, SoundSource.MASTER, 1F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-          ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
         for (Entity entity : getEntities(owner)) {
             if (entity instanceof LivingEntity living && JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
             if (entity instanceof Player player) {
@@ -104,6 +104,11 @@ public class BlastAway extends Ability {
     @Override
     public int getCooldown() {
         return 8 * 20;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 2 * 20;
     }
 
     @Override

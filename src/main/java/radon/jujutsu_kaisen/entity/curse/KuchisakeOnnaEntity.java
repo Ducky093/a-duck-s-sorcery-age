@@ -92,8 +92,8 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.165D)
-                .add(Attributes.ARMOR, 20.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 14.0D);
+                .add(Attributes.ARMOR, 4.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 6.0D);
     }
 
     private PlayState walkPredicate(AnimationState<KuchisakeOnnaEntity> animationState) {

@@ -238,10 +238,14 @@ public class ExperienceHandler {
                 experience *= ConfigHolder.SERVER.pvpGain.get();
                 rawExperience *= ConfigHolder.SERVER.pvpGain.get();
             }
-            if (experience < 0.1F) return;
+            
+            if (experience < 0.1F && ConfigHolder.SERVER.minEXP.get() == 0 ) return;
 
-
-          
+                experience = Math.max( ConfigHolder.SERVER.minEXP.get().floatValue() ,experience);
+                if (ConfigHolder.SERVER.maxEXP.get() != 0) {
+                    experience = Math.min(ConfigHolder.SERVER.maxEXP.get().floatValue(),experience);
+                }
+        
 
             if (ConfigHolder.SERVER.playerRequiredForGradeUp.get() && target instanceof Player targetplayer   ) {
                 SorcererGrade previous = SorcererUtil.getGrade(cap.getExperience());

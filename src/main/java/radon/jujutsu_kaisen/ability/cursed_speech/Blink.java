@@ -34,7 +34,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class Blink extends Ability {
+public class Blink extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
 private static final int DURATION = 15;
@@ -104,6 +104,11 @@ private static final int DURATION = 15;
     @Override
     public int getCooldown() {
         return 10 * 20;
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 1 * 20;
     }
 
     @Override

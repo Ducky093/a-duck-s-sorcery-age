@@ -60,7 +60,9 @@ public abstract class Ability {
         BURNOUT,
         DISABLE,
         DISARMED,
-        SILENCED
+        SILENCED,
+        CHANT,
+        THROAT
     }
 
     public enum Classification {
