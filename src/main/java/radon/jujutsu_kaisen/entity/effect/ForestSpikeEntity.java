@@ -3,6 +3,8 @@ package radon.jujutsu_kaisen.entity.effect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -17,6 +19,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestSpikeEntity extends JujutsuProjectile {
     private static final int DURATION = 5 * 20;
+    private static final int DELAY = 1 * 20;
     private static final float DAMAGE = 12.5F;
 
     public ForestSpikeEntity(EntityType<? extends Projectile> pType, Level pLevel) {
@@ -28,6 +31,13 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     }
 
     @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        float age = this.getTime();
+        float scale = (float) Math.pow(age, 0.5F) * 1.5F;
+        return super.getDimensions(pPose).scale(scale);
+    }
+
+    @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
@@ -35,6 +45,10 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     @Override
     public void tick() {
         super.tick();
+
+        if (this.getTime() <= 3) {
+            this.refreshDimensions();
+        }
 
         if (this.getTime() >= DURATION) {
             this.discard();
@@ -47,9 +61,10 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 if (entity == owner && !cap.hasSelfHit()) continue;
+                if (this.getTime() >= DELAY) {
                 if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower())) {
                     this.discard();
-                    entity.invulnerableTime = 20;
+                }
                 }
                 
             }

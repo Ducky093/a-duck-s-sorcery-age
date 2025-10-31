@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -29,6 +31,12 @@ public class ForestDash extends Ability implements Ability.IChannelened {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         Vec3 start = owner.position().subtract(owner.getUpVector(0.1F).scale(ForestDashEntity.SIZE));
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getEnergy() <= 6.0F) {
+            return;
+        }
 
         for (double i = 0.0D; i <= SPEED * 2; i += ForestDashEntity.SIZE) {
             Vec3 offset = start.add(look.scale(i));

@@ -13,9 +13,9 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class CursedEnergyBlastEntity extends JujutsuProjectile {
-    public static final int DURATION = 40;
-    private static final float DAMAGE = 8.0F;
-    public static final float RANGE = (float) Math.pow(DURATION, 0.5F) * 5.0F;
+    public static final int DURATION = 25;
+    private static final float DAMAGE = 7.0F;
+    public static final float RANGE = (float) Math.pow(DURATION, 0.5F) * 8.0F;
 
     public CursedEnergyBlastEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -31,7 +31,7 @@ public class CursedEnergyBlastEntity extends JujutsuProjectile {
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float age = this.getTime();
-        float scale = (float) Math.pow(age, 0.5F) * 5.0F;
+        float scale = (float) Math.pow(age, 0.5F) * 8.0F;
         return super.getDimensions(pPose).scale(scale);
     }
 

@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 
 public class ForestDashEntity extends JujutsuProjectile {
-    public static final float SIZE = 2.5F;
+    public static final float SIZE = 2.0F;
     private static final int DURATION = 3 * 20;
 
     public ForestDashEntity(EntityType<? extends Projectile> pType, Level pLevel) {
