@@ -100,6 +100,7 @@ public class SorcererData implements ISorcererData {
     private int disable;
 
     private int selfHit;
+    private int extraMeleeTaken;
     private int burnout;
     private int brainDamage;
     private int brainDamageTimer;
@@ -475,6 +476,9 @@ public class SorcererData implements ISorcererData {
         }
         if (this.selfHit > 0) {
             this.selfHit--;
+        }
+        if (this.extraMeleeTaken > 0) {
+            this.extraMeleeTaken--;
         }
         if (this.disarmed > 0) {
             this.disarmed--;
@@ -1166,6 +1170,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void setExtraMeleeTaken(int duration) {
+        this.extraMeleeTaken = duration;
+    }
+
+    @Override
     public int getBurnout() {
         return this.burnout;
     }
@@ -1191,6 +1200,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getExtraMeleeTaken() {
+        return this.extraMeleeTaken ;
+    }
+
+    @Override
     public boolean hasBurnout() {
         return this.burnout > 0;
     }
@@ -1208,6 +1222,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean hasSelfHit() {
         return this.selfHit > 0;
+    }
+
+    @Override
+    public boolean hasExtraMeleeTaken() {
+        return this.extraMeleeTaken > 0;
     }
 
     @Override

@@ -44,7 +44,7 @@ public class MakiZeninEntity extends SorcererEntity {
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
                 .add(Attributes.ARMOR, 20.0D);
     }
 

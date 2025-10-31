@@ -212,6 +212,8 @@ public interface ISorcererData {
 
     void setSelfHit(int duration);
 
+    void setExtraMeleeTaken(int duration);
+
     int getBurnout();
 
     int getDisable();
@@ -222,6 +224,8 @@ public interface ISorcererData {
 
     int getSelfHit();
 
+    int getExtraMeleeTaken();
+
     boolean hasBurnout();
 
     boolean hasDisable();
@@ -231,6 +235,8 @@ public interface ISorcererData {
     boolean hasSilenced();
 
     boolean hasSelfHit();
+
+    boolean hasExtraMeleeTaken();
 
     void resetCooldowns();
 

@@ -345,6 +345,15 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
         }
     });
 }
+
+
+            if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData victimcap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (victimcap != null && victimcap.hasExtraMeleeTaken() && HelperMethods.isMelee(source)) {
+                System.out.println("test");
+                event.setAmount(event.getAmount() * 1.5F);
+            }
+            }
             
 
             if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;

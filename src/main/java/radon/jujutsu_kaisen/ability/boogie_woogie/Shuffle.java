@@ -76,9 +76,11 @@ public class Shuffle extends Ability implements Ability.IChannelened {
             Vec2 targetRot = first.getRotationVector();
              first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
+                    cap.setExtraMeleeTaken(25);
                 });
                 second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
+                    cap.setExtraMeleeTaken(25);
                 });
             first.teleportTo(second.getX(), second.getY(), second.getZ());
             second.teleportTo(pos.x, pos.y, pos.z);
@@ -98,7 +100,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 20.0F;
+        return 30.0F;
     }
 
     public int getCooldown() {

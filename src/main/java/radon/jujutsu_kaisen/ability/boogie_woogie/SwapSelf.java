@@ -73,6 +73,7 @@ public class SwapSelf extends Ability {
             Vec2 targetRot = target.getRotationVector();
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
+                    cap.setExtraMeleeTaken(25);
                 });
       
 
@@ -90,7 +91,7 @@ public class SwapSelf extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 20.0F;
     }
 
     @Override

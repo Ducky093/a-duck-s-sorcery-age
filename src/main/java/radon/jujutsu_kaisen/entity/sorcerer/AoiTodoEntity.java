@@ -31,7 +31,7 @@ public class AoiTodoEntity extends SorcererEntity {
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
-                .add(Attributes.ARMOR, 12.0D);
+                .add(Attributes.ARMOR, 16.0D);
     }
 
     @Override

@@ -86,9 +86,11 @@ public class SwapOthers extends Ability {
                 Vec2 secondRot = second.getRotationVector();
                  first.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
+                     cap.setExtraMeleeTaken(25);
                 });
                 second.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
+                    cap.setExtraMeleeTaken(25);
                 });
                 second.teleportTo(first.getX(), first.getY(), first.getZ());
                 first.teleportTo(pos.x, pos.y, pos.z);
@@ -110,7 +112,7 @@ public class SwapOthers extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 15.0F;
+        return 25.0F;
     }
 
     @Override

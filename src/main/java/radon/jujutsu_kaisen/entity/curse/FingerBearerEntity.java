@@ -66,9 +66,9 @@ public class FingerBearerEntity extends CursedSpirit {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 100.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
-                .add(Attributes.ATTACK_DAMAGE, 1 * 1.0D)
-                .add(Attributes.ARMOR, 10.0D);
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4 * 3.0D)
+                .add(Attributes.ARMOR, 14.0D);
     }
 
     @Override
