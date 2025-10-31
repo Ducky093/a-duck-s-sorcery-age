@@ -36,7 +36,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
         int charge = this.getCharge(owner);
 
-        int speed = 3;
+        int speed = 4;
 
         AirFrameEntity frame = new AirFrameEntity(owner, this.getPower(owner));
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -49,7 +49,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 8.0F;
     }
 
     @Override

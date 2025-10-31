@@ -130,7 +130,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
 
         if (cap.getSpeedStacks() > 0) {
-            newRange = RANGE + ((double) cap.getSpeedStacks() /5); //someone tell brosif to use tabs
+            newRange = RANGE + ((double) cap.getSpeedStacks() / 2); //someone tell brosif to use tabs
         }
 
         List<String> targets = new ArrayList<String>();
@@ -218,7 +218,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
-                            entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
+                            entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 1.5F)
                                     .multiply(1.0D, 0.25D, 1.0D));
                             entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
                             entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));

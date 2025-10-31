@@ -38,7 +38,7 @@ public class SimpleDomainEntity extends Entity {
     private static final double X_STEP = 0.025D;
     public static final float RADIUS = 1.5F;
     private static final float MAX_RADIUS = 3.5F;
-    private static final float DAMAGE = 3.0F;
+    private static final float DAMAGE = 4.0F;
     private boolean invuln = false;
     private boolean domainInvuln = false;
 
@@ -193,9 +193,9 @@ public class SimpleDomainEntity extends Entity {
                         float baseDMG = DAMAGE;
                         if (domain.ability == JJKAbilities.UNLIMITED_VOID.get() || domain.ability == JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) {
                             baseDMG*=0.5F;
-                        } 
+                        }
                         if (domain.ability == JJKAbilities.MALEVOLENT_SHRINE.get()) {
-                            baseDMG*=12.0F;
+                            baseDMG*=9.0F;
                         } 
                         if (target != null) {
                             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

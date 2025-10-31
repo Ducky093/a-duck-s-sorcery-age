@@ -59,7 +59,7 @@ public class ChantHandler {
         }
         float countFactor = (float) count / ConfigHolder.SERVER.maximumChantCount.get();
         float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
-        return (0.45F * countFactor) + (1.15F * lengthFactor);
+        return (0.5F * countFactor) + (1.15F * lengthFactor);
     }
 
     @Nullable

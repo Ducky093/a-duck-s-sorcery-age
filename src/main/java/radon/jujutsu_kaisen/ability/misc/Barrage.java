@@ -84,6 +84,10 @@ public class Barrage extends Ability {
 
         }
 
+        if (cap.getSpeedStacks() > 0) {
+            newRange = RANGE + ((double) cap.getSpeedStacks() / 3);
+        }
+
         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof PolearmStaffItem) {
             newRange+=1.25;
         }
