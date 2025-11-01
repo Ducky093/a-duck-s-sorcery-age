@@ -35,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -221,6 +222,10 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
         if (this.getTarget() != null) {
             this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.1f);
+        }
+
+        if (this.getTarget() != null && HelperMethods.RANDOM.nextInt(5) == 0) {
+            this.moveControl.setWantedPosition(this.getTarget().getX() * -1.5F, this.getTarget().getY() * -1.1F, this.getTarget().getZ() * -1.1F, 1.4f);
         }
 
         if (passenger != null) {

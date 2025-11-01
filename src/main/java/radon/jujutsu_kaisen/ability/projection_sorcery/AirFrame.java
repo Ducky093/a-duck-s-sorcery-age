@@ -36,7 +36,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
         int charge = this.getCharge(owner);
 
-        int speed = 4;
+        int speed = 3;
 
         AirFrameEntity frame = new AirFrameEntity(owner, this.getPower(owner));
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);

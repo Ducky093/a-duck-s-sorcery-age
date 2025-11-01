@@ -14,8 +14,8 @@ import net.minecraft.util.Mth;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
     public static final int DURATION = 3 * 20;
-    private static final float RADIUS = 5.0F;
-    private static final float MAX_EXPLOSION = 24.0F;
+    private static final float RADIUS = 8.0F;
+    private static final float MAX_EXPLOSION = 30.0F;
     private boolean exploded;
 
     public HollowPurpleExplosion(EntityType<? extends Projectile> pType, Level pLevel) {

@@ -28,7 +28,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RatioRule extends Ability implements Ability.IAttack, Ability.IToggled {
-    private static final float MAX_DAMAGE = 30.0F;
+    private static final float MAX_DAMAGE = 40.0F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -83,7 +83,7 @@ public class RatioRule extends Ability implements Ability.IAttack, Ability.ITogg
         //     float f2 = Mth.clamp(k, 0.0F, 20.0F);
         //     damage /= 1.0F - f2 / 25.0F;
         // }
-        return damage * 0.35f;
+        return damage * 0.5f;
     }
 
     @Override

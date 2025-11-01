@@ -73,7 +73,7 @@ public class SwapSelf extends Ability {
             Vec2 targetRot = target.getRotationVector();
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.setSelfHit(15);
-                    cap.setExtraMeleeTaken(25);
+                    cap.setExtraMeleeTaken(20);
                 });
       
 
