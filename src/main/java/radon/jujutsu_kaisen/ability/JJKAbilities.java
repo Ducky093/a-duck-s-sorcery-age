@@ -188,6 +188,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SOUL_RESTORATION = ABILITIES.register("soul_restoration", SoulRestoration::new);
     public static RegistryObject<Ability> ARM_BLADE = ABILITIES.register("arm_blade", ArmBlade::new);
     public static RegistryObject<Ability> GUN = ABILITIES.register("gun", Gun::new);
+    public static RegistryObject<Ability> SHRINK = ABILITIES.register("shrink", Shrink::new);
     public static RegistryObject<Ability> HORSE_LEGS = ABILITIES.register("horse_legs", HorseLegs::new);
     public static RegistryObject<Ability> WINGS = ABILITIES.register("wings", Wings::new);
     public static RegistryObject<Summon<?>> TRANSFIGURED_SOUL_SMALL = ABILITIES.register("transfigured_soul_small", TransfiguredSoulSmall::new);

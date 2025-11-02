@@ -1,18 +1,21 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 
+import java.io.ObjectInputFilter.Config;
+
 import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public enum SorcererGrade {
-    GRADE_4(0.0F),
-    GRADE_3(500.0F),
-    SEMI_GRADE_2(1000.0F),
-    GRADE_2(1500.0F),
-    SEMI_GRADE_1(2000.0F),
-    GRADE_1(2500.0F),
-    SPECIAL_GRADE_1(3000.0F),
-    SPECIAL_GRADE(4000.0F);
+    GRADE_4(ConfigHolder.SERVER.Grade4Exp.get().floatValue()),
+    GRADE_3(ConfigHolder.SERVER.Grade3Exp.get().floatValue()),
+    SEMI_GRADE_2(ConfigHolder.SERVER.SemiGrade2Exp.get().floatValue()),
+    GRADE_2(ConfigHolder.SERVER.Grade2Exp.get().floatValue()),
+    SEMI_GRADE_1(ConfigHolder.SERVER.SemiGrade1Exp.get().floatValue()),
+    GRADE_1(ConfigHolder.SERVER.Grade1Exp.get().floatValue()),
+    SPECIAL_GRADE_1(ConfigHolder.SERVER.SpecialGrade1Exp.get().floatValue()),
+    SPECIAL_GRADE(ConfigHolder.SERVER.SpecialGradeExp.get().floatValue());
 
     private final float required;
 

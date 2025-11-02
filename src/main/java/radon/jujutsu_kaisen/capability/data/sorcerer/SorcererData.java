@@ -1798,6 +1798,27 @@ public float getMaxEnergy() {
         this.frames.clear();
     }
 
+    private boolean isIncompatible(Trait newTrait, Set<Trait> existingTraits, List<String> incompatibilities) {
+        for (String pair : incompatibilities) {
+            String[] split = pair.split(",");
+            if (split.length != 2) continue;
+
+            Trait t1 = Trait.valueOf(split[0].trim());
+            Trait t2 = Trait.valueOf(split[1].trim());
+
+            if ((newTrait == t1 && existingTraits.contains(t2)) || 
+                (newTrait == t2 && existingTraits.contains(t1))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isUniqueTraitAllowed(Trait trait) {
+        List<Trait> uniqueTraits = ConfigHolder.SERVER.getUniqueTraits();
+        return !ConfigHolder.SERVER.uniqueTraits.get() || !uniqueTraits.contains(trait);
+    }
+
     @Override
     public void generate(ServerPlayer owner) {
         this.initialized = true;
@@ -1841,7 +1862,7 @@ public float getMaxEnergy() {
             }
         }
 
-        if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
+        if ( (isUniqueTraitAllowed(Trait.HEAVENLY_RESTRICTION)  || !traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
             HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
@@ -1873,19 +1894,7 @@ public float getMaxEnergy() {
            
             
           
-            Map<Trait, Integer> weights = new HashMap<>();
-            if (this.type == JujutsuType.SORCERER) {
-                weights.put(Trait.VESSEL, ConfigHolder.SERVER.vesselWeight.get());
-                weights.put(Trait.SIX_EYES, ConfigHolder.SERVER.sixEyesWeight.get());
-                weights.put(Trait.RCT_OUTPUT, ConfigHolder.SERVER.rctOutputWeight.get());
-                weights.put(Trait.INCARNATED, ConfigHolder.SERVER.incarnatedWeight.get());
-            }
-            else if (this.type == JujutsuType.CURSE) {
-                weights.put(Trait.DEATH_PAINTING, ConfigHolder.SERVER.deathPaintingWeight.get());
-                weights.put(Trait.CURSED_WOMB, ConfigHolder.SERVER.cursedWombWeight.get());
-            }
-            weights.put(Trait.PERFECT_BODY, ConfigHolder.SERVER.perfectBodyWeight.get());
-            weights.put(Trait.PRODIGY, ConfigHolder.SERVER.prodigyWeight.get());
+            Map<Trait, Integer> weights = ConfigHolder.SERVER.getTraits(type);
             //weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
        
 
@@ -1896,7 +1905,7 @@ public float getMaxEnergy() {
                 if (rollCount < ConfigHolder.SERVER.minTraits.get() ) {
                     weights.remove(null);
                 } else {
-                    weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
+                    weights.put(null, ConfigHolder.SERVER.noTraitWeight.get() * weightMult);
                 }
                 
                 int totalWeight = weights.values().stream().mapToInt(Integer::intValue).sum();
@@ -1912,8 +1921,8 @@ public float getMaxEnergy() {
                         break;
                     }
                 }
-
-                if (chosen != null && (!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(chosen))  && rollCount < ConfigHolder.SERVER.maxTraits.get() && !this.hasTrait(chosen) ) {
+                List<String> incompatibilities = ConfigHolder.SERVER.incompatibleTraits.get();
+                if (chosen != null && !isIncompatible(chosen, traits, incompatibilities) && (isUniqueTraitAllowed(chosen) || !traits.contains(chosen))  && rollCount < ConfigHolder.SERVER.maxTraits.get() && !this.hasTrait(chosen) ) {
                     this.addTrait(chosen);
                     rollCount++;
                     weightMult *= ConfigHolder.SERVER.traitScalingModifier.get();

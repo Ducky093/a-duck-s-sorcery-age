@@ -31,13 +31,6 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float age = this.getTime();
-        float scale = (float) Math.pow(age, 0.5F) * 1.5F;
-        return super.getDimensions(pPose).scale(scale);
-    }
-
-    @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
@@ -46,9 +39,9 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getTime() <= 3) {
-            this.refreshDimensions();
-        }
+        // if (this.getTime() <= 3) {
+        //     this.refreshDimensions();
+        // }
 
         if (this.getTime() >= DURATION) {
             this.discard();

@@ -42,7 +42,7 @@ public class SwapSelf extends Ability {
     }
 
     public static boolean canSwap(Entity target) {
-        return (target.isPickable() || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem || target instanceof CursedEnergyImbuedItemProjectile
+        return ( !(!target.isPickable() && target instanceof ItemEntity) || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem || target instanceof CursedEnergyImbuedItemProjectile
                 || target instanceof JujutsuProjectile) && (!(target instanceof LivingEntity living) || !JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION));
     }
 
@@ -108,5 +108,10 @@ public class SwapSelf extends Ability {
     @Override
     public MenuType getMenuType() {
         return MenuType.J2TSU;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2;
     }
 }

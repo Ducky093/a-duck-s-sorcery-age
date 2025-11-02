@@ -32,15 +32,34 @@ public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
     @Override
     public void render(@NotNull ForestSpikeEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight(), 0.0F);
-
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+        pPoseStack.translate(0.0F, 0.0F, 0.0F);
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
-
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
+        pPoseStack.translate(0.0F, -1.5F, 0.0F);
+
+        float age = pEntity.getTime() + pPartialTick;
+        float maxScale = 1.0F; // maximum size
+        float popDuration = 6.0F; // ticks to scale up
+        float verticalScale = age < popDuration ? (age / popDuration) * maxScale : maxScale;
+        //float entityHeight = pEntity.getBbHeight(); // actual entity height
+//pPoseStack.translate(0.0F, entityHeight / 2.0F, 0.0F);
+//pPoseStack.scale(1.0F, verticalScale, 1.0F);
+//pPoseStack.translate(0.0F, -entityHeight / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, HEIGHT / 2.0F, 0.0F); 
+        pPoseStack.scale(1.0F, verticalScale, 1.0F);
+        pPoseStack.translate(0.0F, -HEIGHT / 2.0F, 0.0F); 
+
+        //pPoseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+
+        //float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        //float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+
+        //pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        //pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
 
         for (int i = 0; i < 2; i++) {
             pPoseStack.mulPose(Axis.YP.rotationDegrees(i * 90.0F));

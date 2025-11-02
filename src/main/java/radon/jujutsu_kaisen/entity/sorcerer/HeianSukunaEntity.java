@@ -4,11 +4,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,6 +24,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -55,6 +58,23 @@ public class HeianSukunaEntity extends SukunaEntity {
     public void setBarrage(int barrage) {
         this.entityData.set(DATA_BARRAGE, barrage);
     }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
+            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+            int count = stack.getCount();
+
+            stack.shrink(count);
+            this.fingers = Math.max(20, this.fingers + count);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
+    }
+
 
     @Override
     public float getExperience() {

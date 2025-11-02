@@ -211,9 +211,16 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         EntityType<?> type = curse.getType();
 
-        BlockPos pos = getRandomPosWithin(pLevel, pLevel.getChunk((int) (centerX + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * ConfigHolder.SERVER.displayCaseSpawnRange.get())),
-                (int) (centerZ + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * ConfigHolder.SERVER.displayCaseSpawnRange.get())))
-            ,pPos, 5);
+        float radius = ConfigHolder.SERVER.displayCaseSpawnRange.get();
+
+        float offsetX = (HelperMethods.RANDOM.nextFloat() - 0.5F) * radius;
+        float offsetZ = (HelperMethods.RANDOM.nextFloat() - 0.5F) * radius;
+
+        int spawnX = (int) (centerX + offsetX);
+        int spawnZ = (int) (centerZ + offsetZ);
+
+
+        BlockPos pos = new BlockPos(spawnX, pPos.getY(), spawnZ);
 
         if (pos.getY() < pLevel.getMinBuildHeight() + 1) return;
 

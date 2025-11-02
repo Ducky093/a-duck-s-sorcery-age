@@ -7,7 +7,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,14 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
     public final ForgeConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
+    public final ForgeConfigSpec.DoubleValue Grade4Exp;
+    public final ForgeConfigSpec.DoubleValue Grade3Exp;
+    public final ForgeConfigSpec.DoubleValue SemiGrade2Exp;
+    public final ForgeConfigSpec.DoubleValue Grade2Exp;
+    public final ForgeConfigSpec.DoubleValue SemiGrade1Exp;
+    public final ForgeConfigSpec.DoubleValue Grade1Exp;
+    public final ForgeConfigSpec.DoubleValue SpecialGrade1Exp;
+    public final ForgeConfigSpec.DoubleValue SpecialGradeExp;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.IntValue totemRCTChanceMult;
@@ -126,6 +136,9 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue maximumStolenTechniques;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableSorcererTechniques;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableCursedSpiritTechniques;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> sorcererTraitList;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> curseTraitList;
+    public final ForgeConfigSpec.ConfigValue<List<String>> incompatibleTraits;
 
     public final ForgeConfigSpec.IntValue natureTraitModifier;
     public final ForgeConfigSpec.IntValue traitScalingModifier;
@@ -154,6 +167,22 @@ public class ServerConfig {
                 .defineInRange("cursedEnergyRegenerationAmount", 0.6F, 0.0F, 100000.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 20000.0F, 1.0F, 1000000.0F);
+        this.Grade4Exp = builder.comment("The experience required for Grade 4 (affects npcs)")
+                .defineInRange("Grade4Exp", 250.0F, 0.0F, 1000000.0F);
+        this.Grade3Exp = builder.comment("The experience required for Grade 3 (affects npcs)")
+                .defineInRange("Grade3Exp", 500.0F, 0.0F, 1000000.0F);
+        this.SemiGrade2Exp = builder.comment("The experience required for Semi Grade 2 (affects npcs)")
+                .defineInRange("SemiGrade2Exp", 1000.0F, 0.0F, 1000000.0F);
+        this.Grade2Exp = builder.comment("The experience required for Grade 2 (affects npcs)")
+                .defineInRange("Grade2Exp", 1500.0F, 0.0F, 1000000.0F);
+        this.SemiGrade1Exp = builder.comment("The experience required for Semi Grade 1 (affects npcs)")
+                .defineInRange("SemiGrade1Exp", 2000.0F, 0.0F, 1000000.0F);
+        this.Grade1Exp = builder.comment("The experience required for Grade 1 (affects npcs)")
+                .defineInRange("Grade1Exp", 2500.0F, 0.0F, 1000000.0F);
+        this.SpecialGrade1Exp = builder.comment("The experience required for Special Grade 1 (affects npcs)")
+                .defineInRange("SpecialGrade1Exp", 3000.0F, 0.0F, 1000000.0F);
+        this.SpecialGradeExp = builder.comment("The experience required for Special Grade (affects npcs)")
+                .defineInRange("SpecialGradeExp", 4000.0F, 0.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance)")
@@ -178,8 +207,8 @@ public class ServerConfig {
                 .defineInRange("sorcererVillageSpawnRate", 6, 0, 100000);
         this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare, 0 to disable)")
                 .defineInRange("displayCaseRarity", 8, 0, 100000);
-        this.displayCaseSpawnRange = builder.comment("Range in chunks curses can spawn from display cases (bigger value means more rare, 0 to disable)")
-                .defineInRange("displayCaseSpawnRange", 8, 0, 100000);
+        this.displayCaseSpawnRange = builder.comment("Range in blocks curses can spawn from display cases (square range so 64 in each direction default)")
+                .defineInRange("displayCaseSpawnRange", 128, 0, 100000);
         this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")
                 .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
@@ -419,11 +448,30 @@ public class ServerConfig {
                         ),
                         ignored -> true
                 );
+
+           this.sorcererTraitList = builder.comment("Traits that can be rolled by Sorcerers (HR and Simurian may not be added here or else it might crash)")
+                .defineList("sorcererTraitList", () -> List.of(
+                                Trait.PRODIGY.name(),
+                                Trait.PERFECT_BODY.name(),
+                                Trait.RCT_OUTPUT.name(),
+                                Trait.INCARNATED.name(),
+                                Trait.VESSEL.name(),
+                                Trait.SIX_EYES.name()
+                        ), ignored -> true);
+           this.curseTraitList = builder.comment("Traits that can be rolled by Curses (HR and Simurian may not be added here or else it might crash)")
+                .defineList("curseTraitList", () -> List.of(
+                                Trait.PRODIGY.name(),
+                                Trait.PERFECT_BODY.name(),
+                                Trait.CURSED_WOMB.name(),
+                                Trait.DEATH_PAINTING.name()
+                        ), ignored -> true);
+           this.incompatibleTraits = builder.comment("Incompatible traits, formatted as TRAIT1,TRAIT2. To add more, just add more comma separated traits to the list")
+                .define("incompatibleTraits", List.of("PERFECT_BODY,SIX_EYES"));
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
         this.traitRolls = builder.comment("How many rolls are done to give players traits? (each minimum guaranteed trait takes a trait roll)")
-                .defineInRange("traitRolls", 4, 0, 1000000);
+                .defineInRange("traitRolls", 3, 0, 1000000);
         this.minTraits = builder.comment("The minimum amount of traits a player will start with")
                 .defineInRange("minTraits", 0 ,0, 1000000);
         this.maxTraits = builder.comment("The maximum amount of traits a player can start with")
@@ -433,33 +481,36 @@ public class ServerConfig {
         this.natureTraitModifier = builder.comment("The division to the chance of rolling a trait with a nature")
                 .defineInRange("natureTraitModifier", 2 ,0, 1000000);
         this.traitScalingModifier = builder.comment("The division to the chance of rolling an additional trait per trait rolled")
-                .defineInRange("traitScalingModifier", 4 ,0, 1000000);
+                .defineInRange("traitScalingModifier", 2 ,0, 1000000);
         this.noTraitWeight = builder.comment("Weight of receiving no trait")
-                .defineInRange("noTraitWeight", 66, 0, 1000000);
+                .defineInRange("noTraitWeight", 800, 0, 1000000);
         this.cursedEnergyNatureRarity = builder.comment("Weight of a cursed energy nature other than basic (1/value chance, bigger value = rarer)")
-                .defineInRange("cursedEnergyNatureRarity", 16, 0, 1000000);
+                .defineInRange("cursedEnergyNatureRarity", 15, 0, 1000000);
         this.curseRarity = builder.comment("Rarity of being a curse (1/value chance, bigger value = rarer")
                 .defineInRange("curseRarity", 4, 0, 1000000);
         this.sixEyesWeight = builder.comment("Weight of having six eyes (lower value = rarer)")
-                .defineInRange("sixEyesWeight", 2, 0, 1000000);
+                .defineInRange("sixEyesWeight", 4, 0, 1000000);
         this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (1/value chance, bigger value = rarer")
-                .defineInRange("heavenlyRestrictionRarity", 20, 0, 1000000);
+                .defineInRange("heavenlyRestrictionRarity", 30, 0, 1000000);
         this.vesselWeight = builder.comment("Weight of being a vessel (lower value = rarer)")
-                .defineInRange("vesselWeight", 6, 0, 1000000);
+                .defineInRange("vesselWeight", 12, 0, 1000000);
         this.perfectBodyWeight = builder.comment("Weight of having a perfect body (lower value = rarer)")
-                .defineInRange("perfectBodyWeight", 2, 0, 1000000);
+                .defineInRange("perfectBodyWeight", 4, 0, 1000000);
         this.incarnatedWeight = builder.comment("Weight of being incarnated (lower value = rarer)")
-                .defineInRange("incarnatedWeight", 20, 0, 1000000);
+                .defineInRange("incarnatedWeight", 36, 0, 1000000);
         this.rctOutputWeight = builder.comment("Weight of being able to output your RCT (lower value = rarer)")
-                .defineInRange("rctOutputWeight", 20, 0, 1000000);
+                .defineInRange("rctOutputWeight", 30, 0, 1000000);
         this.prodigyWeight = builder.comment("Weight of having immense development potential (lower value = rarer)")
                 .defineInRange("prodigyWeight", 8, 0, 1000000);
         this.cursedWombWeight = builder.comment("Weight of forming as a Cursed Womb (lower value = rarer)")
-                .defineInRange("cursedWombWeight", 20, 0, 1000000);
+                .defineInRange("cursedWombWeight", 24, 0, 1000000);
         this.deathPaintingWeight = builder.comment("Weight of having been born as a Death Painting (lower value = rarer)")
-                .defineInRange("deathPaintingWeight", 12, 0, 1000000);
+                .defineInRange("deathPaintingWeight", 16, 0, 1000000);
         builder.pop();
     }
+
+
+    
 
     public List<CursedTechnique> getUnlockableTechniques(JujutsuType type) {
         if (type == JujutsuType.SORCERER) {
@@ -473,4 +524,41 @@ public class ServerConfig {
                 .collect(Collectors.toList());
         }
     }
+
+    public List<Trait> getUniqueTraits() {
+        return this.uniqueTraitList.get().stream()
+                .map(Trait::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    public Map<Trait, Integer> getTraits(JujutsuType type) {
+        Map<Trait, Integer> traitWeights = new HashMap<>();
+
+        List<Trait> traits;
+        if (type == JujutsuType.SORCERER) {
+                traits = this.sorcererTraitList.get().stream()
+                        .map(Trait::valueOf)
+                        .collect(Collectors.toList());
+        } else {
+                traits = this.curseTraitList.get().stream()
+                        .map(Trait::valueOf)
+                        .collect(Collectors.toList());
+        }
+
+        for (Trait t : traits) {
+                switch (t) {
+                case VESSEL -> traitWeights.put(t, vesselWeight.get());
+                case SIX_EYES -> traitWeights.put(t, sixEyesWeight.get());
+                case RCT_OUTPUT -> traitWeights.put(t, rctOutputWeight.get());
+                case INCARNATED -> traitWeights.put(t, incarnatedWeight.get());
+                case DEATH_PAINTING -> traitWeights.put(t, deathPaintingWeight.get());
+                case CURSED_WOMB -> traitWeights.put(t, cursedWombWeight.get());
+                case PERFECT_BODY -> traitWeights.put(t, perfectBodyWeight.get());
+                case PRODIGY -> traitWeights.put(t, prodigyWeight.get());
+                }
+        }
+
+        return traitWeights;
+}
+    
 }

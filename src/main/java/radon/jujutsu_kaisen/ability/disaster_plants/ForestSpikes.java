@@ -61,6 +61,75 @@ public class ForestSpikes extends Ability {
         return super.isTriggerable(owner);
     }
 
+    private void spawnSpike(LivingEntity owner, Direction dir, BlockPos pos) {
+        ForestSpikeEntity spike = new ForestSpikeEntity(owner, this.getPower(owner));
+
+            double offset1 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
+            double offset2 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
+
+
+            Vec3 spawnPos;
+
+            switch (dir.getAxis()) {
+                case Y -> spawnPos = pos.getCenter().add(offset1, 0.0D, offset2); // floor/ceiling, random X/Z
+                case X -> spawnPos = pos.getCenter().add(0.0D, offset1, offset2); // walls along X, random Y/Z
+                case Z -> spawnPos = pos.getCenter().add(offset1, offset2, 0.0D); // walls along Z, random X/Y
+                default -> spawnPos = pos.getCenter();
+            }
+
+            float yRot = dir.toYRot() + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
+            float xRot = (float) (Mth.atan2(dir.getStepY(), dir.getStepX()) * 180.0F / Mth.PI)
+                        + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
+            if (dir == Direction.UP || dir == Direction.DOWN) xRot = -xRot;
+            if (dir == Direction.WEST) xRot -= 180.0F;
+            spike.setYRot(yRot);
+            spike.setXRot(xRot);
+
+            Vec3 rayDir = new Vec3(dir.getStepX(), dir.getStepY(), dir.getStepZ()).scale(-1.0D);
+            Vec3 rayStart = spawnPos;
+            Vec3 rayEnd = spawnPos.add(rayDir.scale(5.0D));
+            BlockHitResult hitResult = owner.level().clip(new ClipContext(
+                rayStart,
+                rayEnd,
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.NONE,
+                spike
+            ));
+
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                BlockPos blockPos = hitResult.getBlockPos();
+
+                BlockPos airCheck = blockPos.relative(dir);
+                if (!owner.level().getBlockState(airCheck).isAir()) {
+                    spike.discard();
+                    return;
+                }
+
+                double blockCenterX = blockPos.getX() + 0.5D;
+        double blockCenterY = blockPos.getY() + 0.5D;
+        double blockCenterZ = blockPos.getZ() + 0.5D;
+
+        // Push along the face normal (dir) by half a block + model + extra offset
+        double extraOffset = 0.0F;
+        double pushDistance = 0.5D + spike.getBbHeight() / 2.0F + extraOffset;
+
+        double finalX = blockCenterX + dir.getStepX() * pushDistance;
+        double finalY = blockCenterY + dir.getStepY() * pushDistance;
+        double finalZ = blockCenterZ + dir.getStepZ() * pushDistance;
+
+                // 
+                // double finalX = blockPos.getX() + (dir.getStepX() != 0 ? dir.getStepX() * spike.getBbHeight() / 2.0F + extraOffset : 0.0);
+                // double finalY = blockPos.getY() + (dir.getStepY() != 0 ? dir.getStepY() * spike.getBbHeight() / 2.0F + extraOffset : 0.0);
+                // double finalZ = blockPos.getZ() + (dir.getStepZ() != 0 ? dir.getStepZ() * spike.getBbHeight() / 2.0F + extraOffset : 0.0);
+
+                spike.moveTo(finalX, finalY, finalZ, yRot, xRot);
+                owner.level().addFreshEntity(spike);
+            } else {
+                spike.discard();
+            }
+        
+    }
+
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
@@ -72,29 +141,11 @@ public class ForestSpikes extends Ability {
 
             Direction dir = hit.getDirection();
             BlockPos pos = hit.getBlockPos();
-
-            for (int i = 0; i < 64; i++) {
-                ForestSpikeEntity spike = new ForestSpikeEntity(owner, this.getPower(owner));
-
-                Vec3 center = pos.relative(dir).getCenter()
-                        .subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);
-                float yRot = dir.toYRot() + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
-                float xRot = (float) (Mth.atan2(dir.getStepY(), dir.getStepX()) * 180.0F / Mth.PI) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
-
-                switch (dir) {
-                    case UP, DOWN -> xRot = -xRot;
-                    case WEST -> xRot -= 180.0F;
-                }
-
-                Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD);
-                spike.moveTo(offset.x, offset.y - spike.getBbHeight() / 2.0F, offset.z, yRot, xRot);
-
-                if (owner.level().getBlockState(BlockPos.containing(offset.subtract(RotationUtil.getTargetAdjustedLookAngle(spike)))).isAir()) {
-                    spike.setPos(center);
-                }
-                owner.level().addFreshEntity(spike);
+            spawnSpike(owner, dir, pos);
+            for (int i = 0; i < 63; i++) {
+                spawnSpike(owner, dir, pos);
             }
-        }
+    }
     }
 
     @Override
