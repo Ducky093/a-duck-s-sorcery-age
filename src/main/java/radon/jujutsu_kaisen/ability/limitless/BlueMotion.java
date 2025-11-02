@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -26,6 +27,11 @@ public class BlueMotion extends Ability {
     }
 
     @Override
+    public MenuType getMenuType() {
+        return MenuType.J2TSU;
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
@@ -33,8 +39,8 @@ public class BlueMotion extends Ability {
         owner.level().addFreshEntity(blue);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.BLUE.get(), SoundSource.MASTER, 1.0F, 1.0F);
-         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-         cap.setDisarmed(100);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setDisarmed(100);
     }
 
     @Override

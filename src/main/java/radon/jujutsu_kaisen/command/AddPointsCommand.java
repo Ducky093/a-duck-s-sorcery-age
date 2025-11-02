@@ -14,12 +14,12 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class AddPointsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("addpoints")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkaddpoints")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("points", IntegerArgumentType.integer())
                         .executes(ctx -> addPoints(EntityArgument.getPlayer(ctx, "player"), IntegerArgumentType.getInteger(ctx, "points"))))));
 
-        dispatcher.register(Commands.literal("addpoints").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjkaddpoints").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int addPoints(ServerPlayer player, int points) {

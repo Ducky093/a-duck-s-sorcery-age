@@ -203,9 +203,9 @@ public class DisplayCaseBlockEntity extends BlockEntity {
             return;
         }
 
-        if (!(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
+        if (!pBlockEntity.hasItem() || !(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
 
-        int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 2 : 1));
+        int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 3 : 2));
 
         if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 

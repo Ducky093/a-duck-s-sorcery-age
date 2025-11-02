@@ -196,7 +196,7 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     public EntityType<?> getKey() {
-        return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElseThrow();
+        return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElse(null);
     }
 
     public GameProfile getPlayer() {
@@ -224,7 +224,7 @@ public class SukunaEntity extends SorcererEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && this.vessel && this.getKey() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (this.getKey() == null || (!this.level().isClientSide && this.vessel && this.getKey() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive()))) {
             this.discard();
         } else {
             super.tick();

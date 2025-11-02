@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -100,6 +101,11 @@ public class ThrownChainProjectile extends AbstractArrow {
     @Nullable
     protected EntityHitResult findHitEntity(@NotNull Vec3 pStartVec, @NotNull Vec3 pEndVec) {
         return this.dealtDamage ? null : super.findHitEntity(pStartVec, pEndVec);
+    }
+
+    @Override
+    protected boolean tryPickup(Player pPlayer) {
+        return false;
     }
 
     @Override
@@ -262,7 +268,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         return 0.99F;
     }
 
-    @Override
+    @Override 
     protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }

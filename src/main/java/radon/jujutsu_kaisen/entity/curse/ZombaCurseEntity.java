@@ -66,9 +66,10 @@ public class ZombaCurseEntity extends CursedSpirit {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 15.0D)
-                .add(Attributes.ATTACK_DAMAGE, 6 * 5.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 10.0D);
+                .add(Attributes.ARMOR, 8.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1 * 2.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 5.0D);
     }
 
     @Override

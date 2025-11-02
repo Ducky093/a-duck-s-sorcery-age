@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
@@ -33,7 +34,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         if (target == null) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE;
+        return cap.getType() == JujutsuType.CURSE && !cap.hasTrait(Trait.DEATH_PAINTING);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        return (targetCap.getType() == JujutsuType.CURSE && (!(target instanceof TamableAnimal tamable) || !tamable.isTame())) &&
+        return (targetCap.getType() == JujutsuType.CURSE && !targetCap.hasTrait(Trait.DEATH_PAINTING) && (!(target instanceof TamableAnimal tamable) || !tamable.isTame())) &&
                 (ownerCap.getExperience() / targetCap.getExperience() >= 2 || target.isDeadOrDying());
     }
 

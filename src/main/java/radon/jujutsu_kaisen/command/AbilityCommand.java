@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class AbilityCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("ability")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkability")
                 .requires((player) -> player.hasPermission(2))
                                 .then(Commands.literal("unlock")
                                         .then(Commands.argument("player", EntityArgument.player())
@@ -52,7 +52,7 @@ public class AbilityCommand {
                                                         }))))
         );
 
-        dispatcher.register(Commands.literal("trait").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjkability").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
    public static int unlockAbility(ServerPlayer player, ResourceLocation id) {

@@ -130,7 +130,7 @@ public class OutputRCT extends Ability {
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (targetCap.getType() == JujutsuType.CURSE) {
+            if (targetCap.getType() == JujutsuType.CURSE && !targetCap.hasTrait(Trait.DEATH_PAINTING)) {
                 target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount  * 15.0F);
                 return;
             }

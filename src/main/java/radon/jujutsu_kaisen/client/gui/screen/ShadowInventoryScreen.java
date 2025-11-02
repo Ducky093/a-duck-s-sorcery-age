@@ -108,6 +108,15 @@ public class ShadowInventoryScreen extends Screen {
         super.onClose();
     }
 
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0 && this.hovered != -1) {
+            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket(this.hovered));
+            this.items.remove(this.hovered);
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
     public static void drawCenteredString(@NotNull GuiGraphics pGuiGraphics, Font pFont, Component pText, int pX, int pY, int pColor) {
         FormattedCharSequence sql = pText.getVisualOrderText();
         pGuiGraphics.drawString(pFont, sql, pX - pFont.width(sql) / 2, pY, pColor);

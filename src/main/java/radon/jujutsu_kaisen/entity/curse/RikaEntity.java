@@ -258,7 +258,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public float getMaxEnergy() {
-        return Float.POSITIVE_INFINITY;
+        return 999999.0F;
     }
 
     @Override

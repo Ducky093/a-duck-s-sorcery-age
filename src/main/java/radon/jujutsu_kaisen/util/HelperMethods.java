@@ -30,8 +30,7 @@ import java.util.*;
 
 public class HelperMethods {
     public static final RandomSource RANDOM = RandomSource.createThreadSafe();
-
-    // TODO: move this goofy shit to config
+    //rework w canon chants and original ones for most techniques
     private static final String[] WORDS = {"blossoms", "thorns", "roots", "petals", "embers", "ashes", "seeds", "vines", "branches", "stones", "crystals", "mist", "bloom", "dew", "tide", "drift", "flame", "soil", 
     "omens", "sigils", "wards", "bindings", "seals", "echoes", "spirits", "whispers", "truths", "mirrors", "phantoms", "visions", "relics", "runes", "shadows", "dreams", "grace", "essence", "fate", "threshold", 
     "judgments", "chains", "ropes", "knives", "crowns", "blades", "scars", "brands", "vows", "marks", "wounds", "oaths", "banners", "arrows", "rings", "keys", "grips", "callings", "rifts", "trials", 

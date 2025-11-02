@@ -151,9 +151,6 @@ public class VeilHandler {
     }
 
     public static boolean canDestroy(LivingEntity entity, Level level, double x, double y, double z) {
-        if (!ConfigHolder.SERVER.destruction.get() ) { 
-            return false;
-        }
         BlockPos target = BlockPos.containing(x, y, z);
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return true;

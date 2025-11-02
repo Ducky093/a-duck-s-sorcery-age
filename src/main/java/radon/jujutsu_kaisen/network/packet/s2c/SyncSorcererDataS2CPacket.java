@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+//import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 //import com.mojang.authlib.GameProfile;
 //import com.mojang.authlib.minecraft.MinecraftProfileTexture;

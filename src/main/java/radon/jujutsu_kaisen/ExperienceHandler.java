@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
@@ -228,7 +229,7 @@ public class ExperienceHandler {
             float targetStrength = calculateStrength(target) * 1.25F;
             float ownerStrength = calculateStrength(owner) * 0.5F;
 
-            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 5.0F
+            float experience = Math.min(targetStrength* ConfigHolder.SERVER.experienceMultiplier.get().floatValue(), (targetStrength - ownerStrength) * 5.0F
                     * (this.totalDamageDealt / this.damageDealtByOwner)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
         
@@ -243,6 +244,9 @@ public class ExperienceHandler {
 
                 experience = Math.max( ConfigHolder.SERVER.minEXP.get().floatValue() ,experience);
                 if (ConfigHolder.SERVER.maxEXP.get() != 0) {
+                    if (cap.hasTrait(Trait.PRODIGY)) {
+                        experience *= 2;
+                    }
                     experience = Math.min(ConfigHolder.SERVER.maxEXP.get().floatValue(),experience);
                 }
         
@@ -254,7 +258,7 @@ public class ExperienceHandler {
                     experience = Math.max(previous.getNext().getRequiredExperience()-0.01f - (cap.getExperience()), 0);
                 }
             }
-
+       
            
 
 
@@ -265,10 +269,17 @@ public class ExperienceHandler {
             }
 
             int points = (int) Math.floor(rawExperience * 0.2F * ConfigHolder.SERVER.pointMultiplier.get().floatValue());
-
+           
+            points = Math.max(ConfigHolder.SERVER.minPoints.get(), points);
+            
+            if (ConfigHolder.SERVER.maxPoints.get() != 0) {
+                if (cap.hasTrait(Trait.PRODIGY)) {
+                    points *= 2;
+                 }
+                 points = Math.max(ConfigHolder.SERVER.maxPoints.get(), points);
+            }
             if (points > 0) {
                 cap.addPoints(points);
-
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points", JujutsuKaisen.MOD_ID), points));
                 }

@@ -4,13 +4,17 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.EntityGetter;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -18,9 +22,43 @@ import radon.jujutsu_kaisen.ability.misc.RCT1;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+        @Nullable
+    public static LivingEntity getOwner(TamableAnimal tamable) {
+        LivingEntity owner = tamable;
+
+        while (owner instanceof TamableAnimal parent && parent.isTame()) {
+            owner = parent.getOwner();
+
+            if (owner == null) return null;
+        }
+        return owner;
+    }
+
+    public static <T extends Entity> List<T> getTargetableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
+        return getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
+                .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
+                // Add entities if owner is null or the entity is not owner and the entity is not a tame owned by the owner
+                .and(entity -> owner == null || (entity != owner && (!(entity instanceof TamableAnimal tamable) || getOwner(tamable) != owner))));
+    }
+
+    public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
+        List<T> entities = new ArrayList<>();
+
+        for (T entity : getTargetableEntities(clazz, getter, owner, bounds)) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (cap != null) {
+                if (cap.hasToggled(JJKAbilities.INFINITY.get())) continue;
+            }
+            entities.add(entity);
+        }
+        return entities;
+    }
+    
     public static void makePoofParticles(Entity entity) {
         for (int i = 0; i < 20; ++i) {
             double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;

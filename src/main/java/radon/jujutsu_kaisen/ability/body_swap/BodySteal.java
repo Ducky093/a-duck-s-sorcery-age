@@ -153,7 +153,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
         //ownerCap.steal(steal);
         ownerCap.setNature(nature);
 
-        if (ConfigHolder.SERVER.bodyStealTraits.get()) { 
+        if (ConfigHolder.SERVER.bodyStealTraits.get() && ownerCap.getTraits() != null && targetCap.getTraits() != null) { 
             for (Trait t : ownerCap.getTraits()) {
                 if (t != Trait.RCT_OUTPUT ) {
                     ownerCap.removeTrait(t);

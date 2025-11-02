@@ -243,7 +243,7 @@ public class ClientAbilityHandler {
                 }
                 if ((inputObj == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
                         (inputObj == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
-                        (inputObj == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
+                        (inputObj == JJKKeys.ACTIVATE_J2TSU.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
                     mc.screen.onClose();
                 }
             }
@@ -288,6 +288,8 @@ public class ClientAbilityHandler {
             case THROAT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID), 
                     Math.max(1, cap.getThroatDamage() / 20)), false);
+            case EMPTYINV ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID)), false);
             }
         return status == Ability.Status.SUCCESS;
     }

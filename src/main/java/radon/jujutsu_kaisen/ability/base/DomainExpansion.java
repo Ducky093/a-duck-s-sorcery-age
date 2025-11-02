@@ -104,7 +104,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public static float getStrength(LivingEntity owner, boolean instant) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float size = (cap.getDomainSize() * 0.5F) - 0.15F;
-        return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size * (instant ? 0.25F : 1.0F));
+        return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size * (instant ? 0.1F : 1.0F));
     }
 
     @Override
@@ -161,8 +161,15 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 2.5F;
+        if (owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return cap.hasToggled(this) ? 2.5F : 1000.0F;
+        }
+        else {
+            return 2.5F;
+        }
     }
+
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
          MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));

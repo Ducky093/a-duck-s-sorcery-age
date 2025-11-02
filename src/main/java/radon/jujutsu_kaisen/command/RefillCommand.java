@@ -13,12 +13,12 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class RefillCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("refill")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkrefill")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
                         refill(EntityArgument.getPlayer(ctx, "player")))));
 
-        dispatcher.register(Commands.literal("refill").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjkrefill").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int refill(ServerPlayer player) {

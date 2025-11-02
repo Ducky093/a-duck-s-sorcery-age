@@ -44,16 +44,19 @@ public class RCTEventHandler {
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.isUnlocked(JJKAbilities.RCT1.get())) return;
+            if ((cap.isUnlocked(JJKAbilities.RCT1.get()) && cap.getType() == JujutsuType.SORCERER) || (cap.hasTrait(Trait.CURSED_WOMB) && cap.checkWombAwakened() == true  ) ) return;
             if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
-            if (cap.getType() != JujutsuType.SORCERER) return;
+            if (cap.getType() != JujutsuType.SORCERER && !cap.hasTrait(Trait.CURSED_WOMB) ) return;
             if (SorcererUtil.getGrade(cap.getExperience()).ordinal() < SorcererGrade.SEMI_GRADE_2.ordinal()) return;
 
             int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
 
-            if (cap.hasTrait(Trait.RCT_OUTPUT)) {
+            if (cap.hasTrait(Trait.RCT_OUTPUT) ) {
                 chance = 2;
+            }
+            else if (cap.hasTrait(Trait.PRODIGY)){ //for sorcerers
+                chance /= 2;
             }
 
             for (InteractionHand hand : InteractionHand.values()) {
@@ -63,11 +66,25 @@ public class RCTEventHandler {
                     chance /= ConfigHolder.SERVER.totemRCTChanceMult.get();
                 }
             }
+            if (cap.hasTrait(Trait.CURSED_WOMB)) {
+                chance = 0;
+            }
 
             if ( chance != 0 && HelperMethods.RANDOM.nextInt(chance) != 0 ) return;
 
             victim.setHealth(victim.getMaxHealth() / 2);
-            cap.unlock(JJKAbilities.RCT1.get());
+
+            
+            if (!cap.hasTrait(Trait.CURSED_WOMB)) {
+                cap.unlock(JJKAbilities.RCT1.get());
+            }
+            else {
+                cap.setWombAwakened(true);
+                cap.addExperience(SorcererGrade.SPECIAL_GRADE.getRequiredExperience());
+                if (cap.getTechnique() != null && cap.getTechnique().getDomain() != null) {
+                    cap.unlock(cap.getTechnique().getDomain());
+                }
+            }
 
             if (victim instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

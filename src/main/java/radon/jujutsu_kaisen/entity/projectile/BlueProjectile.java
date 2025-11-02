@@ -21,6 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -239,6 +240,8 @@ public class BlueProjectile extends JujutsuProjectile {
 
         pCompound.putBoolean("motion", this.entityData.get(DATA_MOTION));
     }
+
+  
 
     private void spin() {
         if (this.getOwner() instanceof LivingEntity owner) {

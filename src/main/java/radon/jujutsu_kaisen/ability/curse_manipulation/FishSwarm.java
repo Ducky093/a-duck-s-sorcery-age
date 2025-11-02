@@ -75,7 +75,7 @@ public class FishSwarm extends Ability {
         for (int i = 0; i < 5; i++) {
             AbsorbedCurse curse = cap.getCurse(JJKEntities.FISH_CURSE.get());
 
-            if (curse.equals(null) || !(JJKAbilities.summonCurse(owner, curse, false) instanceof FishCurseEntity fish)) return;
+            if (curse == null || curse.equals(null) || !(JJKAbilities.summonCurse(owner, curse, false) instanceof FishCurseEntity fish)) return;
 
 
 

@@ -62,7 +62,8 @@ public abstract class Ability {
         DISARMED,
         SILENCED,
         CHANT,
-        THROAT
+        THROAT,
+        EMPTYINV
     }
 
     public enum Classification {
@@ -76,7 +77,7 @@ public abstract class Ability {
         LIGHTNING,
         PROJECTION
     }
-
+    
     public static float getPower(Ability ability, LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getAbilityPower() * (1.0F + 0.5F*ChantHandler.getChant(owner, ability));
@@ -301,8 +302,18 @@ public abstract class Ability {
         if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
 
         MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
-
-        if (instance != null && instance.getAmplifier() > 0 && this != JJKAbilities.HEAL.get() && this != JJKAbilities.RCT1.get() && this != JJKAbilities.RCT2.get() && this != JJKAbilities.RCT3.get() && this != JJKAbilities.CURSED_ENERGY_SHIELD.get() && this != JJKAbilities.HOLLOW_WICKER_BASKET.get()  && this != JJKAbilities.SIMPLE_DOMAIN.get()  && this != JJKAbilities.SIMPLE_DOMAIN_ENLARGEMENT.get()  ) return Status.FAILURE;
+        
+       
+        if (instance != null && instance.getAmplifier() > 0 && this != JJKAbilities.HEAL.get() && this != JJKAbilities.RCT1.get() && this != JJKAbilities.RCT2.get() && this != JJKAbilities.RCT3.get() && this != JJKAbilities.CURSED_ENERGY_SHIELD.get() && this != JJKAbilities.HOLLOW_WICKER_BASKET.get()  && this != JJKAbilities.SIMPLE_DOMAIN.get()  && this != JJKAbilities.SIMPLE_DOMAIN_ENLARGEMENT.get()  )  {
+            if (this.isDomain() ) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (cap.getType() != JujutsuType.CURSE || cap.hasTrait(Trait.DEATH_PAINTING) ) {
+                    return Status.FAILURE;
+                }
+            } else {
+                return Status.FAILURE;
+            }
+        }
 
         Status status = this.getStatus(owner);
 

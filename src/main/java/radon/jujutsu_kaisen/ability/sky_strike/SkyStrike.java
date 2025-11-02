@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.sky_strike;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -13,7 +14,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SkyStrike extends Ability {
-    public static final double RANGE = 35.0D;
+    public static final double RANGE = 50.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -22,7 +23,8 @@ public class SkyStrike extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        return  target != null && this.getTarget(owner) == target;
+        //HelperMethods.RANDOM.nextInt(3) == 0 &&
     }
 
     @Override
@@ -41,7 +43,10 @@ public class SkyStrike extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+        if (owner instanceof Player) {
+            owner.swing(InteractionHand.MAIN_HAND);
+        }
+        
 
         LivingEntity target = this.getTarget(owner);
 
@@ -63,7 +68,7 @@ public class SkyStrike extends Ability {
 
     @Override
     public int getCooldown() {
-        return 3 * 20;
+        return 2 * 20;
     }
 
     @Override

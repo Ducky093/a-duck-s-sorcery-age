@@ -60,7 +60,7 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         LivingEntity owner = this.getOwner();
 
         if (owner != null && pSource.getEntity() == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            IdleTransfiguration.absorb(owner, this);
+            IdleTransfiguration.retrieve(owner, this);
         }
         return super.hurt(pSource, pAmount);
     }

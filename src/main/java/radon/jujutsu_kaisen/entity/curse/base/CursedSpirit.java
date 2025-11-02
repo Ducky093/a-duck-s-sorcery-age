@@ -97,7 +97,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
                 if (ConfigHolder.SERVER.curseVillageSpawnRate.get() == 0) {
                     return false;
                 }
-                if (this.random.nextInt(Math.max(1, Mth.floor(ConfigHolder.SERVER.curseVillageSpawnRate.get()  * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 2.0F : 1.0F)))) != 0) return false;
+                if (this.random.nextInt(Math.max(1, Mth.floor((ConfigHolder.SERVER.curseVillageSpawnRate.get()  * ((SorcererGrade.GRADE_3.getRequiredExperience() + this.getExperience()) / SorcererGrade.SPECIAL_GRADE.getRequiredExperience() ) )  / (this.level().isNight() ? 2.0F : 1.0F)))) != 0) return false;
                 if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return false;
             } else if (!this.isInFortress()) {
                 return false;

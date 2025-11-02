@@ -15,12 +15,12 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetExtraEnergyCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setextraenergy")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksetextraenergy")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("energy", IntegerArgumentType.integer())
                         .executes(ctx -> setExtraEnergy(EntityArgument.getPlayer(ctx, "player"), IntegerArgumentType.getInteger(ctx, "energy"))))));
 
-        dispatcher.register(Commands.literal("setextraenergy").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjksetextraenergy").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int setExtraEnergy(ServerPlayer player, int energy) {

@@ -18,8 +18,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+
+import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 
 import static net.minecraftforge.client.model.data.ModelData.EMPTY;
@@ -33,6 +36,7 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
         this.dispatcher = pContext.getBlockRenderDispatcher();
     }
 
+   
     @Override
     public void render(@NotNull ForestWaveEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         BlockState state = Blocks.OAK_WOOD.defaultBlockState();
@@ -41,14 +45,16 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.scale(0.75F, 0.75F, 0.75F);
+
+        // Vec3 entityScale = pEntity.getScale();
+        // pPoseStack.scale((float) entityScale.x, (float) entityScale.y, (float) entityScale.z);
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
-
-        pPoseStack.scale(pEntity.getBbWidth(), pEntity.getBbHeight(), pEntity.getBbWidth());
 
         pPoseStack.pushPose();
         pPoseStack.translate(-0.5D, -0.5D, -0.5D);
@@ -64,6 +70,7 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
 
         pPoseStack.popPose();
     }
+
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull ForestWaveEntity pEntity) {

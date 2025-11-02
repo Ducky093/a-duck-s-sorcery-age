@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,6 +14,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -24,13 +26,14 @@ import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.PlayerUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 
 public class BlackFlashHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BlackFlashHandlerForgeEvents {
-        private static final float MAX_DAMAGE = 40.0F;
+//        private static final float MAX_DAMAGE = 40.0F;
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingDamage(LivingDamageEvent event) {
@@ -57,35 +60,40 @@ public class BlackFlashHandler {
             int seconds = (int) (attacker.level().getGameTime() - lastBlackFlashTime) / 20;
 
             if (lastBlackFlashTime == 0 || seconds >= 1) {
-                int rng = 200;
+                int rng = ConfigHolder.SERVER.blackFlashChanceRNG.get();
+               
+
                 if (cap.addBlackFlash()){
-                    rng = 150;
+                    rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.75F); //150
                     if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
-                        rng = 20;
+                        rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.1F); //20
                     }
                 }
 
                 if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-                    rng = 150;
+                    rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.75F);
                     if (cap.addBlackFlash()){
-                        rng = 100;
+                        rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.5F); //100
                     }
                 }
 
                 if ((attacker instanceof Player player) && (cap.isInZone())) {
-                    rng = 30;
+                    rng =  (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.15F); //30
                     if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-                        rng = 20;
+                        rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.1F); //20
                     }
                     if (cap.addBlackFlash()){
-                        rng = 15;
+                        rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.075F); //15
                         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-                            rng = 10;
+                            rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.05F); //10
                         }
                         if (cap.hasToggled(JJKAbilities.RATIO_RULE.get())) {
-                            rng = 3;
+                            rng = (int) Math.round(ConfigHolder.SERVER.blackFlashChanceRNG.get().floatValue() * 0.015F); //3
                         }
                     }
+                }
+                if (attacker instanceof ServerPlayer player && !PlayerUtil.hasAdvancement(player, "black_flash") && cap.hasTrait(Trait.PRODIGY)) { 
+                    rng /= 1.5;
                 }
 
                 if (victimcap.getType() == JujutsuType.SHIKIGAMI) {
@@ -106,14 +114,15 @@ public class BlackFlashHandler {
             } else {
                 return;
             }
+            
             cap.onBlackFlash();
 
             if (attacker instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
 
-            event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));
-
+            event.setAmount(Math.min(ConfigHolder.SERVER.blackFlashDmgCap.get().floatValue(), (float) Math.pow(event.getAmount(), ConfigHolder.SERVER.blackFlashPower.get().floatValue())));
+            //event.setAmount(Math.min(ConfigHolder.SERVER.blackFlashDmgCap.get().floatValue(), (float) Math.pow(event.getAmount(), ConfigHolder.SERVER.blackFlashPower)));
             attacker.level().addFreshEntity(new BlackFlashEntity(attacker, victim));
 
             victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),

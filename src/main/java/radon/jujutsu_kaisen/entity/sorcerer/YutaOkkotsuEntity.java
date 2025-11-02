@@ -15,9 +15,11 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class YutaOkkotsuEntity extends SorcererEntity {
@@ -51,6 +53,11 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.OUTPUT_RCT.get());
+    }
+
+    @Override
+    public @NotNull List<Trait> getTraits() {
+        return List.of(Trait.RCT_OUTPUT);
     }
 
     @Override

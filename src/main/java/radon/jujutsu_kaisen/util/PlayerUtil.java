@@ -25,6 +25,22 @@ public class PlayerUtil {
         }
     }
 
+    public static boolean hasAdvancement(ServerPlayer player, String name) {
+        MinecraftServer server = player.getServer();
+        if (server == null) return false;
+
+        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(
+                JujutsuKaisen.MOD_ID,
+                String.format("%s/%s", JujutsuKaisen.MOD_ID, name)
+        ));
+
+        if (advancement == null) return false;
+
+        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+        return progress.isDone();
+    }
+
+
     public static void removeAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;

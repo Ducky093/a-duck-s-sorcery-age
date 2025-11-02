@@ -34,7 +34,7 @@ public class JJKRenderTypes extends RenderType {
            .setOverlayState(RenderStateShard.NO_OVERLAY)
            .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)      // important for water blending
            .setWriteMaskState(RenderStateShard.COLOR_WRITE) // write color & depth
-           .createCompositeState(false)
+           .createCompositeState(true)
             ));
     private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) ->
             create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()

@@ -143,7 +143,8 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             if (ability == null) return;
 
             if (ability.isTechnique()) {
-                event.setAmount(event.getAmount() * (ability.getRequirements().contains(JJKAbilities.RCT1.get()) ? 0.8F : 0.85F));
+                // (ability.getRequirements().contains(JJKAbilities.RCT1.get()) ? 0.8F :
+                event.setAmount(event.getAmount() * 0.85F);
             }
         }
     }

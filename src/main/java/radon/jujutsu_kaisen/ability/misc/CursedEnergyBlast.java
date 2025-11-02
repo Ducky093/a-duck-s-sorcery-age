@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
@@ -68,7 +69,7 @@ public class CursedEnergyBlast extends Ability {
     @Override
     public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && super.canUnlock(owner);
+        return cap.getType() == JujutsuType.CURSE && cap.hasTrait(Trait.CURSED_WOMB) && super.canUnlock(owner);
     }
 
     @Nullable
@@ -85,13 +86,13 @@ public class CursedEnergyBlast extends Ability {
      @Override
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && super.isDisplayed(owner); //&& cap.getExtraEnergy() > 0.0F 
+        return cap.getType() == JujutsuType.CURSE && cap.hasTrait(Trait.CURSED_WOMB)  && cap.checkWombAwakened() == true && super.isDisplayed(owner); //&& cap.getExtraEnergy() > 0.0F 
     }
 
 
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && super.isValid(owner); //&& cap.getExtraEnergy() > 0.0F 
+        return cap.getType() == JujutsuType.CURSE && cap.hasTrait(Trait.CURSED_WOMB)  && cap.checkWombAwakened() == true && super.isValid(owner); //&& cap.getExtraEnergy() > 0.0F 
     }
 }

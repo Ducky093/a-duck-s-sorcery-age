@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +19,9 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.IntValue totemRCTChanceMult;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
+    public final ForgeConfigSpec.DoubleValue domainExpReq;
+    public final ForgeConfigSpec.DoubleValue wcsExpMahoReq;
+    public final ForgeConfigSpec.DoubleValue wcsExpOtherReq;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
     public final ForgeConfigSpec.IntValue sorcererVillageSpawnRate;
@@ -30,9 +35,14 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue deathPenalty;
     public final ForgeConfigSpec.DoubleValue pointPenalty;
     public final ForgeConfigSpec.DoubleValue pvpGain;
+    public final ForgeConfigSpec.IntValue minPoints;
+    public final ForgeConfigSpec.IntValue maxPoints;
     public final ForgeConfigSpec.DoubleValue minEXP;
     public final ForgeConfigSpec.DoubleValue maxEXP;
-    public final ForgeConfigSpec.IntValue blackFlashChance;
+    public final ForgeConfigSpec.IntValue blackFlashChanceRNG;
+    public final ForgeConfigSpec.DoubleValue blackFlashPower;
+    public final ForgeConfigSpec.DoubleValue blackFlashDmgCap;
+    public final ForgeConfigSpec.BooleanValue incarnatedSimpleDomain;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
     public final ForgeConfigSpec.BooleanValue sorcererSaturation;
@@ -46,6 +56,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue bodyStealReroll;
     public final ForgeConfigSpec.BooleanValue MBAReroll;
     public final ForgeConfigSpec.BooleanValue MBAEXPReset;
+    public final ForgeConfigSpec.BooleanValue MBADeath;
     public final ForgeConfigSpec.BooleanValue wcsCutAnything;
     public final ForgeConfigSpec.BooleanValue hrRequiredForISOH;
     public final ForgeConfigSpec.BooleanValue playerRequiredForRCT;
@@ -67,6 +78,7 @@ public class ServerConfig {
 
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> uniqueTraitList;
     public final ForgeConfigSpec.BooleanValue destruction;
     public final ForgeConfigSpec.BooleanValue turboMode;
     public final ForgeConfigSpec.BooleanValue entitySlicing;
@@ -100,16 +112,27 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue outputRCTCost;
     public final ForgeConfigSpec.IntValue maximumCopiedTechniques;
     public final ForgeConfigSpec.IntValue maximumStolenTechniques;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableSorcererTechniques;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableCursedSpiritTechniques;
 
+    public final ForgeConfigSpec.IntValue natureTraitModifier;
+    public final ForgeConfigSpec.IntValue traitScalingModifier;
+    public final ForgeConfigSpec.IntValue natureTraitCost;
+    public final ForgeConfigSpec.IntValue traitRolls;
+    public final ForgeConfigSpec.IntValue minTraits;
+    public final ForgeConfigSpec.IntValue maxTraits;
+    public final ForgeConfigSpec.IntValue noTraitWeight;
     public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
     public final ForgeConfigSpec.IntValue curseRarity;
-    public final ForgeConfigSpec.IntValue sixEyesRarity;
+    public final ForgeConfigSpec.IntValue sixEyesWeight;
     public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
-    public final ForgeConfigSpec.IntValue vesselRarity;
-    public final ForgeConfigSpec.IntValue rctOutputRarity;
-    public final ForgeConfigSpec.IntValue perfectBodyRarity;
-    public final ForgeConfigSpec.IntValue incarnatedRarity;
+    public final ForgeConfigSpec.IntValue vesselWeight;
+    public final ForgeConfigSpec.IntValue rctOutputWeight;
+    public final ForgeConfigSpec.IntValue perfectBodyWeight;
+    public final ForgeConfigSpec.IntValue incarnatedWeight;
+    public final ForgeConfigSpec.IntValue prodigyWeight;
+    public final ForgeConfigSpec.IntValue cursedWombWeight;
+    public final ForgeConfigSpec.IntValue deathPaintingWeight;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
@@ -125,8 +148,14 @@ public class ServerConfig {
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
         this.totemRCTChanceMult = builder.comment("The amount the chance is divided by when holding a totem (raises chances of obtaining rct the higher it is) ")
                 .defineInRange("totemRCTChanceMult", 4, 1, 1000);
-        this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)")
-                .defineInRange("requiredExperienceForExperienced", 5000.0F, 1.0F, 100000.0F);
+        this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion/wheel w domain amp)")
+                .defineInRange("requiredExperienceForExperienced", 5000.0F, 1.0F, 1000000.0F);
+        this.domainExpReq = builder.comment("Experience required to learn a Domain Expansion")
+                .defineInRange("domainExpReq", 3000.0F, 0.0F, 1000000.0F);
+        this.wcsExpMahoReq = builder.comment("Experience required to learn WCS from Mahoraga")
+                .defineInRange("wcsExpMahoReq", 10000.0F, 0.0F, 1000000.0F);
+        this.wcsExpOtherReq = builder.comment("Experience required to learn WCS from other sources")
+                .defineInRange("wcsExpOtherReq", 10000.0F, 0.0F, 1000000.0F);
         this.sorcererFleshRarity = builder.comment("Rarity of sorcerers dropping flesh (bigger value means more rare, 0 to disable)")
                 .defineInRange("sorcererFleshRarity", 20, 0, 100000);
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare, 0 to disable)")
@@ -142,23 +171,33 @@ public class ServerConfig {
         this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")
                 .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
-                        .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
+                .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
-                        .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
+                .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
         this.pointMultiplier = builder.comment("Scale of ability points you gain")
-                        .defineInRange("pointMultiplier", 0.1F, 0.0F, 100.0F);
+                .defineInRange("pointMultiplier", 0.12F, 0.0F, 100.0F);
         this.pointPenalty = builder.comment("Scale of points lost on death")
-                        .defineInRange("pointPenalty", 0.0F, 0.0F, 100.0F);
+                .defineInRange("pointPenalty", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.0F, 0.0F, 1.0F);
+        this.minPoints = builder.comment("Minimum points gained from battles")
+                .defineInRange("minPoints", 1, 0, 9999999);
+        this.maxPoints = builder.comment("Maximum points gained from battles")
+                .defineInRange("maxPoints", 0, 0, 9999999);
         this.minEXP = builder.comment("Minimum experience gained from battles")
                 .defineInRange("minExp", 1.0F, 0.0F, 9999999.0F);
         this.maxEXP = builder.comment("Maximum experience gained from battles (0 to disable)")
                 .defineInRange("maxExp", 0.0F, 0.0F, 9999999.0F);
         this.pvpGain = builder.comment("Percentage of experience gained from player kills")
                 .defineInRange("pvpGain", 1.0F, 0.0F, 999.0F);
-        this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
-                .defineInRange("blackFlashChance", 150, 1, 1000);
+        this.blackFlashChanceRNG = builder.comment("The chance of black flash (smaller number equals bigger chance)")
+                .defineInRange("blackFlashChanceRNG", 200, 0, 1000);
+        this.blackFlashPower = builder.comment("The multiplier a black flash ('power of' multiplier to bfs, canon by default)")
+                .defineInRange("blackFlashPower", 2.5F, 1.0F, 1000.0F);
+        this.blackFlashDmgCap = builder.comment("The maximum damage of a black flash attack (entire dmg not just the added dmg)")
+                .defineInRange("blackFlashDmgCap", 40.0F, 0.0F, 999999.0F);
+        this.incarnatedSimpleDomain = builder.comment("When enabled Incarnated Sorcerers may use Simple Domain")
+                .define("incarnatedSimpleDomain", true);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .define("realisticShikigami", false);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
@@ -181,6 +220,8 @@ public class ServerConfig {
                 .define("bodyStealEXPReset", true);
         this.bodyStealReroll = builder.comment("Whether Body Steal should reroll the player.")
                 .define("bodyStealReroll", false);
+        this.MBADeath = builder.comment("Whether Mythical Beast Amber should kill the user after use")
+                .define("MBADeath", true);
         this.MBAEXPReset = builder.comment("Whether Mythical Beast Amber should reset the EXP of the user after use")
                 .define("MBAEXPReset", true);
         this.MBAReroll = builder.comment("Whether Mythical Beast Amber should reroll the player.")
@@ -222,6 +263,11 @@ public class ServerConfig {
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
                 .define("uniqueTraits", true);
+        this.uniqueTraitList = builder.comment("Traits that will be Unique under the config")
+                .defineList("uniqueTraitList", () -> List.of(
+                                Trait.SIX_EYES.name(),
+                                Trait.PERFECT_BODY.name()
+                        ), ignored -> true);
         this.destruction = builder.comment("When enabled abilities break blocks")
                 .define("destruction", true);
         this.turboMode = builder.comment("When enabled abilities have no cooldowns for players")
@@ -294,8 +340,8 @@ public class ServerConfig {
                 .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
         this.maximumStolenTechniques = builder.comment("The amount of techniques that can be stolen")
                 .defineInRange("maximumStolenTechniques", 2, 1, 10000);
-        this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
-                .defineList("unlockableTechniques", () -> List.of(
+        this.unlockableSorcererTechniques = builder.comment("Techniques that are unlockable for sorcerers by default")
+                .defineList("unlockableSorcererTechniques", () -> List.of(
                                 CursedTechnique.CURSE_MANIPULATION.name(),
                                 CursedTechnique.LIMITLESS.name(),
                                 CursedTechnique.SHRINE.name(),
@@ -306,6 +352,27 @@ public class ServerConfig {
                                 CursedTechnique.DISASTER_PLANTS.name(),
                                 CursedTechnique.ANGEL.name(),
                                 CursedTechnique.BRAIN_TRANSPLANT.name(),
+                                CursedTechnique.TEN_SHADOWS.name(),
+                                CursedTechnique.BOOGIE_WOOGIE.name(),
+                                CursedTechnique.PROJECTION_SORCERY.name(),
+                                CursedTechnique.RATIO.name(),
+                                CursedTechnique.MYTHICAL_BEAST_AMBER.name(),
+                                CursedTechnique.TECHNIQUELESS.name()
+                        ),
+                        ignored -> true
+                );
+
+        this.unlockableCursedSpiritTechniques = builder.comment("Techniques that are unlockable by Curses by default")
+                .defineList("unlockableTechniques", () -> List.of(
+                                CursedTechnique.CURSE_MANIPULATION.name(),
+                                CursedTechnique.LIMITLESS.name(),
+                                CursedTechnique.SHRINE.name(),
+                                CursedTechnique.CURSED_SPEECH.name(),
+                                CursedTechnique.MIMICRY.name(),
+                                CursedTechnique.DISASTER_FLAMES.name(),
+                                CursedTechnique.DISASTER_TIDES.name(),
+                                CursedTechnique.DISASTER_PLANTS.name(),
+                                CursedTechnique.ANGEL.name(),
                                 CursedTechnique.IDLE_TRANSFIGURATION.name(),
                                 CursedTechnique.TEN_SHADOWS.name(),
                                 CursedTechnique.BOOGIE_WOOGIE.name(),
@@ -319,28 +386,57 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
-        this.cursedEnergyNatureRarity = builder.comment("Rarity of a cursed energy nature other than basic (bigger value = rarer)")
-                .defineInRange("cursedEnergyNatureRarity", 10, 1, 1000000);
-        this.curseRarity = builder.comment("Rarity of being a curse (bigger value = rarer)")
-                .defineInRange("curseRarity", 4, 1, 1000000);
-        this.sixEyesRarity = builder.comment("Rarity of having six eyes (bigger value = rarer)")
-                .defineInRange("sixEyesRarity", 100, 1, 1000000);
-        this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (bigger value = rarer)")
-                .defineInRange("heavenlyRestrictionRarity", 10, 1, 1000000);
-        this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
-                .defineInRange("vesselRarity", 50, 1, 1000000);
-        this.perfectBodyRarity = builder.comment("Rarity of having a perfect body (bigger value = rarer)")
-                .defineInRange("perfectBodyRarity", 100, 1, 1000000);
-        this.incarnatedRarity = builder.comment("Rarity of being incarnated (bigger value = rarer)")
-                .defineInRange("incarnatedRarity", 5, 1, 1000000);
-        this.rctOutputRarity = builder.comment("Rarity of being adept at RCT (bigger value = rarer)")
-                .defineInRange("rctOutputRarity", 10, 1, 1000000);
+        this.natureTraitCost = builder.comment("Cursed Energy Nature trait count cost (affected by the minimum/max amount of traits)")
+                .defineInRange("natureTraitCost", 1 ,0, 1000000);
+        this.traitRolls = builder.comment("How many rolls are done to give players traits? (each minimum guaranteed trait takes a trait roll)")
+                .defineInRange("traitRolls", 1, 0, 1000000);
+        this.minTraits = builder.comment("The minimum amount of traits a player will start with")
+                .defineInRange("minTraits", 0 ,0, 1000000);
+        this.maxTraits = builder.comment("The maximum amount of traits a player can start with")
+                .defineInRange("maxTraits", 6 ,0, 1000000);
+        this.natureTraitModifier = builder.comment("The division to the chance of rolling a trait with a nature")
+                .defineInRange("natureTraitModifier", 4 ,0, 1000000);
+        this.traitScalingModifier = builder.comment("The division to the chance of rolling an additional trait per trait rolled")
+                .defineInRange("traitScalingModifier", 8 ,0, 1000000);
+        this.noTraitWeight = builder.comment("Weight of receiving no trait")
+                .defineInRange("noTraitWeight", 30, 0, 1000000);
+        this.cursedEnergyNatureRarity = builder.comment("Weight of a cursed energy nature other than basic (1/value chance, bigger value = rarer)")
+                .defineInRange("cursedEnergyNatureRarity", 8, 0, 1000000);
+        this.curseRarity = builder.comment("Rarity of being a curse (1/value chance, bigger value = rarer")
+                .defineInRange("curseRarity", 4, 0, 1000000);
+        this.sixEyesWeight = builder.comment("Weight of having six eyes (lower value = rarer)")
+                .defineInRange("sixEyesWeight", 1, 0, 1000000);
+        this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (1/value chance, bigger value = rarer")
+                .defineInRange("heavenlyRestrictionRarity", 24, 0, 1000000);
+        this.vesselWeight = builder.comment("Weight of being a vessel (lower value = rarer)")
+                .defineInRange("vesselWeight", 3, 0, 1000000);
+        this.perfectBodyWeight = builder.comment("Weight of having a perfect body (lower value = rarer)")
+                .defineInRange("perfectBodyWeight", 1, 0, 1000000);
+        this.incarnatedWeight = builder.comment("Weight of being incarnated (lower value = rarer)")
+                .defineInRange("incarnatedWeight", 15, 0, 1000000);
+        this.rctOutputWeight = builder.comment("Weight of being able to output your RCT (lower value = rarer)")
+                .defineInRange("rctOutputWeight", 10, 0, 1000000);
+        this.prodigyWeight = builder.comment("Weight of having immense development potential (lower value = rarer)")
+                .defineInRange("prodigyWeight", 4, 0, 1000000);
+        this.cursedWombWeight = builder.comment("Weight of forming as a Cursed Womb (lower value = rarer)")
+                .defineInRange("cursedWombWeight", 10, 0, 1000000);
+        this.deathPaintingWeight = builder.comment("Weight of having been born as a Death Painting (lower value = rarer)")
+                .defineInRange("deathPaintingWeight", 8, 0, 1000000);
         builder.pop();
     }
 
-    public List<CursedTechnique> getUnlockableTechniques() {
-        return this.unlockableTechniques.get().stream()
+    public List<CursedTechnique> getUnlockableTechniques(JujutsuType type) {
+        if (type == JujutsuType.SORCERER) {
+                return this.unlockableSorcererTechniques.get().stream()
                 .map(CursedTechnique::valueOf)
                 .collect(Collectors.toList());
+        }
+        else {
+                return this.unlockableCursedSpiritTechniques.get().stream()
+                .map(CursedTechnique::valueOf)
+                .collect(Collectors.toList());
+        }
+        
+        
     }
 }

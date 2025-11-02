@@ -45,13 +45,16 @@ public class ShadowStorage extends Ability {
                         HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D, HelperMethods.RANDOM.nextGaussian() * 0.075D);
             }
         }
-
-        if (owner.isShiftKeyDown()) {
-            if (owner.getMainHandItem().isEmpty()) return;
-
-            ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.addShadowInventory(owner.getMainHandItem());
-            owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        
+        if (!owner.isShiftKeyDown()) {
+            if (!owner.getMainHandItem().isEmpty()) {
+                ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.addShadowInventory(owner.getMainHandItem());
+                owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            }
+            else if (owner.level().isClientSide) {
+                ClientWrapper.openShadowInventory();
+            }            
         } else if (owner.level().isClientSide) {
             ClientWrapper.openShadowInventory();
         }
@@ -60,12 +63,7 @@ public class ShadowStorage extends Ability {
     @Override
     public Status isTriggerable(LivingEntity owner) {
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (owner.isShiftKeyDown()) {
-            if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;
-        } else {
-            if (cap.getShadowInventory().isEmpty()) return Status.FAILURE;
-        }
+        if  (cap.getShadowInventory().isEmpty() && (owner.isShiftKeyDown() || (owner.getMainHandItem().isEmpty() && !owner.isShiftKeyDown()) ) )   return Status.EMPTYINV;
         return super.isTriggerable(owner);
     }
 

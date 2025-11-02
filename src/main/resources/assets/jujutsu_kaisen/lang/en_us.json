@@ -215,7 +215,7 @@
   "ability.jujutsu_kaisen.fail.throat": "Your throat is still damaged for %1$d seconds",
   "ability.jujutsu_kaisen.fail.chant": "Must be chanted above 150%",
   "ability.jujutsu_kaisen.fail.disable": "Unable to use your technique.",
-
+  "ability.jujutsu_kaisen.fail.emptyinv": "You must store something within your Shadow to retrieve it.",
 
   "ability.jujutsu_kaisen.shockwave": "Shockwave",
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
@@ -517,6 +517,9 @@
   "trait.jujutsu_kaisen.perfect_body": "Perfect Body",
   "trait.jujutsu_kaisen.rct_output": "RCT Output",
   "trait.jujutsu_kaisen.incarnated": "Incarnated",
+  "trait.jujutsu_kaisen.cursed_womb": "Cursed Womb",
+  "trait.jujutsu_kaisen.prodigy": "Prodigy",
+  "trait.jujutsu_kaisen.death_painting": "Cursed Womb: Death Painting",
 
   "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
   "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
@@ -536,6 +539,9 @@
 
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",
+
+  "chat.jujutsu_kaisen.siblingdeath": "Your mind wavers and your blood trembles as you realize your sibling %1$s has perished.",
+
   "chat.jujutsu_kaisen.trait.perfect_body": "You achieved a Perfect Body.",
   "chat.jujutsu_kaisen.trait.incarnated": "You were Incarnated as a Sorcerer.",
   "chat.jujutsu_kaisen.trait.heavenly_restriction": "Your physically gifted body lacks any Cursed Energy.",
@@ -543,6 +549,9 @@
   "chat.jujutsu_kaisen.trait.vessel": "You were born with the potential to serve as a Vessel.",
   "chat.jujutsu_kaisen.trait.six_eyes": "You were born with the Six Eyes. The balance of the world has shifted.",
   "chat.jujutsu_kaisen.trait.simurian": "You were born in another world.",
+  "chat.jujutsu_kaisen.trait.cursed_womb": "You were formed as a Cursed Womb.",
+  "chat.jujutsu_kaisen.trait.prodigy": "You hold development potential far above others.",
+  "chat.jujutsu_kaisen.trait.death_painting": "You were incarnated from a Cursed Womb: Death Painting.",
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
@@ -745,6 +754,9 @@
 
   "advancements.jujutsu_kaisen.reverse_cursed_technique.title": "Reverse Cursed Technique",
   "advancements.jujutsu_kaisen.reverse_cursed_technique.description": "Negative times negative equals positive.",
+
+  "advancements.jujutsu_kaisen.cursed_womb_awakening.title": "Cursed Womb Awakening",
+  "advancements.jujutsu_kaisen.cursed_womb_awakening.description": "Out of desperation, you evolve.",
 
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",

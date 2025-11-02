@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.event;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -17,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +80,7 @@ public class JJKEventHandler {
             while (iter.hasNext()) {
                 BlockPos pos = iter.next();
                 Vec3 center = pos.getCenter();
-
+                
                 if (!VeilHandler.canDestroy(instigator, event.getLevel(), center.x, center.y, center.z)) {
                     iter.remove();
                 }
@@ -180,6 +184,7 @@ public class JJKEventHandler {
                 newCap.resetDisable();
                 newCap.clearToggled();
                 newCap.setCurrentCopied(null);
+                newCap.setCurrentStolen(null);
                 newCap.resetCopy();
                 
                 newCap.resetBlackFlash();
@@ -206,7 +211,10 @@ public class JJKEventHandler {
 
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+            if (cap.hasTrait(Trait.DEATH_PAINTING) && owner.getHealth() < owner.getMaxHealth() * 0.3F && HelperMethods.isMelee(event.getSource())  ) {
+                victim.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 4));
+                victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * 20, 0));
+            }
             // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0.0F) return;
 
@@ -229,6 +237,17 @@ public class JJKEventHandler {
 
             if ((cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+            }
+
+            if((cap.hasTrait(Trait.DEATH_PAINTING)) && owner.getHealth() / owner.getMaxHealth() < 0.3F ) {
+                double x = owner.getX() + (owner.getRandom().nextDouble() - 0.5D) * owner.getBbWidth();
+                double y = owner.getY() + owner.getBbHeight() * 0.5 + (owner.getRandom().nextDouble() - 0.5D) * 0.5;
+                double z = owner.getZ() + (owner.getRandom().nextDouble() - 0.5D) * owner.getBbWidth();
+                owner.level().addParticle(
+                    new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
+                    x, y, z,
+                    0, 0.05, 0
+                );
             }
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
@@ -280,8 +299,9 @@ public class JJKEventHandler {
                 stacks.add(stack.getItem());
                 stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
                         .stream().map(ItemStack::getItem).toList());
-
-                if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
+                if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (cap.getType() == JujutsuType.CURSE && !cap.hasTrait(Trait.DEATH_PAINTING) ) {
                     boolean cursed = false;
 
                     if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
@@ -289,7 +309,6 @@ public class JJKEventHandler {
                     } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
                     } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                         cursed = cap.getEnergy() > 0.0F;
                     }
 
@@ -404,6 +423,17 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
                         victim.spawnAtLocation(stack);
                     }
                 }
+            }
+            if (victimCap.hasTrait(Trait.DEATH_PAINTING)) {
+            if (victim.level() instanceof ServerLevel serverLevel) {
+                for (ServerPlayer player : serverLevel.players()) {
+                    if ( player == victim || !player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+                        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        if (cap.hasTrait(Trait.DEATH_PAINTING)) {
+                             player.sendSystemMessage(Component.translatable(String.format("chat.%s.siblingdeath", JujutsuKaisen.MOD_ID), victim.getName()));
+                        }
+                }
+            }
             }
 
             DamageSource source = event.getSource();

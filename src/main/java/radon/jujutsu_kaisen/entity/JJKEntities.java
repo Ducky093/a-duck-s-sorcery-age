@@ -454,7 +454,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<ForestWaveEntity>> FOREST_WAVE = ENTITIES.register("forest_wave", () ->
             EntityType.Builder.<ForestWaveEntity>of(ForestWaveEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
+                    .sized(0.75F, 0.75F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_wave")
                             .toString()));
     public static RegistryObject<EntityType<LavaRockProjectile>> LAVA_ROCK = ENTITIES.register("lava_rock", () ->

@@ -13,6 +13,9 @@ public enum Trait {
     RCT_OUTPUT,
     INCARNATED,
     PERFECT_BODY,
+    CURSED_WOMB,
+    DEATH_PAINTING,
+    PRODIGY,
     SIMURIAN;
 
     public Component getName() {

@@ -86,6 +86,11 @@ public class ArmBlade extends Transformation {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) && super.isValid(owner);
+    }
+
+    @Override
     public float getSlimTranslation() {
         return 0.0625F;
     }

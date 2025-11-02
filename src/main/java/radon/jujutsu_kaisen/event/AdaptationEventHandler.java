@@ -61,20 +61,8 @@ public class AdaptationEventHandler {
           
            
             // Initiate / continue the adaptation process
-            if (!victim.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+             if (!victim.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
               ITenShadowsData shadowCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
- if (source.getEntity() instanceof LivingEntity attacker && attacker.getCapability(TenShadowsDataHandler.INSTANCE).isPresent() ) {
-             
-            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            if (JJKAbilities.hasToggled(attacker, JJKAbilities.WHEEL.get())) {
-                if (attackerCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                    shadowCap.tryAdapt(JJKAbilities.INFINITY.get());
-                }
-                if (attackerCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                    shadowCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
-                }
-            }
-            }
             if (!shadowCap.isAdaptedTo(source)) shadowCap.tryAdapt(source);
 
             if (victim instanceof MahoragaEntity) {

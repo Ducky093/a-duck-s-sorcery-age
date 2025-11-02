@@ -14,12 +14,12 @@ import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class LockAllCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("lockall")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjklockall")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
                         lockall(EntityArgument.getPlayer(ctx, "player")))));
 
-        dispatcher.register(Commands.literal("lockall").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjklockall").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int lockall(ServerPlayer player) {

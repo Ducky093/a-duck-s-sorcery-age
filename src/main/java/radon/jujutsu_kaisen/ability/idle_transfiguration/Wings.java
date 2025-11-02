@@ -6,6 +6,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -96,6 +98,11 @@ public class Wings extends Transformation {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) && super.isValid(owner);
     }
 
     @Override

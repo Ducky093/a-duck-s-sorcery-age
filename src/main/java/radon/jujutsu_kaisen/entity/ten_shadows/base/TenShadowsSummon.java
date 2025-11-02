@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -58,6 +61,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     private static final EntityDataAccessor<Boolean> DATA_CLONE = SynchedEntityData.defineId(TenShadowsSummon.class, EntityDataSerializers.BOOLEAN);
 
     protected final List<UUID> participants = new ArrayList<>();
+
+    protected boolean ritualNullified = false;
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -172,15 +177,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (!this.isTame()) {
             Vec3 center = this.position();
-            AABB area = new AABB(center.x - RITUAL_RANGE, center.y - RITUAL_RANGE, center.z - RITUAL_RANGE,
-                    center.x + RITUAL_RANGE, center.y + RITUAL_RANGE, center.z + RITUAL_RANGE);
-
-            for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
-                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)
-                    continue;
-                if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
-                this.participants.add(participant.getUUID());
-            }
+            LivingEntity owner = this.getOwner();
+            addParticipants(center, owner);
         }
     }
 
@@ -211,6 +209,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
             if (!this.isTame()) {
                 if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
+                    
                     cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                     if (owner instanceof ServerPlayer player) {
@@ -243,6 +242,22 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         }
     }
 
+    private void addParticipants(Vec3 center, LivingEntity owner) {
+         AABB area = new AABB(center.x - RITUAL_RANGE, center.y - RITUAL_RANGE, center.z - RITUAL_RANGE,
+                            center.x + RITUAL_RANGE, center.y + RITUAL_RANGE, center.z + RITUAL_RANGE);
+
+                    for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
+                        if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)
+                            continue;
+                        if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+                        if (participant != owner && !(participant.getType() == this.getType() && !((TenShadowsSummon) participant).isClone()) &&
+                        !(participant instanceof TamableAnimal tamable && tamable.getOwner() == owner)) {
+                            this.ritualNullified = true;
+                        }
+                        this.participants.add(participant.getUUID());
+                    }
+    }
+
     private void checkParticipants() {
         Iterator<UUID> iter = this.participants.iterator();
 
@@ -256,6 +271,26 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             }
         }
     }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        // Let vanilla/parent handle actual damage logic
+        boolean result = super.hurt(source, amount);
+
+        if (!this.level().isClientSide && result) {
+            Entity attacker = source.getEntity();
+
+          
+               
+
+            // Only process if attacker is a living entity
+            if (attacker instanceof LivingEntity livingAttacker && livingAttacker != this) {
+                this.participants.add(livingAttacker.getUUID());
+            }
+        }
+        return result;
+    }
+
 
     @Override
     public void tick() {
@@ -276,6 +311,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                 if (disappear) {
                     this.discard();
                 }
+                else {
+                    Vec3 center = this.position();
+                    addParticipants(center, owner);
+                }
+                
             } else {
                 LivingEntity target = this.getTarget();
                 this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());

@@ -223,12 +223,14 @@ public abstract class DomainExpansionEntity extends Entity {
         this.setTime(this.getTime() + 1);
 
         LivingEntity owner = this.getOwner();
+        // if (owner != null) {
+        //     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap != null && this.getTime() == 1) {
-            cap.useEnergy(INITIAL_COST);
-        }
+        //     if (cap != null && this.getTime() == 1) {
+        //         cap.useEnergy(INITIAL_COST);
+        //     }
+        // }
+        
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, this.ability))) {
             this.discard();

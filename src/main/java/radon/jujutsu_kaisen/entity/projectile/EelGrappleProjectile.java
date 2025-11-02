@@ -63,8 +63,11 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         super.tick();
 
         Entity owner = this.getOwner();
+        if (owner != null) {
+            this.discard();
+        }
 
-        LivingEntity target = RotationUtil.getExpandedLookAt(this.getOwner(),RANGE);
+        LivingEntity target = RotationUtil.getExpandedLookAt(owner,RANGE);
 
         if (target == null) {
             return;

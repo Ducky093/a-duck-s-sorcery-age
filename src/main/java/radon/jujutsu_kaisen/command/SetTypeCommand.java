@@ -15,18 +15,21 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetTypeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("settype")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksettype")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("type", EnumArgument.enumArgument(JujutsuType.class)).executes((ctx) ->
                         setType(EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("type", JujutsuType.class))))));
 
-        dispatcher.register(Commands.literal("settype").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjksettype").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int setType(ServerPlayer player, JujutsuType type) {
         if (type == JujutsuType.SHIKIGAMI) return 0;
 
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setType(type);
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.setType(type);
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         return 1;

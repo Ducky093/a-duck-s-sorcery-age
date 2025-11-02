@@ -180,6 +180,14 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         }
     }
 
+     public static void retrieve(LivingEntity owner, LivingEntity target) {
+        if (!(target instanceof Player)) {
+            target.discard();
+        } else {
+            target.kill();
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class IdleTransfigurationForgeEvents {
         // @SubscribeEvent

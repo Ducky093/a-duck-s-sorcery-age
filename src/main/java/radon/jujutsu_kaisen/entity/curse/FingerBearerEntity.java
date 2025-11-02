@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -61,6 +63,11 @@ public class FingerBearerEntity extends CursedSpirit {
     @Override
     public boolean canChant() {
         return true;
+    }
+        
+    @Override
+    public @NotNull List<Trait> getTraits() {
+        return List.of(Trait.CURSED_WOMB);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

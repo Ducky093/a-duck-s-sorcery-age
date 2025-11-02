@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.limitless.Infinity.FrozenProjectileData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
@@ -45,6 +46,9 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled, IAdditionalAdaptation {
+    private static final double SLOWING_FACTOR = 0.0001D;
+    private static final double RANGE = 2.0D;
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -134,31 +138,39 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
 
                 Entity projectile = level.getEntity(nbt.getTarget());
 
-                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner)) {
+                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner) || owner.isDeadOrDying()) {
                     if (projectile != null) {
                         projectile.setDeltaMovement(nbt.getMovement());
-                        projectile.setNoGravity(nbt.isNoGravity());
+                        projectile.hurtMarked = true;
                     }
                     iter.remove();
                     this.setDirty();
                     continue;
                 }
-
                 if (projectile == null) {
                     iter.remove();
                     this.setDirty();
-                } else {
-                    if (JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
+                    continue;
+                }
+                Vec3 forward = projectile.getLookAngle();
+
+                Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
+                Vec3 end = projectile.position().add(forward.scale(-projectile.getBbWidth() / 2.0F));
+                float dx = (float) (start.x - end.x);
+                float dy = (float) (start.y - end.y);
+                float dz = (float) (start.z - end.z);
+                float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    if (JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && distance <= RANGE) {
                         Vec3 original = nbt.getMovement();
-                        projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
-                        projectile.setNoGravity(true);
+                        projectile.setDeltaMovement(original.scale(Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR)));
+                        projectile.hurtMarked = true;
                     } else {
                         projectile.setDeltaMovement(nbt.getMovement());
-                        projectile.setNoGravity(nbt.isNoGravity());
+                        projectile.hurtMarked = true;
                         iter.remove();
                         this.setDirty();
                     }
-                }
+                
             }
         }
 
@@ -167,19 +179,17 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
                 this.putUUID("source", source.getUUID());
                 this.putUUID("target", target.getUUID());
 
-                this.putBoolean("no_gravity", target.isNoGravity());
-
                 Vec3 movement = target.getDeltaMovement();
                 this.putDouble("movement_x", movement.x);
                 this.putDouble("movement_y", movement.y);
                 this.putDouble("movement_z", movement.z);
+
+                
             }
 
             public FrozenProjectileNBT(CompoundTag nbt) {
                 this.putUUID("source", nbt.getUUID("source"));
                 this.putUUID("target", nbt.getUUID("target"));
-
-                this.putBoolean("no_gravity", nbt.getBoolean("no_gravity"));
 
                 this.putDouble("movement_x", nbt.getDouble("movement_x"));
                 this.putDouble("movement_y", nbt.getDouble("movement_y"));
@@ -192,10 +202,6 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
 
             public UUID getTarget() {
                 return this.getUUID("target");
-            }
-
-            public boolean isNoGravity() {
-                return this.getBoolean("no_gravity");
             }
 
             public Vec3 getMovement() {
@@ -275,7 +281,7 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
 
             if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
 
-            for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
+            for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(RANGE))) {
                 if (!Infinity.canBlock(target, projectile)) continue;
 
                 data.add(target, projectile);
@@ -315,7 +321,24 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
             // }
 
             // We don't want to play the sound in-case it's a stopped projectile
-            if (!(source.getDirectEntity() instanceof Projectile)) {
+           if (!(source.getDirectEntity() instanceof Projectile)) {
+                if (source.getEntity() instanceof LivingEntity attacker) {
+                    ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+
+                    if (cap != null) {
+                        
+                        if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                            return;
+                        }
+                        else if (attacker.getCapability(TenShadowsDataHandler.INSTANCE).isPresent() && attacker instanceof MahoragaEntity maho){
+                            ITenShadowsData shadowCap = maho.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                            if (shadowCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                                return;
+                            }
+                        }
+                    }
+                }
                 target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
             }
             event.setCanceled(true);

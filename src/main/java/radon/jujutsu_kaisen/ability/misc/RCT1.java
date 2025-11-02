@@ -51,9 +51,9 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         if (cap.getEnergy() < cap.getMaxEnergy()*0.02f) return;
         if (owner instanceof Player player) {
             float healMult = 0.225F;
-           // if (cap.hasTrait(Trait.RCT_SPECIALIST)) {
-             //   healMult *= 1.34F;
-            //}
+            // if (cap.hasTrait(Trait.DEATH_PAINTING)) {
+            //    healMult *= 1.1F;
+            // }
             owner.heal(((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue()  * this.getPower(owner) * healMult * this.healMult()) + 0.75f); //the + here at the end is in conjunction w the cost
          //min between 1.0, 0.05 * math.pow(1 * 0.225, math.log(1)) * 0.225
         }

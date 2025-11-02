@@ -46,6 +46,8 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.PlayerUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -77,8 +79,8 @@ public class SorcererData implements ISorcererData {
     private @Nullable CursedTechnique currentAbsorbed;
 
 
-    private GameProfile stolenSkinProfile;
-    private ResourceLocation stolenSkinTexture;
+    // private GameProfile stolenSkinProfile;
+    // private ResourceLocation stolenSkinTexture;
 
     private int transfiguredSouls;
 
@@ -108,6 +110,7 @@ public class SorcererData implements ISorcererData {
     
     private long lastBlackFlashTime;
     private boolean addBlackFlash;
+    private boolean hasWombAwakened;
 
     private @Nullable Ability channeled;
     private int charge;
@@ -167,7 +170,8 @@ public class SorcererData implements ISorcererData {
 
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
-
+        this.hasWombAwakened = false;
+        
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
         this.delayedTickEvents = new ArrayList<>();
@@ -372,6 +376,8 @@ public class SorcererData implements ISorcererData {
             PlayerUtil.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.PERFECT_BODY))
             PlayerUtil.giveAdvancement(player, "perfect_body");
+        if (this.hasWombAwakened)
+            PlayerUtil.giveAdvancement(player, "cursed_womb_awakening");
     }
 
     @Override
@@ -682,25 +688,25 @@ public class SorcererData implements ISorcererData {
         }
         this.acceptedPacts.get(recipient).add(pact);
     }
-    @Override
-    public void setStolenSkinProfile(GameProfile profile) {
-        this.stolenSkinProfile = profile;
-    }
+    // @Override
+    // public void setStolenSkinProfile(GameProfile profile) {
+    //     this.stolenSkinProfile = profile;
+    // }
 
-    @Override
-    public GameProfile getStolenSkinProfile() {
-        return this.stolenSkinProfile;
-    }
+    // @Override
+    // public GameProfile getStolenSkinProfile() {
+    //     return this.stolenSkinProfile;
+    // }
 
-     @Override
-    public void setStolenSkinTexture(ResourceLocation skin) {
-        this.stolenSkinTexture = skin;
-    }
+    //  @Override
+    // public void setStolenSkinTexture(ResourceLocation skin) {
+    //     this.stolenSkinTexture = skin;
+    // }
 
-    @Override
-    public ResourceLocation getStolenSkinTexture() {
-        return this.stolenSkinTexture;
-    }
+    // @Override
+    // public ResourceLocation getStolenSkinTexture() {
+    //     return this.stolenSkinTexture;
+    // }
 
 
     @Override
@@ -989,7 +995,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.currentStolen == technique;
+        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.getCurrentStolen() == technique;
     }
 
     @Override
@@ -1039,6 +1045,9 @@ public class SorcererData implements ISorcererData {
     @Override
     public void removeTrait(Trait trait) {
         this.traits.remove(trait);
+        if (trait == Trait.CURSED_WOMB) {
+            this.hasWombAwakened = false;
+        }
         this.sync();
     }
 
@@ -1309,7 +1318,7 @@ public float getMaxEnergy() {
 
     @Override
     public void useEnergy(float amount) {
-        this.energy -= amount;
+        this.energy -= Math.max(0,amount);
     }
 
     @Override
@@ -1367,6 +1376,16 @@ public float getMaxEnergy() {
     @Override
     public void moreBlackFlash(boolean bool) {
         this.addBlackFlash = bool;
+    }
+
+    @Override
+    public void setWombAwakened(boolean bool) {
+        this.hasWombAwakened = bool;
+    }
+
+    @Override
+    public boolean checkWombAwakened() {
+        return this.hasWombAwakened;
     }
 
     @Override
@@ -1502,7 +1521,7 @@ public float getMaxEnergy() {
 
     @Override
     public @Nullable CursedTechnique getCurrentStolen() {
-         if (!this.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)) {
+         if (this.getTechnique() != CursedTechnique.BRAIN_TRANSPLANT && !this.getCopied().contains(CursedTechnique.BRAIN_TRANSPLANT) && !this.getAbsorbed().contains(CursedTechnique.BRAIN_TRANSPLANT) ) {
             return null;
         }
         return this.currentStolen;
@@ -1608,6 +1627,14 @@ public float getMaxEnergy() {
         return this.charge;
     }
 
+    @Override
+    public void unlockDomain(LivingEntity entity) {
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.getTechnique().getDomain() != null) {
+            cap.unlock(cap.getTechnique().getDomain());
+        }
+    }
+    
     @Override
     public void addSummon(Entity entity) {
         this.summons.add(entity.getId());
@@ -1770,15 +1797,16 @@ public float getMaxEnergy() {
         this.initialized = true;
 
         this.technique = null;
+        this.hasWombAwakened = false;
 
         this.nature = CursedEnergyNature.BASIC;
-
-        this.traits.remove(Trait.SIX_EYES);
-        this.traits.remove(Trait.HEAVENLY_RESTRICTION);
-        this.traits.remove(Trait.VESSEL);
-        this.traits.remove(Trait.PERFECT_BODY);
-        this.traits.remove(Trait.RCT_OUTPUT);
-        this.traits.remove(Trait.INCARNATED);
+        this.traits.clear();
+        // this.traits.remove(Trait.SIX_EYES);
+        // this.traits.remove(Trait.HEAVENLY_RESTRICTION);
+        // this.traits.remove(Trait.VESSEL);
+        // this.traits.remove(Trait.PERFECT_BODY);
+        // this.traits.remove(Trait.RCT_OUTPUT);
+        // this.traits.remove(Trait.INCARNATED);
         Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
@@ -1808,53 +1836,114 @@ public float getMaxEnergy() {
         }
 
         if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
-                HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
+            HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
-            List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
+            this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
+
+            List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques(type);
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
                 unlockable.removeAll(taken);
             }
             this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
-
-            if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
-                if (this.technique == CursedTechnique.MYTHICAL_BEAST_AMBER) {
-                    this.nature = CursedEnergyNature.LIGHTNING;
-                }
-                else {
+            int rollCount = 0;
+            
+            if (this.technique == CursedTechnique.MYTHICAL_BEAST_AMBER) {
+                this.nature = CursedEnergyNature.LIGHTNING;
+                rollCount += ConfigHolder.SERVER.natureTraitCost.get();
+            }
+            else {
+                if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
                     this.nature = HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
                 }
-                
+                if (this.nature != CursedEnergyNature.BASIC) {
+                    rollCount += ConfigHolder.SERVER.natureTraitCost.get();
+                }
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
             }
-            this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
+           
+            
+          
+            Map<Trait, Integer> weights = new HashMap<>();
+            if (this.type == JujutsuType.SORCERER) {
+                weights.put(Trait.VESSEL, ConfigHolder.SERVER.vesselWeight.get());
+                weights.put(Trait.SIX_EYES, ConfigHolder.SERVER.sixEyesWeight.get());
+                weights.put(Trait.RCT_OUTPUT, ConfigHolder.SERVER.rctOutputWeight.get());
+                weights.put(Trait.INCARNATED, ConfigHolder.SERVER.incarnatedWeight.get());
+            }
+            else if (this.type == JujutsuType.CURSE) {
+                weights.put(Trait.DEATH_PAINTING, ConfigHolder.SERVER.deathPaintingWeight.get());
+                weights.put(Trait.CURSED_WOMB, ConfigHolder.SERVER.cursedWombWeight.get());
+            }
+            weights.put(Trait.PERFECT_BODY, ConfigHolder.SERVER.perfectBodyWeight.get());
+            weights.put(Trait.PRODIGY, ConfigHolder.SERVER.prodigyWeight.get());
+            //weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
+       
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
-                this.addTrait(Trait.VESSEL);
+            while (rollCount < ConfigHolder.SERVER.minTraits.get() && rollCount < ConfigHolder.SERVER.traitRolls.get() && !weights.isEmpty()) {
+                 if (rollCount < ConfigHolder.SERVER.minTraits.get() ) {
+                    weights.remove(null);
+                } else {
+                    weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
+                }
+                int totalWeight = weights.values().stream().mapToInt(Integer::intValue).sum();
+                int roll = HelperMethods.RANDOM.nextInt(totalWeight);
+                int cumulative = 0;
+                Trait chosen = null;
+               
+
+                for (Map.Entry<Trait, Integer> entry : weights.entrySet()) {
+                    cumulative += entry.getValue();
+                    if (roll < cumulative) {
+                        chosen = entry.getKey();
+                        break;
+                    }
+                }
+
+                if (chosen != null && (!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(chosen))  && rollCount < ConfigHolder.SERVER.maxTraits.get()) {
+                    this.addTrait(chosen);
+                    rollCount++;
+                    weights.remove(chosen);
+                }
+                else if (chosen == null) {
+                    rollCount++;
+                }
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.SIX_EYES)) && this.type == JujutsuType.SORCERER  &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
-                this.addTrait(Trait.SIX_EYES);
-            }
+            
+            
+            // while(traitCount < ConfigHolder.SERVER.maxTraits.get() )
+            // if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
+            //         HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
+            //     this.addTrait(Trait.VESSEL);
+            //     traitCount += 1;
+            // }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.PERFECT_BODY)) &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.perfectBodyRarity.get()) == 0) {
-                this.addTrait(Trait.PERFECT_BODY);
-            }
+            // if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.SIX_EYES)) && this.type == JujutsuType.SORCERER  &&
+            //         HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
+            //     this.addTrait(Trait.SIX_EYES);
+            //     traitCount += 1;
+            // }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.RCT_OUTPUT)) &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctOutputRarity.get()) == 0) {
-                this.addTrait(Trait.RCT_OUTPUT);
-            }
+            // if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.PERFECT_BODY)) &&
+            //         HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.perfectBodyRarity.get()) == 0) {
+            //     this.addTrait(Trait.PERFECT_BODY);
+            //     traitCount += 1;
+            // }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.INCARNATED)) &&
-                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.incarnatedRarity.get()) == 0) {
-                this.addTrait(Trait.INCARNATED);
-            }
+            // if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.RCT_OUTPUT)) &&
+            //         HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.rctOutputRarity.get()) == 0) {
+            //     this.addTrait(Trait.RCT_OUTPUT);
+            //     traitCount += 1;
+            // }
 
+            // if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.INCARNATED)) &&
+            //         HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.incarnatedRarity.get()) == 0) {
+            //     this.addTrait(Trait.INCARNATED);
+            //     traitCount += 1;
+            // }
+        
 
             assert this.technique != null;
 
@@ -1991,11 +2080,12 @@ public float getMaxEnergy() {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
-        if (this.stolenSkinProfile != null) {
-            CompoundTag prof = new CompoundTag();
-            NbtUtils.writeGameProfile(prof, this.stolenSkinProfile);
-            nbt.put("stolen_profile", prof);
-        }
+        nbt.putBoolean("hasWombAwakened", this.hasWombAwakened);
+        // if (this.stolenSkinProfile != null) {
+        //     CompoundTag prof = new CompoundTag();
+        //     NbtUtils.writeGameProfile(prof, this.stolenSkinProfile);
+        //     nbt.put("stolen_profile", prof);
+        // }
 
         ListTag unlockedTag = new ListTag();
 
@@ -2173,11 +2263,11 @@ public float getMaxEnergy() {
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
-        if (nbt.contains("stolen_profile")) {
-            this.stolenSkinProfile = NbtUtils.readGameProfile(nbt.getCompound("stolen_profile"));
-        } else {
-            this.stolenSkinProfile = null;
-        }
+        // if (nbt.contains("stolen_profile")) {
+        //     this.stolenSkinProfile = NbtUtils.readGameProfile(nbt.getCompound("stolen_profile"));
+        // } else {
+        //     this.stolenSkinProfile = null;
+        // }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
@@ -2196,6 +2286,7 @@ public float getMaxEnergy() {
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
+        this.hasWombAwakened = nbt.getBoolean("hasWombAwakened");
 
         this.unlocked.clear();
 

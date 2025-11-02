@@ -90,7 +90,7 @@ public class JogoatEntity extends CursedSpirit {
 
     @Override
     public float getMaxEnergy() {
-        return Float.POSITIVE_INFINITY;
+        return 999999.0F;
     }
 
     @Override

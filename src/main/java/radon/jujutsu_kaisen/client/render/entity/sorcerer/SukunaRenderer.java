@@ -48,7 +48,9 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
         assert mc.level != null;
 
         EntityType<?> type = pEntity.getKey();
-
+        if (type == null) {
+            return;
+        }
         if (type == EntityType.PLAYER) {
             GameProfile profile = pEntity.getPlayer();
             ClientPacketListener conn = Minecraft.getInstance().getConnection();

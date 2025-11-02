@@ -119,6 +119,8 @@ public interface ISorcererData {
 
     Set<String> getFirstChants(Ability ability);
 
+    void unlockDomain(LivingEntity entity);
+
     float getOutput();
 
     float getAbilityPower();
@@ -274,6 +276,10 @@ public interface ISorcererData {
 
     boolean addBlackFlash();
 
+    boolean checkWombAwakened();
+
+    void setWombAwakened(boolean bool);
+
     void moreBlackFlash(boolean bool);
 
     void resetBlackFlash();
@@ -325,14 +331,14 @@ public interface ISorcererData {
 
     boolean hasStolen(CursedTechnique technique);
 
-    void setStolenSkinTexture(ResourceLocation skin);
+    // void setStolenSkinTexture(ResourceLocation skin);
 
-    void setStolenSkinProfile(GameProfile profile);
+    // void setStolenSkinProfile(GameProfile profile);
 
 
-    @Nullable GameProfile getStolenSkinProfile();
+    // @Nullable GameProfile getStolenSkinProfile();
 
-    @Nullable ResourceLocation getStolenSkinTexture();
+    // @Nullable ResourceLocation getStolenSkinTexture();
 
     int getTransfiguredSouls();
 
