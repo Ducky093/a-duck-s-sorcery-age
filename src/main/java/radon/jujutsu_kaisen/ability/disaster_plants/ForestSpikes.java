@@ -61,11 +61,8 @@ public class ForestSpikes extends Ability {
         return super.isTriggerable(owner);
     }
 
-    private void spawnSpike(LivingEntity owner, Direction dir, BlockPos pos) {
+    private void spawnSpike(LivingEntity owner, Direction dir, BlockPos pos, double offset1, double offset2) {
         ForestSpikeEntity spike = new ForestSpikeEntity(owner, this.getPower(owner));
-
-            double offset1 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
-            double offset2 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
 
 
             Vec3 spawnPos;
@@ -91,7 +88,7 @@ public class ForestSpikes extends Ability {
             BlockHitResult hitResult = owner.level().clip(new ClipContext(
                 rayStart,
                 rayEnd,
-                ClipContext.Block.OUTLINE,
+                ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
                 spike
             ));
@@ -141,9 +138,16 @@ public class ForestSpikes extends Ability {
 
             Direction dir = hit.getDirection();
             BlockPos pos = hit.getBlockPos();
-            spawnSpike(owner, dir, pos);
+            
+            double offset1 = 0.0;
+            double offset2 = 0.0;
+
+            spawnSpike(owner, dir, pos,offset1,offset2);
             for (int i = 0; i < 63; i++) {
-                spawnSpike(owner, dir, pos);
+                
+                offset1 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
+                offset2 = (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD;
+                spawnSpike(owner, dir, pos,offset1,offset2);
             }
     }
     }

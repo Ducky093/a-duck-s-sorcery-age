@@ -82,7 +82,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.3F;
+        return 0.4F;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
             if (ability.isTechnique()) {
                 // (ability.getRequirements().contains(JJKAbilities.RCT1.get()) ? 0.8F :
-                event.setAmount(event.getAmount() * 0.6F);
+                event.setAmount(event.getAmount() * 0.75F);
             }
         }
     }

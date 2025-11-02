@@ -150,7 +150,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
                     DamageSource source = event.getSource();
                     LivingEntity causingEntity = source.getEntity() instanceof LivingEntity ? (LivingEntity) source.getEntity() : null;
                     if  (causingEntity != simple.getOwner() && causingEntity != victim) {
-                        event.setAmount(event.getAmount() * 0.75F);
+                        event.setAmount(event.getAmount() * 0.85F);
                         simple.hurt(event.getSource(), event.getAmount()*1.25F,false); //multiply dmg to be applied to simple by 2.5x
                     }
                 }
