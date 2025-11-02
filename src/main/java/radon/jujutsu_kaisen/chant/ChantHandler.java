@@ -18,12 +18,7 @@ public class ChantHandler {
 
     public static float getOutput(LivingEntity owner, Ability ability) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float outputMod = 0.0F;
-        if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
-            outputMod += 0.4;
-                    //     if  {
-        }
-        return cap.getOutput() + (getChant(owner, ability)) + outputMod ;
+        return cap.getOutput() + (getChant(owner, ability));
     }
 
     public static float getChant(LivingEntity owner, Ability ability) {
@@ -59,7 +54,12 @@ public class ChantHandler {
         }
         float countFactor = (float) count / ConfigHolder.SERVER.maximumChantCount.get();
         float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
-        return (0.5F * countFactor) + (1.15F * lengthFactor);
+        float outputMod = 0.0F;
+        if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
+            outputMod += 0.4;
+                    //     if  {
+        }
+        return (0.5F * countFactor) + (1.15F * lengthFactor) + (outputMod);
     }
 
     @Nullable

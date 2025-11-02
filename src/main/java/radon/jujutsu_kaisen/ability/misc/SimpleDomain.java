@@ -60,13 +60,13 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
      @Override
     public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS ) && super.canUnlock(owner);
+        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS || ConfigHolder.SERVER.incarnatedSimpleDomain.get()  ) && super.canUnlock(owner);
     }
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {
        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS ) && super.isDisplayed(owner);
+        return (!cap.hasTrait(Trait.INCARNATED) || cap.getTechnique() == CursedTechnique.TECHNIQUELESS || ConfigHolder.SERVER.incarnatedSimpleDomain.get() ) && super.isDisplayed(owner);
     }
 
 
@@ -144,7 +144,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
                 if (victim.distanceTo(simple) < simple.getRadius()) {
                     DamageSource source = event.getSource();
                     LivingEntity causingEntity = source.getEntity() instanceof LivingEntity ? (LivingEntity) source.getEntity() : null;
-                    if ( !(causingEntity == simple.getOwner()) ) {
+                    if  (causingEntity != simple.getOwner() && causingEntity != victim) {
                         event.setAmount(event.getAmount() * 0.75F);
                         simple.hurt(event.getSource(), event.getAmount()*1.25F,false); //multiply dmg to be applied to simple by 2.5x
                     }
