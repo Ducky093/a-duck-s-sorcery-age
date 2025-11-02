@@ -102,15 +102,17 @@ public class VeilBlockEntity extends BlockEntity {
 
     public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
         if (entity == null || parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
-        if (entity.getUUID().equals(be.ownerUUID)) return true;
         if (be.modifiers == null) return false;
-
         if (entity instanceof Player player) {
             for (Modifier modifier : be.modifiers) {
+                if (modifier.getAction() == Modifier.Action.ALLOW &&
+                    modifier.getType() == Modifier.Type.OWNER_BYPASS && (entity.getUUID().equals(be.ownerUUID)) ) {
+                        return true;
+                }
                 if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER)
                     continue;
                 if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
-                    return true;
+                    return modifier.getAction() == Modifier.Action.ALLOW;
                 }
             }
         }

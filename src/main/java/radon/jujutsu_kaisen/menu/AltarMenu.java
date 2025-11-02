@@ -88,6 +88,8 @@ public class AltarMenu extends ItemCombinerMenu {
             return new SorcererModifier(action);
         } else if (stack.is(Items.TNT)) {
             return new GriefingModifier(action);
+        } else if (stack.is(Items.ROTTEN_FLESH)) {
+            return new OwnerBypassModifier(action);
         }
         throw new NotImplementedException();
     }

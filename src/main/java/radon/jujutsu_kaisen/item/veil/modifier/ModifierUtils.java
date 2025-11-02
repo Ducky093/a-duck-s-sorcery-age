@@ -22,6 +22,7 @@ public class ModifierUtils {
             case CURSE -> new CurseModifier(nbt);
             case SORCERER -> new SorcererModifier(nbt);
             case GRIEFING -> new GriefingModifier(nbt);
+            case OWNER_BYPASS -> new OwnerBypassModifier(nbt);
             case VIOLENCE -> new ViolenceModifier(nbt);
         };
     }
