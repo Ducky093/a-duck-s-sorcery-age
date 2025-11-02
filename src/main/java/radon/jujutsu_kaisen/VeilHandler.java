@@ -160,8 +160,14 @@ public class VeilHandler {
 
             int radius = rod.getSize();
             if (target.distSqr(rod.getBlockPos()) >= radius * radius) continue;
-
-            if (entity != null && rod.ownerUUID != null && rod.ownerUUID.equals(entity.getUUID())) continue;
+            boolean ownerFlag = false;
+            for (Modifier modifier : rod.modifiers) {
+                if (modifier.getAction() == Modifier.Action.ALLOW &&
+                    modifier.getType() == Modifier.Type.OWNER_BYPASS) {
+                    ownerFlag = true;
+                }
+            }
+            if (ownerFlag == true && entity != null && rod.ownerUUID != null && rod.ownerUUID.equals(entity.getUUID()) ) continue;
 
             for (Modifier modifier : rod.modifiers) {
                 if (modifier.getAction() == Modifier.Action.DENY &&

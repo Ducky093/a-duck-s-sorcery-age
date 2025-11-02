@@ -107,7 +107,7 @@ public class ForestSpikes extends Ability {
         double blockCenterZ = blockPos.getZ() + 0.5D;
 
         // Push along the face normal (dir) by half a block + model + extra offset
-        double extraOffset = 0.0F;
+        double extraOffset = -0.25F;
         double pushDistance = 0.5D + spike.getBbHeight() / 2.0F + extraOffset;
 
         double finalX = blockCenterX + dir.getStepX() * pushDistance;

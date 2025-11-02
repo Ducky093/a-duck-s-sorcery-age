@@ -58,6 +58,7 @@ public class Modifier {
         CURSE,
         SORCERER,
         GRIEFING,
+        OWNER_BYPASS,
         VIOLENCE
     }
 
