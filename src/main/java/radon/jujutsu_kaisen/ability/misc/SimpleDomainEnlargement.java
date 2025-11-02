@@ -156,7 +156,7 @@ public class SimpleDomainEnlargement extends Ability implements Ability.IChannel
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
         CursedEnergyNature nature = cap.getNature();
-        return (technique == CursedTechnique.TECHNIQUELESS && nature != CursedEnergyNature.DIVERGENT ) && super.isDisplayed(owner);
+        return (ConfigHolder.SERVER.newShadowStyleForAll.get() || (technique == CursedTechnique.TECHNIQUELESS && nature != CursedEnergyNature.DIVERGENT )) && super.isDisplayed(owner);
     }
 
 

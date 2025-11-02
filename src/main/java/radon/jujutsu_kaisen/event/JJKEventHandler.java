@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
@@ -51,6 +52,7 @@ import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
+import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
@@ -355,6 +357,9 @@ if (!(attackerEntity instanceof Player) && attackerEntity instanceof SorcererEnt
 }
 if (!(victim instanceof Player) && victim instanceof SorcererEntity sorc && sorc.getJujutsuType() == JujutsuType.SORCERER ) {
     event.setAmount(event.getAmount() * ConfigHolder.SERVER.sorcererDefenseMult.get().floatValue() );
+}
+if (attackerEntity instanceof Player || (attackerEntity instanceof SummonEntity sum && sum.isTame() && sum.getOwner() instanceof Player) || (attackerEntity instanceof CursedSpirit curse && curse.isTame() && curse.getOwner() instanceof Player ) ) {
+    event.setAmount(event.getAmount() * ConfigHolder.SERVER.playerDamageMult.get().floatValue());
 }
 
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {

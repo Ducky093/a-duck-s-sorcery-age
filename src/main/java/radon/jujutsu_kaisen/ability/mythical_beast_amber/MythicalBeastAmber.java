@@ -199,7 +199,9 @@ public void run(LivingEntity owner) {
                 cap.generate(play);
             }
         }
-        owner.kill();
+        if (ConfigHolder.SERVER.MBADeath.get()) {
+            owner.kill();
+        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

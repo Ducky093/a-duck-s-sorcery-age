@@ -496,8 +496,11 @@ public class SorcererData implements ISorcererData {
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * ((this.owner instanceof Player player && ConfigHolder.SERVER.foodCERegen.get()) ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 15.0D) / 20) * 20) + 40;
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.npcHPMin.get();
 
+            if (this.owner instanceof Player player) {
+                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.hrHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.hrHPMin.get();
+            }
             if (this.owner.getMaxHealth() < health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
@@ -507,6 +510,7 @@ public class SorcererData implements ISorcererData {
 
             double speed = this.getRealPower();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyArmorBoost(owner);
 
             float ratio = owner.getHealth()/owner.getMaxHealth();
 
@@ -552,11 +556,13 @@ public class SorcererData implements ISorcererData {
             }
 
         } else {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * 15.0D) / 20) * 20) + 40;
-
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.npcHPMin.get();
+            
             double damage = this.getRealPower() * 1.0D;
             if (this.owner instanceof Player player) {
-                damage = this.getRealPower() * 2.0D;
+                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.playerHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.playerHPMin.get();
+            
+                damage = this.getRealPower() * ConfigHolder.SERVER.playerM1Mult.get().floatValue();
             }
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
@@ -1521,7 +1527,7 @@ public float getMaxEnergy() {
 
     @Override
     public @Nullable CursedTechnique getCurrentStolen() {
-         if (this.getTechnique() != CursedTechnique.BRAIN_TRANSPLANT && !this.getCopied().contains(CursedTechnique.BRAIN_TRANSPLANT) && !this.getAbsorbed().contains(CursedTechnique.BRAIN_TRANSPLANT) ) {
+         if (this.getTechnique() != CursedTechnique.BRAIN_TRANSPLANT && !this.getCopied().contains(CursedTechnique.BRAIN_TRANSPLANT) ) {
             return null;
         }
         return this.currentStolen;
@@ -1840,7 +1846,7 @@ public float getMaxEnergy() {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
-
+           
             List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques(type);
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
@@ -1848,6 +1854,7 @@ public float getMaxEnergy() {
             }
             this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
             int rollCount = 0;
+            int weightMult = 1;
             
             if (this.technique == CursedTechnique.MYTHICAL_BEAST_AMBER) {
                 this.nature = CursedEnergyNature.LIGHTNING;
@@ -1859,9 +1866,10 @@ public float getMaxEnergy() {
                 }
                 if (this.nature != CursedEnergyNature.BASIC) {
                     rollCount += ConfigHolder.SERVER.natureTraitCost.get();
+                    weightMult *= ConfigHolder.SERVER.natureTraitModifier.get();
                 }
-                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
             }
+            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
            
             
           
@@ -1881,12 +1889,16 @@ public float getMaxEnergy() {
             //weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
        
 
-            while (rollCount < ConfigHolder.SERVER.minTraits.get() && rollCount < ConfigHolder.SERVER.traitRolls.get() && !weights.isEmpty()) {
-                 if (rollCount < ConfigHolder.SERVER.minTraits.get() ) {
+            while (rollCount < ConfigHolder.SERVER.traitRolls.get() && !weights.isEmpty()) {
+                for (Map.Entry<Trait, Integer> entry : weights.entrySet()) {
+                    weights.put(entry.getKey(), (int) (entry.getValue() / weightMult));
+                }
+                if (rollCount < ConfigHolder.SERVER.minTraits.get() ) {
                     weights.remove(null);
                 } else {
                     weights.put(null, ConfigHolder.SERVER.noTraitWeight.get());
                 }
+                
                 int totalWeight = weights.values().stream().mapToInt(Integer::intValue).sum();
                 int roll = HelperMethods.RANDOM.nextInt(totalWeight);
                 int cumulative = 0;
@@ -1901,10 +1913,10 @@ public float getMaxEnergy() {
                     }
                 }
 
-                if (chosen != null && (!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(chosen))  && rollCount < ConfigHolder.SERVER.maxTraits.get()) {
+                if (chosen != null && (!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(chosen))  && rollCount < ConfigHolder.SERVER.maxTraits.get() && !this.hasTrait(chosen) ) {
                     this.addTrait(chosen);
                     rollCount++;
-                    weights.remove(chosen);
+                    weightMult *= ConfigHolder.SERVER.traitScalingModifier.get();
                 }
                 else if (chosen == null) {
                     rollCount++;
@@ -1947,9 +1959,13 @@ public float getMaxEnergy() {
 
             assert this.technique != null;
 
-            
-            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
-
+            if (this.technique == null || this.technique == CursedTechnique.TECHNIQUELESS) {
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique.none", JujutsuKaisen.MOD_ID)));
+            }
+            else {
+                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
+            }
+ 
             for (Trait t : this.traits ) {
                   owner.sendSystemMessage(Component.translatable(String.format("chat.%s.trait.%s", JujutsuKaisen.MOD_ID, t.getRawName())));
             }

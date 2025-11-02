@@ -206,7 +206,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
         CursedEnergyNature nature = cap.getNature();
-        return (technique == CursedTechnique.TECHNIQUELESS && nature != CursedEnergyNature.DIVERGENT ) && super.isDisplayed(owner);
+        return (ConfigHolder.SERVER.newShadowStyleForAll.get() || (technique == CursedTechnique.TECHNIQUELESS && nature != CursedEnergyNature.DIVERGENT )) && super.isDisplayed(owner);
     }
 
     // @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

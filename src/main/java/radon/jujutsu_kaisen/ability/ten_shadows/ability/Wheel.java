@@ -95,7 +95,7 @@ public class Wheel extends Summon<WheelEntity> {
     @Override
     public float getCost(LivingEntity owner) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return 0.0F;
-        return 0.25F;
+        return 0.5F;
     }
 
     @Override

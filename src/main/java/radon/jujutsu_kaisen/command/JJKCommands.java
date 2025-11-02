@@ -28,5 +28,6 @@ public class JJKCommands {
         UnlockAllCommand.register(event.getDispatcher());
         LockAllCommand.register(event.getDispatcher());
         SetExtraEnergyCommand.register(event.getDispatcher());
+        SetAdditionalTechniqueCommand.register(event.getDispatcher());
     }
 }

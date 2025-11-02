@@ -19,7 +19,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.IntValue totemRCTChanceMult;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
-    public final ForgeConfigSpec.DoubleValue domainExpReq;
+    //public final ForgeConfigSpec.DoubleValue domainExpReq;
     public final ForgeConfigSpec.DoubleValue wcsExpMahoReq;
     public final ForgeConfigSpec.DoubleValue wcsExpOtherReq;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
@@ -42,6 +42,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue blackFlashChanceRNG;
     public final ForgeConfigSpec.DoubleValue blackFlashPower;
     public final ForgeConfigSpec.DoubleValue blackFlashDmgCap;
+    public final ForgeConfigSpec.BooleanValue newShadowStyleForAll;
     public final ForgeConfigSpec.BooleanValue incarnatedSimpleDomain;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
@@ -70,6 +71,17 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue sorcererDefenseMult;
     public final ForgeConfigSpec.DoubleValue jujutsuDefenseMult;
     public final ForgeConfigSpec.DoubleValue hrDefenseMult;
+    public final ForgeConfigSpec.DoubleValue playerDamageMult;
+    public final ForgeConfigSpec.DoubleValue playerHPMult;
+    public final ForgeConfigSpec.DoubleValue npcHPMult;
+    public final ForgeConfigSpec.DoubleValue playerCEArmor;
+    public final ForgeConfigSpec.DoubleValue playerCEArmorMax;
+    public final ForgeConfigSpec.DoubleValue playerCEArmorMin;
+    public final ForgeConfigSpec.IntValue playerHPMin;
+    public final ForgeConfigSpec.IntValue npcHPMin;
+    public final ForgeConfigSpec.DoubleValue hrHPMult;
+    public final ForgeConfigSpec.IntValue hrHPMin;
+    public final ForgeConfigSpec.DoubleValue playerM1Mult;
     public final ForgeConfigSpec.DoubleValue limitlessNoSixEyesMult;
     public final ForgeConfigSpec.DoubleValue sixEyesMult;
 
@@ -150,8 +162,8 @@ public class ServerConfig {
                 .defineInRange("totemRCTChanceMult", 4, 1, 1000);
         this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion/wheel w domain amp)")
                 .defineInRange("requiredExperienceForExperienced", 5000.0F, 1.0F, 1000000.0F);
-        this.domainExpReq = builder.comment("Experience required to learn a Domain Expansion")
-                .defineInRange("domainExpReq", 3000.0F, 0.0F, 1000000.0F);
+        // this.domainExpReq = builder.comment("Experience required to learn a Domain Expansion")
+        //         .defineInRange("domainExpReq", 3000.0F, 0.0F, 1000000.0F);
         this.wcsExpMahoReq = builder.comment("Experience required to learn WCS from Mahoraga")
                 .defineInRange("wcsExpMahoReq", 10000.0F, 0.0F, 1000000.0F);
         this.wcsExpOtherReq = builder.comment("Experience required to learn WCS from other sources")
@@ -196,6 +208,8 @@ public class ServerConfig {
                 .defineInRange("blackFlashPower", 2.5F, 1.0F, 1000.0F);
         this.blackFlashDmgCap = builder.comment("The maximum damage of a black flash attack (entire dmg not just the added dmg)")
                 .defineInRange("blackFlashDmgCap", 40.0F, 0.0F, 999999.0F);
+        this.newShadowStyleForAll = builder.comment("When enabled anyone may learn advanced Simple Domain Techs (techniqueless is useless with this)")
+                .define("newShadowStyleForAll", false);
         this.incarnatedSimpleDomain = builder.comment("When enabled Incarnated Sorcerers may use Simple Domain")
                 .define("incarnatedSimpleDomain", true);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
@@ -254,6 +268,28 @@ public class ServerConfig {
                 .defineInRange("jujutsuDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.hrDefenseMult = builder.comment("The multiplier to Heavenly Restriction players's defense (already higher outside of config)")
                 .defineInRange("hrDefenseMult", 1.0F, 0.0F, 9999.0F);
+        this.playerDamageMult = builder.comment("The multiplier to all player attacks (includes summons of all kinds)")
+                .defineInRange("playerDamageMult", 1.0F, 0.0F, 9999.0F);
+        this.playerHPMult = builder.comment("The multiplier to player HP (scales by bars, so will move by 20 hp increments)")
+                .defineInRange("playerHPMult", 15.0F, 0.0F, 9999.0F);
+        this.npcHPMult = builder.comment("The multiplier to npc HP (scales by bars, so will move by 20 hp increments)")
+                .defineInRange("npcHPMult", 15.0F, 0.0F, 9999.0F);
+        this.playerCEArmor = builder.comment("The multiplier to player armor with ce flow/hr (does not pass cap)")
+                .defineInRange("playerCEArmorMult", 8.0F, 0.0F, 9999.0F);
+        this.playerCEArmorMin = builder.comment("The minimum boost to player armor with ce flow/hr (does not pass cap)")
+                .defineInRange("playerCEArmorMin", 12.0F, 0.0F, 9999.0F);
+        this.playerCEArmorMax = builder.comment("The maximum boost to player armor with ce flow/hr (This is the cap, does not stack w reg armor)")
+                .defineInRange("playerCEArmorMax", 20.0F, 0.0F, 9999.0F);
+        this.playerHPMin = builder.comment("The minimum health of a player.")
+                .defineInRange("playerHPMin", 40, 1, 9999);
+        this.hrHPMult = builder.comment("The multiplier to a heavenly restriction player's HP (scales by bars, so will move by 20 hp increments)")
+                .defineInRange("hrHPMult", 15.0F, 0.0F, 9999.0F);
+        this.hrHPMin = builder.comment("The minimum health of a Heavenly Restriction player.")
+                .defineInRange("hrHPMin", 40, 1, 9999);
+        this.npcHPMin = builder.comment("The minimum health of the mod's NPCs.")
+                .defineInRange("npcHPMin", 40, 1, 9999);
+        this.playerM1Mult = builder.comment("The multiplier to player M1 Hit Damage")
+                .defineInRange("playerM1Mult", 2.0F, 0.0F, 9999.0F);
         this.limitlessNoSixEyesMult = builder.comment("The multiplier to Limitless's costs without Six Eyes")
                 .defineInRange("limitlessNoSixEyesMult", 1.0F, 0.0F, 9999.0F);
         this.sixEyesMult = builder.comment("The multiplier of drain decreases given to Six Eyes.")
@@ -261,7 +297,7 @@ public class ServerConfig {
 
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
-        this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
+        this.uniqueTraits = builder.comment("When enabled on servers there can be only one Six Eyes and Perfect Body")
                 .define("uniqueTraits", true);
         this.uniqueTraitList = builder.comment("Traits that will be Unique under the config")
                 .defineList("uniqueTraitList", () -> List.of(
@@ -386,42 +422,42 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
-        this.natureTraitCost = builder.comment("Cursed Energy Nature trait count cost (affected by the minimum/max amount of traits)")
-                .defineInRange("natureTraitCost", 1 ,0, 1000000);
         this.traitRolls = builder.comment("How many rolls are done to give players traits? (each minimum guaranteed trait takes a trait roll)")
-                .defineInRange("traitRolls", 1, 0, 1000000);
+                .defineInRange("traitRolls", 4, 0, 1000000);
         this.minTraits = builder.comment("The minimum amount of traits a player will start with")
                 .defineInRange("minTraits", 0 ,0, 1000000);
         this.maxTraits = builder.comment("The maximum amount of traits a player can start with")
                 .defineInRange("maxTraits", 6 ,0, 1000000);
+        this.natureTraitCost = builder.comment("Cursed Energy Nature trait count cost (affected by the minimum/max amount of traits)")
+                .defineInRange("natureTraitCost", 1 ,0, 1000000);
         this.natureTraitModifier = builder.comment("The division to the chance of rolling a trait with a nature")
-                .defineInRange("natureTraitModifier", 4 ,0, 1000000);
+                .defineInRange("natureTraitModifier", 2 ,0, 1000000);
         this.traitScalingModifier = builder.comment("The division to the chance of rolling an additional trait per trait rolled")
-                .defineInRange("traitScalingModifier", 8 ,0, 1000000);
+                .defineInRange("traitScalingModifier", 4 ,0, 1000000);
         this.noTraitWeight = builder.comment("Weight of receiving no trait")
-                .defineInRange("noTraitWeight", 30, 0, 1000000);
+                .defineInRange("noTraitWeight", 66, 0, 1000000);
         this.cursedEnergyNatureRarity = builder.comment("Weight of a cursed energy nature other than basic (1/value chance, bigger value = rarer)")
-                .defineInRange("cursedEnergyNatureRarity", 8, 0, 1000000);
+                .defineInRange("cursedEnergyNatureRarity", 16, 0, 1000000);
         this.curseRarity = builder.comment("Rarity of being a curse (1/value chance, bigger value = rarer")
                 .defineInRange("curseRarity", 4, 0, 1000000);
         this.sixEyesWeight = builder.comment("Weight of having six eyes (lower value = rarer)")
-                .defineInRange("sixEyesWeight", 1, 0, 1000000);
+                .defineInRange("sixEyesWeight", 2, 0, 1000000);
         this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (1/value chance, bigger value = rarer")
-                .defineInRange("heavenlyRestrictionRarity", 24, 0, 1000000);
+                .defineInRange("heavenlyRestrictionRarity", 20, 0, 1000000);
         this.vesselWeight = builder.comment("Weight of being a vessel (lower value = rarer)")
-                .defineInRange("vesselWeight", 3, 0, 1000000);
+                .defineInRange("vesselWeight", 6, 0, 1000000);
         this.perfectBodyWeight = builder.comment("Weight of having a perfect body (lower value = rarer)")
-                .defineInRange("perfectBodyWeight", 1, 0, 1000000);
+                .defineInRange("perfectBodyWeight", 2, 0, 1000000);
         this.incarnatedWeight = builder.comment("Weight of being incarnated (lower value = rarer)")
-                .defineInRange("incarnatedWeight", 15, 0, 1000000);
+                .defineInRange("incarnatedWeight", 20, 0, 1000000);
         this.rctOutputWeight = builder.comment("Weight of being able to output your RCT (lower value = rarer)")
-                .defineInRange("rctOutputWeight", 10, 0, 1000000);
+                .defineInRange("rctOutputWeight", 20, 0, 1000000);
         this.prodigyWeight = builder.comment("Weight of having immense development potential (lower value = rarer)")
-                .defineInRange("prodigyWeight", 4, 0, 1000000);
+                .defineInRange("prodigyWeight", 8, 0, 1000000);
         this.cursedWombWeight = builder.comment("Weight of forming as a Cursed Womb (lower value = rarer)")
-                .defineInRange("cursedWombWeight", 10, 0, 1000000);
+                .defineInRange("cursedWombWeight", 20, 0, 1000000);
         this.deathPaintingWeight = builder.comment("Weight of having been born as a Death Painting (lower value = rarer)")
-                .defineInRange("deathPaintingWeight", 8, 0, 1000000);
+                .defineInRange("deathPaintingWeight", 12, 0, 1000000);
         builder.pop();
     }
 
@@ -436,7 +472,5 @@ public class ServerConfig {
                 .map(CursedTechnique::valueOf)
                 .collect(Collectors.toList());
         }
-        
-        
     }
 }

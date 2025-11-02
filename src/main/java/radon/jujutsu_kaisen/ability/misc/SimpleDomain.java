@@ -135,10 +135,15 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     public static class SimpleDomainForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
-            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource)) return;
+            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource jjkdmg)) return;
 
-            LivingEntity victim = event.getEntity();
-            
+            LivingEntity victim = event.getEntity(); 
+
+            Ability ability = jjkdmg.getAbility();
+
+            if (ability == null) return;
+
+            if (ability.isTechnique()) {
 
             for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
                 if (victim.distanceTo(simple) < simple.getRadius()) {
@@ -149,6 +154,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
                         simple.hurt(event.getSource(), event.getAmount()*1.25F,false); //multiply dmg to be applied to simple by 2.5x
                     }
                 }
+            }
             }
         }
 

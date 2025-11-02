@@ -51,7 +51,8 @@ import java.util.UUID;
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("641b629b-f7b7-4066-a486-8e1d670a7439");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
-  
+
+
     private static final double SPEED = 0.03D;
     //private boolean hasShieldDrained = false;
 
@@ -88,6 +89,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public boolean usesHands() {
         return false;
     }
+
+    
 
     @Override
     public void run(LivingEntity owner) {
@@ -129,6 +132,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+       
         //float scale = isShielding ? 1.4F : 1.0F;
         float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.4F : 1.0F;
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
@@ -173,7 +177,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
 
         EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-       // if (!(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))) {
+        EntityUtil.applyArmorBoost(owner);
+        // if (!(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))) {
             //cap.setShieldTicks(0);
        // } else {
            // cap.setShieldTicks(cap.getShieldTicks() + 1);
@@ -209,6 +214,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public void removeModifiers(LivingEntity owner) {
         EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
         EntityUtil.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
+        EntityUtil.removeArmorBoost(owner);
     }
 
     @Override
@@ -355,6 +361,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     }
                     //victimCap.abilities.CURSED_ENERGY_SHIELD
                     // ( Math.min(1.3F + (0.04F * victimCap.getShieldTicks()), 2.5F) )
+
                     float armor = !source.is(DamageTypeTags.BYPASSES_SHIELD) && victimCap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.5F : 1.2F;
                     
 
