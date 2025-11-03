@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -122,7 +123,7 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
     private final Map<Ability, Integer> disrupted;
-    private final Set<Integer> summons;
+    private final Set<SummonData> summons;
     private final Map<UUID, Set<Pact>> acceptedPacts;
     private final Map<UUID, Set<Pact>> requestedPactsCreations;
     private final Map<UUID, Integer> createRequestExpirations;
@@ -299,21 +300,30 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateSummons() {
-        if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
+     private void updateSummons() {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
 
-        if (this.owner.level() instanceof ServerLevel level) {
-            Iterator<Integer> iter = this.summons.iterator();
+        boolean dirty = false;
 
-            while (iter.hasNext()) {
-                Integer identifier = iter.next();
+        Iterator<SummonData> iter = this.summons.iterator();
 
-                Entity entity = level.getEntity(identifier);
+        while (iter.hasNext()) {
+            SummonData data = iter.next();
 
-                if (entity == null || !entity.isAlive() || entity.isRemoved()) {
-                    iter.remove();
-                }
+            if (!level.areEntitiesLoaded(data.getChunkPos())) continue;
+
+            Entity entity = level.getEntity(data.getIdentifier());
+
+            if (entity == null || !entity.isAlive() || entity.isRemoved()) {
+                dirty = true;
+                iter.remove();
+                continue;
             }
+            data.setChunkPos(entity.chunkPosition().toLong());
+        }
+
+        if (dirty && this.owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
         }
     }
 
@@ -1655,20 +1665,22 @@ public float getMaxEnergy() {
     
     @Override
     public void addSummon(Entity entity) {
-        this.summons.add(entity.getId());
+        this.summons.add(new SummonData(entity));
     }
 
     @Override
     public void removeSummon(Entity entity) {
-        this.summons.remove(entity.getId());
+        this.summons.removeIf(data -> data.getIdentifier().equals(entity.getUUID()));
     }
 
-    @Override
+        @Override
     public List<Entity> getSummons() {
+        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
+
         List<Entity> entities = new ArrayList<>();
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getIdentifier());
 
             if (entity == null) continue;
 
@@ -1677,12 +1689,14 @@ public float getMaxEnergy() {
         return entities;
     }
 
-    @Override
+     @Override
     public <T extends Entity> @Nullable T getSummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return null;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getIdentifier());
 
             if (entity == null) continue;
 
@@ -1696,15 +1710,39 @@ public float getMaxEnergy() {
     }
 
     @Override
-    public <T extends Entity> void unsummonByClass(Class<T> clazz) {
+    public <T extends Entity> List<T> getSummonsByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
+
+        List<T> entities = new ArrayList<>();
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<Integer> iter = this.summons.iterator();
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getIdentifier());
+
+            if (entity == null) continue;
+
+            T summon = test.tryCast(entity);
+
+            if (summon != null) {
+                entities.add(summon);
+            }
+        }
+        return entities;
+    }
+
+    @Override
+    public <T extends Entity> void unsummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
+
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        Iterator<SummonData> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            Integer identifier = iter.next();
+            SummonData data = iter.next();
 
-            Entity entity = this.owner.level().getEntity(identifier);
+            Entity entity = level.getEntity(data.getIdentifier());
 
             if (entity == null) continue;
 
@@ -1717,16 +1755,18 @@ public float getMaxEnergy() {
         }
     }
 
-    @Override
+   @Override
     public <T extends Entity> void removeSummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<Integer> iter = this.summons.iterator();
+        Iterator<SummonData> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            Integer identifier = iter.next();
+            SummonData data = iter.next();
 
-            Entity entity = this.owner.level().getEntity(identifier);
+            Entity entity = level.getEntity(data.getIdentifier());
 
             if (entity == null) continue;
 
@@ -1737,13 +1777,15 @@ public float getMaxEnergy() {
             }
         }
     }
-
+    
     @Override
     public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return false;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getIdentifier());
 
             if (entity == null) continue;
 
@@ -2191,10 +2233,11 @@ public float getMaxEnergy() {
         }
         nbt.put("cooldowns", cooldownsTag);
 
+       
         ListTag summonsTag = new ListTag();
 
-        for (Integer identifier : this.summons) {
-            summonsTag.add(IntTag.valueOf(identifier));
+        for (SummonData data : this.summons) {
+            summonsTag.add(data.serializeNBT());
         }
         nbt.put("summons", summonsTag);
 
@@ -2379,10 +2422,8 @@ public float getMaxEnergy() {
 
         this.summons.clear();
 
-        ListTag summonsTag = nbt.getList("summons", Tag.TAG_INT);
-
-        for (int i = 0; i < summonsTag.size(); i++) {
-            this.summons.add(summonsTag.getInt(i));
+        for (Tag tag : nbt.getList("summons", Tag.TAG_COMPOUND)) {
+            this.summons.add(new SummonData((CompoundTag) tag));
         }
 
         this.acceptedPacts.clear();

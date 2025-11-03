@@ -366,6 +366,8 @@ public interface ISorcererData {
 
     <T extends Entity> @Nullable T getSummonByClass(Class<T> clazz);
 
+    <T extends Entity> List<T> getSummonsByClass(Class<T> clazz);
+
     <T extends Entity> void unsummonByClass(Class<T> clazz);
 
     <T extends Entity> void removeSummonByClass(Class<T> clazz);
