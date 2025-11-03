@@ -59,6 +59,9 @@ public class Modifier {
         SORCERER,
         GRIEFING,
         OWNER_BYPASS,
+        TELEPORT,
+        CURSE_SPAWN,
+        SORCERER_SPAWN,
         VIOLENCE
     }
 

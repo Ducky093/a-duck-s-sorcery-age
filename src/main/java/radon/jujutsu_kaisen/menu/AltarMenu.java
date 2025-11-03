@@ -17,6 +17,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
+
+import radon.jujutsu_kaisen.ability.limitless.Teleport;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.modifier.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
@@ -90,6 +93,12 @@ public class AltarMenu extends ItemCombinerMenu {
             return new GriefingModifier(action);
         } else if (stack.is(Items.ROTTEN_FLESH)) {
             return new OwnerBypassModifier(action);
+        } else if (stack.is(Items.ENDER_PEARL)) {
+            return new TeleportModifier(action);
+        } else if (stack.is(JJKItems.CURSE_FLESH.get())) {
+            return new CurseSpawnModifier(action);
+        } else if (stack.is(JJKItems.SORCERER_FLESH.get())) {
+            return new SorcererSpawnModifier(action);
         }
         throw new NotImplementedException();
     }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -10,12 +11,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 import java.util.*;
@@ -137,6 +141,9 @@ public class VeilHandler {
         }
     }
 
+    
+
+
     public static boolean canSpawn(Mob mob, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(mob.level().dimension());
@@ -145,7 +152,18 @@ public class VeilHandler {
         for (VeilRodBlockEntity rod : rods) {
             if (!rod.isValid()) continue;
             int radius = rod.getSize();
-            if (target.distSqr(rod.getBlockPos()) < radius * radius) return false;
+            boolean curseSpawnFlag = false;
+            boolean sorcererSpawnFlag = false;
+            for (Modifier modifier : rod.modifiers) {
+            if (modifier.getAction() == Modifier.Action.ALLOW &&
+                modifier.getType() == Modifier.Type.CURSE_SPAWN) {
+                curseSpawnFlag = true;
+            } else if (modifier.getAction() == Modifier.Action.ALLOW &&
+                modifier.getType() == Modifier.Type.SORCERER_SPAWN) {
+                sorcererSpawnFlag = true;
+            }
+            }
+            if (target.distSqr(rod.getBlockPos()) <= radius * radius && !(sorcererSpawnFlag && mob instanceof SorcererEntity) && !(curseSpawnFlag && mob instanceof CursedSpirit) ) return false;
         }
         return true;
     }
@@ -187,6 +205,29 @@ public class VeilHandler {
             if (target.distSqr(rod.getBlockPos()) < radius * radius) return true;
         }
         return false;
+    }
+
+    public static boolean isTeleportValid(Level level, BlockPos target) {
+        Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
+        if (rods == null) return false;
+
+        for (VeilRodBlockEntity rod : rods) {
+            if (!rod.isValid() ) continue;
+            boolean ownerFlag = false;
+             boolean teleportFlag = false;
+             for (Modifier modifier : rod.modifiers) {
+                if (modifier.getAction() == Modifier.Action.ALLOW &&
+                    modifier.getType() == Modifier.Type.OWNER_BYPASS) {
+                    ownerFlag = true;
+                }else if (modifier.getAction() == Modifier.Action.DENY &&
+                    modifier.getType() == Modifier.Type.TELEPORT) {
+                    teleportFlag = true;
+                }
+            }
+            int radius = rod.getSize();
+            if (( teleportFlag && target.distSqr(rod.getBlockPos()) <= (radius) * (radius) && !ownerFlag ) ) return false;
+        }
+        return true;
     }
 
     public static void cleanupDimension(ResourceKey<Level> dimension) {
