@@ -279,7 +279,7 @@ public class JJKEventHandler {
 
             if((cap.hasTrait(Trait.CURSED_WOMB) )) {
                 if (cap != null) {
-                float targetScale = 0.7F;
+                float targetScale = 0.8F;
                 float targetWidth = 1.2F;
                 if (cap.checkWombAwakened() ==  true) {
                     targetScale = 1.1F;
@@ -296,7 +296,16 @@ public class JJKEventHandler {
             }
             }
             else {
-                
+                ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
+                ScaleData baseWidth = ScaleTypes.WIDTH.getScaleData(owner);
+                if (baseScale.getBaseScale() != baseScale.getScale()) {
+                    baseWidth.resetScale();
+                    baseScale.resetScale();
+                }
+                if (baseWidth.getBaseScale() != baseWidth.getScale()) {
+                    baseWidth.resetScale();
+                    baseScale.resetScale();
+                }
             }
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
