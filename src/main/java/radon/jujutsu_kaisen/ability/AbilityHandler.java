@@ -59,13 +59,15 @@ public class AbilityHandler {
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT ) {
             if (status == Ability.Status.SUCCESS) {
+                ability.charge(owner);
+                ability.addDuration(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
-                ability.charge(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                ability.addDuration(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
@@ -74,6 +76,7 @@ public class AbilityHandler {
 
         } else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                ability.addDuration(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
@@ -83,6 +86,7 @@ public class AbilityHandler {
 
         else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                ability.addDuration(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.channel(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));

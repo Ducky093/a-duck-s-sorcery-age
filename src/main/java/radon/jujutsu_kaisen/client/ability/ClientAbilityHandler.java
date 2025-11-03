@@ -305,16 +305,17 @@ public class ClientAbilityHandler {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            Ability.Status status;
-
+            ability.charge(owner);
+            ability.addDuration(owner);
             //if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
-                ability.charge(owner);
+          
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             //}
            // return status;
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED || ability.getActivationType(owner) == Ability.ActivationType.DOMAIN ) {
+            ability.addDuration(owner);
             //Ability.Status status;
 
             //if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
@@ -324,6 +325,7 @@ public class ClientAbilityHandler {
             //}
             //return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
+            ability.addDuration(owner);
             //Ability.Status status;
 
             //if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
