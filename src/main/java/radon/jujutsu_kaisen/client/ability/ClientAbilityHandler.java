@@ -118,9 +118,9 @@ public class ClientAbilityHandler {
 
                     if (isHeld) {
                         if (!isChanneling) {
-                            if (ClientAbilityHandler.trigger(channeled) == Ability.Status.SUCCESS) {
+                            //if (ClientAbilityHandler.trigger(channeled) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
-                            }
+                           // }
                         }
                         isChanneling = true;
                     } else if (isChanneling) {
@@ -177,9 +177,9 @@ public class ClientAbilityHandler {
                             channeled = ability;
                             current = JJKKeys.ACTIVATE_ABILITY;
                         } else {
-                            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
+                            //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            }
+                            //}
                         }
                     }
                 }
@@ -192,9 +192,9 @@ public class ClientAbilityHandler {
                             channeled = ability;
                             current = JJKKeys.ACTIVATE_J2TSU;
                         } else {
-                            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
+                            //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            }
+                            //}
                         }
                     }
                 }
@@ -217,14 +217,14 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.DASH.isDown()) {
-                    if (ClientAbilityHandler.trigger(JJKAbilities.DASH.get()) == Ability.Status.SUCCESS) {
+                    //if (ClientAbilityHandler.trigger(JJKAbilities.DASH.get()) == Ability.Status.SUCCESS) {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
-                    }
+                    //}
                 }
                 if (JJKKeys.QUICKDASH.isDown()) {
-                    if (ClientAbilityHandler.trigger(JJKAbilities.QUICKDASH.get()) == Ability.Status.SUCCESS) {
+                    //if (ClientAbilityHandler.trigger(JJKAbilities.QUICKDASH.get()) == Ability.Status.SUCCESS) {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.QUICKDASH.get())));
-                    }
+                    //}
                 }
             } else if (action == InputConstants.RELEASE) {
                 if (current != null) {
@@ -262,37 +262,37 @@ public class ClientAbilityHandler {
 
       
 
-    public static boolean isSuccess(Ability ability, Ability.Status status) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer owner = mc.player;
+    // public static boolean isSuccess(Ability ability, Ability.Status status) {
+    //     Minecraft mc = Minecraft.getInstance();
+    //     LocalPlayer owner = mc.player;
 
-        if (owner == null) return false;
+    //     if (owner == null) return false;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+    //     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        switch (status) {
-            case ENERGY ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
-            case COOLDOWN ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
-            case BURNOUT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                        cap.getBurnout() / 20), false);
-            case DISABLE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
-            case FAILURE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
-            case CHANT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID)), false);
-            case THROAT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID), 
-                    Math.max(1, cap.getThroatDamage() / 20)), false);
-            case EMPTYINV ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID)), false);
-            }
-        return status == Ability.Status.SUCCESS;
-    }
+    //     switch (status) {
+    //         case ENERGY ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
+    //         case COOLDOWN ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
+    //                         Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
+    //         case BURNOUT ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
+    //                     cap.getBurnout() / 20), false);
+    //         case DISABLE ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
+    //         case FAILURE ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
+    //         case CHANT ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID)), false);
+    //         case THROAT ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID), 
+    //                 Math.max(1, cap.getThroatDamage() / 20)), false);
+    //         case EMPTYINV ->
+    //                 mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID)), false);
+    //         }
+    //     return status == Ability.Status.SUCCESS;
+    // }
 
     public static Ability.Status trigger(Ability ability) {
         Minecraft mc = Minecraft.getInstance();
@@ -307,31 +307,31 @@ public class ClientAbilityHandler {
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+            //if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
                 ability.charge(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
-            return status;
+            //}
+           // return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            Ability.Status status;
+            //Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            //if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
-            return status;
+            //}
+            //return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            Ability.Status status;
+            //Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            //if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.channel(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
-            return status;
+            //}
+            //return status;
         }
         return Ability.Status.SUCCESS;
     }

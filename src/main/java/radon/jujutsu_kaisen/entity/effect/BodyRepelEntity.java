@@ -194,10 +194,6 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         return this.segments != null;
     }
 
-    @Override
-public boolean isPickable() {
-    return false; // can't be picked with raytrace (e.g., cursor)
-}
 
 @Override
 public boolean isPushable() {

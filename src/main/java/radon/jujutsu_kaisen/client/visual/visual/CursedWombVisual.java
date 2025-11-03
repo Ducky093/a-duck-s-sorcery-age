@@ -63,7 +63,7 @@ public class CursedWombVisual implements IVisual {
         float targetScale = 0.7F;
         float targetWidth = 1.2F;
         if (cap.checkWombAwakened() ==  true) {
-            targetScale = 1.15F;
+            targetScale = 1.1F;
             targetWidth = 1.0F;
         }
         ScaleData baseScale = ScaleTypes.BASE.getScaleData(entity);

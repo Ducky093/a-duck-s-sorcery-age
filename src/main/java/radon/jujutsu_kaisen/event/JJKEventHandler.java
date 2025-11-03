@@ -67,6 +67,8 @@ import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.*;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -273,6 +275,28 @@ public class JJKEventHandler {
                     x, y, z,
                     0, 0.05, 0
                 );
+            }
+
+            if((cap.hasTrait(Trait.CURSED_WOMB) )) {
+                if (cap != null) {
+                float targetScale = 0.7F;
+                float targetWidth = 1.2F;
+                if (cap.checkWombAwakened() ==  true) {
+                    targetScale = 1.1F;
+                    targetWidth = 1.0F;
+                }
+                ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
+                ScaleData baseWidth = ScaleTypes.WIDTH.getScaleData(owner);
+                // float currentScale = baseScale.getScale();
+                // float currentWidth = baseWidth.getScale();
+                if (cap.hasTrait(Trait.CURSED_WOMB)) {
+                    baseScale.setScale(targetScale);
+                    baseWidth.setScale(targetWidth);
+                }
+            }
+            }
+            else {
+                
             }
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {

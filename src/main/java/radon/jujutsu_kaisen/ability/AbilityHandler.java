@@ -52,16 +52,16 @@ public class AbilityHandler {
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (cap == null) return Ability.Status.FAILURE;
         Ability.Status status = ability.isTriggerable(owner);
 
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT ) {
             if (status == Ability.Status.SUCCESS) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                ability.run(owner);
                 ability.charge(owner);
+                ability.run(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
