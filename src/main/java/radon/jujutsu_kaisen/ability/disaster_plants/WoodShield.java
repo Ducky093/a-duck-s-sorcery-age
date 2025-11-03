@@ -59,7 +59,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 2.0F;
+        return 1.0F;
     }
 
     @Override

@@ -437,11 +437,10 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             if (duration > 0) {
-                duration = (int) (duration * cap.getRealPower());
+                duration = (int) (duration * 12);
             }
+
             return duration;
         }
     }
