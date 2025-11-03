@@ -168,7 +168,7 @@ public class ServerConfig {
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 20000.0F, 1.0F, 1000000.0F);
         this.Grade4Exp = builder.comment("The experience required for Grade 4 (affects npcs)")
-                .defineInRange("Grade4Exp", 250.0F, 0.0F, 1000000.0F);
+                .defineInRange("Grade4Exp", 0.0F, 0.0F, 1000000.0F);
         this.Grade3Exp = builder.comment("The experience required for Grade 3 (affects npcs)")
                 .defineInRange("Grade3Exp", 500.0F, 0.0F, 1000000.0F);
         this.SemiGrade2Exp = builder.comment("The experience required for Semi Grade 2 (affects npcs)")
@@ -202,13 +202,13 @@ public class ServerConfig {
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare, 0 to disable)")
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
         this.curseVillageSpawnRate = builder.comment("Rarity of curses spawning in villages (bigger value means more rare, 0 to disable)")
-                .defineInRange("curseVillageSpawnRate", 8, 0, 100000);
+                .defineInRange("curseVillageSpawnRate", 5, 0, 100000);
         this.sorcererVillageSpawnRate = builder.comment("Rarity of sorcerers spawning in villages (bigger value means more rare, 0 to disable)")
-                .defineInRange("sorcererVillageSpawnRate", 6, 0, 100000);
+                .defineInRange("sorcererVillageSpawnRate", 3, 0, 100000);
         this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare, 0 to disable)")
                 .defineInRange("displayCaseRarity", 8, 0, 100000);
-        this.displayCaseSpawnRange = builder.comment("Range in blocks curses can spawn from display cases (square range so 64 in each direction default)")
-                .defineInRange("displayCaseSpawnRange", 128, 0, 100000);
+        this.displayCaseSpawnRange = builder.comment("Range in blocks curses can spawn from display cases")
+                .defineInRange("displayCaseSpawnRange", 64, 0, 100000);
         this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")
                 .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")

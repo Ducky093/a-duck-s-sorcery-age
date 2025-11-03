@@ -34,6 +34,11 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
+    public boolean canFly() {
+        return true;
+    }
+
+    @Override
     public boolean isTotality() {
         return true;
     }

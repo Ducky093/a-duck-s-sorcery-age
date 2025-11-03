@@ -3,18 +3,22 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -81,7 +85,11 @@ public class SyncSorcererDataS2CPacket {
             //     newCap.setStolenSkinTexture(oldCap.getStolenSkinTexture());
             // }
             Set<Ability> oldToggled = oldCap.getToggled();
-            Set<Ability> newToggled = newCap.getToggled();
+            Set<Ability> newToggled = new HashSet<>();
+            for (Tag tag : this.nbt.getList("toggled", Tag.TAG_STRING)) {
+                newToggled.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
+            }
+
 
             oldToggled.removeAll(newToggled);
 

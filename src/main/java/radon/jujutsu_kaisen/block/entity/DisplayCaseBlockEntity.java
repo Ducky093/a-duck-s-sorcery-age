@@ -215,9 +215,10 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         float offsetX = (HelperMethods.RANDOM.nextFloat() - 0.5F) * radius;
         float offsetZ = (HelperMethods.RANDOM.nextFloat() - 0.5F) * radius;
-
-        int spawnX = (int) (centerX + offsetX);
-        int spawnZ = (int) (centerZ + offsetZ);
+        int spawnCenterX = pPos.getX();
+        int spawnCenterZ = pPos.getZ();
+        int spawnX = (int) (spawnCenterX + offsetX);
+        int spawnZ = (int) (spawnCenterZ + offsetZ);
 
 
         BlockPos pos = new BlockPos(spawnX, pPos.getY(), spawnZ);

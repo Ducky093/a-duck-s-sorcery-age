@@ -57,6 +57,11 @@ public class Nue extends Summon<NueEntity> {
     }
 
     @Override
+    public boolean canFly() {
+        return true;
+    }
+
+    @Override
     public boolean canDie() {
         return true;
     }

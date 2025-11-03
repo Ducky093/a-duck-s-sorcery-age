@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -183,8 +184,13 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             ((TenShadowsSummon) summon).setClone(clone);
         }
         owner.level().addFreshEntity(summon);
-
+        if (!owner.onGround() && owner.getVehicle() == null && this.isTamed(owner) && this.canFly()) {
+            owner.startRiding(summon);
+        }
         cap.addSummon(summon);
+        if (owner instanceof ServerPlayer player) {
+              PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        }
     }
 
     @Override
@@ -192,12 +198,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (owner.level().isClientSide) return;
 
         this.spawn(owner, false);
+    }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-        }
+    public boolean canFly() {
+        return false;
     }
 
     @Override
@@ -209,7 +213,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         } else {
             cap.removeSummonByClass(this.clazz);
         }
-
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         }

@@ -40,7 +40,8 @@ public class TriggerAbilityS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Ability ability = JJKAbilities.getValue(this.key); ClientAbilityHandler.trigger(ability);
+            Ability ability = JJKAbilities.getValue(this.key); 
+            ClientAbilityHandler.trigger(ability);
         }));
 
         ctx.setPacketHandled(true);

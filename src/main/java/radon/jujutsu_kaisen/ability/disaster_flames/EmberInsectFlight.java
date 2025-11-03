@@ -4,9 +4,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.EmberInsectFlightEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -15,9 +18,14 @@ public class EmberInsectFlight extends Summon<EmberInsectFlightEntity> {
         super(EmberInsectFlightEntity.class);
     }
 
-    @Override
+ @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 1.0F;
+       
+
+        if (JJKAbilities.hasToggled(owner,this)) {
+            return owner.getBlockStateOn().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return owner.fallDistance > 4.0F && !owner.isInFluidType();
     }
 
     @Override
