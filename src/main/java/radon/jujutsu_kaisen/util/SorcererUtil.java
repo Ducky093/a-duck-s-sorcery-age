@@ -19,11 +19,11 @@ public class SorcererUtil {
         return 1.6F + experience / 1340.0F;
     }
 
-    public static float getDefense(float experience) {
-        return 1.0F + experience / 4500.0F;
+    public static float getDefense(float experience) { //ends up as 5.3, prev was 5.4
+        return 1.3F + experience / 5000.0F;
     }
 
     public static float getDefenseHR(float experience) {
-        return 2.25F + experience / 4500.0F;
-    }
+        return 2.6F + experience / 5000.0F;
+    } //ends up as 6.6, prev was 6.69
 }

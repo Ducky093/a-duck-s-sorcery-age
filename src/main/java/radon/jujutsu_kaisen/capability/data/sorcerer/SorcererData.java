@@ -542,7 +542,7 @@ public class SorcererData implements ISorcererData {
 
             EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
-            if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty() && this.getDash() >0) {
+            if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
                 Vec3 motion = owner.getDeltaMovement();
 
                 if (motion.y < 0.0D) {
@@ -553,6 +553,17 @@ public class SorcererData implements ISorcererData {
                     owner.setDeltaMovement(motion.x, amount, motion.z);
                 }
                 owner.setOnGround(true);
+            }
+
+            if (owner instanceof Player player) {
+                float f;
+
+                if (owner.onGround() && !owner.isDeadOrDying() && !owner.isSwimming()) {
+                    f = Math.min(0.1F, (float) owner.getDeltaMovement().horizontalDistance());
+                } else {
+                    f = 0.0F;
+                }
+                player.bob += (f - player.bob) * 0.4F;
             }
 
         } else {
