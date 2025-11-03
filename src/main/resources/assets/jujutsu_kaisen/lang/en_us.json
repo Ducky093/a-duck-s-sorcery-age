@@ -207,6 +207,8 @@
   "item.jujutsu_kaisen.veil_rod.sorcerer.deny": "Deny sorcerers",
   "item.jujutsu_kaisen.veil_rod.griefing.allow": "Allow griefing",
   "item.jujutsu_kaisen.veil_rod.griefing.deny": "Deny griefing",
+  "item.jujutsu_kaisen.veil_rod.owner_bypass.allow": "Allow owner",
+  "item.jujutsu_kaisen.veil_rod.owner_bypass.deny": "Deny owner",
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",

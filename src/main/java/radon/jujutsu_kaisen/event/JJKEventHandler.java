@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -42,6 +44,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
+import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -89,6 +92,25 @@ public class JJKEventHandler {
             }
         }
 
+            @SubscribeEvent
+            public static void onEntityTeleport(EntityTeleportEvent event) {
+                Level level = event.getEntity().level();
+
+                BlockPos from = BlockPos.containing(event.getPrevX(), event.getPrevY(), event.getPrevZ());
+                BlockPos to = BlockPos.containing(event.getTargetX(), event.getTargetY(), event.getTargetZ());
+        
+                if (!VeilHandler.isTeleportValid(level, from) || !VeilHandler.isTeleportValid(level, to) ) {
+                    event.setCanceled(true);
+                }
+                else {
+                    if (level.isClientSide) return;
+                    ServerLevel serverLevel = (ServerLevel) level;
+                    if (!VeilHandler.getDomains(serverLevel, from).isEmpty() || !VeilHandler.getDomains(serverLevel, to).isEmpty()) {
+                        event.setCanceled(true);
+                    }
+                }
+            }
+
         @SubscribeEvent
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
             LivingEntity entity = event.getEntity();
@@ -97,6 +119,7 @@ public class JJKEventHandler {
                 event.setCanceled(true);
             }
         }
+        
 
         @SubscribeEvent
         public static void onBlockBreak(BlockEvent.BreakEvent event) {

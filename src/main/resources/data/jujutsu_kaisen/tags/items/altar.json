@@ -20,6 +20,10 @@
     "minecraft:glass",
     "#jujutsu_kaisen:cursed_object",
     "#jujutsu_kaisen:cursed_tool",
-    "minecraft:tnt"
+    "minecraft:tnt",
+    "minecraft:rotten_flesh",
+    "minecraft:ender_pearl",
+    "jujutsu_kaisen:curse_flesh",
+    "jujutsu_kaisen:sorcerer_flesh"
   ]
 }

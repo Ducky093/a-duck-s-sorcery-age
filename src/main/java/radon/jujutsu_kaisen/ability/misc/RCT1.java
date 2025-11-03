@@ -49,16 +49,22 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < cap.getMaxEnergy()*0.02f) return;
+        float heal = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue();
+        float power = this.getPower(owner);
+        if (cap.hasTrait(Trait.DEATH_PAINTING)) {
         if (owner instanceof Player player) {
-            float healMult = 0.225F;
-            // if (cap.hasTrait(Trait.DEATH_PAINTING)) {
-            //    healMult *= 1.1F;
-            // }
-            owner.heal(((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue()  * this.getPower(owner) * healMult * this.healMult()) + 0.75f); //the + here at the end is in conjunction w the cost
-         //min between 1.0, 0.05 * math.pow(1 * 0.225, math.log(1)) * 0.225
+            owner.heal(heal * power * 0.20F * this.healMult() + 0.5f);
+        } else {
+            // Apply to NPCs using the original formula but slightly faster
+            owner.heal((float) Math.min(1.0F, heal * Math.pow(power * 0.175F, Math.log(power)) * 0.175F) + 0.075f);
         }
-        else {
-            owner.heal((float) Math.min(1.0F, ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner) * 0.175F, Math.log(this.getPower(owner))) * 0.15F) + 0.1f);
+        } else {
+            // Default RCT1 healing
+            if (owner instanceof Player player) {
+                owner.heal(heal * power * 0.225F * this.healMult() + 0.75f);
+            } else {
+                owner.heal((float) Math.min(1.0F, heal * Math.pow(power * 0.175F, Math.log(power)) * 0.15F) + 0.1f);
+            }
         }
         if (!(owner.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < 2; i++) {
@@ -84,11 +90,21 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            if (owner instanceof Player player) {
-                return ((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 9.0f;
-                // 8.5 min, 0.05 * math.pow(1, math.log(1)) * 8 (lvl 3)
+            float base = (float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier();
+
+            if (cap.hasTrait(Trait.DEATH_PAINTING)) {
+                if (owner instanceof Player) {
+                    return base + 6.0F;
+                } else {
+                    return base + 1.75F;
+                }
             }
-            return ((float) ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 3.0f;
+
+            if (owner instanceof Player) {
+                return base + 9.0F;
+            } else {
+                return base + 3.0F;
+            }
         }
         return 0.0F;
     }

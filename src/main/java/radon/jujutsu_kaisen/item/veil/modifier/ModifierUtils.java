@@ -23,6 +23,9 @@ public class ModifierUtils {
             case SORCERER -> new SorcererModifier(nbt);
             case GRIEFING -> new GriefingModifier(nbt);
             case OWNER_BYPASS -> new OwnerBypassModifier(nbt);
+            case TELEPORT -> new TeleportModifier(nbt);
+            case CURSE_SPAWN -> new CurseSpawnModifier(nbt);
+            case SORCERER_SPAWN -> new SorcererSpawnModifier(nbt);
             case VIOLENCE -> new ViolenceModifier(nbt);
         };
     }

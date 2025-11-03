@@ -7,6 +7,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -47,13 +48,26 @@ public class Heal extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < cap.getMaxEnergy()*0.02f) return;
-        if (owner instanceof Player player) {
-            owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .2f) + 0.5f);
-        }
-        //min between 1.0, 0.075 * math.pow(1 * 0.225, math.log(1)) * 0.225
-        else {
-            owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  * this.getPower(owner) * .175f) + 0.05f);
-        }
+
+        if (cap.hasTrait(Trait.DEATH_PAINTING)) {
+            if (owner instanceof Player player) {
+                // faster than curse but slower than sorc
+                owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  
+                    * this.getPower(owner) * .225f) + 0.55f);
+            } else {
+                owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  
+                    * this.getPower(owner) * .19f) + 0.075f);
+            }
+    } else {
+            // default curse heal
+            if (owner instanceof Player player) {
+                owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  
+                    * this.getPower(owner) * .2f) + 0.5f);
+            } else {
+                owner.heal(((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue()  
+                    * this.getPower(owner) * .175f) + 0.05f);
+            }
+    }
         if (!(owner.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < 2; i++) {
             cap.delayTickEvent(() -> {
@@ -74,10 +88,11 @@ public class Heal extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         if (cap.getEnergy() < 100.0F) return 0.0F;
         if (owner.getHealth() < owner.getMaxHealth()) {
-            if (owner instanceof Player player) {
-                return ((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 5.0f;
+            float base = (float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier();
+             if (cap.hasTrait(Trait.DEATH_PAINTING)) {
+                return (owner instanceof Player) ? base + 6.0F : base + 2.0F;
             }
-            return ((float) ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier()) + 1.75f;
+            return (owner instanceof Player) ? base + 5.0F : base + 1.75F;
         }
         return 0.0F;
     }
