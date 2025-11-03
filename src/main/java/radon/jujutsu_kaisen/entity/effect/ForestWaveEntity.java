@@ -72,7 +72,7 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return false;
     }
 
     public void setDamage(boolean damage) {

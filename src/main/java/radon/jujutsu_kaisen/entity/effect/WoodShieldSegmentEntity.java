@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class WoodShieldSegmentEntity extends WoodSegmentEntity {
-    private static final int COUNT = 30;
+    private static final int COUNT = 20;
 
     private boolean isDying;
     private int start;
@@ -128,7 +128,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                     for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
                         Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
                         float f = RotationUtil.getYaw(this.pos.subtract(this.position().add(pos)));
-                        WoodShieldSegmentEntity segment = new WoodShieldSegmentEntity(this, pos.x, pos.y, pos.z, f + ((this.random.nextFloat() - 0.5F) * 160.0F), 80.0F);
+                        WoodShieldSegmentEntity segment = new WoodShieldSegmentEntity(this, pos.x, pos.y, pos.z, f + ((this.random.nextFloat() - 0.5F) * 160.0F), 60.0F);
                         segment.prevSegment = segment;
                         this.level().addFreshEntity(segment);
                     }
@@ -140,7 +140,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                     if (i > 1) {
                         yaw = Mth.wrapDegrees(RotationUtil.getYaw(this.pos
                                 .subtract(this.prevSegment.position())) - this.prevSegment.getYRot());
-                        yaw /= owner.getBbWidth() + Math.max(4.4F - (float) i * 0.075F, 1.0F);
+                        yaw /= owner.getBbWidth() + Math.max(4.4F - (float) i * 0.085F, 1.0F);
                     }
                     this.prevSegment = new WoodShieldSegmentEntity(this.prevSegment, yaw, -0.5F);
                     this.level().addFreshEntity(this.prevSegment);

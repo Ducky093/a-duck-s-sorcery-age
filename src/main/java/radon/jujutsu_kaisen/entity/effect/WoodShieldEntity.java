@@ -76,7 +76,7 @@ public class WoodShieldEntity extends Mob {
         if (owner == null) {
             return super.getDimensions(pPose);
         }
-        return EntityDimensions.fixed(owner.getBbWidth(), owner.getBbHeight()).scale(1.25F);
+        return EntityDimensions.fixed(owner.getBbWidth(), owner.getBbHeight()).scale(2.0F);
     }
 
     @Override
