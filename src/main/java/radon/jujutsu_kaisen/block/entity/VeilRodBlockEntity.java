@@ -172,15 +172,24 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (b instanceof DomainBlock || b instanceof DomainAirBlock || b instanceof VeilBlock ) {
             continue;
         }
+        CompoundTag saved = null;
         // if (existingBE == null || (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity))  ) {
         //    hadBarrier = false;
+            if (existingBE != null) {
+                saved = existingBE.saveWithFullMetadata();
+                if (existingBE instanceof net.minecraft.world.Container container) {
+                    container.clearContent();
+                }
+                level.removeBlockEntity(targetPos);
+            }
+
         level.setBlockAndUpdate(targetPos, replacement);
             //level.setBlock(targetPos, replacement, Block.UPDATE_ALL);
        // }
 
        // if (hadBarrier == false) {
             if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
-              be.create(pos, size, currentState);
+              be.create(pos, size, currentState, saved);
             }
        // }
     }

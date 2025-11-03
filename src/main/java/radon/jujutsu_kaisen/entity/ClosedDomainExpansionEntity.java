@@ -281,8 +281,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 // }
             //   boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
             //                                     Block.UPDATE_ALL);
+            BlockEntity be = ((ServerLevel)this.level()).getBlockEntity(pos);
+            if (be != null) {
+                if (be instanceof net.minecraft.world.Container container) {
+                    container.clearContent();
+                }
+                ((ServerLevel)this.level()).removeBlockEntity(pos);
+            }
             boolean success =   owner.level().setBlock(pos, block.defaultBlockState(),
-                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
                                               
               //(pos, block.defaultBlockState(),
               //Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS );  

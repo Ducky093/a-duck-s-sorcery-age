@@ -36,6 +36,9 @@ public class VeilBlockEntity extends BlockEntity {
 
     private CompoundTag deferred;
 
+    @Nullable
+    private CompoundTag saved;
+
     private int size;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -85,19 +88,32 @@ public class VeilBlockEntity extends BlockEntity {
         // if (this.level.getBlockEntity(pos) == this) {
         //     this.level.removeBlockEntity(pos);
         // }
+        
+
 
         if (original == null || original.isAir() || original.getBlock() == JJKBlocks.DOMAIN_AIR.get()) {
             this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             return;
         }
 
+    
+
         // if (original.getBlock() instanceof EntityBlock) {
         //     this.level.removeBlockEntity(pos);
         // }
 
         this.level.setBlockAndUpdate(pos, original);
+            if (this.saved != null) {
+        BlockEntity restored = this.level.getBlockEntity(pos);
+        if (restored != null && !(restored instanceof VeilBlockEntity) && this.saved != null) {
+            restored.load(this.saved);
+        }
+    }
     }
 
+    public @Nullable CompoundTag getSaved() {
+        return this.saved;
+    }
 
 
     public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
@@ -140,13 +156,14 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(BlockPos parent, int size, BlockState original) {
+    public void create(BlockPos parent, int size, BlockState original, CompoundTag saved) {
         this.parent = parent;
         this.size = size;
         if (original.getBlock() == JJKBlocks.DOMAIN_AIR.get()) {
             original = Blocks.AIR.defaultBlockState();
         }
         this.original = original;
+        this.saved = saved;
         this.sendUpdates();
     }
 
@@ -191,7 +208,11 @@ public class VeilBlockEntity extends BlockEntity {
             } else {
                 pTag.put("original", this.deferred);
             }
+            if (this.saved != null) {
+                pTag.put("saved", this.saved);
+            }
         }
+        
 
         if (this.parent != null) {
             pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
@@ -207,11 +228,16 @@ public class VeilBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             this.deferred = pTag.getCompound("original");
+            if (pTag.contains("saved")) {
+                this.saved = pTag.getCompound("saved");
+            }
         }
 
         if (pTag.contains("parent")) {
             this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
         }
         this.size = pTag.getInt("size");
+
+      
     }
 }

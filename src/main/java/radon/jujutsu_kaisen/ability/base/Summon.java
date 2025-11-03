@@ -25,6 +25,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         this.clazz = clazz;
     }
 
+    public final Class<T> getClazz() {
+        return this.clazz;
+    }
+
+
     public abstract List<EntityType<?>> getTypes();
 
     protected boolean canTame() {
@@ -153,8 +158,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (cap == null) return Status.FAILURE;
         if ((this.isTenShadows() || this.getActivationType(owner) == ActivationType.TOGGLED) && cap.hasSummonOfClass(this.clazz)) {
             return Status.FAILURE;
         }
@@ -164,7 +169,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     @Override
     public Status isStillUsable(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (cap == null) {
+                return Status.FAILURE;
+            }
 
             if (!cap.hasSummonOfClass(this.clazz)) {
                 return Status.FAILURE;
@@ -188,9 +196,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             owner.startRiding(summon);
         }
         cap.addSummon(summon);
-        if (owner instanceof ServerPlayer player) {
-              PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-        }
+        // if (owner instanceof ServerPlayer player) {
+        //       PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        // }
     }
 
     @Override
@@ -206,6 +214,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public void onDisabled(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (this.shouldRemove()) {
@@ -215,6 +224,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         }
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        }
         }
     }
 

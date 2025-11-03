@@ -171,7 +171,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
             for (int i = 0; i < COUNT; i++) {
                 RabbitEscapeEntity entity = new RabbitEscapeEntity(this);
                 entity.setPos(this.position());
-                entity.setTame(true);
+                entity.setTame(false);
                 this.level().addFreshEntity(entity);
             }
         }

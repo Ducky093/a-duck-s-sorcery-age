@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +27,8 @@ import radon.jujutsu_kaisen.ability.cursed_speech.ICursedSpeech;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
+import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -39,6 +42,8 @@ import java.util.List;
 public abstract class RadialScreen extends Screen {
     protected static final int RADIUS_IN = 20;
     protected static final int RADIUS_OUT = 100;
+    private static final ResourceLocation HEALTH_BAR = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/health_bar.png");
+    private static final float HEALTH_BAR_SCALE = 0.3F;
 
     private final List<List<DisplayItem>> pages = new ArrayList<>();
 
@@ -373,6 +378,33 @@ public abstract class RadialScreen extends Screen {
                 float height = entity.getBbHeight();
                 int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
                 renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
+                // ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                // Entity out = cap.getSummonByClass(summon.getClazz());
+                // if (!(out instanceof LivingEntity living)) continue;
+                // pGuiGraphics.pose().pushPose();
+                // pGuiGraphics.pose().scale(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE, HEALTH_BAR_SCALE);
+
+                // RenderSystem.disableDepthTest();
+                // RenderSystem.depthMask(false);
+                // RenderSystem.defaultBlendFunc();
+                // RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+
+                // int xOffset = Math.round(posX * (1.0F / HEALTH_BAR_SCALE) - 46.5F);
+                // int yOffset = Math.round((posY + (height * scale / 2.0F) + (this.minecraft.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
+
+
+                // pGuiGraphics.blit(HEALTH_BAR, xOffset, yOffset, 0, 0, 93, 10, 93, 18);
+
+
+                // float healthWidth = (living.getHealth() / living.getMaxHealth()) * 93.0F;
+                // pGuiGraphics.blit(HEALTH_BAR, xOffset, yOffset + 1, 0, 10, (int) healthWidth, 8, 93, 18);
+
+                // RenderSystem.depthMask(true);
+                // RenderSystem.enableDepthTest();
+                // pGuiGraphics.pose().popPose();
+                // yOffset += 10 + 2;
+
             } else if (item.type == DisplayItem.Type.ABILITY) {
                 int y = posY - this.font.lineHeight / 2;
 

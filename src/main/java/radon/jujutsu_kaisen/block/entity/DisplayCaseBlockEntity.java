@@ -199,13 +199,13 @@ public class DisplayCaseBlockEntity extends BlockEntity {
                 }
             }
         }
-        if (displayCaseCount >= 8) {
+        if (displayCaseCount >= 5) {
             return;
         }
 
         if (!pBlockEntity.hasItem() || !(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
 
-        int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 3 : 2));
+        int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 4 : 3));
 
         if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 

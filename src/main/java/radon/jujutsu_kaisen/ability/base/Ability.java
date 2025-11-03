@@ -248,7 +248,7 @@ public abstract class Ability {
         return true;
     }
 
-    private void addDuration(LivingEntity owner) {
+    public void addDuration(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
@@ -320,7 +320,7 @@ public abstract class Ability {
         /*if (status == Status.SUCCESS && this.getActivationType(owner) == ActivationType.INSTANT) {
             this.charge(owner);
         } moved to abilityhandler */
-       	this.addDuration(owner);
+       	//this.addDuration(owner);
         return status;
     }
 

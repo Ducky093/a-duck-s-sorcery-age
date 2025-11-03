@@ -1647,7 +1647,7 @@ public float getMaxEnergy() {
 
     @Override
     public boolean isChanneling(Ability ability) {
-        return this.channeled == ability;
+        return this.channeled == ability && !this.disrupted.containsKey(this.channeled);
     }
 
     @Override
@@ -2101,7 +2101,7 @@ public float getMaxEnergy() {
     }
 
     public boolean hasToggled(Ability ability) {
-        return this.toggled.contains(ability);
+        return this.toggled.contains(ability)  && !this.disrupted.containsKey(ability);
     }
 
     @Override

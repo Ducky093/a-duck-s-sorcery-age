@@ -209,6 +209,13 @@
   "item.jujutsu_kaisen.veil_rod.griefing.deny": "Deny griefing",
   "item.jujutsu_kaisen.veil_rod.owner_bypass.allow": "Allow owner",
   "item.jujutsu_kaisen.veil_rod.owner_bypass.deny": "Deny owner",
+  "item.jujutsu_kaisen.veil_rod.curse_spawn.allow": "Allow curse spawning",
+  "item.jujutsu_kaisen.veil_rod.curse_spawn.deny": "Deny curse spawning",
+  "item.jujutsu_kaisen.veil_rod.sorcerer_spawn.allow": "Allow sorcerer spawning",
+  "item.jujutsu_kaisen.veil_rod.sorcerer_spawn.deny": "Deny sorcerer spawning",
+  "item.jujutsu_kaisen.veil_rod.teleport.allow": "Allow teleportation",
+  "item.jujutsu_kaisen.veil_rod.teleport.deny": "Deny teleportation",
+
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",

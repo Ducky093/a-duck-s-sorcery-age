@@ -89,7 +89,7 @@ public class SyncSorcererDataS2CPacket {
             for (Tag tag : this.nbt.getList("toggled", Tag.TAG_STRING)) {
                 newToggled.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
             }
-
+            //     Set<Ability> newToggled = newCap.getToggled();
 
             oldToggled.removeAll(newToggled);
 

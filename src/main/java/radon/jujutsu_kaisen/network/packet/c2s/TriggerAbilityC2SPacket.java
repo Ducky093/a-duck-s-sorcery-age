@@ -39,10 +39,9 @@ public class TriggerAbilityC2SPacket {
 
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
-             Minecraft mc = Minecraft.getInstance();
-            LocalPlayer owner = mc.player;
 
             assert sender != null;
+            Minecraft mc = Minecraft.getInstance();
 
             Ability.Status status;
             Ability ability = JJKAbilities.getValue(this.key);
