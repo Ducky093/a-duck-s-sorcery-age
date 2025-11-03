@@ -163,7 +163,14 @@ public class VeilHandler {
                 sorcererSpawnFlag = true;
             }
             }
-            if (target.distSqr(rod.getBlockPos()) <= radius * radius && !(sorcererSpawnFlag && mob instanceof SorcererEntity) && !(curseSpawnFlag && mob instanceof CursedSpirit) ) return false;
+            if (target.distSqr(rod.getBlockPos()) <= radius * radius)  {
+                if ((sorcererSpawnFlag && mob instanceof SorcererEntity) || (curseSpawnFlag && mob instanceof CursedSpirit) )  {
+                    continue;
+                }
+                else {
+                    return false;
+                }
+            }
         }
         return true;
     }

@@ -40,7 +40,7 @@ public class MobEventHandler {
 
         @SubscribeEvent
         public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
-            if (event.getSpawnType() == MobSpawnType.NATURAL || event.getSpawnType() == MobSpawnType.CHUNK_GENERATION) {
+            if (event.getSpawnType() == MobSpawnType.NATURAL || event.getSpawnType() == MobSpawnType.CHUNK_GENERATION || event.getSpawnType() == MobSpawnType.SPAWNER ) {
                 if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
                     event.setSpawnCancelled(true);
                 }
