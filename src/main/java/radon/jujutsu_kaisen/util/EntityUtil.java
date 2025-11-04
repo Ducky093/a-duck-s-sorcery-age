@@ -35,7 +35,8 @@ import java.util.UUID;
 public class EntityUtil {
     private static final UUID CE_FLOW_ARMOR_UUID = UUID.fromString("c7b8f3f0-9c4f-4e76-b69f-dc2f3d94e7b8");
     private static final UUID CE_FLOW_ARMOR_TOUGHNESS_UUID = UUID.fromString("f3a3c0e2-bc9a-45a2-9219-0f1f6de65c17");
-
+    private static Map<UUID, Float> lastArmorBonus = new HashMap<>();
+    private static Map<UUID, Float> lastToughnessBonus = new HashMap<>();
         @Nullable
     public static LivingEntity getOwner(TamableAnimal tamable) {
         LivingEntity owner = tamable;
@@ -80,32 +81,33 @@ public class EntityUtil {
 
     public static void applyArmorBoost(LivingEntity owner) {
         if (!(owner instanceof Player) ) return;
+        //if (owner.level().isClientSide) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Map<UUID, Float> lastArmorBonus = new HashMap<>();
-        Map<UUID, Float> lastToughnessBonus = new HashMap<>();
 
+        removeModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID);
+        removeModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID);
         float currentArmor = (float) owner.getAttributeValue(Attributes.ARMOR);
-        AttributeInstance instance = owner.getAttribute(Attributes.ARMOR);
-        if (instance != null) {
-            AttributeModifier existing = instance.getModifier(CE_FLOW_ARMOR_UUID);
-            if (existing != null) {
-                currentArmor -= existing.getAmount();
-            }
-        }
+        //AttributeInstance instance = owner.getAttribute(Attributes.ARMOR);
+        // if (instance != null) {
+        //     AttributeModifier existing = instance.getModifier(CE_FLOW_ARMOR_UUID);
+        //     if (existing != null) {
+        //         currentArmor -= existing.getAmount();
+        //     }
+        // }
 
         float currentToughness = (float) owner.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
 
-        AttributeInstance instanceToughness = owner.getAttribute(Attributes.ARMOR_TOUGHNESS);
-        if (instanceToughness != null) {
-            AttributeModifier existing = instanceToughness.getModifier(CE_FLOW_ARMOR_UUID);
-            if (existing != null) {
-                currentToughness -= existing.getAmount();
-            }
-        }
+        // AttributeInstance instanceToughness = owner.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        // if (instanceToughness != null) {
+        //     AttributeModifier existing = instanceToughness.getModifier(CE_FLOW_ARMOR_TOUGHNESS_UUID);
+        //     if (existing != null) {
+        //         currentToughness -= existing.getAmount();
+        //     }
+        // }
 
         float ceFlowArmorBonus =  ConfigHolder.SERVER.playerCEArmorMin.get().floatValue() + (ConfigHolder.SERVER.playerCEArmor.get().floatValue() * (cap.getExperience() / (SorcererGrade.SPECIAL_GRADE.getRequiredExperience())));
-        float ceFlowToughnessBonus = ConfigHolder.SERVER.playerCEArmorMin.get().floatValue() / 2 + ( (ConfigHolder.SERVER.playerCEArmor.get().floatValue() * 0.575F) * (cap.getExperience() / ConfigHolder.SERVER.maxEXP.get().floatValue() ));
+        float ceFlowToughnessBonus = ConfigHolder.SERVER.playerCEArmorMin.get().floatValue() / 2 + ( (ConfigHolder.SERVER.playerCEArmor.get().floatValue() * 0.575F) * (cap.getExperience() / (SorcererGrade.SPECIAL_GRADE.getRequiredExperience() )));
 
         // cap total armor at 20/toughness at 12
 
@@ -118,22 +120,25 @@ public class EntityUtil {
             ceFlowToughnessBonus = Math.max(0, maxToughness - currentToughness);
         }
 
-          UUID id = owner.getUUID();
-            Float prevArmor = lastArmorBonus.getOrDefault(id, -1f);
-            Float prevTough = lastToughnessBonus.getOrDefault(id, -1f);
+          //UUID id = owner.getUUID();
+           // Float prevArmor = lastArmorBonus.getOrDefault(id, -1f);
+            //Float prevTough = lastToughnessBonus.getOrDefault(id, -1f);
         
-            if (prevArmor.equals(ceFlowArmorBonus) && prevTough.equals(ceFlowToughnessBonus)) {
-                return;
-            }
+            //if (prevArmor.equals(ceFlowArmorBonus) && prevTough.equals(ceFlowToughnessBonus)) {
+            //    return;
+            //}
 
-            lastArmorBonus.put(id, ceFlowArmorBonus);
-            lastToughnessBonus.put(id, ceFlowToughnessBonus);
-
+            //lastArmorBonus.put(id, ceFlowArmorBonus);
+            //lastToughnessBonus.put(id, ceFlowToughnessBonus);
+        //EntityUtil.removeModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID);
+        //EntityUtil.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID);
         EntityUtil.applyModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID, "CE Flow Armor Bonus", ceFlowArmorBonus, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID, "CE Flow Armor Toughness Bonus", ceFlowToughnessBonus, AttributeModifier.Operation.ADDITION);
+            
     }
 
     public static void removeArmorBoost(LivingEntity owner) {
+        //if (owner.level().isClientSide) return;
         EntityUtil.removeModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID);
         EntityUtil.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID);
     }

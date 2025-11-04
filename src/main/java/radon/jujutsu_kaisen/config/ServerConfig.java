@@ -26,6 +26,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue SpecialGrade1Exp;
     public final ForgeConfigSpec.DoubleValue SpecialGradeExp;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
+    public final ForgeConfigSpec.IntValue lives;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.IntValue totemRCTChanceMult;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
@@ -185,6 +186,8 @@ public class ServerConfig {
                 .defineInRange("SpecialGradeExp", 4000.0F, 0.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
+        this.lives = builder.comment("Max deaths before a player is rerolled (default 0 = disabled)")
+                .defineInRange("lives", 0, 0, 1000);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance)")
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
         this.totemRCTChanceMult = builder.comment("The amount the chance is divided by when holding a totem (raises chances of obtaining rct the higher it is) ")

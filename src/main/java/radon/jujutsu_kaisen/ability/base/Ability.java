@@ -53,7 +53,7 @@ public abstract class Ability {
 
     public enum Status {
         FAILURE,
-        UNUSUABLE,
+        UNUSABLE,
         SUCCESS,
         ENERGY,
         COOLDOWN,
@@ -299,7 +299,7 @@ public abstract class Ability {
     }
 
     public Status isTriggerable(LivingEntity owner) {
-        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
+        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSABLE;
 
         MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
         
@@ -325,7 +325,7 @@ public abstract class Ability {
     }
 
     public Status isStillUsable(LivingEntity owner) {
-        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
+        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSABLE;
 
         if (this instanceof IAttack || this instanceof ICharged) {
             return this.getStatus(owner);

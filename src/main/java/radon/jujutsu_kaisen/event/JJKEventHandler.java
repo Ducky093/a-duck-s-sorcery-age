@@ -367,7 +367,8 @@ public class JJKEventHandler {
                     } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
                     } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        cursed = cap.getEnergy() > 0.0F;
+                        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        cursed = attackerCap.getEnergy() > 0.0F;
                     }
 
                     if (!cursed) {
