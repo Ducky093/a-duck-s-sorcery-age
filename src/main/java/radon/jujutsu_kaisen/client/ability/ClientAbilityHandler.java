@@ -247,6 +247,9 @@ public class ClientAbilityHandler {
                     mc.screen.onClose();
                 }
             }
+        
+        
+        
         }
          
     @SubscribeEvent

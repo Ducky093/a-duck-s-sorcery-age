@@ -37,6 +37,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class RadialScreen extends Screen {
@@ -109,7 +110,11 @@ public abstract class RadialScreen extends Screen {
         }
     }
 
+    @Nullable
     public List<DisplayItem> getCurrent() {
+        if (this.pages == null || this.pages.isEmpty() || page < 0 || page >= this.pages.size()) {
+            return null;
+        }
         return this.pages.get(page);
     }
 
@@ -155,7 +160,7 @@ public abstract class RadialScreen extends Screen {
         if (this.minecraft != null && this.minecraft.player != null) {
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
+            if (this.hovered >= 0 && this.getCurrent() != null && this.hovered < this.getCurrent().size()) {
                 DisplayItem item = this.getCurrent().get(this.hovered);
 
                 if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
@@ -441,7 +446,7 @@ public abstract class RadialScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.getCurrent().isEmpty()) return;
+        if (this.getCurrent() == null || this.getCurrent().isEmpty()) return;
 
         float startAngle = this.getAngleFor(-0.5F);
         float endAngle = this.getAngleFor(this.getCurrent().size() - 0.5F);
@@ -496,7 +501,7 @@ public abstract class RadialScreen extends Screen {
 
 
     private float getAngleFor(double i) {
-        if (this.getCurrent().isEmpty()) {
+        if (this.getCurrent() == null || this.getCurrent().isEmpty()) {
             return 0;
         }
         return (float) (((i / this.getCurrent().size()) + 0.25D) * Mth.TWO_PI + Math.PI);

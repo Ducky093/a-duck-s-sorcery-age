@@ -46,12 +46,15 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("641b629b-f7b7-4066-a486-8e1d670a7439");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("df3957ac-ad26-432a-a26e-711aab5dead5");
-
+    private static final Map<UUID, Float> lastArmorBonus = new HashMap<>();
+    private static final Map<UUID, Float> lastToughnessBonus = new HashMap<>();
 
     private static final double SPEED = 0.03D;
     //private boolean hasShieldDrained = false;

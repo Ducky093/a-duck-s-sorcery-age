@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.TriggerAbilityS2CPacket;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
@@ -53,29 +54,37 @@ public class TriggerAbilityC2SPacket {
 
             switch (status) {
             case ENERGY ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID),
+                    PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)),
                     false), sender);
             case COOLDOWN ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), sender);
+                    PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
+                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), false), sender);
             case BURNOUT ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID), cap.getBurnout() / 20),
-                            sender);
+                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID)),
+                    false), sender);
             case DISABLE ->
-                   PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID),
+                    PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)),
                     false), sender);
             case FAILURE ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID),
+                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)),
                     false), sender);
             case CHANT ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID),
+                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID)),
                     false), sender);
             case THROAT ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, cap.getThroatDamage() / 20)), sender);
+                    PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID),
+                            Math.max(1, cap.getThroatDamage() / 20)), false), sender);
             case EMPTYINV ->
-                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID),
+                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID)),
                     false), sender);
+            case SILENCED ->
+                {}//PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.silenced", JujutsuKaisen.MOD_ID)), sender);
+             case DISARMED ->
+                {}//PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.disarmed", JujutsuKaisen.MOD_ID)), sender);
+             case UNUSABLE ->
+                {}//PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.unusable", JujutsuKaisen.MOD_ID)), sender);
+            case SUCCESS ->
+                {}
             }
         }
         });

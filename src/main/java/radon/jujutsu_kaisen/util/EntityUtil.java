@@ -134,12 +134,8 @@ public class EntityUtil {
     }
 
     public static void removeArmorBoost(LivingEntity owner) {
-        Map<UUID, Float> lastArmorBonus = new HashMap<>();
-        Map<UUID, Float> lastToughnessBonus = new HashMap<>();
         EntityUtil.removeModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID);
         EntityUtil.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID);
-        lastArmorBonus.remove(owner.getUUID());
-        lastToughnessBonus.remove(owner.getUUID());
     }
 
     public static void rotation(Entity entity, Vec3 look) {
