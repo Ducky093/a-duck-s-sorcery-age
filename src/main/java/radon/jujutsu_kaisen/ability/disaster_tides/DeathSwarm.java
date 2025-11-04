@@ -60,7 +60,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
             int delay = i * 3;
 
             cap.delayTickEvent(() -> {
-                if (target.isAlive() && !target.isRemoved()) {
+                if (target != null && target.isAlive() && !target.isRemoved()) {
                     FishShikigamiProjectile projectile = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
                     projectile.setDomain(domain != null);
                     owner.level().addFreshEntity(projectile);
