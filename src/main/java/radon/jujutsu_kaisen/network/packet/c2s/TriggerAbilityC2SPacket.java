@@ -40,7 +40,7 @@ public class TriggerAbilityC2SPacket {
             
 
             assert sender != null;
-            Minecraft mc = Minecraft.getInstance();
+
 
             Ability.Status status;
             Ability ability = JJKAbilities.getValue(this.key);
@@ -53,24 +53,29 @@ public class TriggerAbilityC2SPacket {
 
             switch (status) {
             case ENERGY ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID),
+                    false), sender);
             case COOLDOWN ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
+                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), sender);
             case BURNOUT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                        cap.getBurnout() / 20), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID), cap.getBurnout() / 20),
+                            sender);
             case DISABLE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)), false);     
+                   PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID),
+                    false), sender);
             case FAILURE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID),
+                    false), sender);
             case CHANT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.chant", JujutsuKaisen.MOD_ID),
+                    false), sender);
             case THROAT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID), 
-                    Math.max(1, cap.getThroatDamage() / 20)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
+                            Math.max(1, cap.getThroatDamage() / 20)), sender);
             case EMPTYINV ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID)), false);
+                    PacketHandler.sendToClient(Component.translatable(String.format("ability.%s.fail.emptyinv", JujutsuKaisen.MOD_ID),
+                    false), sender);
             }
         }
         });
