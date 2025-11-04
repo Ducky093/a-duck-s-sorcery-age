@@ -35,8 +35,7 @@ import java.util.UUID;
 public class EntityUtil {
     private static final UUID CE_FLOW_ARMOR_UUID = UUID.fromString("c7b8f3f0-9c4f-4e76-b69f-dc2f3d94e7b8");
     private static final UUID CE_FLOW_ARMOR_TOUGHNESS_UUID = UUID.fromString("f3a3c0e2-bc9a-45a2-9219-0f1f6de65c17");
-    private static final Map<UUID, Float> lastArmorBonus = new HashMap<>();
-    private static final Map<UUID, Float> lastToughnessBonus = new HashMap<>();
+
         @Nullable
     public static LivingEntity getOwner(TamableAnimal tamable) {
         LivingEntity owner = tamable;
@@ -83,7 +82,8 @@ public class EntityUtil {
         if (!(owner instanceof Player) ) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-       
+        Map<UUID, Float> lastArmorBonus = new HashMap<>();
+        Map<UUID, Float> lastToughnessBonus = new HashMap<>();
 
         float currentArmor = (float) owner.getAttributeValue(Attributes.ARMOR);
         AttributeInstance instance = owner.getAttribute(Attributes.ARMOR);
@@ -93,6 +93,7 @@ public class EntityUtil {
                 currentArmor -= existing.getAmount();
             }
         }
+
         float currentToughness = (float) owner.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
 
         AttributeInstance instanceToughness = owner.getAttribute(Attributes.ARMOR_TOUGHNESS);
@@ -107,6 +108,7 @@ public class EntityUtil {
         float ceFlowToughnessBonus = ConfigHolder.SERVER.playerCEArmorMin.get().floatValue() / 2 + ( (ConfigHolder.SERVER.playerCEArmor.get().floatValue() * 0.575F) * (cap.getExperience() / ConfigHolder.SERVER.maxEXP.get().floatValue() ));
 
         // cap total armor at 20/toughness at 12
+
         float maxArmor = ConfigHolder.SERVER.playerCEArmorMax.get().floatValue();
         float maxToughness = maxArmor * 0.6F;
         if (currentArmor + ceFlowArmorBonus > maxArmor) {
@@ -132,6 +134,8 @@ public class EntityUtil {
     }
 
     public static void removeArmorBoost(LivingEntity owner) {
+        Map<UUID, Float> lastArmorBonus = new HashMap<>();
+        Map<UUID, Float> lastToughnessBonus = new HashMap<>();
         EntityUtil.removeModifier(owner, Attributes.ARMOR, CE_FLOW_ARMOR_UUID);
         EntityUtil.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, CE_FLOW_ARMOR_TOUGHNESS_UUID);
         lastArmorBonus.remove(owner.getUUID());
