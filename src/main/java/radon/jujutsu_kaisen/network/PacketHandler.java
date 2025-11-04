@@ -37,15 +37,15 @@ public class PacketHandler {
                 .encoder(SyncTenShadowsDataS2CPacket::encode)
                 .consumerMainThread(SyncTenShadowsDataS2CPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(TriggerAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(TriggerAbilityC2SPacket::new)
-                .encoder(TriggerAbilityC2SPacket::encode)
-                .consumerMainThread(TriggerAbilityC2SPacket::handle)
-                .add();
         INSTANCE.messageBuilder(TriggerAbilityS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(TriggerAbilityS2CPacket::new)
                 .encoder(TriggerAbilityS2CPacket::encode)
                 .consumerMainThread(TriggerAbilityS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(TriggerAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(TriggerAbilityC2SPacket::new)
+                .encoder(TriggerAbilityC2SPacket::encode)
+                .consumerMainThread(TriggerAbilityC2SPacket::handle)
                 .add();
         INSTANCE.messageBuilder(OpenInventoryCurseC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(OpenInventoryCurseC2SPacket::new)

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.*;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.chant.ServerChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -38,12 +39,16 @@ public class MobEventHandler {
             if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
         }
 
+
+
         @SubscribeEvent
-        public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
+        public static void onMobSpawnPositionCheck(MobSpawnEvent.PositionCheck event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
             if (event.getSpawnType() == MobSpawnType.NATURAL || event.getSpawnType() == MobSpawnType.CHUNK_GENERATION || event.getSpawnType() == MobSpawnType.SPAWNER ) {
-                if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
-                    event.setSpawnCancelled(true);
-                }
+
+            if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
+                event.setResult(Result.DENY);
+            }
             }
         }
 
