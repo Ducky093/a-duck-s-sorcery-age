@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -71,17 +72,21 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     }
 
     private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+        ServerLevel serverLevel = (ServerLevel) this.level();
+        BlockPos pos = this.blockPosition();
 
-        boolean success = false;
+        HolderSet.Named<Structure> villages = serverLevel.registryAccess()
+                .registryOrThrow(Registries.STRUCTURE)
+                .getTag(StructureTags.VILLAGE)
+                .orElseThrow();
 
-        for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
-                success = true;
-                break;
+        for (Holder<Structure> holder : villages) {
+            if (serverLevel.structureManager().getStructureAt(pos, holder.get()).isValid()) {
+                return true;
             }
         }
-        return success;
+
+        return false;
     }
 
     private boolean isInFortress() {
@@ -94,6 +99,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.isInVillage()) {
+                if (!this.level().isNight()) return false;
                 if (ConfigHolder.SERVER.curseVillageSpawnRate.get() == 0) {
                     return false;
                 }
@@ -115,7 +121,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
                 return false;
         }
 
-        if (!pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.position(), 16.0D, 8.0D, 16.0D)).isEmpty())
+        if (!pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.position(), 20.0D, 8.0D, 20.0D)).isEmpty())
             return false;
 
         return super.checkSpawnRules(pLevel, pSpawnReason);
