@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.sorcerer.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -122,18 +123,25 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+        ServerLevel serverLevel = (ServerLevel) this.level();
+        BlockPos pos = this.blockPosition();
 
-        boolean success = false;
+        HolderSet.Named<Structure> villages = serverLevel.registryAccess()
+                .registryOrThrow(Registries.STRUCTURE)
+                .getTag(StructureTags.VILLAGE)
+                .orElseThrow();
 
-        for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
-                success = true;
-                break;
+        for (Holder<Structure> holder : villages) {
+            if (serverLevel.structureManager().getStructureAt(pos, holder.get()).isValid()) {
+                return true;
             }
         }
-        return success;
+
+        return false;
     }
+
+
+    
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
@@ -146,10 +154,10 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
             if (!this.isInVillage()) return false;
         }
 
-        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+        //if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
             if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 64.0D, 128.0D)).isEmpty())
                 return false;
-        }
+        //}
 
         if (!pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 16.0D, 8.0D, 16.0D)).isEmpty())
             return false;

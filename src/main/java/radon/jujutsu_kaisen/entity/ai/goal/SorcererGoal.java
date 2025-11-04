@@ -48,7 +48,7 @@ public class SorcererGoal extends Goal {
         if (cap.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
             LivingEntity target = this.mob.getTarget();
 
-            if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
+            if (target != null && HelperMethods.RANDOM.nextInt(4) == 0) {
                 List<AbsorbedCurse> curses = cap.getCurses();
 
                 if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
