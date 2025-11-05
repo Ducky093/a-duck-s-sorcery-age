@@ -54,7 +54,7 @@ public class TenShadowsData implements ITenShadowsData {
     private void updateAdaptation() {
         ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasToggled(JJKAbilities.WHEEL.get())) return;
+        if (!cap.hasToggled(JJKAbilities.WHEEL.get()) || cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) ) return;
 
         Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
   
@@ -347,7 +347,10 @@ public class TenShadowsData implements ITenShadowsData {
     public void tryAdapt(DamageSource source) {
         RegistryAccess registry = this.owner.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-
+        ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            return;
+        }
         Adaptation adaptation = new Adaptation(types.getKey(source.type()),
                 source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
         if (this.adaptationCD.containsKey(adaptation)) {
@@ -390,7 +393,10 @@ public class TenShadowsData implements ITenShadowsData {
     @Override
     public void tryAdapt(Ability ability) {
         Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
-
+        ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            return;
+        }
         if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || (this.adapted != null &&  this.adapted.get(adaptation) != null && this.adapted.get(adaptation) >= additional.getAdditional() + 1)) )
             return;
         if (this.adaptationCD.containsKey(adaptation)) {

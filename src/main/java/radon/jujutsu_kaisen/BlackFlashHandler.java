@@ -110,7 +110,7 @@ public class BlackFlashHandler {
                
 
 
-                if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
+                if (rng >= 1 && HelperMethods.RANDOM.nextInt(rng) != 0) return;
             } else {
                 return;
             }

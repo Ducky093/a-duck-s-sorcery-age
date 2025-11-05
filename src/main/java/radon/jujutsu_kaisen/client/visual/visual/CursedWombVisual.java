@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleType;
 import virtuoel.pehkui.api.ScaleTypes;
 
 public class CursedWombVisual implements IVisual {  

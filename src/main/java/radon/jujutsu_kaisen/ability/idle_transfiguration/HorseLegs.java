@@ -82,6 +82,11 @@ public class HorseLegs extends Transformation {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) && super.isValid(owner);
+    }
+
+    @Override
     public boolean usesHands() {
         return false;
     }

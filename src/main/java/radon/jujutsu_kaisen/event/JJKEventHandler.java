@@ -276,6 +276,7 @@ public class JJKEventHandler {
                     0, 0.05, 0
                 );
             }
+        
             if (cap.hasToggled(JJKAbilities.SHRINK.get())) {
                   ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
                     float targetScale = 0.5F;
@@ -284,6 +285,7 @@ public class JJKEventHandler {
                     baseScale.setScale(newScale);
             }
             else if((cap.hasTrait(Trait.CURSED_WOMB) )) {
+                if (owner instanceof Player) {
                 if (cap != null) {
                 float targetScale = 0.8F;
                 float targetWidth = 1.2F;
@@ -299,6 +301,7 @@ public class JJKEventHandler {
                     baseScale.setScale(targetScale);
                     baseWidth.setScale(targetWidth);
                 }
+                }
             }
             }
             else {
@@ -313,6 +316,7 @@ public class JJKEventHandler {
                     baseScale.resetScale();
                 }
             }
+            
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 2, 1, false, false, false));

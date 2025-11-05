@@ -20,6 +20,8 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.util.LazyOptional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
@@ -29,15 +31,19 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider, ICurioItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public static final int SIZE = 9;
 
     public InventoryCurseItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {
         super(pMaterial, pType, pProperties);
@@ -76,55 +82,107 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
     @Override
     public @NotNull Component getDisplayName() {
         return Component.translatable(String.format("%s.desc", this.getDescriptionId()));
+    }   
+
+    private static void ensureSize(ListTag list) {
+        while (list.size() < SIZE) list.add(new CompoundTag());
     }
+
+   private static ItemStack findEquippedCurse(Player player) {
+    ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+    if (chest.getItem() instanceof InventoryCurseItem) {
+        return chest;
+    }
+
+    LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(player);
+    if (!optional.isPresent()) return ItemStack.EMPTY;
+
+    ICuriosItemHandler handler = optional.resolve().orElse(null);
+    if (handler == null) return ItemStack.EMPTY;
+
+    for (SlotResult result : handler.findCurios(item -> item.getItem() instanceof InventoryCurseItem)) {
+        if (!result.stack().isEmpty()) {
+            return result.stack();
+        }
+    }
+
+    return ItemStack.EMPTY;
+}
 
     public static void addItem(ItemStack inventory, int slot, ItemStack stack) {
         CompoundTag nbt = inventory.getOrCreateTag();
         ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
-        itemsTag.add(slot, stack.save(new CompoundTag()));
+        ensureSize(itemsTag);
+
+        itemsTag.set(slot, stack.save(new CompoundTag()));
         nbt.put("items", itemsTag);
     }
 
-    public static void removeItem(ItemStack inventory, int slot) {
+      public static void removeItem(ItemStack inventory, int slot) {
         CompoundTag nbt = inventory.getOrCreateTag();
         ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
+        ensureSize(itemsTag);
 
-        if (itemsTag.size() >= slot) {
-            itemsTag.remove(slot);
-        }
+        itemsTag.set(slot, new CompoundTag());
         nbt.put("items", itemsTag);
     }
+
 
     public static void clear(ItemStack inventory) {
         CompoundTag nbt = inventory.getOrCreateTag();
-        nbt.remove("items");
+        ListTag list = new ListTag();
+        ensureSize(list);
+        nbt.put("items", list);
     }
 
     public static ItemStack getItem(ItemStack inventory, int slot) {
         CompoundTag nbt = inventory.getOrCreateTag();
         ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
+        ensureSize(itemsTag);
         return ItemStack.of(itemsTag.getCompound(slot));
     }
 
+
     @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
-        CompoundTag nbt = pPlayer.getItemBySlot(EquipmentSlot.CHEST).getOrCreateTag();
+@Override
+public AbstractContainerMenu createMenu(int id, @NotNull Inventory playerInv, @NotNull Player player) {
+    ItemStack inventoryItem = findEquippedCurse(player);
 
-        AtomicInteger previous = new AtomicInteger(nbt.getList("items", Tag.TAG_COMPOUND).size());
+    if (inventoryItem.isEmpty()) return null;
 
-        SimpleContainer container = new SimpleContainer(9);
-        container.fromTag(nbt.getList("items", Tag.TAG_COMPOUND));
-        container.addListener(pContainer -> {
-            nbt.put("items", ((SimpleContainer) pContainer).createTag());
+    CompoundTag nbt = inventoryItem.getOrCreateTag();
+    ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
+    ensureSize(itemsTag);
 
-            int current = nbt.getList("items", Tag.TAG_COMPOUND).size();
+    AtomicInteger previousCount = new AtomicInteger(itemsTag.size());
 
-            if (current > previous.get()) {
-                pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
+    SimpleContainer container = new SimpleContainer(SIZE) {
+        @Override
+        public void setChanged() {
+            super.setChanged();
+            ListTag tag = new ListTag();
+            for (int i = 0; i < getContainerSize(); i++) {
+                ItemStack stack = getItem(i);
+                tag.add(stack.isEmpty() ? new CompoundTag() : stack.save(new CompoundTag()));
             }
-            previous.set(current);
-        });
-        return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / 9);
+
+            nbt.put("items", tag);
+            inventoryItem.setTag(nbt); 
+
+            int current = tag.size();
+            if (current > previousCount.get()) {
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            }
+            previousCount.set(current);
+        }
+    };
+
+    for (int i = 0; i < SIZE; i++) {
+        ItemStack stack = ItemStack.of(itemsTag.getCompound(i));
+        container.setItem(i, stack);
     }
+
+    return new ChestMenu(MenuType.GENERIC_9x1, id, playerInv, container, 1);
+}
 }
