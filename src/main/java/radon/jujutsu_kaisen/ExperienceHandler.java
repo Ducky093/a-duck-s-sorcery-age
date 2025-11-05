@@ -146,6 +146,7 @@ public class ExperienceHandler {
                 battleIter.remove();
             }
         }
+        cap.removeLife();
     }
 
     private static class BattleData {

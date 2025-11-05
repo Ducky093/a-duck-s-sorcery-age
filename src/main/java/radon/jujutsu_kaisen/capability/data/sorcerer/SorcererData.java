@@ -170,6 +170,7 @@ public class SorcererData implements ISorcererData {
 
         this.output = 1.0F;
 
+        this.lives = ConfigHolder.SERVER.livesconfig.get();
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
         
@@ -1665,8 +1666,8 @@ public float getMaxEnergy() {
 
     @Override
     public void removeLife() {
-        this.lives--;
-        if (ConfigHolder.SERVER.lives.get() > 0 && this.owner instanceof ServerPlayer play ) {
+        this.lives -= 1;
+        if (ConfigHolder.SERVER.livesconfig.get() > 0 && this.owner instanceof ServerPlayer play ) {
             if (this.lives <= 0) {
                 this.generate(play);
             }
@@ -2064,7 +2065,9 @@ public float getMaxEnergy() {
             }
         }
         this.energy = this.getMaxEnergy();
-
+        if (ConfigHolder.SERVER.livesconfig.get() > 0) {
+            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.lives", JujutsuKaisen.MOD_ID), this.lives ));
+        }
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
     }
 
@@ -2392,6 +2395,9 @@ public float getMaxEnergy() {
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
         this.lives = nbt.getInt("lives");
+        if (ConfigHolder.SERVER.livesconfig.get() > 0 && this.lives <= 0) {
+            this.lives = ConfigHolder.SERVER.livesconfig.get();
+        }
         this.hasWombAwakened = nbt.getBoolean("hasWombAwakened");
 
         this.unlocked.clear();
