@@ -50,7 +50,7 @@ public class SorcererDataHandler {
             newCap.resetBlackFlash();
             newCap.resetExtraEnergy();
             newCap.resetSpeedStacks();
-            newCap.addDeath();
+            newCap.removeLife();
 
             if (!player.level().isClientSide) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);

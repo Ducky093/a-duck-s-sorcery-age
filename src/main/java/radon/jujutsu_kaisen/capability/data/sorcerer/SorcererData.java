@@ -91,6 +91,7 @@ public class SorcererData implements ISorcererData {
     private float output;
 
     private float energy;
+    private int lives;
     private int dashes = 0;
     private int shieldTicks = 0;
     private float maxEnergy;
@@ -168,6 +169,8 @@ public class SorcererData implements ISorcererData {
 
 
         this.output = 1.0F;
+
+        this.lives = ConfigHolder.SERVER.lives.get();
 
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
@@ -1656,14 +1659,37 @@ public float getMaxEnergy() {
         return this.charge;
     }
 
+    // @Override
+    // public void unlockDomain() {
+    //     if (this.getTechnique() != null && this.getTechnique().getDomain() != null) {
+    //         this.unlock(this.getTechnique().getDomain());
+    //     }
+    // }
+
     @Override
-    public void unlockDomain(LivingEntity entity) {
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (cap.getTechnique().getDomain() != null) {
-            cap.unlock(cap.getTechnique().getDomain());
+    public void removeLife() {
+        this.lives -= 1;
+        if (ConfigHolder.SERVER.lives.get() > 0 && this.owner instanceof ServerPlayer play ) {
+            if (this.lives <= 0) {
+                this.generate(play);
+            }
+            else {
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.lives", JujutsuKaisen.MOD_ID), this.lives ));
+            }
+            
         }
     }
     
+    @Override
+    public int getLives() {
+        return this.lives;
+    }
+
+    @Override
+    public void setLives(int count) {
+        this.lives = count;
+    }
+
     @Override
     public void addSummon(Entity entity) {
         this.summons.add(new SummonData(entity));
@@ -2160,6 +2186,7 @@ public float getMaxEnergy() {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
+        nbt.putInt("lives", this.lives);
         nbt.putBoolean("hasWombAwakened", this.hasWombAwakened);
         // if (this.stolenSkinProfile != null) {
         //     CompoundTag prof = new CompoundTag();
@@ -2367,6 +2394,7 @@ public float getMaxEnergy() {
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
+        this.lives = nbt.getInt("lives");
         this.hasWombAwakened = nbt.getBoolean("hasWombAwakened");
 
         this.unlocked.clear();

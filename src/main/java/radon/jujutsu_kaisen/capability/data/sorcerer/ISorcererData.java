@@ -119,7 +119,7 @@ public interface ISorcererData {
 
     Set<String> getFirstChants(Ability ability);
 
-    void unlockDomain(LivingEntity entity);
+    //void unlockDomain();
 
     float getOutput();
 
@@ -274,6 +274,12 @@ public interface ISorcererData {
     long getLastBlackFlashTime();
 
     boolean addBlackFlash();
+
+    void removeLife();
+        
+    void setLives(int count);
+
+    int getLives();
 
     boolean checkWombAwakened();
 

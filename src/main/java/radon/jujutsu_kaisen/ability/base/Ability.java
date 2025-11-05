@@ -420,6 +420,10 @@ public abstract class Ability {
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost ));
     }
 
+    public float getRealCost(LivingEntity owner) {
+        return this.getRealCost(owner, this.getCost(owner) );
+    }
+
     public interface IDomainAttack {
         default void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {}
         default void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {}
