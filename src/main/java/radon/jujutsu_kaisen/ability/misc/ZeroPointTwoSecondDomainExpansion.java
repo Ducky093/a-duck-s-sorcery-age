@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +18,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
@@ -81,8 +84,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         return super.isTriggerable(owner);
     }
 
+
+     
     @Override
     public void run(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -93,9 +99,8 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
             AbilityHandler.trigger(owner, ability);
 
             DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
-
             if (domain == null) return;
-
+            domain.setInstant(true);
             cap.delayTickEvent(() -> {
                 for (LivingEntity entity : domain.getAffected()) {
                     if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
@@ -111,6 +116,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                 cap.addCooldown(ability);
+            }
             }
     }
 

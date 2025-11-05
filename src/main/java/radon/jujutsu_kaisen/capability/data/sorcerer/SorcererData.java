@@ -1123,8 +1123,9 @@ public class SorcererData implements ISorcererData {
         } else {
             this.toggled.add(ability);
             ((Ability.IToggled) ability).onEnabled(this.owner);
+            ability.run(this.owner);
         }
-        ability.run(this.owner);
+
         this.sync();
     }
 

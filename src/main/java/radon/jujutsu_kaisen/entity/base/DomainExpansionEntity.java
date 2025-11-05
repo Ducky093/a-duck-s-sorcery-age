@@ -10,7 +10,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -32,6 +34,8 @@ import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -51,7 +55,8 @@ public abstract class DomainExpansionEntity extends Entity {
     public DomainExpansion ability;
     protected boolean first = true;
 
-      private float scale;
+    private float scale;
+    private boolean instant;
 
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -61,7 +66,7 @@ public abstract class DomainExpansionEntity extends Entity {
         super(pType, owner.level());
 
         this.setOwner(owner);
-
+        this.instant = false;
         this.ability = ability;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -130,6 +135,10 @@ public abstract class DomainExpansionEntity extends Entity {
 
     public void setTime(int time) {
         this.entityData.set(DATA_TIME, time);
+    }
+
+    public void setInstant(boolean yn) {
+        this.instant = true;
     }
 
     @Override
@@ -223,13 +232,21 @@ public abstract class DomainExpansionEntity extends Entity {
         this.setTime(this.getTime() + 1);
 
         LivingEntity owner = this.getOwner();
-        // if (owner != null) {
-        //     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        //     if (cap != null && this.getTime() == 1) {
-        //         cap.useEnergy(INITIAL_COST);
-        //     }
-        // }
+        if (!this.level().isClientSide && owner != null && ( !(owner instanceof Player player) || !player.getAbilities().instabuild) && this.getTime() == 1 &&  !this.instant ) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            float cost = this.getAbility().getRealCost(owner, INITIAL_COST);
+            //if (this.instant) cost /= 4;
+            if (cap == null || cap.getEnergy() - cost < 0 ) {
+                this.discard();
+                return;
+            }
+            else {
+                cap.useEnergy(cost);
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                }
+            }
+        }
         
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, this.ability))) {

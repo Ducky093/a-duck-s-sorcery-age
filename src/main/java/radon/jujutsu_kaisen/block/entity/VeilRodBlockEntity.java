@@ -179,8 +179,8 @@ public class VeilRodBlockEntity extends BlockEntity {
                 saved = existingBE.saveWithFullMetadata();
                 if (existingBE instanceof net.minecraft.world.Container container) {
                     container.clearContent();
+                    level.removeBlockEntity(targetPos);
                 }
-                level.removeBlockEntity(targetPos);
             }
 
         level.setBlockAndUpdate(targetPos, replacement);

@@ -60,7 +60,7 @@ public class TriggerAbilityC2SPacket {
                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
                             Math.max(1, cap.getRemainingCooldown(ability) / 20)), false), sender);
             case BURNOUT ->
-                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID)),
+                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID), Math.max(1, cap.getBurnout() / 20)),
                     false), sender);
             case DISABLE ->
                     PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.disable", JujutsuKaisen.MOD_ID)),

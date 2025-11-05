@@ -285,8 +285,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (be != null) {
                 if (be instanceof net.minecraft.world.Container container) {
                     container.clearContent();
+                    ((ServerLevel)this.level()).removeBlockEntity(pos);
                 }
-                ((ServerLevel)this.level()).removeBlockEntity(pos);
+                
             }
             boolean success =   owner.level().setBlock(pos, block.defaultBlockState(),
                                               Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);

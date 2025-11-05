@@ -76,7 +76,10 @@ public class AbilityHandler {
 
         } else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                ability.addDuration(owner);
+                // if (!cap.hasToggled(ability)) {
+                //     ability.charge(owner);
+                // }
+                ability.addDuration(owner); //separate for future changes
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));

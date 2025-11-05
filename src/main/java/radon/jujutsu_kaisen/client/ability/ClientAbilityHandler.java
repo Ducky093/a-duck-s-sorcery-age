@@ -317,7 +317,7 @@ public class ClientAbilityHandler {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             //}
            // return status;
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED || ability.getActivationType(owner) == Ability.ActivationType.DOMAIN ) {
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED  ) {
             ability.addDuration(owner);
             //Ability.Status status;
 
@@ -327,6 +327,20 @@ public class ClientAbilityHandler {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             //}
             //return status;
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.DOMAIN) {
+            // if (!cap.hasToggled(ability)) {
+            //     ability.charge(owner);
+            // }
+            ability.addDuration(owner);
+            //Ability.Status status;
+
+            //if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                cap.toggle(ability);
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+            //}
+            //return status;
+        
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             ability.addDuration(owner);
             //Ability.Status status;

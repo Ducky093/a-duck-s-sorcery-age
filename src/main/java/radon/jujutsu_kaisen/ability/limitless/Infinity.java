@@ -213,29 +213,29 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
         }
     }
 
-    private static boolean canBlock(LivingEntity owner, Projectile projectile) {
-        if (projectile.getOwner() == owner) return false;
+    // private static boolean canBlock(LivingEntity owner, Projectile projectile) {
+    //     if (projectile.getOwner() == owner) return false;
 
-         if (projectile instanceof WorldSlashProjectile slash) {
-            return false;
-        }
+    //      if (projectile instanceof WorldSlashProjectile slash) {
+    //         return false;
+    //     }
 
-        if (projectile instanceof ThrownChainProjectile chain) {
-            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
-        }
+    //     if (projectile instanceof ThrownChainProjectile chain) {
+    //         if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
+    //     }
 
-        for (KuchisakeOnnaEntity curse : owner.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(owner.position(),
-                KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
-            Optional<UUID> identifier = curse.getCurrent();
-            if (identifier.isEmpty()) continue;
-            if (identifier.get() == owner.getUUID() && projectile.getOwner() == curse) return false;
-        }
+    //     for (KuchisakeOnnaEntity curse : owner.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(owner.position(),
+    //             KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
+    //         Optional<UUID> identifier = curse.getCurrent();
+    //         if (identifier.isEmpty()) continue;
+    //         if (identifier.get() == owner.getUUID() && projectile.getOwner() == curse) return false;
+    //     }
 
-        if (projectile instanceof JujutsuProjectile jujutsu) {
-            return !jujutsu.isDomain();
-        }
-        return true;
-    }
+    //     if (projectile instanceof JujutsuProjectile jujutsu) {
+    //         return !jujutsu.isDomain();
+    //     }
+    //     return true;
+    // }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class InfinityForgeEvents {
@@ -255,15 +255,13 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
             if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
             if (!(hit.getEntity() instanceof LivingEntity owner)) return;
             if (!(owner.level() instanceof ServerLevel level)) return;
-
             if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                     FrozenProjectileData.IDENTIFIER);
 
             Projectile projectile = event.getProjectile();
-
-            if (!Infinity.canBlock(owner, projectile)) return;
+            if (!HelperMethods.isBlockable(owner, projectile)) return;
 
             data.add(owner, projectile);
 
@@ -282,13 +280,13 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
             if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
 
             for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(RANGE))) {
-                if (!Infinity.canBlock(target, projectile)) continue;
+                if (!HelperMethods.isBlockable(target, projectile)) continue;
 
                 data.add(target, projectile);
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent(priority = EventPriority.LOW)
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 
@@ -298,19 +296,9 @@ public class Infinity extends Ability implements Ability.IToggled, IAdditionalAd
 
             DamageSource source = event.getSource();
 
-            if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
+            if (!HelperMethods.isBlockable(target, source)) return;
 
-            if (source.getDirectEntity() instanceof Projectile projectile && !canBlock(target, projectile)) return;
-
-            if (source.getDirectEntity() instanceof DomainExpansionEntity) return;
-
-            if (source.getEntity() == target) return;
-
-            if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
-                if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    return;
-                } 
-            }
+            
             // if (source.getEntity() instanceof LivingEntity living ) {
             //     if (living.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
             //     ITenShadowsData cap = living.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();

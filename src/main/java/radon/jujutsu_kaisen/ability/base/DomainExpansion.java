@@ -120,12 +120,15 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!cap.hasSummonOfClass(DomainExpansionEntity.class)) {
             return Status.FAILURE;
         }
+    }
         return super.isStillUsable(owner);
+        
     }
 
     @Override
@@ -135,39 +138,34 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        DomainExpansionEntity domain = this.createBarrier(owner);
-        cap.addSummon(domain);
-
+        if (owner.level().isClientSide) return;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            DomainExpansionEntity domain = this.createBarrier(owner);
+            cap.addSummon(domain);
+        
     }
 
     
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        if (!owner.level().isClientSide) {
+        if (owner.level().isClientSide) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             cap.unsummonByClass(DomainExpansionEntity.class);
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
-        }
+        
     }
 
     @Override
     public void run(LivingEntity owner) {
-
+        
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        if (owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return cap.hasToggled(this) ? 2.5F : 1000.0F;
-        }
-        else {
-            return 2.5F;
-        }
+        return 2.5F;
     }
 
 

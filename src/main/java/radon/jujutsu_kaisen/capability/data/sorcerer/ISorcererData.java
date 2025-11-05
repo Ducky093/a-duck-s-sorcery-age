@@ -203,7 +203,6 @@ public interface ISorcererData {
 
     boolean isThroatDamaged();
 
-    
     void setBurnout(int duration);
 
     void setDisable(int duration);
