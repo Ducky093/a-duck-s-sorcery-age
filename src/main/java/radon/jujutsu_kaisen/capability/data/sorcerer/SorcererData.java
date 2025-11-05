@@ -288,7 +288,7 @@ public class SorcererData implements ISorcererData {
 
     private void updateChanneled() {
         if (this.channeled != null) {
-            if (this.disrupted.containsKey(this.channeled)) return;
+            //if (this.disrupted.containsKey(this.channeled)) return;
             Ability.Status status = this.channeled.isStillUsable(this.owner);
             if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && this.channeled instanceof Ability.IAttack)) {
                 this.channeled.run(this.owner);
@@ -1649,7 +1649,7 @@ public float getMaxEnergy() {
 
     @Override
     public boolean isChanneling(Ability ability) {
-        return this.channeled == ability && !this.disrupted.containsKey(this.channeled);
+        return this.channeled == ability;
     }
 
     @Override
