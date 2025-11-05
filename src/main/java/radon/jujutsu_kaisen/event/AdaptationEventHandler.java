@@ -92,7 +92,7 @@ public class AdaptationEventHandler {
                             if (victim.doHurtTarget(attacker)) {
                                 victim.invulnerableTime = 0;
                             }
-                            event.setCanceled(true);
+                            //event.setCanceled(true);
                             /* 
                              * 
                              * if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
@@ -130,10 +130,24 @@ public class AdaptationEventHandler {
               if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
               ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !attackerCap.hasToggled(JJKAbilities.WHEEL.get())) return;
+              if (victim instanceof MahoragaEntity) {
+                ITenShadowsData shadowerCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                  switch (shadowerCap.getAdaptationType(source)) {
+                      case DAMAGE -> {
+                          if (shadowerCap.isAdaptedTo(source)) {
+                              victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+                              event.setCanceled(true);
+                          }
+                          //event.setAmount(event.getAmount() * process);
+                      }
+                      case COUNTER -> {
+                          //event.setAmount(event.getAmount() * process);
+                      }
+                  }
+            }
 
-          
-          
+
+            if (attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !attackerCap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
      
 
