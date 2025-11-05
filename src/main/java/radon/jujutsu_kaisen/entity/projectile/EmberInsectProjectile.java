@@ -24,6 +24,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -43,8 +46,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     private static final float DAMAGE = 17.5F;
     private static final float SPEED = 3.0F;
     private static final float EXPLOSIVE_POWER = 2.0F;
-    private static final float MAX_EXPLOSION = 2.0F;
+    private static final float MAX_EXPLOSION = 3.0F;
     private static final int DELAY = 5;
+    private static final int STUN = 10;
 
     public EmberInsectProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -98,6 +102,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         if ( entity == owner && !cap.hasSelfHit() ) return;
 
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * this.getPower());
+        if (entity instanceof LivingEntity aliveentity) {
+            aliveentity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+        }
     }
 
     @Override
