@@ -92,7 +92,7 @@ public class AdaptationEventHandler {
                             if (victim.doHurtTarget(attacker)) {
                                 victim.invulnerableTime = 0;
                             }
-                            //event.setCanceled(true);
+                            event.setCanceled(true);
                             /* 
                              * 
                              * if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {

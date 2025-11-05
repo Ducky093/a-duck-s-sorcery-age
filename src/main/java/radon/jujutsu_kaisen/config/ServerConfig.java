@@ -205,11 +205,11 @@ public class ServerConfig {
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare, 0 to disable)")
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
         this.curseVillageSpawnRate = builder.comment("Rarity of curses spawning in villages (bigger value means more rare, 0 to disable)")
-                .defineInRange("curseVillageSpawnRate", 5, 0, 100000);
+                .defineInRange("curseVillageSpawnRate", 8, 0, 100000);
         this.sorcererVillageSpawnRate = builder.comment("Rarity of sorcerers spawning in villages (bigger value means more rare, 0 to disable)")
-                .defineInRange("sorcererVillageSpawnRate", 2, 0, 100000);
+                .defineInRange("sorcererVillageSpawnRate", 7, 0, 100000);
         this.displayCaseSpawnRate = builder.comment("Rarity of curses spawning from display cases (bigger value means more rare, 0 to disable)")
-                .defineInRange("displayCaseRarity", 8, 0, 100000);
+                .defineInRange("displayCaseRarity", 12, 0, 100000);
         this.displayCaseSpawnRange = builder.comment("Range in blocks curses can spawn from display cases")
                 .defineInRange("displayCaseSpawnRange", 64, 0, 100000);
         this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")

@@ -68,6 +68,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.*;
 import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleType;
 import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.ArrayList;
@@ -275,8 +276,14 @@ public class JJKEventHandler {
                     0, 0.05, 0
                 );
             }
-
-            if((cap.hasTrait(Trait.CURSED_WOMB) )) {
+            if (cap.hasToggled(JJKAbilities.SHRINK.get())) {
+                  ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
+                    float targetScale = 0.5F;
+                    float currentScale = baseScale.getScale();
+                    float newScale = currentScale + (targetScale - currentScale) * 0.1F;
+                    baseScale.setScale(newScale);
+            }
+            else if((cap.hasTrait(Trait.CURSED_WOMB) )) {
                 if (cap != null) {
                 float targetScale = 0.8F;
                 float targetWidth = 1.2F;

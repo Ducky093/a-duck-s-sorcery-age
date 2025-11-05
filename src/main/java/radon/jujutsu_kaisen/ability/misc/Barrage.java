@@ -61,8 +61,7 @@ public class Barrage extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-
-        Level level = owner.level();
+        if (!(owner.level() instanceof ServerLevel level)) return;
         int gap = 2;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         int duration2 = DURATION;

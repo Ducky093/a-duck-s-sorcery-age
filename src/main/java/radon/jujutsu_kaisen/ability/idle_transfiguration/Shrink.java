@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.UUID;
 
 public class Shrink extends Ability implements Ability.IToggled {
-    private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("2b553d20-2aab-46c3-9199-4c6500948aaa");
+    private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("e6b4c6a4-9171-41b0-a4e2-7b3df7b6c602");
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -44,12 +44,12 @@ public class Shrink extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 0.2F;
     }
 
     @Override
     public void applyModifiers(LivingEntity owner) {
-        EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 1.0D, AttributeModifier.Operation.ADDITION);
+        EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", -0.5D, AttributeModifier.Operation.ADDITION);
     
     }
 

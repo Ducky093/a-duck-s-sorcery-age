@@ -99,7 +99,7 @@ public class Punch extends Ability implements Ability.ICharged{
         }
 
         owner.swing(InteractionHand.MAIN_HAND);
-
+        if (!(owner.level() instanceof ServerLevel level)) return false;
         float power = (float) Math.min(20, this.getCharge(owner)) / 20;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -247,7 +247,7 @@ public class Punch extends Ability implements Ability.ICharged{
             }
 
 
-        if ((owner.level() instanceof ServerLevel level)) {
+        //if ((owner.level() instanceof ServerLevel level)) {
             if (dash > 0) {
                 Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
                 level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y+1, pos.z, 0, 0D, 0.0D, 0.0D, 1.0D);
@@ -274,7 +274,7 @@ public class Punch extends Ability implements Ability.ICharged{
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.MASTER, 1.0F, 1F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.MASTER, 1.0F, 1.6F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .4f);
 
-        }
+       // }
 
 
 
