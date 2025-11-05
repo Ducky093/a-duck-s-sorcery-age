@@ -77,7 +77,7 @@ public class Volcano extends Ability implements Ability.IChannelened, Ability.ID
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 8.0F;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Volcano extends Ability implements Ability.IChannelened, Ability.ID
 
     @Override
     public int getCooldown() {
-        return 12 * 20;
+        return 15 * 20;
     }
 
     @Override

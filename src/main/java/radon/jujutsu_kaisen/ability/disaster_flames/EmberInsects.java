@@ -46,6 +46,6 @@ public class EmberInsects extends Ability {
 
     @Override
     public int getCooldown() {
-        return 8 * 20;
+        return 12 * 20;
     }
 }

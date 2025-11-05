@@ -77,7 +77,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
     @Override
     public int getDuration() {
-        return 20;
+        return 10;
     }
 
     @Override

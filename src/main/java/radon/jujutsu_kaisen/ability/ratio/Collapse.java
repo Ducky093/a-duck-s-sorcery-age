@@ -109,7 +109,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
         }
 
 
-            if (index == 15) {
+            if (index == 12) {
                         if (owner instanceof ServerPlayer player) {
                             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.COLLAPSE.get(), SoundSource.MASTER, 1.0F, 1.0F);
                     //owner.level().sendParticles(ParticleTypes.SONIC_BOOM, pos.X, pos.Y, pos.Z, 0, 0D, 0.0D, 0.0D, 1.0D);
@@ -138,15 +138,15 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
             Vec3 realpos = result.getLocation();
 
-            if (index >= 20 && index < DURATION) {
+            if (index >= 17 && index < DURATION) {
                 ExplosionHandler.spawn(owner.level().dimension(), realpos, Math.min(MAX_EXPLOSIVE_POWER * 1.1F, ((EXPLOSIVE_POWER) * (this.getPower(owner))) * 1.1F),
                         20, DAMAGE + (this.getPower(owner) * 0.1F), owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.COLLAPSE.get()), false);
 
                 BlockHitResult hit = this.getBlockHit(owner, RANGE);
                 BlockPos blocked = hit.getBlockPos();
 
-                AABB bounds = new AABB(blocked.getX() * 0.9F, blocked.getY() * 0.9F, blocked.getZ() * 0.9F,
-                        blocked.getX() * 1.05F, blocked.getY() * 1.05F, blocked.getZ() * 1.05F);
+                AABB bounds = new AABB(blocked.getX() - 1.0D, blocked.getY() - 1.0D, blocked.getZ() - 1.0D,
+                        blocked.getX() + 1.0D, blocked.getY() + 1.0D, blocked.getZ() + 1.0D);
 
                 double centerX = bounds.getCenter().x;
                 double centerY = bounds.getCenter().y;
@@ -198,7 +198,7 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public int getCooldown() {
-        return 15 * 20;
+        return 14 * 20;
     }
 
     @Override

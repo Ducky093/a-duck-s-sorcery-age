@@ -160,7 +160,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
                 float scale = 1.5F;
 
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).x;
-                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
+                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() + 0.5D * owner.getBbHeight();
                 double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).z;
 
                 level.sendParticles(ParticleTypes.SONIC_BOOM, x, y, z, 0, 0D, 0.0D, 0.0D, 1.0D);
@@ -189,7 +189,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 12 * 20;
     }
 
     @Override

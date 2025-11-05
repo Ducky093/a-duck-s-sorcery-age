@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -53,6 +54,10 @@ public class Shuffle extends Ability implements Ability.IChannelened {
         if (this.getCharge(owner) % 2 != 0) return;
 
         if (owner.level().isClientSide) return;
+
+        ISorcererData ownercap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (ownercap != null && ownercap.getEnergy() <= 30) return;
 
         List<Entity> targets = this.getTargets(owner);
 
