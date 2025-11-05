@@ -170,11 +170,8 @@ public class SorcererData implements ISorcererData {
 
         this.output = 1.0F;
 
-        this.lives = ConfigHolder.SERVER.lives.get();
-
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
-        this.hasWombAwakened = false;
         
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -1668,7 +1665,7 @@ public float getMaxEnergy() {
 
     @Override
     public void removeLife() {
-        this.lives -= 1;
+        this.lives--;
         if (ConfigHolder.SERVER.lives.get() > 0 && this.owner instanceof ServerPlayer play ) {
             if (this.lives <= 0) {
                 this.generate(play);

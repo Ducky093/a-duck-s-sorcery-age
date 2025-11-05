@@ -393,8 +393,7 @@ public abstract class Ability {
         return null;
     }
 
-    public float getRealCost(LivingEntity owner) {
-        float cost = this.getCost(owner);
+    public float getRealCost(LivingEntity owner, float cost) {
         float output = ChantHandler.getOutput(owner, this);
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return cost;
