@@ -97,7 +97,7 @@ public class JJKEventHandler {
             @SubscribeEvent
             public static void onEntityTeleport(EntityTeleportEvent event) {
                 Level level = event.getEntity().level();
-
+                if (level.isClientSide) return;
                 BlockPos from = BlockPos.containing(event.getPrevX(), event.getPrevY(), event.getPrevZ());
                 BlockPos to = BlockPos.containing(event.getTargetX(), event.getTargetY(), event.getTargetZ());
         
@@ -105,7 +105,6 @@ public class JJKEventHandler {
                     event.setCanceled(true);
                 }
                 else {
-                    if (level.isClientSide) return;
                     ServerLevel serverLevel = (ServerLevel) level;
                     if (!VeilHandler.getDomains(serverLevel, from).isEmpty() || !VeilHandler.getDomains(serverLevel, to).isEmpty()) {
                         event.setCanceled(true);

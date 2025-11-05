@@ -216,7 +216,7 @@ public class VeilHandler {
 
     public static boolean isTeleportValid(Level level, BlockPos target) {
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
-        if (rods == null) return false;
+        if (rods == null) return true;
 
         for (VeilRodBlockEntity rod : rods) {
             if (!rod.isValid() ) continue;
@@ -232,7 +232,7 @@ public class VeilHandler {
                 }
             }
             int radius = rod.getSize();
-            if (( teleportFlag && target.distSqr(rod.getBlockPos()) <= (radius) * (radius) && !ownerFlag ) ) return false;
+            if (( teleportFlag && target.distSqr(rod.getBlockPos()) <= (radius+2) * (radius+2) && !ownerFlag ) ) return false;
         }
         return true;
     }
