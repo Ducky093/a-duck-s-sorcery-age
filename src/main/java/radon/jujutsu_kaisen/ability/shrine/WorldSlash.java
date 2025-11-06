@@ -148,7 +148,7 @@ public class WorldSlash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 60 * 20;
     }
 
     @Override

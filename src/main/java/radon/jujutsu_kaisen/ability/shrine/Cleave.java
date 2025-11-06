@@ -137,7 +137,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
                 damage *= testpower;
             }
 
-            damage *= (this.getPower(owner) * 0.1f);
+            damage *= (this.getPower(owner) * 0.075f);
 
             boolean success = target.hurt(source, damage);
 
