@@ -175,7 +175,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         if (!(target instanceof Player)) {
             target.discard();
-        } else {
+        } else if (!owner.isDeadOrDying()) {
             target.kill();
         }
     }
@@ -183,7 +183,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
      public static void retrieve(LivingEntity owner, LivingEntity target) {
         if (!(target instanceof Player)) {
             target.discard();
-        } else {
+        } else if (!owner.isDeadOrDying()) {
             target.kill();
         }
     }

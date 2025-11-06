@@ -189,7 +189,7 @@ public class EntityUtil {
             }
 
             if (kill) {
-                if (src instanceof Player) {
+                if (src instanceof Player && (!src.isDeadOrDying()) ) {
                     src.kill();
                 } else {
                     src.discard();

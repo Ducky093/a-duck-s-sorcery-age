@@ -199,7 +199,7 @@ public void run(LivingEntity owner) {
                 cap.wipe(play);
             }
         }
-        if (ConfigHolder.SERVER.MBADeath.get()) {
+        if (ConfigHolder.SERVER.MBADeath.get() && !owner.isDeadOrDying()) {
             owner.kill();
         }
     }
