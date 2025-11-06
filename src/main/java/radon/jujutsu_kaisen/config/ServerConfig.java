@@ -469,7 +469,7 @@ public class ServerConfig {
                                 Trait.DEATH_PAINTING.name()
                         ), ignored -> true);
            this.incompatibleTraits = builder.comment("Incompatible traits, formatted as TRAIT1,TRAIT2. To add more, just add more comma separated traits to the list")
-                .define("incompatibleTraits", List.of("PERFECT_BODY,SIX_EYES"));
+                .define("incompatibleTraits", List.of("PERFECT_BODY,SIX_EYES", "CURSED_WOMB,DEATH_PAINTING"));
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
