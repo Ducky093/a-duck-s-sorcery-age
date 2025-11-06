@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public enum Pact {
+    FRIENDS,
     INVULNERABILITY,
     TECHNIQUE;
 

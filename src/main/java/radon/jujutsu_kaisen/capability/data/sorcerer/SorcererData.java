@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 import com.mojang.authlib.GameProfile;
+
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -1116,6 +1119,8 @@ public class SorcererData implements ISorcererData {
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
 
+            //ability.cooldown(this.owner);
+
             ((Ability.IToggled) ability).onDisabled(this.owner);
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
@@ -1625,10 +1630,10 @@ public float getMaxEnergy() {
                     this.channeled.charge(this.owner);
                 }
             }
-
             if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                 this.owner.sendSystemMessage(this.channeled.getDisableMessage());
             }
+              // this.channeled.cooldown(this.owner);
             MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         }
 
@@ -1817,23 +1822,35 @@ public float getMaxEnergy() {
     
     @Override
     public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return false;
-
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
+        Level level = this.owner.level(); 
+
         for (SummonData data : this.summons) {
-            Entity entity = level.getEntity(data.getIdentifier());
+            Entity entity = null;
+
+            if (level instanceof ServerLevel serverLevel) {
+                entity = serverLevel.getEntity(data.getIdentifier());
+            } else if (level instanceof ClientLevel clientLevel) {
+                for (Entity e : clientLevel.entitiesForRendering()) {
+                    if (e.getUUID().equals(data.getIdentifier())) {
+                        entity = e;
+                        break;
+                    }
+                }
+            }
 
             if (entity == null) continue;
 
             T summon = test.tryCast(entity);
-
             if (summon != null) {
                 return true;
             }
         }
+
         return false;
     }
+
 
     @Override
     public void addCurse(AbsorbedCurse curse) {

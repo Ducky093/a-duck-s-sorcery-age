@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
@@ -156,6 +157,13 @@ public class Punch extends Ability implements Ability.ICharged{
                         continue;
                     }
                     targets.add(entity.getStringUUID());
+                        if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent() && entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData victimCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData attackerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                if (victimCap.hasPact(owner.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
+                   continue;
+                }
+                }
                     if (level1 instanceof ServerLevel) {
                         Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 0.9F, 1.2F);
@@ -205,7 +213,7 @@ public class Punch extends Ability implements Ability.ICharged{
                     if (!(owner instanceof Player player)) {
                         newDMG/=1.65F;
                     }
-
+                    
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
@@ -216,7 +224,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
                     newDMG *= (float) (1+0.75 *power);
-
+                    
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
                         if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 1.5F)

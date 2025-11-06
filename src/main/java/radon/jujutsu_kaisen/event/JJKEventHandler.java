@@ -376,7 +376,11 @@ public class JJKEventHandler {
                         cursed = true;
                     } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
+                    } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                       // ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        cursed = true;
                     }
+
                     if (!cursed) {
                         event.setCanceled(true);
                     }
@@ -405,7 +409,7 @@ public class JJKEventHandler {
             else {
                 if (source.getEntity() instanceof LivingEntity sourceUser && HelperMethods.isMelee(source) && sourceUser.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         ISorcererData attackerCap = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        if (attackerCap.getEnergy() > 0.0F) {
+                        if (attackerCap.getEnergy() <= 0.0F) {
                             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
                             if (victimCap != null && victimCap.getType() == JujutsuType.CURSE && !victimCap.hasTrait(Trait.DEATH_PAINTING)) {
                                 event.setAmount(0.0F);
