@@ -57,8 +57,9 @@ public class AbsorbedPlayerEntityRenderer extends HumanoidMobRenderer<radon.juju
     public @NotNull ResourceLocation getTextureLocation(@NotNull radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity pEntity) {
         GameProfile profile = pEntity.getPlayer();
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
-        PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
+        PlayerInfo info = null;
         if (profile != null) {
+             info = conn == null ? null : conn.getPlayerInfo(profile.getId());
              this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
         }
         else {

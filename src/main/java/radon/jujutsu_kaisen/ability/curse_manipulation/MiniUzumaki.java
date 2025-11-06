@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -41,11 +42,13 @@ public class MiniUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!cap.hasSummonOfClass(CursedSpirit.class)) {
             return false;
         }
+    }
         return super.isValid(owner);
     }
 

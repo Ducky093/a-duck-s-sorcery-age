@@ -539,6 +539,10 @@
   "pact.jujutsu_kaisen.invulnerability": "互不侵犯",
   "pact.jujutsu_kaisen.invulnerability.description": "双方承诺不伤害对方的契约。",
 
+  "pact.jujutsu_kaisen.friends": "互不攻击",
+  "pact.jujutsu_kaisen.friends.description": "一个双方承诺不互相伤害的契约。",
+
+
   "pact.jujutsu_kaisen.technique": "术式",
   "pact.jujutsu_kaisen.technique.description": "双方发誓不使用术式的契约。",
 

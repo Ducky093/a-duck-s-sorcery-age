@@ -639,11 +639,11 @@ public class SorcererData implements ISorcererData {
         if (this.toggled.contains(JJKAbilities.MYTHICAL_BEAST_AMBER.get() )) {
             output = 1.5F;
         }
-        else if (this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            output = 1.1F;
-        }
         else if (this.isInZone())  {
             output = 1.2F;
+        }
+        else if (this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+            output = 1.1F;
         }
 
         else if (this.traits.contains(Trait.SIMURIAN)) {
@@ -1822,26 +1822,12 @@ public float getMaxEnergy() {
     
     @Override
     public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return false;
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Level level = this.owner.level(); 
-
         for (SummonData data : this.summons) {
-            Entity entity = null;
-
-            if (level instanceof ServerLevel serverLevel) {
-                entity = serverLevel.getEntity(data.getIdentifier());
-            } else if (level instanceof ClientLevel clientLevel) {
-                for (Entity e : clientLevel.entitiesForRendering()) {
-                    if (e.getUUID().equals(data.getIdentifier())) {
-                        entity = e;
-                        break;
-                    }
-                }
-            }
-
+            Entity entity = level.getEntity(data.getIdentifier());
             if (entity == null) continue;
-
             T summon = test.tryCast(entity);
             if (summon != null) {
                 return true;

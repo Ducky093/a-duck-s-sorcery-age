@@ -87,6 +87,13 @@ public abstract class Ability {
         return getPower(this, owner);
     }
 
+    public void cooldown(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (this.getRealCooldown(owner) > 0) {
+            cap.addCooldown(this);
+        }
+    }
+
     public boolean isScalable(LivingEntity owner) {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
     }

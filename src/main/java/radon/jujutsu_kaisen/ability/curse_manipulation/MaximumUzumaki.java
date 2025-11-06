@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,11 +45,13 @@ public class MaximumUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!cap.hasSummonOfClass(CursedSpirit.class)) {
             return false;
         }
+    }
         return super.isValid(owner);
     }
 
