@@ -1669,7 +1669,7 @@ public float getMaxEnergy() {
         this.lives -= 1;
         if (ConfigHolder.SERVER.livesconfig.get() > 0 && this.owner instanceof ServerPlayer play ) {
             if (this.lives <= 0) {
-                this.generate(play);
+                this.wipe(play);
             }
             else {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.lives", JujutsuKaisen.MOD_ID), this.lives ));
@@ -1678,6 +1678,18 @@ public float getMaxEnergy() {
         }
     }
     
+
+    @Override 
+    public void wipe(ServerPlayer owner) {
+        this.setExperience(0.0F);
+        PlayerUtil.removeAdvancement(owner, "six_eyes");
+        PlayerUtil.removeAdvancement(owner, "heavenly_restriction");
+        PlayerUtil.removeAdvancement(owner, "vessel");
+        PlayerUtil.removeAdvancement(owner, "perfect_body");
+        this.lockAll();
+        this.generate(owner);
+    }
+
     @Override
     public int getLives() {
         return this.lives;

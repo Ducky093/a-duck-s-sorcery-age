@@ -20,8 +20,11 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
@@ -163,18 +166,31 @@ public class PerfectBodyOverlay implements IOverlay {
             }
         }
         humanoid.setupAnim(entity, f5, f8, f7, f2, f6);
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
+            humanoid.rightArm.xRot = (float) Math.toRadians(-75.0F);
+            humanoid.leftArm.xRot  = (float) Math.toRadians(-75.0F);
 
-        if (model.attackTime <= 0) {
-            humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+            humanoid.rightArm.yRot = (float) Math.toRadians(-40.0F);
+            humanoid.leftArm.yRot  = (float) Math.toRadians(40.0F);
+
+            humanoid.rightArm.zRot = (float) Math.toRadians(15.0F);
+            humanoid.leftArm.zRot  = (float) Math.toRadians(-15.0F);
+        } else {
+            if (model.attackTime <= 0) {
+                humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+            }
+            humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - ((float) Math.PI * 0.125F);
+
+            if (model.attackTime <= 0) {
+                humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+            }
+            humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - ((float) Math.PI * 0.025F);
         }
-        humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - ((float) Math.PI * 0.125F);
+     
         humanoid.rightSleeve.copyFrom(humanoid.rightArm);
         humanoid.rightArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 
-        if (model.attackTime <= 0) {
-            humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
-        }
-        humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - ((float) Math.PI * 0.025F);
         humanoid.leftSleeve.copyFrom(humanoid.leftArm);
         humanoid.leftArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 

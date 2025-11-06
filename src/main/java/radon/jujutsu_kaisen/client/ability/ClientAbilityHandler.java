@@ -8,6 +8,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -17,6 +18,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
+
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,18 +33,27 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.JJKKeys;
+import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
+import radon.jujutsu_kaisen.client.gui.screen.JutwotsuScreen;
+import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.client.gui.screen.ShadowInventoryScreen;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.UntriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.awt.event.KeyEvent;
@@ -103,17 +115,16 @@ public class ClientAbilityHandler {
                 }
             }
         }
+        
 
-        @SubscribeEvent
+        @SubscribeEvent 
         public static void onClientTick(TickEvent.ClientTickEvent event) {
+            
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
 
-            if (current != null) {
-                boolean possiblyChanneling = channeled != null;
-
-                if (possiblyChanneling) {
+            if (current != null && channeled != null) {
                     boolean isHeld = current.isDown();
 
                     if (isHeld) {
@@ -131,7 +142,6 @@ public class ClientAbilityHandler {
                         current = null;
                         isChanneling = false;
                     }
-                }
             }
 
             if (mc.player.getVehicle() instanceof IRightClickInputListener listener) {
@@ -148,7 +158,7 @@ public class ClientAbilityHandler {
                 }
             }
         }
-
+      
           private static void handleInput(int inputObj, int action) {
  Minecraft mc = Minecraft.getInstance();
 
@@ -169,7 +179,7 @@ public class ClientAbilityHandler {
             }
 
             if (action == InputConstants.PRESS) {
-                if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
+                if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
                     Ability ability = AbilityOverlay.getSelected();
 
                     if (ability != null) {
@@ -179,12 +189,11 @@ public class ClientAbilityHandler {
                         } else {
                             //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            //}
                         }
                     }
                 }
 
-                if (JJKKeys.ACTIVATE_J2TSU.isDown()) {
+                if (JJKKeys.ACTIVATE_J2TSU.consumeClick()) {
                     Ability ability = AbilityOverlay.getSelected2();
 
                     if (ability != null) {
@@ -199,7 +208,37 @@ public class ClientAbilityHandler {
                     }
                 }
 
-                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
+                if (JJKKeys.OPEN_INVENTORY_CURSE.consumeClick() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
+                        CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
+                    PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
+                }
+                if (JJKKeys.OPEN_JUJUTSU_MENU.consumeClick()) {
+                    mc.setScreen(new JujutsuScreen());
+                }
+                if (JJKKeys.SHOW_ABILITY_MENU.consumeClick()) {
+                    mc.setScreen(new AbilityScreen());
+                }
+                if (JJKKeys.SHOW_DOMAIN_MENU.consumeClick()) {
+                    mc.setScreen(new DomainScreen());
+                }
+                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.consumeClick()) {
+                    mc.setScreen(new MeleeScreen());
+                }
+                if (JJKKeys.ACTIVATE_J2TSU_MENU.consumeClick()) {
+                    mc.setScreen(new JutwotsuScreen());
+                }
+                if (JJKKeys.INCREASE_OUTPUT.consumeClick()) {
+                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
+                    cap.increaseOutput();
+                }
+                if (JJKKeys.DECREASE_OUTPUT.consumeClick()) {
+                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.DECREASE));
+                    cap.decreaseOutput();
+                }   
+
+                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.consumeClick()) {
                     Ability rct = EntityUtil.getRCTTier(mc.player);
 
                     if (JJKAbilities.getType(mc.player) == JujutsuType.CURSE) {
@@ -211,36 +250,36 @@ public class ClientAbilityHandler {
                     }
                 }
 
-                if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
+                if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.consumeClick()) {
                         channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
                         current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
                 }
 
-                if (JJKKeys.DASH.isDown()) {
+                if (JJKKeys.DASH.consumeClick()) {
                     //if (ClientAbilityHandler.trigger(JJKAbilities.DASH.get()) == Ability.Status.SUCCESS) {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                     //}
                 }
-                if (JJKKeys.QUICKDASH.isDown()) {
+                if (JJKKeys.QUICKDASH.consumeClick()) {
                     //if (ClientAbilityHandler.trigger(JJKAbilities.QUICKDASH.get()) == Ability.Status.SUCCESS) {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.QUICKDASH.get())));
                     //}
                 }
             } else if (action == InputConstants.RELEASE) {
-                if (current != null) {
-                    boolean possiblyChanneling = channeled != null;
+                // if (current != null) {
+                //     boolean possiblyChanneling = channeled != null;
 
-                    if (possiblyChanneling) {
-                        if (inputObj == current.getKey().getValue()) {
-                            AbilityHandler.untrigger(mc.player, channeled);
-                            PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+                //     if (possiblyChanneling) {
+                //         if (inputObj == current.getKey().getValue()) {
+                //             AbilityHandler.untrigger(mc.player, channeled);
+                //             PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
 
-                            channeled = null;
-                            current = null;
-                            isChanneling = false;
-                        }
-                    }
-                }
+                //             channeled = null;
+                //             current = null;
+                //             isChanneling = false;
+                //         }
+                //     }
+                // }
                 if ((inputObj == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
                         (inputObj == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
                         (inputObj == JJKKeys.ACTIVATE_J2TSU.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {

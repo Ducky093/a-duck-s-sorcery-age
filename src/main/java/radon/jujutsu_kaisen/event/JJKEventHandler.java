@@ -262,7 +262,7 @@ public class JJKEventHandler {
 
             cap.tick(owner);
 
-            if ((cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if ((cap.hasTrait(Trait.SIX_EYES) && (!owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()) && !CuriosUtil.findSlot(owner, "head").is(JJKItems.BLINDFOLD.get()) ) ) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
@@ -376,11 +376,7 @@ public class JJKEventHandler {
                         cursed = true;
                     } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
-                    } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        cursed = attackerCap.getEnergy() > 0.0F;
                     }
-
                     if (!cursed) {
                         event.setCanceled(true);
                     }
@@ -405,6 +401,17 @@ public class JJKEventHandler {
                 if (source.getEntity() == victim && !capSelf.hasSelfHit() ) {
                     event.setAmount(event.getAmount() * 0.1F);
                 }
+            }
+            else {
+                if (source.getEntity() instanceof LivingEntity sourceUser && HelperMethods.isMelee(source) && sourceUser.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                        ISorcererData attackerCap = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        if (attackerCap.getEnergy() > 0.0F) {
+                            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+                            if (victimCap != null && victimCap.getType() == JujutsuType.CURSE && !victimCap.hasTrait(Trait.DEATH_PAINTING)) {
+                                event.setAmount(0.0F);
+                            }
+                        }
+                    }
             }
             Entity attackerEntity = source.getEntity();
 if (attackerEntity instanceof Projectile projectile) {

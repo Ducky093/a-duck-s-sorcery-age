@@ -9,15 +9,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.armor.BlindfoldRenderer;
-import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.function.Consumer;
 
-public class BlindfoldItem extends ArmorItem implements GeoItem {
+public class BlindfoldItem extends ArmorItem implements GeoItem, ICurioItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public BlindfoldItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {

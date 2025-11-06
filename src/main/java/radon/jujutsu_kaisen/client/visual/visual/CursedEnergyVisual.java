@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CursedEnergyVisual implements IVisual {
@@ -21,7 +22,7 @@ public class CursedEnergyVisual implements IVisual {
         if (mc.player == null) return false;
 
         return ConfigHolder.CLIENT.visibleCursedEnergy.get() && data.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
-                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));
+                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) && (!mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()) && !CuriosUtil.findSlot(mc.player, "head").is(JJKItems.BLINDFOLD.get()) ) ) );
     }
 
     @Override

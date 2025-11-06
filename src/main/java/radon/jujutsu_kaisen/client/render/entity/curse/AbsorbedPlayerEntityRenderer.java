@@ -14,14 +14,17 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.UUID;
+
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 
-public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity, PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity>> {
+public class AbsorbedPlayerEntityRenderer extends HumanoidMobRenderer<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity, PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity>> {
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> normal;
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> slim;
 
-    public AbsorbedPlayerEntity(EntityRendererProvider.Context pContext) {
+    public AbsorbedPlayerEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
@@ -39,10 +42,14 @@ public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kais
         assert mc.level != null;
 
         GameProfile profile = pEntity.getPlayer();
+        if (profile != null) {
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
         PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
         this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
-
+        }
+        else {
+            this.model = this.normal;
+        }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
 
@@ -51,7 +58,14 @@ public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kais
         GameProfile profile = pEntity.getPlayer();
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
         PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-        this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
+        if (profile != null) {
+             this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
+        }
+        else {
+            this.model = this.normal;
+            return DefaultPlayerSkin.getDefaultSkin(UUID.randomUUID());
+
+        }
         return info == null ? DefaultPlayerSkin.getDefaultSkin(profile.getId()) : info.getSkinLocation();
     }
 }

@@ -222,44 +222,16 @@ public class JJKClientEventHandler {
             }
         }
 
-        @SubscribeEvent
-        public static void onKeyInput(InputEvent.Key event) {
-            Minecraft mc = Minecraft.getInstance();
+        // @SubscribeEvent
+        // public static void onKeyInput(InputEvent.Key event) {
+        //     Minecraft mc = Minecraft.getInstance();
 
-            if (mc.player == null) return;
+        //     if (mc.player == null) return;
 
-            if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
-                        CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
-                    PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
-                }
-                if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
-                    mc.setScreen(new JujutsuScreen());
-                }
-                if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
-                    mc.setScreen(new AbilityScreen());
-                }
-                if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
-                    mc.setScreen(new DomainScreen());
-                }
-                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
-                    mc.setScreen(new MeleeScreen());
-                }
-                if (JJKKeys.ACTIVATE_J2TSU_MENU.isDown()) {
-                    mc.setScreen(new JutwotsuScreen());
-                }
-                if (JJKKeys.INCREASE_OUTPUT.isDown()) {
-                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
-                    cap.increaseOutput();
-                }
-                if (JJKKeys.DECREASE_OUTPUT.isDown()) {
-                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.DECREASE));
-                    cap.decreaseOutput();
-                }
-            }
-        }
+        //     if (event.getAction() == InputConstants.PRESS) {
+                
+        //     }
+        // }
 
         @SubscribeEvent
         public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
@@ -434,7 +406,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FINGER_BEARER.get(), FingerBearerRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DINO_CURSE.get(), DinoCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntity::new);
+            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntityRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);

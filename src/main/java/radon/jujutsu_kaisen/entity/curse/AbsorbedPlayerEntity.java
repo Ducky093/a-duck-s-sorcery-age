@@ -27,6 +27,9 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
 
     @Override
     public @NotNull Component getName() {
+        if (this.getPlayer() != null ) {
+            return Component.literal("");
+        }
         return Component.literal(this.getPlayer().getName());
     }
 
@@ -34,8 +37,14 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
         this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
     }
 
-    public GameProfile getPlayer() {
-        return NbtUtils.readGameProfile(this.entityData.get(DATA_PLAYER).orElseThrow());
+    public @Nullable GameProfile getPlayer() {
+        CompoundTag a = this.entityData.get(DATA_PLAYER).orElse(null);
+        if (a == null) {
+            return null;
+        }
+        else {
+            return NbtUtils.readGameProfile(a);
+        }
     }
 
     @Override

@@ -361,6 +361,8 @@ public interface ISorcererData {
 
     int getCharge();
 
+    void wipe(ServerPlayer owner);
+
     void generate(ServerPlayer owner);
 
     void addSummon(Entity entity);

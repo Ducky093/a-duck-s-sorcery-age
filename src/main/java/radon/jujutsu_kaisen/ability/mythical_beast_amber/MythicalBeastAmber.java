@@ -196,7 +196,7 @@ public void run(LivingEntity owner) {
         cap.setCursedEnergyColor(color);
         if (owner instanceof ServerPlayer play) {
             if (ConfigHolder.SERVER.MBAReroll.get()) {
-                cap.generate(play);
+                cap.wipe(play);
             }
         }
         if (ConfigHolder.SERVER.MBADeath.get()) {

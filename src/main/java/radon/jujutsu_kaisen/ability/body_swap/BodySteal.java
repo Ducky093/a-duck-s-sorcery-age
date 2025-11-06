@@ -178,7 +178,7 @@ public class BodySteal extends Ability implements Ability.IToggled {
        // 
         if (attacker instanceof ServerPlayer servOwner ) {
             if (ConfigHolder.SERVER.bodyStealReroll.get()) {
-                targetCap.generate(servOwner);
+                targetCap.wipe(servOwner);
             }
         
             attacker.sendSystemMessage(Component.translatable(

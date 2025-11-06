@@ -15,9 +15,11 @@ public class JJKCommands {
         TraitCommand.register(event.getDispatcher());
         SetTypeCommand.register(event.getDispatcher());
         RerollCommand.register(event.getDispatcher());
+        WipeCommand.register(event.getDispatcher());
         ResetSummonsCommand.register(event.getDispatcher());
         SetNatureCommand.register(event.getDispatcher());
         SetExperienceCommand.register(event.getDispatcher());
+        AddExperienceCommand.register(event.getDispatcher());
         PactCreationAcceptCommand.register(event.getDispatcher());
         PactCreationDeclineCommand.register(event.getDispatcher());
         PactRemovalAcceptCommand.register(event.getDispatcher());

@@ -1,6 +1,7 @@
 {
   "entities": ["player"],
   "slots": [
+    "head",
     "right_hand",
     "left_hand"
   ]
