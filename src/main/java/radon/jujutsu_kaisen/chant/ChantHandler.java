@@ -35,6 +35,17 @@ public class ChantHandler {
         int count = 0;
         int length = 0;
 
+        float countMult = 0.5F;
+        float lengthMult = 1.15F;
+
+        float outputMod = 0.0F;
+
+        if (cap.hasBindingVow(BindingVow.CHANTER)) {
+        outputMod += -0.3F;
+        countMult = 1.0F;
+        lengthMult = 1.65F;
+        }
+
         //Iterator<String> iter = chants.iterator();
         int index = 0;
         // for (String chant : messages) {
@@ -54,12 +65,12 @@ public class ChantHandler {
         }
         float countFactor = (float) count / ConfigHolder.SERVER.maximumChantCount.get();
         float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
-        float outputMod = 0.0F;
+
         if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
             outputMod += 0.4;
-                    //     if  {
         }
-        return (0.5F * countFactor) + (1.15F * lengthFactor) + (outputMod);
+
+        return (countMult * countFactor) + (lengthMult * lengthFactor) + (outputMod);
     }
 
     @Nullable

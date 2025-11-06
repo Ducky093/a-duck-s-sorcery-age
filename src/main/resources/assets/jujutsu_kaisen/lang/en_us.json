@@ -551,6 +551,9 @@
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
   "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
+  "binding_vow.jujutsu_kaisen.chanter": "Chanter",
+  "binding_vow.jujutsu_kaisen.chanter.description": "Your own abilities decrease in power, but scale much higher with chants.",
+
   "binding_vow.jujutsu_kaisen.risk": "Risk",
   "binding_vow.jujutsu_kaisen.risk.description": "Your cursed technique lays dormant unless your health drops below a threshold. In exchange, the output of the technique is empowered.",
 

@@ -6,6 +6,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 public enum BindingVow {
     OVERTIME,
     RECOIL,
+    CHANTER,
     RISK;
 
     public Component getName() {
