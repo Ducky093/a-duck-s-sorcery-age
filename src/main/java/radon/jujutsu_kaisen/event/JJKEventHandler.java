@@ -482,7 +482,18 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
                    armor*=ConfigHolder.SERVER.hrDefenseMult.get().floatValue();
                 }
             }
-           
+
+            if (!(victim instanceof Player) && (!(attackerEntity instanceof Player)) ) {
+                if (!(victim instanceof CursedSpirit curse && curse.isTame())) {
+                    if (!(victim instanceof SummonEntity summon && summon.isTame())) {
+                        if (!(attackerEntity instanceof CursedSpirit curse && curse.isTame())) {
+                            if (!(attackerEntity instanceof SummonEntity summon && summon.isTame())) {
+                                event.setAmount(event.getAmount() * 0.85F);
+                            }
+                        }
+                        }
+                    }
+                }
           
 
             float blocked = event.getAmount()/armor;
