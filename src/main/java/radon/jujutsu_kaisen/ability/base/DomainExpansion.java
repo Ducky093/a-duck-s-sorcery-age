@@ -218,7 +218,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     public interface IClosedDomain {
         default int getSize() {
-            return 20;
+            return 30;
         }
 
         default float getRadius(LivingEntity owner) {
