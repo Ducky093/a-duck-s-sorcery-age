@@ -30,7 +30,7 @@ public class ForestRoots extends Ability {
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
-        float output = ChantHandler.getOutput(owner, this);
+        float output = (ChantHandler.getOutput(owner, this) * 1.2F);
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE * output, RANGE * output, RANGE * output))) {
             if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || !entity.onGround() ) continue;

@@ -35,15 +35,15 @@ public class ChantHandler {
         int count = 0;
         int length = 0;
 
-        float countMult = 0.5F;
-        float lengthMult = 1.15F;
+        float countMult = 0.2F;
+        float lengthMult = 0.6F;
 
         float outputMod = 0.0F;
 
         if (cap.hasBindingVow(BindingVow.CHANTER)) {
         outputMod += -0.3F;
-        countMult = 1.0F;
-        lengthMult = 1.65F;
+        countMult = 0.35F;
+        lengthMult = 0.8F;
         }
 
         //Iterator<String> iter = chants.iterator();

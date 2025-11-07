@@ -75,7 +75,7 @@ public class WorldSlash extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (ConfigHolder.SERVER.chantRequiredForWCS.get() && owner instanceof Player && ChantHandler.getOutput(owner, this) < 1.5F ) {
+        if (ConfigHolder.SERVER.chantRequiredForWCS.get() && owner instanceof Player && ChantHandler.getOutput(owner, this) < 1.25F ) {
             return Status.CHANT;
         }
         return super.isTriggerable(owner);
