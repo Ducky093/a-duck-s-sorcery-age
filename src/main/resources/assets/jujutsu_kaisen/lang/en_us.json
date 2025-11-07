@@ -536,13 +536,13 @@
   "trait.jujutsu_kaisen.death_painting": "Cursed Womb: Death Painting",
 
   "pact.jujutsu_kaisen.friends": "Friends",
-  "pact.jujutsu_kaisen.friends.description": "A pact in which both parties mutually agree to not target each other with blows.",
+  "pact.jujutsu_kaisen.friends.description": "An inviolable pact in which both parties mutually agree to not target each other with blows.",
 
   "pact.jujutsu_kaisen.invulnerability": "Non-Aggression",
-  "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
+  "pact.jujutsu_kaisen.invulnerability.description": "A violable pact in which both parties promise not to cause harm to each other.",
 
   "pact.jujutsu_kaisen.technique": "Technique",
-  "pact.jujutsu_kaisen.technique.description": "A pact in which both parties vow to not utilize cursed techniques.",
+  "pact.jujutsu_kaisen.technique.description": "A violable pact in which both parties vow to not utilize cursed techniques.",
 
 
   "binding_vow.jujutsu_kaisen.overtime": "Overtime",

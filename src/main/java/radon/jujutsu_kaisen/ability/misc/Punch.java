@@ -157,13 +157,8 @@ public class Punch extends Ability implements Ability.ICharged{
                         continue;
                     }
                     targets.add(entity.getStringUUID());
-                        if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent() && entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData victimCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                ISorcererData attackerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                if (victimCap.hasPact(owner.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
-                   continue;
-                }
-                }
+                    if (HelperMethods.friendsCheck(owner, entity)) continue;
+                        
                     if (level1 instanceof ServerLevel) {
                         Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 0.9F, 1.2F);

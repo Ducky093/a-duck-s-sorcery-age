@@ -137,13 +137,7 @@ public class Barrage extends Ability {
                         entity -> entity != owner)) {
                     // && owner.hasLineOfSight(entity)
                     Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-                       if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent() && entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData victimCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    ISorcererData attackerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    if (victimCap.hasPact(owner.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
-                    continue;
-                    }
-                    }
+                    if (HelperMethods.friendsCheck(owner, entity)) continue;
                     if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SteelGauntletItem) {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }

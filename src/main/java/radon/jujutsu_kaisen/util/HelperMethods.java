@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -52,6 +53,49 @@ public class HelperMethods {
     "rot", "decay", "curse", "wither", "lament", "sin", "hunger", "feast", "shroud", "wrath", "abyss", "void", "grief", "scar", "torment", "ruin", "dread", "flesh", "night"
     };
     
+
+    public static boolean friendsCheck(LivingEntity owner, LivingEntity entity) {
+
+        ISorcererData attackerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        ISorcererData victimCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+
+        if (attackerCap != null && victimCap != null) {
+            if (victimCap.hasPact(owner.getUUID(), Pact.FRIENDS)
+                    && attackerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
+                return true;
+            }
+        }
+
+        LivingEntity ownerOfOwner = (owner instanceof TamableAnimal t1 && t1.isTame()) ? t1.getOwner() : null;
+        LivingEntity ownerOfEntity = (entity instanceof TamableAnimal t2 && t2.isTame()) ? t2.getOwner() : null;
+
+        if (ownerOfOwner != null) {
+            ISorcererData ownerOwnerCap = ownerOfOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (ownerOwnerCap != null && ownerOwnerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
+                return true;
+            }
+        }
+
+        if (ownerOfEntity != null) {
+            ISorcererData ownerEntityCap = ownerOfEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (ownerEntityCap != null && ownerEntityCap.hasPact(owner.getUUID(), Pact.FRIENDS)) {
+                return true;
+            }
+        }
+
+        if (ownerOfOwner != null && ownerOfEntity != null) {
+            ISorcererData cap1 = ownerOfOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            ISorcererData cap2 = ownerOfEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+            if (cap1 != null && cap2 != null
+                    && cap1.hasPact(ownerOfEntity.getUUID(), Pact.FRIENDS)
+                    && cap2.hasPact(ownerOfOwner.getUUID(), Pact.FRIENDS)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public static boolean isBlockable(LivingEntity target, Projectile projectile) {
         if (projectile instanceof WorldSlashProjectile) return false;
         if (projectile.getOwner() == target) return false;

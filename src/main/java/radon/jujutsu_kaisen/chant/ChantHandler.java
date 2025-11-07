@@ -28,9 +28,9 @@ public class ChantHandler {
 
         List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
 
-        if (chants.isEmpty()) return 0.0F;
+        //if (chants.isEmpty()) return 0.0F;
 
-        if (messages.isEmpty()) return 0.0F;
+        //if (messages.isEmpty()) return 0.0F;
 
         int count = 0;
         int length = 0;
@@ -67,7 +67,14 @@ public class ChantHandler {
         float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
 
         if (cap.hasBindingVow(BindingVow.RISK) && (owner.getHealth()/owner.getMaxHealth() < 0.25F ) && ability.isTechnique()) {
-            outputMod += 0.4;
+            outputMod += 0.4F;
+        }
+    
+        if (chants.isEmpty() || messages.isEmpty() ) {
+            countMult = 0;
+            countFactor = 0;
+            lengthMult = 0;
+            lengthFactor = 0;
         }
 
         return (countMult * countFactor) + (lengthMult * lengthFactor) + (outputMod);

@@ -20,11 +20,11 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 
-public class AbsorbedPlayerEntityRenderer extends HumanoidMobRenderer<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity, PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity>> {
+public class AbsorbedPlayerRenderer extends HumanoidMobRenderer<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity, PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity>> {
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> normal;
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> slim;
 
-    public AbsorbedPlayerEntityRenderer(EntityRendererProvider.Context pContext) {
+    public AbsorbedPlayerRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),

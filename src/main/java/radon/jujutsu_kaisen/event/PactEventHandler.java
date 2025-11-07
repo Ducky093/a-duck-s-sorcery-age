@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.LimboCloneEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -151,11 +152,14 @@ public class PactEventHandler {
                             if (dimension != null) {
                                 BlockPos pos = HelperMethods.findSafePos(dimension, attacker);
                                 attacker.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), attacker.getYRot(), attacker.getXRot());
+                                attacker.level().addFreshEntity(new LimboCloneEntity(attacker, attacker.level().dimension().location()));
                             }
                         }
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), (ServerPlayer) victim);
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), (ServerPlayer) attacker);
                     //event.setCanceled(true);
+                }  else if (HelperMethods.isMelee(source) && victimCap.hasPact(attacker.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(victim.getUUID(), Pact.FRIENDS)) { 
+                    event.setCanceled(true);
                 }
             }
         }

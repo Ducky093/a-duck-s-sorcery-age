@@ -129,6 +129,10 @@ public class JJKEntities {
             EntityType.Builder.<AbsorbedPlayerEntity>of(AbsorbedPlayerEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
                             .toString()));
+    public static RegistryObject<EntityType<LimboCloneEntity>> LIMBO_CLONE = ENTITIES.register("limbo_clone", () ->
+            EntityType.Builder.<LimboCloneEntity>of(LimboCloneEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "limbo_clone")
+                            .toString()));
 
     public static RegistryObject<EntityType<SukunaEntity>> SUKUNA = ENTITIES.register("sukuna", () ->
             EntityType.Builder.<SukunaEntity>of(SukunaEntity::new, MobCategory.AMBIENT)
@@ -619,6 +623,7 @@ public class JJKEntities {
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
         event.put(DINO_CURSE.get(), DinoCurseEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
+        event.put(LIMBO_CLONE.get(), SorcererEntity.createAttributes().build());
 
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
     }
