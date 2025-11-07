@@ -62,7 +62,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         CursedTechnique technique = cap.getTechnique();
         if (technique == null) return false;
         Ability domain = technique.getDomain();
-        if (domain == null) return false;
+        if (domain == null || cap.hasToggled(domain) ) return false;
 
         //DomainExpansionEntity domainEntity = cap.getSummonByClass(DomainExpansionEntity.class);
 //domainEntity == null
@@ -142,4 +142,5 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     public float getCost(LivingEntity owner) {
         return 250.0F;
     }
+
 }

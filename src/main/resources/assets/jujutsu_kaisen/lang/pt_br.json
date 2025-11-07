@@ -366,7 +366,7 @@
   "ability.jujutsu_kaisen.soul_decimation.enable": "Dizimação Espiritual ativada",
   "ability.jujutsu_kaisen.soul_decimation.disable": "Dizimação Espiritual desativada",
   "ability.jujutsu_kaisen.soul_reinforcement": "Reforço de Alma",
-  "ability.jujutsu_kaisen.soul_reinforcement.enable": "Reforço de Alma ativado
+  "ability.jujutsu_kaisen.soul_reinforcement.enable": "Reforço de Alma ativado",
   "ability.jujutsu_kaisen.soul_reinforcement.disable": "Reforço de Alma desativado",
   "ability.jujutsu_kaisen.barrier_travel.enable": "Travessia de Barreiras ativada",
   "ability.jujutsu_kaisen.barrier_travel.disable": "Travessia de Barreiras desativada",
@@ -398,8 +398,8 @@
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.disable": "Espírito Instantâneo da Matança Distorcida desativado",
   "ability.jujutsu_kaisen.self_embodiment_of_perfection": "Auto-Personificação da Perfeição",
 
-  "ability.jujutsu_kaisen.mythical_beast_amber.enable": "Besta Mítica Âmbar ativada"
-  "ability.jujutsu_kaisen.mythical_beast_amber.disable": "Besta Mítica Âmbar desativada	",
+  "ability.jujutsu_kaisen.mythical_beast_amber.enable": "Besta Mítica Âmbar ativada",
+  "ability.jujutsu_kaisen.mythical_beast_amber.disable": "Besta Mítica Âmbar desativada",
   "ability.jujutsu_kaisen.switch_mode": "Trocar de Modo",
   "ability.jujutsu_kaisen.release_shikigami": "Retirar Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Armazenamento Sombrio",
@@ -624,7 +624,7 @@
 
   "chat.jujutsu_kaisen.pact_failure_create": "%1$s não solicitou um pacto %2$s com você",
   "chat.jujutsu_kaisen.pact_accept_remove": "Você removeu seu pacto %1$s com %2$s",
-  "chat.jujutsu_kaisen.pact_failure_remove": "%1$s não solicitou a remoção do pacto %2$s com você"
+  "chat.jujutsu_kaisen.pact_failure_remove": "%1$s não solicitou a remoção do pacto %2$s com você",
 
   "chat.jujutsu_kaisen.chant": "%1$s encantado por: %2$d%%",
 

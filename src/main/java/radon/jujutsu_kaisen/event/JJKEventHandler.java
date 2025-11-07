@@ -409,10 +409,17 @@ public class JJKEventHandler {
             else {
                 if (source.getEntity() instanceof LivingEntity sourceUser && HelperMethods.isMelee(source) && sourceUser.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         ISorcererData attackerCap = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        if (attackerCap.getEnergy() <= 0.0F) {
-                            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+                        if (attackerCap.getEnergy() <= 0.0F) {  
+                            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : sourceUser.getItemInHand(InteractionHand.MAIN_HAND);
+                            List<Item> stacks = new ArrayList<>();
+                            stacks.add(stack.getItem());
+                            stacks.addAll(CuriosUtil.findSlots(sourceUser, sourceUser.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                            .stream().map(ItemStack::getItem).toList());
+                            if (!(stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
+                                 ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
                             if (victimCap != null && victimCap.getType() == JujutsuType.CURSE && !victimCap.hasTrait(Trait.DEATH_PAINTING)) {
                                 event.setAmount(0.0F);
+                            }
                             }
                         }
                     }

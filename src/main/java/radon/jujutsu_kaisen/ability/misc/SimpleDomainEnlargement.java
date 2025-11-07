@@ -100,7 +100,7 @@ public class SimpleDomainEnlargement extends Ability implements Ability.IChannel
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!(JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) )) return false;
-
+        if (!owner.level().isClientSide)  {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
@@ -108,6 +108,7 @@ public class SimpleDomainEnlargement extends Ability implements Ability.IChannel
          if (domain == null) return false;
 
          if (!domain.canEnlarge()) return false;
+        }
         return super.isValid(owner);
     }
     // @Override
