@@ -197,7 +197,7 @@ public class LimboCloneEntity extends PathfinderMob implements ISorcerer {
         if (owner.level() != this.level()) return;
 
         BlockPos pos = HelperMethods.findSafePos(dimension, play);
-        play.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), play.getYRot(), play.getXRot());
+        play.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), play.getYRot(), play.getXRot());
     }
 
     @Override
