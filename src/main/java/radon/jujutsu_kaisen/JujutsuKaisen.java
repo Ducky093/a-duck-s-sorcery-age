@@ -103,7 +103,6 @@ public class JujutsuKaisen {
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get(), RenderType.cutout());
 
-         CuriosRendererRegistry.register(JJKItems.INVENTORY_CURSE.get(), InventoryCurseRenderer::new);
         CuriosRendererRegistry.register(JJKItems.INVENTORY_CURSE.get(), InventoryCurseRenderer::new);
         CuriosRendererRegistry.register(JJKItems.BLINDFOLD.get(), BlindfoldRenderer::new);
     }
