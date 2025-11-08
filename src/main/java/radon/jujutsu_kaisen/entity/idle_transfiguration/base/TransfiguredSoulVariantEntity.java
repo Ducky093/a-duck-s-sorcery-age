@@ -29,10 +29,10 @@ public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEnti
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 6 * 14.0F)
-                .add(Attributes.ARMOR, 16.0D)
+                .add(Attributes.MAX_HEALTH, 7.0F)
+                .add(Attributes.ARMOR, 12.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 6.0D)
-                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
 
     @Override
