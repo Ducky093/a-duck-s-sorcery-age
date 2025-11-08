@@ -71,6 +71,11 @@ public class BlueProjectile extends JujutsuProjectile {
         this.entityData.define(DATA_MOTION, false);
     }
 
+    @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
     private void pullEntities() {
         float radius = this.getRadius();
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,

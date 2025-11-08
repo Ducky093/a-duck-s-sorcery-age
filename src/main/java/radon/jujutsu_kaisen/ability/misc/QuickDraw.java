@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.effect.base.JJKEffect;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
+import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -82,7 +83,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             boolean last = i == Barrage.DURATION - 1;
 
             cap.delayTickEvent(() -> {
-                cap.useEnergy(4.0F);
+                SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
+                if (domain == null) return;
+                if (cap.hasToggled(JJKAbilities.QUICK_DRAW.get()) && entity.distanceTo(domain) <= domain.getRadius()) {
+
+
+                cap.useEnergy(3.0F);
                 if (owner instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }
@@ -119,7 +125,8 @@ public class QuickDraw extends Ability implements Ability.IToggled {
                 if (!last) {
                     entity.invulnerableTime = 1;
                 }
-            }, i * 2);
+                }
+            }, i);
         }
     }
 
@@ -237,7 +244,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (!cap.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !cap.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
-            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile) || event.getSource().getDirectEntity() instanceof WorldSlashProjectile ) return;
+            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile) || (event.getSource().getDirectEntity() instanceof JujutsuProjectile pro && pro.canDeflect() == false ) ) return;
 
             ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
 
@@ -256,7 +263,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
-            //stack.hurtAndBreak(blocked, victim, EquipmentSlot.MAINHAND);
+            stack.hurtAndBreak(1, victim, entity -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+
+            cap.useEnergy(3.0F);
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
 
             event.setCanceled(true);
         }
@@ -273,7 +285,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (!cap.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !cap.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
-            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile)) return;
+            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile) || (event.getSource().getDirectEntity() instanceof JujutsuProjectile pro && pro.canDeflect() == false)  ) return;
 
             ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
 
@@ -288,7 +300,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
-            //stack.hurtAndBreak(blocked, victim, EquipmentSlot.MAINHAND);
+            stack.hurtAndBreak(1, victim, entity -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+
+            cap.useEnergy(3.0F);
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
 
             float reduced = amount - blocked;
 

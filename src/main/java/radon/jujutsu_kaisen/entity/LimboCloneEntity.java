@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -179,23 +180,24 @@ public class LimboCloneEntity extends PathfinderMob implements ISorcerer {
     @Override
     public void die(@NotNull DamageSource pDamageSource) {
         super.die(pDamageSource);
-
+        
+    if (this.level().isClientSide) return;
         LivingEntity owner = this.getOwner();
 
-        if (owner == null) return;
+        if (owner == null || !(owner instanceof ServerPlayer play)) return;
 
         MinecraftServer server = this.level().getServer();
 
         if (server == null) return;
 
         ServerLevel dimension = server.getLevel(ResourceKey.create(Registries.DIMENSION, this.original));
-
+        System.out.println("pre dim");
         if (dimension == null) return;
-
+                System.out.println("post dim");
         if (owner.level() != this.level()) return;
 
-        BlockPos pos = HelperMethods.findSafePos(dimension, owner);
-        owner.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), owner.getYRot(), owner.getXRot());
+        BlockPos pos = HelperMethods.findSafePos(dimension, play);
+        play.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), play.getYRot(), play.getXRot());
     }
 
     @Override

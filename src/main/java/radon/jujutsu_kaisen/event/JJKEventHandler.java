@@ -282,7 +282,10 @@ public class JJKEventHandler {
                     float targetScale = 0.5F;
                     float currentScale = baseScale.getScale();
                     float newScale = currentScale + (targetScale - currentScale) * 0.1F;
-                    baseScale.setScale(newScale);
+                    if (baseScale.getScale() != targetScale ) {
+                        baseScale.setScale(newScale);
+                        baseScale.markForSync(true);
+                    }
             }
             else if((cap.hasTrait(Trait.CURSED_WOMB) )) {
                 if (owner instanceof Player) {
@@ -298,8 +301,12 @@ public class JJKEventHandler {
                 // float currentScale = baseScale.getScale();
                 // float currentWidth = baseWidth.getScale();
                 if (cap.hasTrait(Trait.CURSED_WOMB)) {
+                    if (baseScale.getScale() != targetScale ) {
                     baseScale.setScale(targetScale);
                     baseWidth.setScale(targetWidth);
+                    baseScale.markForSync(true);
+                    baseWidth.markForSync(true);
+                    }
                 }
                 }
             }
@@ -310,10 +317,14 @@ public class JJKEventHandler {
                 if (baseScale.getBaseScale() != baseScale.getScale()) {
                     baseWidth.resetScale();
                     baseScale.resetScale();
+                    baseScale.markForSync(true);
+                    baseWidth.markForSync(true);
                 }
                 if (baseWidth.getBaseScale() != baseWidth.getScale()) {
                     baseWidth.resetScale();
                     baseScale.resetScale();
+                    baseScale.markForSync(true);
+                    baseWidth.markForSync(true);
                 }
             }
             
@@ -450,7 +461,7 @@ if (attackerEntity instanceof Player || (attackerEntity instanceof SummonEntity 
 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(capSelf -> {
         if (HelperMethods.isMelee(source) && !capSelf.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
-            event.setAmount(event.getAmount() * 1.5F);
+            event.setAmount(event.getAmount() * ConfigHolder.SERVER.perfectBodyMult.get().floatValue() );
         }
     });
 }
@@ -488,7 +499,7 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
                     if (!(victim instanceof SummonEntity summon && summon.isTame())) {
                         if (!(attackerEntity instanceof CursedSpirit curse && curse.isTame())) {
                             if (!(attackerEntity instanceof SummonEntity summon && summon.isTame())) {
-                                event.setAmount(event.getAmount() * 0.85F);
+                                event.setAmount(event.getAmount() * ConfigHolder.SERVER.npcvsnpcDamageMult.get().floatValue());
                             }
                         }
                         }

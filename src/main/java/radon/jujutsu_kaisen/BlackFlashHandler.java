@@ -107,6 +107,9 @@ public class BlackFlashHandler {
                     } 
                 }
                 }
+                if (cap.hasToggled(JJKAbilities.QUICK_DRAW.get())) {
+                    rng *= 1.5;
+                }
                
 
 

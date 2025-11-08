@@ -79,7 +79,9 @@ public class JJKRenderTypes extends RenderType {
                             RenderSystem.setShaderTexture(0, 0);
                         }
                     }, () -> {}))
-                    .createCompositeState(false));
+                    .createCompositeState(false)
+                    );
+
     private static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
             false, true, RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LIGHTNING_SHADER)

@@ -8,9 +8,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -23,8 +29,11 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JetBlackShadowSwordItem;
 import radon.jujutsu_kaisen.item.cursed_tool.SteelGauntletItem;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -57,7 +66,12 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
-        if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof JetBlackShadowSwordItem) {
+           ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+        if (stacks.contains(JJKItems.JET_BLACK_SHADOW_SWORD.get())) {
             return 10.0F;
         }
         return 15.0F;

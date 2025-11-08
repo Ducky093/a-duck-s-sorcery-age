@@ -122,16 +122,15 @@ public class ClientAbilityHandler {
         }
 
 
-        private static void startchannel(Ability ability, KeyMapping key) {
-    Minecraft mc = Minecraft.getInstance();
-    if (mc.player == null) return;
+    private static void channel(@Nullable Ability ability, @Nullable KeyMapping key) {
+        Minecraft mc = Minecraft.getInstance();
 
-    // If already channeling this key, skip
-    if (activeChannels.containsKey(key)) return;
+        if (mc.player == null) return;
 
-    activeChannels.put(key, ability);
-    isChannelingMap.put(key, false); // not yet triggered
-}
+        channeled = ability;
+        current = key;
+        isChanneling = false;
+    }
         
 
         @SubscribeEvent
@@ -139,36 +138,21 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
     Minecraft mc = Minecraft.getInstance();
     if (mc.player == null) return;
 
-    // Use iterator so we can safely remove entries
-    Iterator<Map.Entry<KeyMapping, Ability>> it = activeChannels.entrySet().iterator();
-    while (it.hasNext()) {
-        Map.Entry<KeyMapping, Ability> entry = it.next();
-        KeyMapping key = entry.getKey();
-        Ability ability = entry.getValue();
-        boolean held = key.isDown();
+   if (current != null && channeled != null) {
+                boolean isHeld = current.isDown();
 
-        boolean isChanneling = isChannelingMap.getOrDefault(key, false);
+                if (isHeld) {
+                    if (!isChanneling) {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+                    }
+                    isChanneling = true;
+                } else if (isChanneling) {
+                    AbilityHandler.untrigger(mc.player, channeled);
+                    PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
 
-        if (held) {
-            // Start the channel if not yet triggered
-            if (!isChanneling) {
-                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                isChannelingMap.put(key, true);
+                    channel(null, null);
+                }
             }
-            // (Optional) You could also send periodic updates while held, if needed.
-        } else {
-            // Key released — end the channel
-            if (isChanneling) {
-                AbilityHandler.untrigger(mc.player, ability);
-                PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-            }
-
-            // Clean up
-            it.remove();
-            isChannelingMap.remove(key);
-        }
-    }
-
     // --- Keep your right-click listener logic as-is ---
     if (mc.player.getVehicle() instanceof IRightClickInputListener listener) {
         if (!isRightDown && mc.mouseHandler.isRightPressed()) {
@@ -203,12 +187,14 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
             }
 
             if (action == InputConstants.PRESS) {
-                if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
+                if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
                     Ability ability = AbilityOverlay.getSelected();
 
                     if (ability != null) {
                         if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-                             startchannel(ability, JJKKeys.ACTIVATE_ABILITY );
+                             if (channeled == null) {
+                                channel(ability, JJKKeys.ACTIVATE_ABILITY);
+                            }
                         } else {
                             //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
@@ -216,14 +202,16 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
                     }
                 }
 
-                if (JJKKeys.ACTIVATE_J2TSU.consumeClick()) {
+                if (JJKKeys.ACTIVATE_J2TSU.isDown()) {
                     Ability ability = AbilityOverlay.getSelected2();
 
                     if (ability != null) {
                         if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-                            startchannel(ability, JJKKeys.ACTIVATE_J2TSU );
+                            if (channeled == null) {
+                                channel(ability, JJKKeys.ACTIVATE_J2TSU);
+                            }
                       
-                        } else {
+                         } else if (JJKKeys.ACTIVATE_J2TSU.consumeClick()){
                             //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                             //}
@@ -261,19 +249,20 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
                     cap.decreaseOutput();
                 }   
 
-                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.consumeClick()) {
+                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                     Ability rct = EntityUtil.getRCTTier(mc.player);
-
-                    if (JJKAbilities.getType(mc.player) == JujutsuType.CURSE) {
-                        startchannel(JJKAbilities.HEAL.get(),JJKKeys.ACTIVATE_RCT_OR_HEAL );
-                        
-                    } else if (rct != null) {
-                        startchannel(rct,JJKKeys.ACTIVATE_RCT_OR_HEAL );
+                    Ability ability = JJKAbilities.getType(mc.player) == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : rct;
+                    if (ability != null) {
+                        if (channeled == null) {
+                            channel(ability, JJKKeys.ACTIVATE_RCT_OR_HEAL);
+                        }
                     }
                 }
 
-                if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.consumeClick()) {
-                    startchannel(JJKAbilities.CURSED_ENERGY_SHIELD.get(),JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD );
+                if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
+                    if (channeled == null) {
+                        channel(JJKAbilities.CURSED_ENERGY_SHIELD.get(),JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD );
+                    }
                 }
 
                 if (JJKKeys.DASH.consumeClick()) {

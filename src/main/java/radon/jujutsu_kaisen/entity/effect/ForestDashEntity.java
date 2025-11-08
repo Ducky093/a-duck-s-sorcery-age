@@ -30,6 +30,7 @@ public class ForestDashEntity extends JujutsuProjectile {
     public boolean canBeCollidedWith() {
         return false;
     }
+    
 
     @Override
     protected boolean isProjectile() {

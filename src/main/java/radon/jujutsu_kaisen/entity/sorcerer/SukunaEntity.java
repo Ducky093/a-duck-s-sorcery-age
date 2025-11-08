@@ -11,11 +11,14 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +89,22 @@ public class SukunaEntity extends SorcererEntity {
         }
     }
 
+     @Override
+    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
+            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+            int count = stack.getCount();
+
+            stack.shrink(count);
+            this.fingers = Math.max(20, this.fingers + count);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
+    }
+    
     @Override
     protected boolean isCustom() {
         return false;
@@ -124,13 +143,13 @@ public class SukunaEntity extends SorcererEntity {
 
             for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
-                AbilityHandler.trigger(this, ability);
-                return;
-            }
-            if (!mahoraga.isTamed(this)) {
-                AbilityHandler.trigger(this, mahoraga);
-                return;
-            }
+                    AbilityHandler.trigger(this, ability);
+                    return;
+                }
+                if (!mahoraga.isTamed(this)) {
+                    AbilityHandler.trigger(this, mahoraga);
+                    return;
+                }
         }
     }
 //  @Override
@@ -224,7 +243,7 @@ public class SukunaEntity extends SorcererEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (this.getKey() == null || (!this.level().isClientSide && this.vessel && this.getKey() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive()))) {
+        if ((!this.level().isClientSide && this.vessel && this.getKey() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive()))) {
             this.discard();
         } else {
             super.tick();
@@ -358,6 +377,8 @@ public class SukunaEntity extends SorcererEntity {
             sorcererDst.setAdditional(sorcererSrc.getTechnique());
             tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
             tenShadowsDst.setDead(tenShadowsSrc.getDead());
+            sorcererDst.setCopies(sorcererSrc.getCopied());
+            sorcererDst.setStolen(sorcererSrc.getStolen());
         }
     }
 
@@ -372,11 +393,11 @@ public class SukunaEntity extends SorcererEntity {
                 player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
 
-            ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            //ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            //ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
-            dst.setTamed(src.getTamed());
-            dst.setDead(src.getDead());
+            //dst.setTamed(src.getTamed());
+            //dst.setDead(src.getDead());
         }
     }
 

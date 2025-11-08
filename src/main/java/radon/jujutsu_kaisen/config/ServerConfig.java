@@ -83,6 +83,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue jujutsuDefenseMult;
     public final ForgeConfigSpec.DoubleValue hrDefenseMult;
     public final ForgeConfigSpec.DoubleValue playerDamageMult;
+    public final ForgeConfigSpec.DoubleValue npcvsnpcDamageMult;
     public final ForgeConfigSpec.DoubleValue playerHPMult;
     public final ForgeConfigSpec.DoubleValue npcHPMult;
     public final ForgeConfigSpec.DoubleValue playerCEArmor;
@@ -95,6 +96,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue playerM1Mult;
     public final ForgeConfigSpec.DoubleValue limitlessNoSixEyesMult;
     public final ForgeConfigSpec.DoubleValue sixEyesMult;
+    public final ForgeConfigSpec.DoubleValue perfectBodyMult;
 
 
 
@@ -219,13 +221,13 @@ public class ServerConfig {
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")
                 .defineInRange("minimumBodyStealEXP", 0.0F, 0.0F, 100000.0F);
         this.pointMultiplier = builder.comment("Scale of ability points you gain")
-                .defineInRange("pointMultiplier", 0.12F, 0.0F, 100.0F);
+                .defineInRange("pointMultiplier", 0.13F, 0.0F, 100.0F);
         this.pointPenalty = builder.comment("Scale of points lost on death")
                 .defineInRange("pointPenalty", 0.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.0F, 0.0F, 1.0F);
         this.minPoints = builder.comment("Minimum points gained from battles")
-                .defineInRange("minPoints", 1, 0, 9999999);
+                .defineInRange("minPoints", 0, 0, 9999999);
         this.maxPoints = builder.comment("Maximum points gained from battles")
                 .defineInRange("maxPoints", 0, 0, 9999999);
         this.minEXP = builder.comment("Minimum experience gained from battles")
@@ -302,6 +304,8 @@ public class ServerConfig {
                 .defineInRange("hrDefenseMult", 1.0F, 0.0F, 9999.0F);
         this.playerDamageMult = builder.comment("The multiplier to all player attacks (includes summons of all kinds)")
                 .defineInRange("playerDamageMult", 1.0F, 0.0F, 9999.0F);
+        this.npcvsnpcDamageMult = builder.comment("The multiplier to npc vs npc damage")
+                .defineInRange("npcvsnpcDamageMult", 0.85F, 0.0F, 9999.0F);
         this.playerHPMult = builder.comment("The multiplier to player HP (scales by bars, so will move by 20 hp increments)")
                 .defineInRange("playerHPMult", 15.0F, 0.0F, 9999.0F);
         this.npcHPMult = builder.comment("The multiplier to npc HP (scales by bars, so will move by 20 hp increments)")
@@ -326,6 +330,8 @@ public class ServerConfig {
                 .defineInRange("limitlessNoSixEyesMult", 1.0F, 0.0F, 9999.0F);
         this.sixEyesMult = builder.comment("The multiplier of drain decreases given to Six Eyes.")
                 .defineInRange("sixEyesMult", 0.5F, 0.0F, 9999.0F);
+        this.perfectBodyMult = builder.comment("The multiplier of Perfect Body's damage.")
+                .defineInRange("perfectBodyMult", 1.5F, 0.0F, 9999.0F);
 
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);

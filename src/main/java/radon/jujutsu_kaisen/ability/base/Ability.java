@@ -420,8 +420,22 @@ public abstract class Ability {
             }
         }
         if (output > 0) {
-            output = Mth.clamp(output*0.8F,1.0F,100.0F);
-	        cost *= (this.isScalable(owner) || this.isChantable() ? output : 1.0F);
+            //System.out.println(output);
+            if (output >= 1.0F) {
+                output = Mth.clamp(output*0.8F,1.0F,100.0F);
+                cost *= (this.isScalable(owner) || this.isChantable() ? output : 1.0F);
+
+             } else {
+               float scaledOutput = Mth.clamp(output, 0.1F, 1.0F);
+               float costMultiplier = (float)Math.pow(scaledOutput, 0.5);
+                cost *= (this.isScalable(owner) || this.isChantable())
+                        ? (costMultiplier)
+                        : 1.0F;
+            }
+           
+	  
+            
+
         }
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost ));
     }
@@ -462,7 +476,7 @@ public abstract class Ability {
 
         default int getCharge(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return cap.getCharge();
+            return cap.getCharge((Ability) this );
         }
     }
 

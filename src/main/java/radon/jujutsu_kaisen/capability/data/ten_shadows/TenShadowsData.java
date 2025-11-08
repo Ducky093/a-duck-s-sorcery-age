@@ -351,8 +351,11 @@ public class TenShadowsData implements ITenShadowsData {
         if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             return;
         }
-        Adaptation adaptation = new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
+        ResourceLocation key = types.getKey(source.type());
+        Ability ability = source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null;
+        if (key == null && ability == null) return;
+
+        Adaptation adaptation = new Adaptation(key != null ? key : JJKDamageSources.JUJUTSU.location(), ability);
         if (this.adaptationCD.containsKey(adaptation)) {
             return;
         }
@@ -471,7 +474,9 @@ public class TenShadowsData implements ITenShadowsData {
 
         for (Map.Entry<Adaptation, Integer> adaptation : this.adapted.entrySet()) {
             CompoundTag data = new CompoundTag();
-            data.put("adaptation", adaptation.getKey().serializeNBT());
+            Adaptation key = adaptation.getKey();
+            if (key == null || key.getAbility() == null || key.getKey() == null) continue;
+            data.put("adaptation", key.serializeNBT());
             data.putInt("stage", adaptation.getValue());
             adaptedTag.add(data);
         }
@@ -515,10 +520,16 @@ public class TenShadowsData implements ITenShadowsData {
 
         this.adapted.clear();
 
+        
         for (Tag key : nbt.getList("adapted", Tag.TAG_COMPOUND)) {
             CompoundTag DATA = (CompoundTag) key;
             this.adapted.put(   new Adaptation(DATA.getCompound("adaptation")), DATA.getInt("stage"));
         }
+
+        this.adapted.entrySet().removeIf(entry ->
+            entry.getKey() == null ||
+            entry.getKey().getAbility() == null && entry.getKey().getKey() == null
+        );
 
         // this.adapting.clear();
 

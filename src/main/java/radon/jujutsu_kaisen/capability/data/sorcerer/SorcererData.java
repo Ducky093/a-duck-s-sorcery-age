@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
@@ -41,11 +42,13 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
 import radon.jujutsu_kaisen.network.packet.c2s.UncopyAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.UnstealAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.PlayerUtil;
@@ -636,19 +639,28 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getMaximumOutput() {
         float output = 1.0F;
+
         if (this.toggled.contains(JJKAbilities.MYTHICAL_BEAST_AMBER.get() )) {
             output = 1.5F;
         }
         else if (this.isInZone())  {
             output = 1.2F;
         }
-        else if (this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HitenStaffItem && !this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            output = 1.1F;
-        }
-
         else if (this.traits.contains(Trait.SIMURIAN)) {
             output = 1.1F;
         }
+        else {
+            ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+            if (stacks.contains(JJKItems.HITEN_STAFF.get()) && !this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+                output = 1.1F;
+            }
+        }
+
+
         return output * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
     }
 
@@ -1466,11 +1478,17 @@ public float getMaxEnergy() {
         this.copied.add(technique);
     }
 
+    @Override
+    public void setCopies(Set<CursedTechnique> copiedTechs) {
+        this.copied = copiedTechs;
+    } 
+
      @Override
     public void steal(@Nullable CursedTechnique technique) {
-
         this.stolen.add(technique);
     }
+
+
 
     @Override
     public Set<CursedTechnique> getCopied() {
@@ -1487,6 +1505,11 @@ public float getMaxEnergy() {
         }
         return this.stolen;
     }
+
+    @Override
+    public void setStolen(Set<CursedTechnique> stolenTechs) {
+        this.stolen = stolenTechs;
+    } 
 
     @Override
     public CursedTechnique getLastStolen() {
@@ -1658,8 +1681,8 @@ public float getMaxEnergy() {
     }
 
     @Override
-    public int getCharge() {
-        return this.charge;
+    public int getCharge(Ability ability) {
+         return this.channeled == ability ? this.charge : 0;
     }
 
     // @Override
@@ -1691,6 +1714,10 @@ public float getMaxEnergy() {
         PlayerUtil.removeAdvancement(owner, "heavenly_restriction");
         PlayerUtil.removeAdvancement(owner, "vessel");
         PlayerUtil.removeAdvancement(owner, "perfect_body");
+        this.resetCopy();
+        this.setCurrentCopied(null);
+        this.clearToggled();
+        this.resetSteal();
         this.lockAll();
         this.generate(owner);
     }

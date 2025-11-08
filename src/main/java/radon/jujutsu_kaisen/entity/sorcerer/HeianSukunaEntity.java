@@ -60,23 +60,6 @@ public class HeianSukunaEntity extends SukunaEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
-        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
-            int count = stack.getCount();
-
-            stack.shrink(count);
-            this.fingers = Math.max(20, this.fingers + count);
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
-        } else {
-            return super.mobInteract(pPlayer, pHand);
-        }
-    }
-
-
-    @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.5F;
     }

@@ -9,18 +9,27 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JetBlackShadowSwordItem;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -100,7 +109,12 @@ public class ShadowTravel extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-         if (owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof JetBlackShadowSwordItem) {
+                  ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+        if (stacks.contains(JJKItems.JET_BLACK_SHADOW_SWORD.get())) {
             return 20.0F;
          }
         return 40.0F;

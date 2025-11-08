@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.block.entity.SkyBlockEntity;
@@ -40,5 +42,11 @@ public class SkyRenderer implements BlockEntityRenderer<SkyBlockEntity> {
 
     protected RenderType renderType() {
         return JJKRenderTypes.sky();
+    }
+
+    
+    @Override
+    public boolean shouldRender(@NotNull SkyBlockEntity blockEntity, @NotNull Vec3 cameraPos) {
+        return true;
     }
 }

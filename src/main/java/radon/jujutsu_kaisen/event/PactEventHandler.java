@@ -140,9 +140,11 @@ public class PactEventHandler {
                 ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (victimCap.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerCap.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
+                if (HelperMethods.isMelee(source) && victimCap.hasPact(attacker.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(victim.getUUID(), Pact.FRIENDS)) { 
+                    event.setCanceled(true);
+                } else if (victimCap.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerCap.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
                     victimCap.removePact(attacker.getUUID(), Pact.INVULNERABILITY);
-                        attackerCap.removePact(victim.getUUID(), Pact.INVULNERABILITY);
+                    attackerCap.removePact(victim.getUUID(), Pact.INVULNERABILITY);
 
                         MinecraftServer server = attacker.level().getServer();
 
@@ -158,8 +160,6 @@ public class PactEventHandler {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), (ServerPlayer) victim);
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), (ServerPlayer) attacker);
                     //event.setCanceled(true);
-                }  else if (HelperMethods.isMelee(source) && victimCap.hasPact(attacker.getUUID(), Pact.FRIENDS) && attackerCap.hasPact(victim.getUUID(), Pact.FRIENDS)) { 
-                    event.setCanceled(true);
                 }
             }
         }

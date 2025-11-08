@@ -40,6 +40,7 @@ public class ElectricBeam extends Ability {
     public boolean isTechnique() {
         return false;
     }
+    
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {

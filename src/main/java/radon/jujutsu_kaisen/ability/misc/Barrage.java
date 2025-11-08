@@ -110,7 +110,7 @@ public class Barrage extends Ability {
                         Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
 
                         Item item = owner.getItemInHand(InteractionHand.MAIN_HAND).getItem();
-                        ((ServerLevel) level).sendParticles(item instanceof SwordItem && !(item instanceof SteelGauntletItem)? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                        ((ServerLevel) level).sendParticles(JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) || (item instanceof SwordItem && !(item instanceof SteelGauntletItem))? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                                 pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,

@@ -125,7 +125,7 @@ public class SkyHandler {
         final Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 pos = camera.getPosition();
 
-        FogRenderer.setupColor(camera, partialTick, overworld, mc.options.getEffectiveRenderDistance(), mc.gameRenderer.getDarkenWorldAmount(partialTick));
+        FogRenderer.setupColor(camera, partialTick, overworld, mc.options.getEffectiveRenderDistance() , mc.gameRenderer.getDarkenWorldAmount(partialTick));
         FogRenderer.levelFogColor();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
         final float distance = mc.gameRenderer.getRenderDistance();

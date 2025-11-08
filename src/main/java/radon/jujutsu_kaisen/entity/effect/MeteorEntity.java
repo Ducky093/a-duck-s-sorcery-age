@@ -98,6 +98,11 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
+    @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 

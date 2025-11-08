@@ -23,6 +23,12 @@ public class ElectricBeamEntity extends BeamEntity {
         super(JJKEntities.ELECTRIC_BEAM.get(), owner, power);
     }
 
+    
+    @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
     @Override
     public int getFrames() {
         return 3;

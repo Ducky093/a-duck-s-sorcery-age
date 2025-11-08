@@ -94,6 +94,11 @@ public class WorldSlashProjectile extends JujutsuProjectile {
     }
 
     @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
+    @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 

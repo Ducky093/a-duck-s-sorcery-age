@@ -24,6 +24,8 @@ public class AbsorbedPlayerRenderer extends HumanoidMobRenderer<radon.jujutsu_ka
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> normal;
     private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> slim;
 
+    private final UUID randuuid = UUID.randomUUID();
+
     public AbsorbedPlayerRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 
@@ -64,7 +66,7 @@ public class AbsorbedPlayerRenderer extends HumanoidMobRenderer<radon.jujutsu_ka
         }
         else {
             this.model = this.normal;
-            return DefaultPlayerSkin.getDefaultSkin(UUID.randomUUID());
+            return DefaultPlayerSkin.getDefaultSkin(randuuid);
 
         }
         return info == null ? DefaultPlayerSkin.getDefaultSkin(profile.getId()) : info.getSkinLocation();

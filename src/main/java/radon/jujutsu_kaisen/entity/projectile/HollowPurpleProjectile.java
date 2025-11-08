@@ -114,6 +114,11 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         return EntityDimensions.fixed(this.getRadius(), this.getRadius());
     }
 
+    @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
     private void renderBlue(Vec3 center) {
         float radius = (float) Math.max(Math.PI, this.getRadius()) * 0.5F;
         int count = (int) (radius * Math.PI * 2);

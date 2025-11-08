@@ -131,6 +131,11 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
     }
 
     @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }

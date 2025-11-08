@@ -70,6 +70,8 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.set(DATA_DOMAIN, domain);
     }
 
+
+
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -99,6 +101,10 @@ public class JujutsuProjectile extends Projectile {
     }
 
     protected boolean isProjectile() {
+        return true;
+    }
+
+    public boolean canDeflect() {
         return true;
     }
 

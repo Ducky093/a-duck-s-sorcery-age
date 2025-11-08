@@ -24,6 +24,6 @@ public class JJKVisuals {
         VISUALS.add(new IdleTransfigurationVisual());
         VISUALS.add(new TransfiguredSoulVisual());
         VISUALS.add(new PerfectBodyVisual());
-        //VISUALS.add(new CursedWombVisual());
+        //VISUALS.add(new PehkuiVisual());
     }
 }

@@ -103,6 +103,7 @@ public class FingerBearerEntity extends CursedSpirit {
         super.init(data);
 
         data.addExtraEnergy(((CursedObjectItem) JJKItems.SUKUNA_FINGER.get().getDefaultInstance().getItem()).getEnergy());
+        data.setWombAwakened(true);
     }
 
     private PlayState walkRunPredicate(AnimationState<FingerBearerEntity> animationState) {

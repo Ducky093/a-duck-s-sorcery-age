@@ -251,10 +251,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (distance >= radius - 1) {
                  block = JJKBlocks.DOMAIN.get();
             } else {
-                if (distance >= radius - 2) {
-                    block = blocks.get(this.random.nextInt(blocks.size()));
-                } else if (pos.getY() < center.getY()) {
+                if (pos.getY() < center.getY()) {
                     block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
+                } else if (distance >= radius - 2) {
+                    block = blocks.get(this.random.nextInt(blocks.size()));
                 } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
                     block = decoration.get(this.random.nextInt(decoration.size()));
                 // } else {
@@ -291,6 +291,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             }
             boolean success =   owner.level().setBlock(pos, block.defaultBlockState(),
                                               Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
+                                              
                                               
               //(pos, block.defaultBlockState(),
               //Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS );  

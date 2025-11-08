@@ -32,6 +32,11 @@ public class PureLoveBeamEntity extends BeamEntity {
     protected boolean shouldSwing() {
         return false;
     }
+    
+    @Override
+    public boolean canDeflect() {
+        return false;
+    }
 
     @Override
     public int getFrames() {

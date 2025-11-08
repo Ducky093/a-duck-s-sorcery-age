@@ -6,8 +6,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+
+import radon.jujutsu_kaisen.block.entity.SkyBlockEntity;
 import radon.jujutsu_kaisen.block.entity.UnlimitedVoidBlockEntity;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 
@@ -38,5 +42,10 @@ public class UnlimitedVoidRenderer implements BlockEntityRenderer<UnlimitedVoidB
 
     protected RenderType renderType() {
         return JJKRenderTypes.unlimitedVoid();
+    }
+
+    @Override
+    public boolean shouldRender(@NotNull UnlimitedVoidBlockEntity blockEntity, @NotNull Vec3 cameraPos) {
+        return true;
     }
 }

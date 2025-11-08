@@ -30,6 +30,8 @@ public class RerollCommand {
         cap.resetCopy();
         cap.setCurrentCopied(null);
         cap.clearToggled();
+        cap.resetSteal();
+        cap.lockAll();
         cap.generate(player);
 
         return 1;

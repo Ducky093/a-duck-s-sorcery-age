@@ -303,8 +303,12 @@ public interface ISorcererData {
     void steal(@Nullable CursedTechnique technique);
 
     void resetSteal();
+
+    void setStolen(Set<CursedTechnique> stolenTechs);
     
     void resetCopy();
+
+    void setCopies(Set<CursedTechnique> copiedTechs);
 
     Set<CursedTechnique> getCopied();
 
@@ -359,7 +363,7 @@ public interface ISorcererData {
 
     boolean isChanneling(Ability ability);
 
-    int getCharge();
+    int getCharge(Ability ability);
 
     void wipe(ServerPlayer owner);
 

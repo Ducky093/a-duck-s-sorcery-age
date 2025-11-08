@@ -70,6 +70,11 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     }
 
     @Override
+    public boolean canDeflect() {
+        return false;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
