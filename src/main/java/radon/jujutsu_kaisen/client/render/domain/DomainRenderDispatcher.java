@@ -1,144 +1,148 @@
-// package radon.jujutsu_kaisen.client.render.domain;
+package radon.jujutsu_kaisen.client.render.domain;
 
 
-// import com.mojang.blaze3d.pipeline.TextureTarget;
-// import com.mojang.blaze3d.platform.GlStateManager;
-// import com.mojang.blaze3d.platform.Window;
-// import com.mojang.blaze3d.systems.RenderSystem;
-// import net.minecraft.client.Minecraft;
-// import net.minecraft.client.renderer.GameRenderer;
-// import net.minecraft.resources.ResourceLocation;
-// import net.neoforged.api.distmarker.Dist;
-// import net.neoforged.bus.api.SubscribeEvent;
-// import net.neoforged.fml.common.EventBusSubscriber;
-// import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-// import org.joml.Matrix4f;
-// import radon.jujutsu_kaisen.JujutsuKaisen;
-// import radon.jujutsu_kaisen.ability.DomainExpansion;
-// import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-// import radon.jujutsu_kaisen.client.JJKShaders;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// import javax.annotation.Nullable;
-// import java.util.HashMap;
-// import java.util.Map;
+import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.client.JJKShaders;
 
-// @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
-// public class DomainRenderDispatcher {
-//     private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
-//     private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
-//     static {
-//         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
-//         renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
-//         renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
-//         renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
-//     }
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE )
+public class DomainRenderDispatcher {
+    private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
+    private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
 
-//     // NOTE: Temporary until all domain renderers are implemented
-//     private static final DomainRenderer DEFAULT_RENDERER = new DefaultDomainRenderer();
-//     @Nullable
-//     private static TextureTarget fallback;
+    static {
+        renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
+//        renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
+//        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
+//        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
+    }
 
-//     private static int skyWidth;
-//     private static int skyHeight;
+    // NOTE: Temporary until all domain renderers are implemented
+    private static final DomainRenderer DEFAULT_RENDERER = new DefaultDomainRenderer();
+    @Nullable
+    private static TextureTarget fallback;
 
-//     public static TextureTarget get(ResourceLocation domain) {
-//         if (!cached.containsKey(domain)) {
-//             return fallback;
-//         }
-//         return cached.get(domain);
-//     }
+    private static int skyWidth;
+    private static int skyHeight;
 
-//     private static TextureTarget update(@Nullable TextureTarget target, DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, boolean update) {
-//         Minecraft mc = Minecraft.getInstance();
+    public static TextureTarget get(ResourceLocation domain) {
+        if (!cached.containsKey(domain)) {
+            return fallback;
+        }
+        return cached.get(domain);
+    }
 
-//         if (target == null || update) {
-//             if (target != null) {
-//                 target.destroyBuffers();
-//             }
-//             target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
-//         }
+    private static TextureTarget update(@Nullable TextureTarget target, DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, boolean update) {
+        Minecraft mc = Minecraft.getInstance();
 
-//         target.clear(Minecraft.ON_OSX);
+        if (target == null || update) {
+            if (target != null) {
+                target.destroyBuffers();
+            }
+            target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
+        }
 
-//         target.bindWrite(true);
+        target.clear(Minecraft.ON_OSX);
 
-//         render(renderer, modelViewMatrix, projectionMatrix);
+        target.bindWrite(true);
 
-//         target.unbindRead();
-//         target.unbindWrite();
+        render(renderer, modelViewMatrix, projectionMatrix);
 
-//         mc.getMainRenderTarget().bindWrite(true);
+        target.unbindRead();
+        target.unbindWrite();
 
-//         return target;
-//     }
+        mc.getMainRenderTarget().bindWrite(true);
 
-//     @SubscribeEvent
-//     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-//         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
+        return target;
+    }
 
-//         Minecraft mc = Minecraft.getInstance();
+    @SubscribeEvent
+    public static void onRenderLevelStage(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 
-//         Window window = mc.getWindow();
-//         int ww = window.getWidth();
-//         int wh = window.getHeight();
+        Minecraft mc = Minecraft.getInstance();
 
-//         if (ww <= 0 || wh <= 0) return;
+        Window window = mc.getWindow();
+        int ww = window.getWidth();
+        int wh = window.getHeight();
 
-//         boolean update = false;
+        if (ww <= 0 || wh <= 0) return;
 
-//         if (skyWidth != ww || skyHeight != wh) {
-//             update = true;
-//             skyWidth = ww;
-//             skyHeight = wh;
-//         }
+        boolean update = false;
 
-//         for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
-//             ResourceLocation key = entry.getKey();
-//             DomainRenderer renderer = entry.getValue();
-//             TextureTarget target = cached.get(key);
-//             TextureTarget updated = update(target, renderer, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
-//             cached.put(key, updated);
-//         }
+        if (skyWidth != ww || skyHeight != wh) {
+            update = true;
+            skyWidth = ww;
+            skyHeight = wh;
+        }
 
-//         fallback = update(fallback, DEFAULT_RENDERER, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
-//     }
+        Matrix4f modelViewMatrix = RenderSystem.getModelViewMatrix();
+        Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
 
-//     public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
-//         ResourceLocation key = JJKAbilities.getKey(domain);
-//         DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
+        for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
+            ResourceLocation key = entry.getKey();
+            DomainRenderer renderer = entry.getValue();
+            TextureTarget target = cached.get(key);
+            TextureTarget updated = update(target, renderer, modelViewMatrix, projectionMatrix, update);
+            cached.put(key, updated);
+        }
 
-//         RenderSystem.enableBlend();
-//         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        fallback = update(fallback, DEFAULT_RENDERER, modelViewMatrix, projectionMatrix, update);
+    }
 
-//         RenderSystem.setShaderTexture(0, renderer.getTexture());
-//         RenderSystem.setShaderTexture(1, include.getColorTextureId());
+    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
+        ResourceLocation key = JJKAbilities.getKey(domain);
+        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
 
-//         RenderSystem.setShader(JJKShaders::getDomainShader);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
-//         renderer.render(modelViewMatrix, projectionMatrix);
+        RenderSystem.setShaderTexture(0, renderer.getTexture());
+        RenderSystem.setShaderTexture(1, include.getColorTextureId());
 
-//         for (DomainRenderLayer layer : renderer.getLayers()) {
-//             if (!layer.shouldRender(time)) continue;
+        RenderSystem.setShader(JJKShaders::getDomainShader);
 
-//             RenderSystem.setShaderTexture(0, layer.getTexture());
+        renderer.render(modelViewMatrix, projectionMatrix);
 
-//             renderer.render(modelViewMatrix, projectionMatrix);
-//         }
+        for (DomainRenderLayer layer : renderer.getLayers()) {
+            if (!layer.shouldRender(time)) continue;
 
-//         RenderSystem.defaultBlendFunc();
-//         RenderSystem.disableBlend();
-//     }
+            RenderSystem.setShaderTexture(0, layer.getTexture());
 
-//     public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
-//         RenderSystem.enableBlend();
+            renderer.render(modelViewMatrix, projectionMatrix);
+        }
 
-//         RenderSystem.setShaderTexture(0, renderer.getTexture());
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableBlend();
+    }
 
-//         RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
+        RenderSystem.enableBlend();
 
-//         renderer.render(modelViewMatrix, projectionMatrix);
+        RenderSystem.setShaderTexture(0, renderer.getTexture());
 
-//         RenderSystem.disableBlend();
-//     }
-// }
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+        renderer.render(modelViewMatrix, projectionMatrix);
+
+        RenderSystem.disableBlend();
+    }
+}

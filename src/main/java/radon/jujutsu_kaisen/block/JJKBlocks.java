@@ -58,19 +58,19 @@ public class JJKBlocks {
                     .noLootTable()
                     .air()));
 
-    public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
-            new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
+//     public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
+//             new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
+//                     .strength(-1.0F, 8.0F)
+//                     .isSuffocating(JJKBlocks::never)
+//                     .lightLevel((pState) -> 14)
+//                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
-            new SkyBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
+//     public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
+//             new SkyBlock(BlockBehaviour.Properties.of()
+//                     .strength(-1.0F, 8.0F)
+//                     .isSuffocating(JJKBlocks::never)
+//                     .lightLevel((pState) -> 14)
+//                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
@@ -180,6 +180,13 @@ public class JJKBlocks {
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
                     .noOcclusion()));
+    public static RegistryObject<Block> DOMAIN_SKY = BLOCKS.register("domain_sky", () ->
+            new DomainSkyBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 12.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel(pState -> 14)
+                    .noLootTable()
+                    .sound(SoundType.GLASS)));
 
     public static RegistryObject<FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
             new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));

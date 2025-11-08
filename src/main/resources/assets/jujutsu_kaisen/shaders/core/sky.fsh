@@ -8,5 +8,5 @@ in vec4 texProj0;
 out vec4 fragColor;
 
 void main() {
-	fragColor = textureProj(Sampler0, texProj0);
+    fragColor = textureProj(Sampler0, texProj0);
 }

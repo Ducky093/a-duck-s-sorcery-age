@@ -60,8 +60,9 @@ import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
-import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
-import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
+import radon.jujutsu_kaisen.client.render.block.DomainSkyBlockRenderer;
+// import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
+// import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
@@ -215,12 +216,12 @@ public class JJKClientEventHandler {
             }
         }
 
-        @SubscribeEvent
-        public static void onRenderLevelStage(RenderLevelStageEvent event) {
-            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-                SkyHandler.renderSky(event.getPoseStack(), event.getPartialTick(), event.getProjectionMatrix());
-            }
-        }
+        // @SubscribeEvent
+        // public static void onRenderLevelStage(RenderLevelStageEvent event) {
+        //     if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+        //         SkyHandler.renderSky(event.getPoseStack(), event.getPartialTick(), event.getProjectionMatrix());
+        //     }
+        // }
 
         // @SubscribeEvent
         // public static void onKeyInput(InputEvent.Key event) {
@@ -390,6 +391,8 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(JJKBlockEntities.DOMAIN_SKY.get(), pContext -> new DomainSkyBlockRenderer());
+
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
             event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
@@ -494,10 +497,10 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FILM_GAUGE.get(), FilmGaugeRenderer::new);
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
+            // event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
+            // event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
             event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
@@ -527,11 +530,6 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SLICE.get(), SlicedEntityParticle.Provider::new);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
-            JJKShaders.onRegisterShaders(event);
         }
     }
 }

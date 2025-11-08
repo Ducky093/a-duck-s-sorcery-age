@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.domain.DomainBlock;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
@@ -223,6 +224,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             List<Block> blocks = domain.getBlocks();
             List<Block> fill = domain.getFillBlocks();
             List<Block> floor = domain.getFloorBlocks();
+            List<Block> bottomfloor = domain.getBottomFloorBlocks();
             List<Block> decoration = domain.getDecorationBlocks();
 
             Block block = JJKBlocks.DOMAIN_AIR.get();
@@ -251,8 +253,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (distance >= radius - 1) {
                  block = JJKBlocks.DOMAIN.get();
             } else {
-                if (pos.getY() < center.getY()) {
+                if (pos.getY() < center.getY() - 1) {
+                    if (!bottomfloor.isEmpty()) {
+                        block = bottomfloor.get(this.random.nextInt(bottomfloor.size()));
+                    } else if (!floor.isEmpty()) {
+                        block = floor.get(this.random.nextInt(floor.size()));
+                    } else {
+                        block = fill.get(this.random.nextInt(fill.size()));
+                    }
+                } else if (pos.getY() < center.getY()) {
                     block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
+                } else if (pos.getY() < center.getY()) {
+                    block = bottomfloor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
                 } else if (distance >= radius - 2) {
                     block = blocks.get(this.random.nextInt(blocks.size()));
                 } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
@@ -539,7 +551,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         ServerLevel serverLevel = (ServerLevel) this.level();
-    int radius = this.getRadius();
+    //int radius = this.getRadius();
    //BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
     // for (int x = -radius; x <= radius; x++) {
@@ -566,12 +578,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (id != null && id.equals(this.getUUID())) {
                 domainBe.destroy();
             }
-            
-        } else {
-            //serverLevel.destroyBlock(pos, false); 
-            serverLevel.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            //serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
+        // } else {
+        //     //serverLevel.destroyBlock(pos, false); 
+        //     //if (be instanceof DomainBlockEntity domainBe) {
+        //     BlockState state = serverLevel.getBlockState(pos);
+        //     if (!state.getBlock() instanceof DomainBlock) {
+        //         serverLevel.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        //     }
+
+        //     //}
+        //     //serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        // }
         
     }
     
@@ -618,7 +636,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (completed) {
             if (this.getTime() % 20 == 0) {
                 this.check();
-                System.out.println(this.getTime());
+                //System.out.println(this.getTime());
             }
         }
 

@@ -36,15 +36,19 @@ public class JJKBlockEntities {
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
 
-    public static RegistryObject<BlockEntityType<UnlimitedVoidBlockEntity>> UNLIMITED_VOID = BLOCK_ENTITIES.register("unlimited_void", () ->
-            BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
-                            JJKBlocks.UNLIMITED_VOID.get())
-                    .build(null));
-    public static RegistryObject<BlockEntityType<SkyBlockEntity>> SKY = BLOCK_ENTITIES.register("sky", () ->
-            BlockEntityType.Builder.of(SkyBlockEntity::new,
-                            JJKBlocks.SKY.get())
-                    .build(null));
+//     public static RegistryObject<BlockEntityType<UnlimitedVoidBlockEntity>> UNLIMITED_VOID = BLOCK_ENTITIES.register("unlimited_void", () ->
+//             BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
+//                             JJKBlocks.UNLIMITED_VOID.get())
+//                     .build(null));
+//     public static RegistryObject<BlockEntityType<SkyBlockEntity>> SKY = BLOCK_ENTITIES.register("sky", () ->
+//             BlockEntityType.Builder.of(SkyBlockEntity::new,
+//                             JJKBlocks.SKY.get())
+//                     .build(null));
 
+       public static RegistryObject<BlockEntityType<DomainSkyBlockEntity>> DOMAIN_SKY = BLOCK_ENTITIES.register("domain_sky", () ->
+            BlockEntityType.Builder.of(DomainSkyBlockEntity::new,
+                    JJKBlocks.DOMAIN_SKY.get()
+            ).build(null));
     public static RegistryObject<BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->
             BlockEntityType.Builder.of(DisplayCaseBlockEntity::new,
                             JJKBlocks.DISPLAY_CASE.get())

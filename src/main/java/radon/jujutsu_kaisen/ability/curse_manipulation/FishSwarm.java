@@ -34,18 +34,18 @@ public class FishSwarm extends Ability {
         if (!super.isValid(owner)) return false;
 
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
 
         if (cap == null) return false;
 
+        return cap.hasCurse(JJKEntities.FISH_CURSE.get());
+        // int amount = 0;
 
-        int amount = 0;
-
-        for (int i = 0; i < cap.getCurses().size(); i++) {
-            if (cap.getCurses().get(i).getType() != JJKEntities.FISH_CURSE.get()) continue;
-            amount++;
-        }
-        return amount >= 5;
+        // for (int i = 0; i < cap.getCurses().size(); i++) {
+        //     if (cap.getCurses().get(i).getType() != JJKEntities.FISH_CURSE.get()) continue;
+        //     amount++;
+        // }
+        //return false;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class RenderUtil {
         entity.yHeadRot = entity.getYRot();
         entity.yHeadRotO = entity.getYRot();
         float scalar = entity.getScale();
-        Vector3f vector3f = new Vector3f(0.0F, entity.getBbHeight() / 2 + yOffset * scalar, 0.0F);
+        //Vector3f vector3f = new Vector3f(0.0F, entity.getBbHeight() / 2 + yOffset * scalar, 0.0F);
         InventoryScreen.renderEntityInInventory(graphics, x, y, (int) ((float) scale / scalar), pose, cam, entity);
         entity.yBodyRot = yBodyRot;
         entity.setYRot(yRot);

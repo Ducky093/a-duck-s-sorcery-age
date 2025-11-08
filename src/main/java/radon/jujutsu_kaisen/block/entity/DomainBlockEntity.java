@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
-    private UUID identifier;
+    protected UUID identifier;
 
     private int death;
 

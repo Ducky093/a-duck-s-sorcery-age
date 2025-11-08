@@ -27,7 +27,12 @@ import java.util.List;
 public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.UNLIMITED_VOID.get());
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
+    }
+
+    @Override
+    public List<Block> getBottomFloorBlocks() {
+        return List.of(JJKBlocks.DOMAIN.get() );
     }
 
     @Override
@@ -103,6 +108,8 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
 
     }
+
+
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
