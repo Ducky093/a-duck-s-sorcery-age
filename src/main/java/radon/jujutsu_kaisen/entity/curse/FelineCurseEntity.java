@@ -132,7 +132,7 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         int target = 1;
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-        if (this.hasMeleeAttack()) this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.05D, true));
+        if (this.hasMeleeAttack()) this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.9D, true));
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new RandomLookAroundGoal(this));
