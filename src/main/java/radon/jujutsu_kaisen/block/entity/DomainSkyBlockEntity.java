@@ -48,7 +48,6 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
         if (pBlockEntity.domain == null) {
             if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain))
                 return;
-            System.out.println("setting domain");
             pBlockEntity.setDomain(JJKAbilities.getKey(domain.getAbility()));
         }
     }
@@ -58,6 +57,11 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     private void markUpdated() {

@@ -94,8 +94,8 @@ public class DomainRenderDispatcher {
             skyHeight = wh;
         }
 
-        Matrix4f modelViewMatrix = RenderSystem.getModelViewMatrix();
-        Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
+        Matrix4f modelViewMatrix = new Matrix4f(RenderSystem.getInverseViewRotationMatrix()).invert();
+        Matrix4f projectionMatrix = event.getProjectionMatrix();
 
         for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
             ResourceLocation key = entry.getKey();
@@ -108,32 +108,6 @@ public class DomainRenderDispatcher {
         fallback = update(fallback, DEFAULT_RENDERER, modelViewMatrix, projectionMatrix, update);
     }
 
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
-        ResourceLocation key = JJKAbilities.getKey(domain);
-        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
-
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-
-        RenderSystem.setShaderTexture(0, renderer.getTexture());
-        RenderSystem.setShaderTexture(1, include.getColorTextureId());
-
-        RenderSystem.setShader(JJKShaders::getDomainShader);
-
-        renderer.render(modelViewMatrix, projectionMatrix);
-
-        for (DomainRenderLayer layer : renderer.getLayers()) {
-            if (!layer.shouldRender(time)) continue;
-
-            RenderSystem.setShaderTexture(0, layer.getTexture());
-
-            renderer.render(modelViewMatrix, projectionMatrix);
-        }
-
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
-    }
-
     public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
         RenderSystem.enableBlend();
 
@@ -142,6 +116,16 @@ public class DomainRenderDispatcher {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         renderer.render(modelViewMatrix, projectionMatrix);
+
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+        for (DomainRenderLayer layer : renderer.getLayers()) {
+            RenderSystem.setShaderTexture(0, layer.getTexture());
+
+            renderer.render(modelViewMatrix, projectionMatrix);
+        }
+
+        RenderSystem.defaultBlendFunc();
 
         RenderSystem.disableBlend();
     }
