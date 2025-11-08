@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -63,7 +64,7 @@ public class YujiItadoriEntity extends SorcererEntity {
         return YujiItadoriEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
                 .add(Attributes.ARMOR, 16.0D);
     }
 
@@ -82,6 +83,10 @@ public class YujiItadoriEntity extends SorcererEntity {
         return List.of(Trait.VESSEL);
     }
 
+    @Override
+    public @Nullable CursedEnergyNature getNature() {
+        return CursedEnergyNature.DIVERGENT;
+    }
 
     @Override
     public void init(ISorcererData data) {

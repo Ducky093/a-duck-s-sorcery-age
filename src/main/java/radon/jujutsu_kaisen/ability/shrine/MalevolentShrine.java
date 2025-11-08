@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
-    public static final int DELAY = 2 * 15;
+    public static final int DELAY = 2 * 17;
     private static final int INTERVAL = 5;
 
     @Override

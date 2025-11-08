@@ -222,7 +222,7 @@
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
   "ability.jujutsu_kaisen.fail.throat": "Your throat is still damaged for %1$d seconds",
-  "ability.jujutsu_kaisen.fail.chant": "Must be chanted above 150%",
+  "ability.jujutsu_kaisen.fail.chant": "Must be chanted above 125%",
   "ability.jujutsu_kaisen.fail.disable": "Unable to use your technique.",
   "ability.jujutsu_kaisen.fail.emptyinv": "You must store something within your Shadow to retrieve it.",
 

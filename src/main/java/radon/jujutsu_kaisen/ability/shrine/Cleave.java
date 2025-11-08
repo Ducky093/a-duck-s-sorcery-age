@@ -13,6 +13,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -27,7 +28,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IAttack, Ability.IToggled {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 35.0F;
+    private static final float DAMAGE = 30.0F;
+    private static final float DAMAGE_SCALE = 0.05F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -48,37 +50,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         return domain == null ? JJKDamageSources.jujutsuAttack(owner, this) : JJKDamageSources.indirectJujutsuAttack(domain, owner, this);
     }
 
-    private float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
-        float damage = target.getMaxHealth();
-        float armor = (float) target.getArmorValue();
-        float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-        float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
-        damage /= 1.0F - f1 / 25.0F;
 
-        MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
-
-        if (instance != null) {
-            int resistance = instance.getAmplifier();
-            int i = (resistance + 1) * 5;
-            int j = 25 - i;
-
-            if (j == 0) {
-                return damage;
-            } else {
-                float x = 25.0F / (float) j;
-                damage = damage * x;
-            }
-        }
-
-        // int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
-
-        // if (k > 0) {
-        //     float f2 = Mth.clamp(k, 0.0F, 20.0F);
-        //     damage /= 1.0F - f2 / 25.0F;
-        // }
-        return damage;
-    }
 
     @Override
     public float getCost(LivingEntity owner) {
@@ -130,17 +102,18 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         cap.delayTickEvent(() -> {
 
             DamageSource source = this.getSource(owner, domain);
-            float damage = this.calculateDamage(source, owner, target);
+
+            float addeddmg = target.getMaxHealth() * DAMAGE_SCALE;
+            float realdamage = (this.getPower(owner) * DAMAGE) + addeddmg;
 
             if (domain != null) {
-                float testpower = (DomainExpansion.getStrength(owner, false) - 0.1F);
-                damage *= testpower;
-                damage *= 0.29F;
+                float size = cap.getDomainSize();
+                realdamage *= ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size);
             }
 
-            damage *= (this.getPower(owner) * 0.075f);
 
-            boolean success = target.hurt(source, damage);
+
+            boolean success = target.hurt(source, realdamage);
 
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 

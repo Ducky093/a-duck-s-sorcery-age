@@ -20,6 +20,12 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import radon.jujutsu_kaisen.util.HelperMethods;
+
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
@@ -71,13 +77,37 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         int goal = 1;
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 0.9D, true));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, false));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+        LivingEntity target = this.getTarget();
+        GroundPathNavigation navigation = new GroundPathNavigation(this, pLevel);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
+        return navigation;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        if (this.getTarget() != null) {
+            this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.1f);
+        }
+
+        if (this.getTarget() != null && HelperMethods.RANDOM.nextInt(5) == 0) {
+            this.moveControl.setWantedPosition(this.getTarget().getX() * -1.5F, this.getTarget().getY() * -1.1F, this.getTarget().getZ() * -1.1F, 1.4f);
+        }
+
     }
 
     private PlayState walkRunPredicate(AnimationState<TransfiguredSoulEntity> animationState) {
@@ -138,7 +168,7 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         }
         ISorcererData ownerCap = this.getOwner().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         float exp = ownerCap.getExperience();
-        return exp * 0.3f;
+        return exp * 0.4f;
     }
 
     @Override
