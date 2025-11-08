@@ -10,10 +10,9 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -34,8 +33,6 @@ public class DomainRenderDispatcher {
 //        renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
 //        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
 //        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
-        //renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
-        //renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
     }
 
     // NOTE: Temporary until all domain renderers are implemented
@@ -96,47 +93,19 @@ public class DomainRenderDispatcher {
             skyWidth = ww;
             skyHeight = wh;
         }
-            //    Matrix4f modelViewMatrix = new Matrix4f()
-    //         .rotationXYZ(camera.getXRot() * (float) (Math.PI / 180.0), camera.getYRot() * (float) (Math.PI / 180.0) + (float) Math.PI, 0.0F);
-    //     modelViewMatrix = new Matrix4f().rotationZ(cameraSetup.getRoll() * (float) (Math.PI / 180.0)).mul(modelViewMatrix);
 
-    Matrix4f modelViewMatrix = new Matrix4f(RenderSystem.getInverseViewRotationMatrix()).invert();
-    //System.out.println(modelViewMatrix);
+        Matrix4f modelViewMatrix = new Matrix4f(RenderSystem.getInverseViewRotationMatrix()).invert();
+        Matrix4f projectionMatrix = event.getProjectionMatrix();
+
         for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
             ResourceLocation key = entry.getKey();
             DomainRenderer renderer = entry.getValue();
             TextureTarget target = cached.get(key);
-            TextureTarget updated = update(target, renderer,modelViewMatrix, event.getProjectionMatrix(), update);
+            TextureTarget updated = update(target, renderer, modelViewMatrix, projectionMatrix, update);
             cached.put(key, updated);
         }
 
-        fallback = update(fallback, DEFAULT_RENDERER, modelViewMatrix, event.getProjectionMatrix(), update);
-    }
-
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
-        ResourceLocation key = JJKAbilities.getKey(domain);
-        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
-
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-
-        RenderSystem.setShaderTexture(0, renderer.getTexture());
-        RenderSystem.setShaderTexture(1, include.getColorTextureId());
-
-        RenderSystem.setShader(JJKShaders::getDomainShader);
-
-        renderer.render(modelViewMatrix, projectionMatrix);
-
-        for (DomainRenderLayer layer : renderer.getLayers()) {
-            if (!layer.shouldRender(time)) continue;
-
-            RenderSystem.setShaderTexture(0, layer.getTexture());
-
-            renderer.render(modelViewMatrix, projectionMatrix);
-        }
-
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
+        fallback = update(fallback, DEFAULT_RENDERER, modelViewMatrix, projectionMatrix, update);
     }
 
     public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
