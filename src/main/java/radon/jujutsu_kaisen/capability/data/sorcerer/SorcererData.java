@@ -177,6 +177,7 @@ public class SorcererData implements ISorcererData {
         this.output = 1.0F;
 
         this.lives = ConfigHolder.SERVER.livesconfig.get();
+        this.charge = 0;
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
         
@@ -2230,7 +2231,7 @@ public float getMaxEnergy() {
         nbt.putInt("throat_damage", this.throatDamage);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
-        nbt.putInt("charge", this.charge);
+       // nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
@@ -2438,7 +2439,7 @@ public float getMaxEnergy() {
         this.throatDamage = nbt.getInt("throat_damage");
         this.brainDamage = nbt.getInt("brain_damage");
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
-        this.charge = nbt.getInt("charge");
+        //this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");

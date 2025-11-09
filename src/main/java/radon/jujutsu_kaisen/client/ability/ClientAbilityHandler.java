@@ -195,7 +195,7 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
                              if (channeled == null) {
                                 channel(ability, JJKKeys.ACTIVATE_ABILITY);
                             }
-                        } else {
+                        } else if (JJKKeys.ACTIVATE_ABILITY.consumeClick()){
                             //if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
                                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                         }

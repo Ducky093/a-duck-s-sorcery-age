@@ -434,7 +434,7 @@ public abstract class Ability {
             }
            
 	  
-            
+            cost *= (ConfigHolder.SERVER.cursedEnergyCostAmount.get().floatValue() );
 
         }
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost ));
