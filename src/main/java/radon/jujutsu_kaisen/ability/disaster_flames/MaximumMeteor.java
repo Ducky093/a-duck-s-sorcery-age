@@ -40,6 +40,7 @@ public class MaximumMeteor extends Ability {
                     !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
                     (cap.getType() == JujutsuType.CURSE && HelperMethods.RANDOM.nextInt(10) == 0 || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.6F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
         }
+        return false;
     }
 
     @Override
