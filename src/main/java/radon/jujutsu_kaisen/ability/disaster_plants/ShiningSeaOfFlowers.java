@@ -106,7 +106,7 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_SKY.get());
+        return List.of(JJKBlocks.FAKE_SKY.get());
     }
 
     @Override

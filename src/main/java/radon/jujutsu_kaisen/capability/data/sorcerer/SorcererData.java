@@ -851,7 +851,13 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addBindingVowCooldown(BindingVow vow) {
-        this.bindingVowCooldowns.put(vow, 20 * 60 * 30);
+        this.bindingVowCooldowns.put(vow, 20 * ConfigHolder.SERVER.bindingVowCooldown.get() );
+    }
+
+    @Override
+    public void resetVows() {
+        this.bindingVows.clear();
+        this.bindingVowCooldowns.clear();
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.io.IOException;
 public class JJKShaders {
     private static ShaderInstance domainShader;
     private static ShaderInstance skyShader;
+    private static ShaderInstance fakeSkyShader;
 
     @SubscribeEvent
     public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
@@ -25,6 +26,9 @@ public class JJKShaders {
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         new ResourceLocation(JujutsuKaisen.MOD_ID, "sky"), DefaultVertexFormat.POSITION_TEX),
                 shader -> skyShader = shader);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(JujutsuKaisen.MOD_ID, "fake_sky"), DefaultVertexFormat.POSITION_TEX),
+        shader -> fakeSkyShader = shader);
     }
 
     public static ShaderInstance getDomainShader() {
@@ -33,5 +37,9 @@ public class JJKShaders {
 
     public static ShaderInstance getSkyShader() {
         return skyShader;
+    }
+
+    public static ShaderInstance getFakeSkyShader() {
+        return fakeSkyShader;
     }
 }

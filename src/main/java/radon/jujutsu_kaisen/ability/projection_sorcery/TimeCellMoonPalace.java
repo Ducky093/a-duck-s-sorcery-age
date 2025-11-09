@@ -132,7 +132,19 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
     }
 
     @Override
-    public List<Block> getBlocks() {
+    public List<Block> getBottomFloorBlocks() {
         return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
     }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
+    }
+
+    
+
+    //  @Override
+    // public List<Block> getFillBlocks() {
+    //     return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
+    // }
 }

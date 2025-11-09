@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.block.entity.DomainSkyBlockEntity;
@@ -42,5 +44,10 @@ public class DomainSkyBlockRenderer implements BlockEntityRenderer<DomainSkyBloc
 
     private static RenderType renderType(ResourceLocation domain) {
         return JJKRenderTypes.skybox(DomainRenderDispatcher.get(domain));
+    }
+
+    @Override
+    public boolean shouldRender(@NotNull DomainSkyBlockEntity blockEntity, @NotNull Vec3 cameraPos) {
+              return Vec3.atCenterOf(blockEntity.getBlockPos()).closerThan(cameraPos, (double)this.getViewDistance() * 2);
     }
 }

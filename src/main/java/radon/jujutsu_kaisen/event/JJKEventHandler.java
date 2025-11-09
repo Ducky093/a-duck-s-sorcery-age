@@ -276,16 +276,16 @@ public class JJKEventHandler {
                     0, 0.05, 0
                 );
             }
-        
+            if (!owner.level().isClientSide) {
             if (cap.hasToggled(JJKAbilities.SHRINK.get())) {
                   ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
                     float targetScale = 0.5F;
                     float currentScale = baseScale.getScale();
                     float newScale = currentScale + (targetScale - currentScale) * 0.1F;
-                    if (baseScale.getScale() != targetScale ) {
+                    //if (baseScale.getScale() != targetScale ) {
                         baseScale.setScale(newScale);
                         baseScale.markForSync(true);
-                    }
+                    //}
             }
             else if((cap.hasTrait(Trait.CURSED_WOMB) )) {
                 if (owner instanceof Player) {
@@ -300,32 +300,20 @@ public class JJKEventHandler {
                 ScaleData baseWidth = ScaleTypes.WIDTH.getScaleData(owner);
                 // float currentScale = baseScale.getScale();
                 // float currentWidth = baseWidth.getScale();
-                if (cap.hasTrait(Trait.CURSED_WOMB)) {
-                    if (baseScale.getScale() != targetScale ) {
-                    baseScale.setScale(targetScale);
-                    baseWidth.setScale(targetWidth);
-                    baseScale.markForSync(true);
-                    baseWidth.markForSync(true);
-                    }
-                }
+                baseScale.setScale(targetScale); 
+                baseWidth.setScale(targetWidth);
+
                 }
             }
             }
             else {
                 ScaleData baseScale = ScaleTypes.BASE.getScaleData(owner);
                 ScaleData baseWidth = ScaleTypes.WIDTH.getScaleData(owner);
-                if (baseScale.getBaseScale() != baseScale.getScale()) {
-                    baseWidth.resetScale();
-                    baseScale.resetScale();
-                    baseScale.markForSync(true);
-                    baseWidth.markForSync(true);
+                if (!baseScale.isReset() || !baseWidth.isReset()) {
+                    baseWidth.resetScale(true);
+                    baseScale.resetScale(true);
                 }
-                if (baseWidth.getBaseScale() != baseWidth.getScale()) {
-                    baseWidth.resetScale();
-                    baseScale.resetScale();
-                    baseScale.markForSync(true);
-                    baseWidth.markForSync(true);
-                }
+            }
             }
             
 

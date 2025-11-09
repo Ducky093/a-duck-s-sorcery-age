@@ -40,10 +40,10 @@ public class JJKBlockEntities {
 //             BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
 //                             JJKBlocks.UNLIMITED_VOID.get())
 //                     .build(null));
-//     public static RegistryObject<BlockEntityType<SkyBlockEntity>> SKY = BLOCK_ENTITIES.register("sky", () ->
-//             BlockEntityType.Builder.of(SkyBlockEntity::new,
-//                             JJKBlocks.SKY.get())
-//                     .build(null));
+    public static RegistryObject<BlockEntityType<FakeSkyBlockEntity>> FAKE_SKY = BLOCK_ENTITIES.register("fake_sky", () ->
+            BlockEntityType.Builder.of(FakeSkyBlockEntity::new,
+                            JJKBlocks.FAKE_SKY.get())
+                    .build(null));
 
        public static RegistryObject<BlockEntityType<DomainSkyBlockEntity>> DOMAIN_SKY = BLOCK_ENTITIES.register("domain_sky", () ->
             BlockEntityType.Builder.of(DomainSkyBlockEntity::new,

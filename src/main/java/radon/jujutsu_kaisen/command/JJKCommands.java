@@ -32,5 +32,7 @@ public class JJKCommands {
         SetExtraEnergyCommand.register(event.getDispatcher());
         SetAdditionalTechniqueCommand.register(event.getDispatcher());
         LivesCommand.register(event.getDispatcher());
+        ResetVowsCommand.register(event.getDispatcher());
+        ResetStatusesCommand.register(event.getDispatcher());
     }
 }

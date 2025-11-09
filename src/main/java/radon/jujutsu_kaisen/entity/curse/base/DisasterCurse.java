@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.entity.curse.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -41,10 +43,15 @@ public abstract class DisasterCurse extends CursedSpirit {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
     }
 
+    public static boolean isFarEnoughFromSpawn(LevelAccessor level, BlockPos pos) {
+        LevelData data = level.getLevelData();
+        BlockPos relative = new BlockPos(data.getXSpawn(), pos.getY(), data.getZSpawn());
+        return !relative.closerThan(pos, ConfigHolder.SERVER.minimumSpawnDangerDistance.get());
+    }
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (ConfigHolder.SERVER.disasterCurseSpawnRate.get() == 0) {
+            if (ConfigHolder.SERVER.disasterCurseSpawnRate.get() == 0 || !isFarEnoughFromSpawn(pLevel, this.blockPosition() ) ) {
                 return false;
             }
             if (this.random.nextInt(Math.max(1,Mth.floor(ConfigHolder.SERVER.disasterCurseSpawnRate.get()  * SorcererUtil.getPower(this.getExperience()) *

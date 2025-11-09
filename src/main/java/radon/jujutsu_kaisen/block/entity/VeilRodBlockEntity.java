@@ -39,7 +39,7 @@ import java.util.UUID;
 
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
-    public static final int INTERVAL = 10;
+    public static final int INTERVAL = 2;
     private static final float COST = 0.1F;
     private int blockCursor;
 
@@ -92,7 +92,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
 
     if (!rod.isValid()) return;
-    if (!(level instanceof ServerLevel serverLevel)) return;
+    //if (!(level instanceof ServerLevel serverLevel)) return;
     if (rod.ownerUUID == null) return;
 
     //if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
@@ -128,19 +128,25 @@ public class VeilRodBlockEntity extends BlockEntity {
     //     if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
     // }
 
-
-    int blocksPerTick = 61152; 
     int size = rod.getSize();
-    int totalBlocks = (size * 2 + 1) * (size * 2 + 1) * (size * 2 + 1);
+    //int blocksPerTick = 61152 * (1 + 2*(size / ConfigHolder.SERVER.maximumVeilSize.get()) ); 
+    int s = (size * 2 + 1);
+    int totalBlocks = s * s * s;
 
     if (rod.blockCursor >= totalBlocks) rod.blockCursor = 0; // reset
+    int yLayer = size - (rod.blockCursor / (s * s ));
+    //for (int i = 0; i < blocksPerTick && rod.blockCursor < totalBlocks; i++, rod.blockCursor++) {
+    for (int xIndex = 0; xIndex < s; xIndex++) {
+    for (int zIndex = 0; zIndex < s; zIndex++) {
 
-    for (int i = 0; i < blocksPerTick && rod.blockCursor < totalBlocks; i++, rod.blockCursor++) {
-        int cursor = rod.blockCursor;
+        //int cursor = rod.blockCursor;
+        int x = xIndex - size;
+        int z = zIndex - size;
+        int y = yLayer;
+        // int x = cursor % (s) - size;
+        // int z = (cursor / (s)) % (s) - size;
+        // int y = size - (cursor / ((s) * (s)));
 
-        int x = cursor % (size * 2 + 1) - size;
-        int y = (cursor / (size * 2 + 1)) % (size * 2 + 1) - size;
-        int z = (cursor / ((size * 2 + 1) * (size * 2 + 1))) - size;
         double distSqr = x * x + y * y + z * z;
         double minSqr = (size - 0.5) * (size - 0.5);
         double maxSqr = (size + 0.5) * (size + 0.5);
@@ -192,8 +198,11 @@ public class VeilRodBlockEntity extends BlockEntity {
               be.create(pos, size, currentState, saved);
             }
        // }
+        }
     }
+    rod.blockCursor += s * s; 
 }
+
 
 
     public int getSize() {
@@ -225,11 +234,14 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     @Override
     public void setRemoved() {
-        super.setRemoved();
-
         if (!this.level.isClientSide) {
-            VeilHandler.removeVeil(this);
+            BlockState state = this.level.getBlockState(this.getBlockPos());
+            // Only remove veil if the block at this position is no longer a VeilRod
+            if (!state.getBlock().equals(JJKBlocks.VEIL_ROD.get())) {
+                VeilHandler.removeVeil(this);
+            }
         }
+        super.setRemoved();
     }
 
     //     @Override

@@ -43,10 +43,10 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    @Override
-    public @Nullable ParticleOptions getEnvironmentParticle() {
-        return ParticleTypes.WHITE_ASH;
-    }
+    // @Override
+    // public @Nullable ParticleOptions getEnvironmentParticle() {
+    //     return ParticleTypes.WHITE_ASH;
+    // }
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
@@ -126,10 +126,12 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
         SelfEmbodimentOfPerfectionEntity entity = new SelfEmbodimentOfPerfectionEntity(domain);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-
+        //double forwardDistance = 3.5D;
         Vec3 pos = owner.position()
                 .add(owner.getUpVector(1.0F).scale(entity.getBbHeight()))
                 .subtract(look.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+        //        .add(look.scale(forwardDistance)); 
+
         entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         double d0 = look.horizontalDistance();
@@ -142,7 +144,12 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     }
 
     @Override
-    public List<Block> getBlocks() {
+    public List<Block> getBottomFloorBlocks() {
         return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
     }
 }

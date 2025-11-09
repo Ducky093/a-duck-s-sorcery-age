@@ -25,12 +25,13 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
 
     public void setDomain(@Nullable ResourceLocation domain) {
         this.domain = domain;
-        this.setChanged();
+        this.markUpdated();
     }
 
     public @Nullable ResourceLocation getDomain() {
         return this.domain;
     }
+    
 
     // @Override
     // public void onLoad() {
@@ -60,7 +61,7 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
 

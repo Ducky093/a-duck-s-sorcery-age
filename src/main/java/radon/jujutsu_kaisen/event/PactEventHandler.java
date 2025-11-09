@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -153,8 +154,9 @@ public class PactEventHandler {
 
                             if (dimension != null) {
                                 BlockPos pos = HelperMethods.findSafePos(dimension, attacker);
+                                ResourceLocation dim = attacker.level().dimension().location();
                                 attacker.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), attacker.getYRot(), attacker.getXRot());
-                                attacker.level().addFreshEntity(new LimboCloneEntity(attacker, attacker.level().dimension().location()));
+                                attacker.level().addFreshEntity(new LimboCloneEntity(attacker, dim));
                             }
                         }
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), (ServerPlayer) victim);

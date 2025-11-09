@@ -56,7 +56,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
     private AABB hitbox;
 
-    private static final double SPEED = 3D;
+    private static final double SPEED = 1D;
     private static final float DAMAGE = 10.0F;
     private static final float EXPLOSIVE_POWER = 2.0F;
     private static final float MAX_EXPLOSION = 15.0F;

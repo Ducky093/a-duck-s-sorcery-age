@@ -66,20 +66,20 @@ public class JJKRenderTypes extends RenderType {
     //                 .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
     //                         .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
     //                 .createCompositeState(false));
-    // private static final RenderType SKY = create("sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
-    //         false, false, RenderType.CompositeState.builder()
-    //                 .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
-    //                 .setTextureState(new EmptyTextureStateShard(() -> {
-    //                     TextureTarget target = SkyHandler.getTarget();
+    private static final RenderType FAKE_SKY = create("fake_sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
+            false, false, RenderType.CompositeState.builder()
+                    .setShaderState(new ShaderStateShard(JJKShaders::getFakeSkyShader))
+                    .setTextureState(new EmptyTextureStateShard(() -> {
+                        TextureTarget target = FakeSkyHandler.getTarget();
 
-    //                     if (target != null) {
-    //                         RenderSystem.setShaderTexture(0, target.getColorTextureId());
-    //                     } else {
-    //                         RenderSystem.setShaderTexture(0, 0);
-    //                     }
-    //                 }, () -> {}))
-    //                 .createCompositeState(false)
-    //                 );
+                        if (target != null) {
+                            RenderSystem.setShaderTexture(0, target.getColorTextureId());
+                        } else {
+                            RenderSystem.setShaderTexture(0, 0);
+                        }
+                    }, () -> {}))
+                    .createCompositeState(false)
+                    );
     private static final Function<TextureTarget, RenderType> SKYBOX = Util.memoize((target) ->
             create("skybox", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
                     false, false, RenderType.CompositeState.builder()
@@ -118,9 +118,9 @@ public class JJKRenderTypes extends RenderType {
     //     return UNLIMITED_VOID;
     // }
 
-    // public static RenderType sky() {
-    //     return SKY;
-    // }
+    public static RenderType fake_sky() {
+        return FAKE_SKY;
+    }
 
     public static @NotNull RenderType lightning() {
         return LIGHTNING;

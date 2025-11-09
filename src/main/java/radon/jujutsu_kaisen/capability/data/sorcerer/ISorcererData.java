@@ -91,6 +91,8 @@ public interface ISorcererData {
 
     int getRemainingCooldown(BindingVow vow);
 
+    void resetVows();
+
     float getAdditionalEnergy();
 
     void setAdditionalEnergy(float additionalEnergy);

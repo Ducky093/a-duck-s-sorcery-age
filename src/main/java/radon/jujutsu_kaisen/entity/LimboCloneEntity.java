@@ -177,28 +177,51 @@ public class LimboCloneEntity extends PathfinderMob implements ISorcerer {
         }
     }
 
-    @Override
+     @Override
     public void die(@NotNull DamageSource pDamageSource) {
         super.die(pDamageSource);
-        
-    if (this.level().isClientSide) return;
+
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || !(owner instanceof ServerPlayer play)) return;
+        if (owner == null) return;
 
         MinecraftServer server = this.level().getServer();
 
         if (server == null) return;
 
         ServerLevel dimension = server.getLevel(ResourceKey.create(Registries.DIMENSION, this.original));
-        System.out.println("pre dim");
+
         if (dimension == null) return;
-                System.out.println("post dim");
+
         if (owner.level() != this.level()) return;
 
-        BlockPos pos = HelperMethods.findSafePos(dimension, play);
-        play.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), play.getYRot(), play.getXRot());
+        BlockPos pos = HelperMethods.findSafePos(dimension, owner);
+        owner.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), Set.of(), owner.getYRot(), owner.getXRot());
     }
+
+
+    // @Override
+    // public void die(@NotNull DamageSource pDamageSource) {
+    //     super.die(pDamageSource);
+        
+    // if (this.level().isClientSide) return;
+    //     LivingEntity owner = this.getOwner();
+
+    //     if (owner == null || !(owner instanceof ServerPlayer play)) return;
+
+    //     MinecraftServer server = this.level().getServer();
+
+    //     if (server == null) return;
+
+    //     ServerLevel dimension = server.getLevel(ResourceKey.create(Registries.DIMENSION, this.original));
+    //     System.out.println("pre dim");
+    //     if (dimension == null) return;
+    //             System.out.println("post dim");
+    //     if (owner.level() != this.level()) return;
+
+    //     BlockPos pos = HelperMethods.findSafePos(dimension, play);
+    //     play.teleportTo(dimension, pos.getX(), pos.getY(), pos.getZ(), play.getYRot(), play.getXRot());
+    // }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {

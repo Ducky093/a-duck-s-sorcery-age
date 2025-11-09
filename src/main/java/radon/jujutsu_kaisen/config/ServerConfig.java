@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
     public final ForgeConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
+    public final ForgeConfigSpec.DoubleValue cursedEnergyCostAmount;
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue Grade4Exp;
     public final ForgeConfigSpec.DoubleValue Grade3Exp;
@@ -26,6 +27,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue SpecialGrade1Exp;
     public final ForgeConfigSpec.DoubleValue SpecialGradeExp;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
+    public final ForgeConfigSpec.IntValue bindingVowCooldown;
     public final ForgeConfigSpec.IntValue livesconfig;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.IntValue totemRCTChanceMult;
@@ -40,6 +42,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue displayCaseSpawnRate;
     public final ForgeConfigSpec.IntValue displayCaseSpawnRange;
     public final ForgeConfigSpec.IntValue disasterCurseSpawnRate;
+    public final ForgeConfigSpec.IntValue minimumSpawnDangerDistance;
     public final ForgeConfigSpec.DoubleValue pointMultiplier;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue minimumBodyStealEXP;
@@ -168,6 +171,8 @@ public class ServerConfig {
                 .defineInRange("cursedEnergyAmount", 500.0F, 0.0F, 1000000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.6F, 0.0F, 100000.0F);
+        this.cursedEnergyCostAmount = builder.comment("Drain Multiplier of Cursed Energy (recommended to maintain the ratio with regen)")
+                .defineInRange("cursedEnergyCostAmount", 1.0F, 0.0F, 100000.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 20000.0F, 1.0F, 1000000.0F);
         this.Grade4Exp = builder.comment("The experience required for Grade 4 (affects npcs)")
@@ -188,6 +193,8 @@ public class ServerConfig {
                 .defineInRange("SpecialGradeExp", 4000.0F, 0.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
+        this.bindingVowCooldown = builder.comment("Cooldown after removing a Binding Vow in seconds (default is 30 Minutes")
+                .defineInRange("bindingVowCooldown", 0, 0, 1800);
         this.livesconfig = builder.comment("Max deaths before a player is rerolled (default 0 = disabled)")
                 .defineInRange("livesconfig", 0, 0, 1000);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance)")
@@ -216,6 +223,8 @@ public class ServerConfig {
                 .defineInRange("displayCaseSpawnRange", 64, 0, 100000);
         this.disasterCurseSpawnRate = builder.comment("Rarity of disaster curses (bigger value means more rare, 0 to disable)")
                 .defineInRange("disasterCurseSpawnRate", 12, 0, 100000);
+        this.minimumSpawnDangerDistance = builder.comment("The minimum distance from spawn of dangerous things such as disaster curses")
+                .defineInRange("minimumSpawnDangerDistance", 1000, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                 .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.minimumBodyStealEXP = builder.comment("Minimum EXP before a body can be stolen")

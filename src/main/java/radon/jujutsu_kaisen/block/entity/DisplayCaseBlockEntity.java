@@ -23,6 +23,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
@@ -203,6 +204,8 @@ public class DisplayCaseBlockEntity extends BlockEntity {
             return;
         }
 
+        AABB nearbyCurses = new AABB(pPos).inflate(16, 8, 16);
+        if (!pLevel.getEntitiesOfClass(CursedSpirit.class, nearbyCurses).isEmpty()) return;
         if (!pBlockEntity.hasItem() || !(getRandomCurse(pLevel, energy) instanceof CursedSpirit curse)) return;
 
         int rng = 64 * Math.max(1, Mth.floor((ConfigHolder.SERVER.displayCaseSpawnRate.get()  )) / (pLevel.isNight() ? 4 : 3));

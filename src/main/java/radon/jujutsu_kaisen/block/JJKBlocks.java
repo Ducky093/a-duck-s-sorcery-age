@@ -65,12 +65,12 @@ public class JJKBlocks {
 //                     .lightLevel((pState) -> 14)
 //                     .noLootTable()));
 
-//     public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
-//             new SkyBlock(BlockBehaviour.Properties.of()
-//                     .strength(-1.0F, 8.0F)
-//                     .isSuffocating(JJKBlocks::never)
-//                     .lightLevel((pState) -> 14)
-//                     .noLootTable()));
+    public static RegistryObject<DomainBlock> FAKE_SKY = BLOCKS.register("fake_sky", () ->
+            new FakeSkyBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()

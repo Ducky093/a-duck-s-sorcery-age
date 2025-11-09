@@ -1,11 +1,7 @@
 package radon.jujutsu_kaisen.block.domain;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,11 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
-import radon.jujutsu_kaisen.block.entity.DomainSkyBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class DomainSkyBlock extends DomainBlock {
-    public DomainSkyBlock(Properties pProperties) {
+public class FakeSkyBlock extends DomainBlock implements EntityBlock {
+    public FakeSkyBlock(Properties pProperties) {
         super(pProperties);
     }
 
@@ -31,20 +26,14 @@ public class DomainSkyBlock extends DomainBlock {
         return RenderShape.INVISIBLE;
     }
 
-
-    @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DOMAIN_SKY.get().create(pPos, pState);
+    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        return JJKBlockEntities.FAKE_SKY.get().create(pPos, pState);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_SKY.get(), DomainSkyBlockEntity::tick);
-    }
 
-    
-
-
+    // @Override
+    // public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    //     return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.SKY.get(), DomainBlockEntity::tick);
+    // }
 }
