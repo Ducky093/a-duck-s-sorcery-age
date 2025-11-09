@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -26,10 +28,18 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 public class MaximumMeteor extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+
+        if (target == null || target.isDeadOrDying()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
-                !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
-                (cap.getType() == JujutsuType.CURSE && HelperMethods.RANDOM.nextInt(10) == 0 || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.6F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+        ISorcererData targetcap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (targetcap == null) return false;
+
+        if (SorcererUtil.getGrade(targetcap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal()) {
+            return owner.hasLineOfSight(target) &&
+                    !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
+                    (cap.getType() == JujutsuType.CURSE && HelperMethods.RANDOM.nextInt(10) == 0 || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.6F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+        }
     }
 
     @Override

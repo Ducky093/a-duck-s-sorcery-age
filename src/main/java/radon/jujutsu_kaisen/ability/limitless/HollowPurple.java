@@ -10,7 +10,11 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 
 import java.util.List;
 
@@ -19,8 +23,16 @@ public class HollowPurple extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        return owner.distanceTo(target) >= 20.0D && HelperMethods.RANDOM.nextInt(3) == 0;
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap == null) return false;
+
+        if (SorcererUtil.getGrade(cap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal()) {
+            return owner.distanceTo(target) >= 20.0D && HelperMethods.RANDOM.nextInt(3) == 0;
+        }
+        return false;
     }
+
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {

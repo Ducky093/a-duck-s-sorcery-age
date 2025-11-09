@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -24,7 +26,15 @@ public class DismantleNet extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null;
+        if (target == null) return false;
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap != null) {
+            if (SorcererUtil.getGrade(cap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal()) {
+                return HelperMethods.RANDOM.nextInt(5) == 0 && target != null;
+            }
+        }
+        return false;
     }
 
     @Override
