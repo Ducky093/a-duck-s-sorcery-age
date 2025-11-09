@@ -41,9 +41,9 @@ public class ChantHandler {
         float outputMod = 0.0F;
 
         if (cap.hasBindingVow(BindingVow.CHANTER)) {
-        outputMod += -0.3F;
-        countMult = 0.35F;
-        lengthMult = 0.8F;
+        outputMod += -0.2F;
+        countMult = 0.5F;
+        lengthMult = 1.0F;
         }
 
         //Iterator<String> iter = chants.iterator();
