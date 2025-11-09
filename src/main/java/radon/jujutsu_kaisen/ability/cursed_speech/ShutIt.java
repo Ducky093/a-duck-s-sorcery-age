@@ -18,6 +18,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -35,6 +36,11 @@ public class ShutIt extends CursedSpeech {
     private static final double RADIUS = 2.5D;
     private static final int DURATION = 35;
 
+    double REALRADIUS = RADIUS;
+    double REALRANGE = RANGE;
+
+
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return getEntities(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
@@ -45,9 +51,18 @@ public class ShutIt extends CursedSpeech {
         return Ability.ActivationType.INSTANT;
     }
 
-    private static List<Entity> getEntities(LivingEntity owner) {
+    private List<Entity> getEntities(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 src = owner.getEyePosition();
+
+        if (ChantHandler.isChanted(owner, this)) {
+            float output = (ChantHandler.getOutput(owner, this));
+            REALRANGE = RANGE * output;
+            REALRADIUS = RADIUS * output;
+            AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(REALRANGE)).inflate(REALRADIUS);
+            return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+        }
+
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
@@ -64,7 +79,7 @@ public class ShutIt extends CursedSpeech {
 
         Vec3 src = owner.getEyePosition();
 
-        for (int i = 1; i < RANGE + 7; i++) {
+        for (int i = 1; i < REALRANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
             ((ServerLevel) owner.level()).sendParticles(new CursedSpeechParticle.CursedSpeechParticleOptions(new Vector3f(0.471F, 0.471F, 0.471F), (float)(src.distanceTo(dst) * 0.5D) ),
                                     dst.x, dst.y, dst.z, 0, 0.0D, 0.0D, 0.0D, 1.0D);
