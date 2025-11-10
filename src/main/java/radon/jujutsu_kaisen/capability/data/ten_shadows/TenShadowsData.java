@@ -19,10 +19,12 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.Adaptation.Type;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 
+import java.io.ObjectInputFilter.Config;
 import java.util.*;
 
 public class TenShadowsData implements ITenShadowsData {
@@ -54,7 +56,15 @@ public class TenShadowsData implements ITenShadowsData {
     private void updateAdaptation() {
         ISorcererData cap = this.owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasToggled(JJKAbilities.WHEEL.get()) || cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) ) return;
+        if (!cap.hasToggled(JJKAbilities.WHEEL.get()) || (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && cap.getExperience() < ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue()) ) {
+            this.adapting.clear();
+            this.adapted.clear();
+            return;
+        } else if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()   ) && cap.getExperience() >= ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue()) {
+            return;
+        }
+        
+        
 
         Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
   

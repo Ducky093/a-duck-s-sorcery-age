@@ -149,7 +149,7 @@ public class VeilHandler {
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(mob.level().dimension());
         if (rods == null) return true;
 
-        for (VeilRodBlockEntity rod : rods) {
+        for (VeilRodBlockEntity rod : Set.copyOf(rods)) {
             if (!rod.isValid()) continue;
             int radius = rod.getSize();
             boolean curseSpawnFlag = false;
@@ -180,7 +180,7 @@ public class VeilHandler {
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return true;
 
-        for (VeilRodBlockEntity rod : rods) {
+        for (VeilRodBlockEntity rod : Set.copyOf(rods)) {
             if (!rod.isValid() || target.equals(rod.getBlockPos())) continue;
 
             int radius = rod.getSize();
@@ -206,7 +206,7 @@ public class VeilHandler {
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return false;
 
-        for (VeilRodBlockEntity rod : rods) {
+        for (VeilRodBlockEntity rod : Set.copyOf(rods)) {
             if (!rod.isValid()) continue;
             int radius = rod.getSize();
             if (target.distSqr(rod.getBlockPos()) < radius * radius) return true;
@@ -218,7 +218,7 @@ public class VeilHandler {
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return true;
 
-        for (VeilRodBlockEntity rod : rods) {
+        for (VeilRodBlockEntity rod : Set.copyOf(rods)) {
             if (!rod.isValid() ) continue;
             boolean ownerFlag = false;
              boolean teleportFlag = false;

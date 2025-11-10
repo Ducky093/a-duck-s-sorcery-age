@@ -164,7 +164,7 @@ public class VeilBlockEntity extends BlockEntity {
         }
         this.original = original;
         this.saved = saved;
-        this.sendUpdates();
+       // this.sendUpdates();
     }
 
     public @Nullable BlockPos getParent() {
@@ -178,8 +178,8 @@ public class VeilBlockEntity extends BlockEntity {
     public void sendUpdates() {
         if (this.level != null) {
             this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
-            this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
-            this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
+           // this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
+           // this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
             this.setChanged();
         }
     }
