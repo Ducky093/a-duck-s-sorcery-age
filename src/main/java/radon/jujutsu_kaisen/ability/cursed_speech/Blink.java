@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
@@ -37,7 +38,10 @@ import java.util.List;
 public class Blink extends CursedSpeech {
     private static final double RANGE = 25.0D;
     private static final double RADIUS = 2.5D;
-private static final int DURATION = 15;
+    private static final int DURATION = 15;
+
+    double REALRADIUS = RADIUS;
+    double REALRANGE = RANGE;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -49,9 +53,18 @@ private static final int DURATION = 15;
         return Ability.ActivationType.INSTANT;
     }
 
-    private static List<Entity> getEntities(LivingEntity owner) {
+    private List<Entity> getEntities(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 src = owner.getEyePosition();
+
+        if (ChantHandler.isChanted(owner, this)) {
+            float output = (ChantHandler.getOutput(owner, this));
+            REALRANGE = RANGE * output;
+            REALRADIUS = RADIUS * output;
+            AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(REALRANGE)).inflate(REALRADIUS);
+            return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+        }
+
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
@@ -68,7 +81,7 @@ private static final int DURATION = 15;
 
         Vec3 src = owner.getEyePosition();
 
-        for (int i = 1; i < RANGE + 7; i++) {
+        for (int i = 1; i < REALRANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
             ((ServerLevel) owner.level()).sendParticles(new CursedSpeechParticle.CursedSpeechParticleOptions(new Vector3f(0.115F, 0.115F, 0.115F), (float)(src.distanceTo(dst) * 0.5D) ),
                                     dst.x, dst.y, dst.z, 0, 0.0D, 0.0D, 0.0D, 1.0D);
@@ -87,7 +100,7 @@ private static final int DURATION = 15;
 
                          ISorcererData capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();    
                         if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
-                            PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20)), player);
+                            PacketHandler.sendToClient(new BlinkS2CPacket(Mth.clamp(Math.round(DURATION * this.getPower(owner)), 4*20,5*20)), player);
                         }
                        
                     }
