@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -81,14 +82,15 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
 
-    if (VeilHandler.checkIntersect(level, rod.getBlockPos(), rod.getSize())) {
-        return;
-    }
-    VeilHandler.addVeil(rod);
+   
 
 
     if (++rod.counter < INTERVAL) return;
     rod.counter = 0;
+     if (VeilHandler.checkIntersect(level, rod.getBlockPos(), rod.getSize())) {
+        return;
+    }
+    VeilHandler.addVeil(rod);
 
 
     if (!rod.isValid()) return;
@@ -155,6 +157,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         //if (distance >= size || distance < size - 1) continue; 
 
         BlockPos targetPos = pos.offset(x, y, z);
+         if (!level.isInWorldBounds(pos)) continue;
 
         // boolean blocked = false;
         // for (DomainExpansionEntity domain : nearbyDomains) {
@@ -176,8 +179,9 @@ public class VeilRodBlockEntity extends BlockEntity {
         BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : targetState;
         Block b = targetState.getBlock();
         if (b instanceof DomainBlock || b instanceof DomainAirBlock || b instanceof VeilBlock ) {
-            continue;
+            continue;  
         }
+        if (state.is(Blocks.BEDROCK)) continue;
         CompoundTag saved = null;
         // if (existingBE == null || (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity))  ) {
         //    hadBarrier = false;
@@ -232,6 +236,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
+    
     @Override
     public void setRemoved() {
         if (!this.level.isClientSide) {

@@ -23,7 +23,7 @@ public class HollowPurple extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
 
         if (cap == null) return false;
 

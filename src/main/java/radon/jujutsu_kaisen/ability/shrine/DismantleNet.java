@@ -27,7 +27,7 @@ public class DismantleNet extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
 
         if (cap != null) {
             if (SorcererUtil.getGrade(cap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal()) {

@@ -17,12 +17,16 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -95,6 +99,32 @@ public class HelperMethods {
         return false;
     }
 
+    public static boolean wouldBeFilled(LivingEntity owner, Vec3 target) {
+        AABB newBox = owner.getBoundingBox().move(target.subtract(owner.position()));
+        return owner.level().noCollision(newBox);
+    }
+    public static boolean isBlocked(LivingEntity owner, Vec3 prev, Vec3 target) {
+                double height = owner.getBbHeight();
+                Vec3 feetStart = new Vec3(prev.x, prev.y, prev.z);
+                Vec3 feetEnd   = new Vec3(target.x, target.y, target.z);
+                Vec3 headStart = new Vec3(prev.x, prev.y + height * 0.9, prev.z);
+                Vec3 headEnd   = new Vec3(target.x, target.y + height * 0.9, target.z);
+                ClipContext ctxFeet = new ClipContext(
+                        feetStart, feetEnd,
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE,
+                        owner
+                );
+                ClipContext ctxHead = new ClipContext(
+                        headStart, headEnd,
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE,
+                        owner
+                );
+                HitResult hitFeet = owner.level().clip(ctxFeet);
+                HitResult hitHead = owner.level().clip(ctxHead);
+                return (hitFeet.getType() == HitResult.Type.BLOCK && hitHead.getType() == HitResult.Type.BLOCK);
+    }
 
     public static boolean isBlockable(LivingEntity target, Projectile projectile) {
         if (projectile instanceof WorldSlashProjectile) return false;

@@ -134,7 +134,7 @@ public class JJKEventHandler {
                 return; 
             }
             Vec3 center = pos.getCenter();
-            if (!VeilHandler.canDestroy(player, level, center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(player, level, center.x, center.y, center.z, true)) {
                 event.setCanceled(true);
 
                 // Optional: re-sync block state to client so it doesn’t look broken

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -164,7 +165,8 @@ public class VeilBlockEntity extends BlockEntity {
         }
         this.original = original;
         this.saved = saved;
-       // this.sendUpdates();
+        this.initialized = true;
+        this.sendUpdates();
     }
 
     public @Nullable BlockPos getParent() {
@@ -177,7 +179,7 @@ public class VeilBlockEntity extends BlockEntity {
 
     public void sendUpdates() {
         if (this.level != null) {
-            this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
+            //this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
            // this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
            // this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
             this.setChanged();
@@ -189,12 +191,17 @@ public class VeilBlockEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
+    // @Override
+    // public @NotNull CompoundTag getUpdateTag() {
+    //     CompoundTag tag = super.getUpdateTag();
+    //     this.saveAdditional(tag);
+    //     return tag;
+    // }
+@Override
     public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        this.saveAdditional(tag);
-        return tag;
+        return this.saveWithoutMetadata();
     }
+
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {

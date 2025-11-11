@@ -31,7 +31,7 @@ public class MaximumMeteor extends Ability {
 
         if (target == null || target.isDeadOrDying()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData targetcap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetcap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
 
         if (targetcap == null) return false;
 

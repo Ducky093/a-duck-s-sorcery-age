@@ -184,8 +184,18 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 owner.walkAnimation.setSpeed(2.0F);
 
                 boolean isOnGround = isGrounded(owner.level(), owner.blockPosition()) || (previous.get() != null && isGrounded(owner.level(), BlockPos.containing(previous.get())));
+                //Vec3 prev = previous.get() != null ? previous.get() : owner.position();
+                Vec3 target = frame;
+                //AABB newBox = owner.getBoundingBox().move(target.subtract(owner.position()));
+                //boolean canFit = owner.level().noCollision(newBox);
 
-                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 50.0D * (cap.getSpeedStacks() + 1)) {
+                Vec3 prev = previous.get() != null ? previous.get() : owner.position();
+
+                if ( HelperMethods.isBlocked(owner, prev, target) ) {
+                    cancelled.set(true);
+                    return;
+                }
+                if ( (!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 50.0D * (cap.getSpeedStacks() + 1)) {
                     cancelled.set(true);
 
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
@@ -218,7 +228,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 movements.add(RelativeMovement.Z);
                 movements.add(RelativeMovement.X_ROT);
                 movements.add(RelativeMovement.Y_ROT);
-
+              
                 if (owner instanceof ServerPlayer player) {
                     player.connection.teleport(frame.x, frame.y, frame.z, yaw, owner.getXRot());
                 } else {

@@ -64,6 +64,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected boolean ritualNullified = false;
 
+    private int participantCheckCooldown = 0;   
+
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
 
@@ -263,6 +265,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     private void checkParticipants() {
         Iterator<UUID> iter = this.participants.iterator();
 
+
         while (iter.hasNext()) {
             UUID identifier = iter.next();
 
@@ -309,17 +312,21 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             if (this.level().isClientSide) return;
 
             if (!this.isTame()) {
-                this.checkParticipants();
+                if (participantCheckCooldown-- <= 0) {
+                    participantCheckCooldown = 20;
+                    this.checkParticipants();
 
-                boolean disappear = this.participants.isEmpty();
 
-                if (disappear) {
-                    this.discard();
-                }
-                // else {
-                //     Vec3 center = this.position();
-                //     addParticipants(center, owner);
-                // }
+                    boolean disappear = this.participants.isEmpty();
+
+                    if (disappear) {
+                        this.discard();
+                    }
+                    else {
+                         Vec3 center = this.position();
+                         addParticipants(center, owner);
+                    }
+                    }
                 
             } else {
                 LivingEntity target = this.getTarget();

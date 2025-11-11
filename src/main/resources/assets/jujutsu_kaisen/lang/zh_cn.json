@@ -222,10 +222,9 @@
   "ability.jujutsu_kaisen.fail.burnout": "熔断：%1$d 秒",
   "ability.jujutsu_kaisen.fail.failure": "现在无法使用",
   "ability.jujutsu_kaisen.fail.throat": "你的咒言反噬时间仍有： %1$d ",
-  "ability.jujutsu_kaisen.fail.chant": "必须被吟唱咒词至超过150%的输出量",
+  "ability.jujutsu_kaisen.fail.chant": "必须被吟唱咒词至超过125%的输出量",
   "ability.jujutsu_kaisen.fail.disable": "无法使用你的术式。",
   "ability.jujutsu_kaisen.fail.emptyinv": "你必须先将某物存在影子中才能检索它",
-
 
   "ability.jujutsu_kaisen.shockwave": "震荡波",
   "ability.jujutsu_kaisen.sky_strike": "天空束",
@@ -536,22 +535,24 @@
   "trait.jujutsu_kaisen.prodigy": "天才",
   "trait.jujutsu_kaisen.death_painting": "咒胎：死涂",
 
-  "pact.jujutsu_kaisen.invulnerability": "互不侵犯",
-  "pact.jujutsu_kaisen.invulnerability.description": "双方承诺不伤害对方的契约。",
-
-  "pact.jujutsu_kaisen.friends": "互不攻击",
+  "pact.jujutsu_kaisen.friends": "盟友",
   "pact.jujutsu_kaisen.friends.description": "一个双方承诺不互相伤害的契约。",
 
+  "pact.jujutsu_kaisen.invulnerability": "互不侵犯",
+  "pact.jujutsu_kaisen.invulnerability.description": "双方承诺不伤害对方的契约。",
 
   "pact.jujutsu_kaisen.technique": "术式",
   "pact.jujutsu_kaisen.technique.description": "双方发誓不使用术式的契约。",
 
 
   "binding_vow.jujutsu_kaisen.overtime": "加班",
-  "binding_vow.jujutsu_kaisen.overtime.description": "白天你的咒力被限制在80-90%，但在夜晚会增加到110-120%。",
+  "binding_vow.jujutsu_kaisen.overtime.description": "白天你的咒力被限制在80-90%, 但在夜晚会增加到110-120%。",
 
   "binding_vow.jujutsu_kaisen.recoil": "反噬",
-  "binding_vow.jujutsu_kaisen.recoil.description": "你自己的能力会对你造成伤害，以换取显著增强的力量。",
+  "binding_vow.jujutsu_kaisen.recoil.description": "你的技能会对你造成伤害，以换取显著增强的力量。",
+
+  "binding_vow.jujutsu_kaisen.chanter": "祝词",
+  "binding_vow.jujutsu_kaisen.chanter.description": "你的技能伤害会降低，但在念诵咒词后提升的倍率更大",
 
   "binding_vow.jujutsu_kaisen.risk": "风险",
   "binding_vow.jujutsu_kaisen.risk.description": "你的术式处于休眠状态，除非你的生命值降到阈值以下。作为交换，术式的输出会得到强化。",
@@ -642,33 +643,33 @@
   "entity.jujutsu_kaisen.dagon": "特级 陀艮",
   "entity.jujutsu_kaisen.hanami": "特级 花御",
 
-  "entity.jujutsu_kaisen.rugby_field_curse": "咒灵 鬣虫(二级)",
-  "entity.jujutsu_kaisen.fish_curse": "咒灵 黑鱼(三级)",
-  "entity.jujutsu_kaisen.cyclops_curse": "咒灵 枭首(一级)",
-  "entity.jujutsu_kaisen.kuchisake_onna": "咒灵 裂口女(一级)",
-  "entity.jujutsu_kaisen.zomba_curse": "咒灵 尊巴(准一级)",
-  "entity.jujutsu_kaisen.worm_curse": "咒灵 芋虫(二级)",
-  "entity.jujutsu_kaisen.feline_curse": "咒灵 分裂猫(二级)",
-  "entity.jujutsu_kaisen.fugly_curse": "咒灵 螳螂(三级)",
-  "entity.jujutsu_kaisen.bird_curse": "咒灵 鸟(三级)",
-  "entity.jujutsu_kaisen.finger_bearer": "咒胎 戴天(特级)",
-  "entity.jujutsu_kaisen.rainbow_dragon": "咒灵 虹龙(特级)",
-  "entity.jujutsu_kaisen.dino_curse": "咒灵 森(一级)",
+  "entity.jujutsu_kaisen.rugby_field_curse": "咒灵 鬣虫",
+  "entity.jujutsu_kaisen.fish_curse": "咒灵 黑鱼",
+  "entity.jujutsu_kaisen.cyclops_curse": "咒灵 枭首",
+  "entity.jujutsu_kaisen.kuchisake_onna": "咒灵 裂口女",
+  "entity.jujutsu_kaisen.zomba_curse": "咒灵 尊巴",
+  "entity.jujutsu_kaisen.worm_curse": "咒灵 芋虫",
+  "entity.jujutsu_kaisen.feline_curse": "咒灵 分裂猫",
+  "entity.jujutsu_kaisen.fugly_curse": "咒灵 螳螂",
+  "entity.jujutsu_kaisen.bird_curse": "咒灵 鸟",
+  "entity.jujutsu_kaisen.finger_bearer": "咒胎 戴天",
+  "entity.jujutsu_kaisen.rainbow_dragon": "咒灵 虹龙",
+  "entity.jujutsu_kaisen.dino_curse": "咒灵 森",
 
   "entity.jujutsu_kaisen.sukuna": "宿傩",
   "entity.jujutsu_kaisen.heian_sukuna": "诅咒之王",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "伏黑甚尔",
-  "entity.jujutsu_kaisen.satoru_gojo": "特级 五条悟",
-  "entity.jujutsu_kaisen.yuta_okkotsu": "特级 乙骨忧太",
-  "entity.jujutsu_kaisen.megumi_fushiguro": "二级 伏黑惠",
-  "entity.jujutsu_kaisen.yuji_itadori": "二级 虎杖悠仁",
-  "entity.jujutsu_kaisen.toge_inumaki": "准一级 狗卷棘",
-  "entity.jujutsu_kaisen.suguru_geto": "特级 夏油杰",
-  "entity.jujutsu_kaisen.naoya_zenin": "特一级 禅院直哉",
+  "entity.jujutsu_kaisen.satoru_gojo": "五条悟",
+  "entity.jujutsu_kaisen.yuta_okkotsu": "乙骨忧太",
+  "entity.jujutsu_kaisen.megumi_fushiguro": "伏黑惠",
+  "entity.jujutsu_kaisen.yuji_itadori": "虎杖悠仁",
+  "entity.jujutsu_kaisen.toge_inumaki": "狗卷棘",
+  "entity.jujutsu_kaisen.suguru_geto": "夏油杰",
+  "entity.jujutsu_kaisen.naoya_zenin": "禅院直哉",
   "entity.jujutsu_kaisen.hajime_kashimo": "鹿紫云一",
-  "entity.jujutsu_kaisen.maki_zenin": "四级 禅院真希",
-  "entity.jujutsu_kaisen.aoi_todo": "一级 东堂葵",
+  "entity.jujutsu_kaisen.maki_zenin": "禅院真希",
+  "entity.jujutsu_kaisen.aoi_todo": "东堂葵",
 
   "entity.jujutsu_kaisen.rika": "里香",
 
@@ -799,7 +800,7 @@
   "container.jujutsu_kaisen.bounty.target": "目标",
   "container.jujutsu_kaisen.bounty.accept": "接受",
 
-  "curios.identifier.right_hand": "右手",
-  "curios.identifier.left_hand": "左手",
-  "curios.identifier.head": "頭"
+  "curios.identifier.right_hand": "副右手",
+  "curios.identifier.left_hand": "副左手",
+  "curios.identifier.head": "头"
 }

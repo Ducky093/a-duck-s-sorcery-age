@@ -1726,6 +1726,7 @@ public float getMaxEnergy() {
         this.clearToggled();
         this.resetSteal();
         this.lockAll();
+        this.setPoints(0);
         this.generate(owner);
     }
 

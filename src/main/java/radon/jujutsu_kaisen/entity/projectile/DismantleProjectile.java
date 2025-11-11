@@ -269,7 +269,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                     this.destroyed += 15;
                     return hits;
                 }
-                if (HelperMethods.isDestroyable(this.level(), owner, current)) {
+                if (!this.isDomain() && HelperMethods.isDestroyable(this.level(), owner, current)) {
                     boolean destroyed;
 
                     if (state.getFluidState().isEmpty()) {

@@ -52,8 +52,6 @@ public class VeilHandler {
     return false;
 }
 
-
-
     public static void addVeil(VeilRodBlockEntity rod) {
         ResourceKey<Level> dimension = rod.getLevel().dimension();
         veilsByDimension.computeIfAbsent(dimension, k -> new HashSet<>()).add(rod);
@@ -176,13 +174,18 @@ public class VeilHandler {
     }
 
     public static boolean canDestroy(LivingEntity entity, Level level, double x, double y, double z) {
+        return canDestroy(entity, level, x, y, z, false);
+    }
+    public static boolean canDestroy(LivingEntity entity, Level level, double x, double y, double z, boolean manualBreak) {
         BlockPos target = BlockPos.containing(x, y, z);
         Set<VeilRodBlockEntity> rods = veilsByDimension.get(level.dimension());
         if (rods == null) return true;
 
         for (VeilRodBlockEntity rod : Set.copyOf(rods)) {
-            if (!rod.isValid() || target.equals(rod.getBlockPos())) continue;
-
+            if (!rod.isValid() ) continue;
+            if (manualBreak && target.equals(rod.getBlockPos())) {
+                continue;
+            }
             int radius = rod.getSize();
             if (target.distSqr(rod.getBlockPos()) >= radius * radius) continue;
             boolean ownerFlag = false;

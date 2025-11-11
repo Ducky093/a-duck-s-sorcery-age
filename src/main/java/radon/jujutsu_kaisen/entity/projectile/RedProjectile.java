@@ -14,6 +14,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.HitResult.Type;
+
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -96,16 +98,20 @@ public class RedProjectile extends JujutsuProjectile {
         super.onHit(pResult);
 
         if (this.level().isClientSide) return;
+          if (!(this.getOwner() instanceof LivingEntity owner)) return;
+       
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+      
+        if (pResult.getType() == HitResult.Type.ENTITY && ((EntityHitResult)pResult).getEntity() == owner && !cap.hasSelfHit()) return;
 
         this.playSound(JJKSounds.RED_EXPLOSION.get(), 3.0F, 1.0F);
 
-        if (this.getOwner() instanceof LivingEntity owner) {
             float radius = Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower());
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
             ExplosionHandler.spawn(this.level().dimension(), offset, radius, 1 * 20, this.getPower() * 0.33F, owner,
                     JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false, false);
-        }
+        
         this.discard();
     }
 
