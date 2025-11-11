@@ -43,6 +43,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -169,7 +170,10 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public void applyModifiers(LivingEntity owner) {
         double newSpeed = SPEED;
+        double maxSpeed = ConfigHolder.SERVER.playerMaxSpeed.get().floatValue();
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
         if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
             newSpeed*=1.15;
         }
@@ -194,21 +198,25 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             // }
              if (ratio <= 0.5 && ratio > 0.3) {
             newSpeed *= 0.85;
+            maxSpeed *= 0.85;
         }
             if (ratio <= 0.3 && ratio > 0.15) {
                 newSpeed *=0.75;
+                maxSpeed *= 0.75;
             }
 
             if (ratio <= 0.15) {
                 newSpeed *= 0.65;
+                maxSpeed *= 0.65;
             }
 
             if (cap.getBurnout() > 0) {
                 newSpeed *= 0.8;
+                maxSpeed *= 0.8;
             }
 
                 EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                newSpeed * this.getPower(owner), AttributeModifier.Operation.ADDITION); 
+                Math.min(maxSpeed, newSpeed * this.getPower(owner)), AttributeModifier.Operation.ADDITION);
             
             }
     }

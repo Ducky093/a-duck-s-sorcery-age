@@ -533,26 +533,33 @@ public class SorcererData implements ISorcererData {
             float ratio = owner.getHealth()/owner.getMaxHealth();
 
 
-            double movement = this.getRealPower() * 0.3D;
+            double movement = this.getRealPower() * 0.05D;
+            double realmovement = ConfigHolder.SERVER.HRMaxSpeed.get().floatValue();
+
 
             if (this.getOutput() < 1) {
                 movement *= (0.5 * this.getOutput());
+                realmovement *= (0.5 * this.getOutput());
                 damage *= this.getOutput();
             }
 
             if (ratio <= 0.5 && ratio > 0.35) {
                 movement *= 0.4;
+                realmovement *= 0.4;
             }
 
             if (ratio <= 0.35 && ratio > 0.2) {
                 movement *= 0.25;
+                realmovement *= 0.25;
             }
 
             if (ratio <= 0.2) {
                 movement *= 0.15;
+                realmovement *= 0.15;
             }
 
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(0.8,  movement), AttributeModifier.Operation.ADDITION);
+
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(realmovement, movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() != this.owner.getMaxHealth()) {
                 this.owner.heal(0.45F / 20);

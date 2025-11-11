@@ -93,6 +93,8 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue playerCEArmorMax;
     public final ForgeConfigSpec.DoubleValue playerCEArmorMin;
     public final ForgeConfigSpec.IntValue playerHPMin;
+    public final ForgeConfigSpec.DoubleValue playerMaxSpeed;
+    public final ForgeConfigSpec.DoubleValue HRMaxSpeed;
     public final ForgeConfigSpec.IntValue npcHPMin;
     public final ForgeConfigSpec.DoubleValue hrHPMult;
     public final ForgeConfigSpec.IntValue hrHPMin;
@@ -325,6 +327,10 @@ public class ServerConfig {
                 .defineInRange("playerCEArmorMin", 12.0F, 0.0F, 9999.0F);
         this.playerCEArmorMax = builder.comment("The maximum boost to player armor with ce flow/hr (This is the cap, does not stack w reg armor)")
                 .defineInRange("playerCEArmorMax", 20.0F, 0.0F, 9999.0F);
+        this.playerMaxSpeed = builder.comment("The maximum boost to player movement speed, scales to 0.32 at 20k exp by default (DOES NOT CAP PROJECTION OR SCALE SPEED HIGHER).")
+                .defineInRange("playerMaxSpeed", 0.32F, 0.0F, 9999.0F);
+        this.HRMaxSpeed = builder.comment("The maximum boost to Heavenly Restriction movement speed, scales to 0.8 at 20k by default (DOES NOT SCALE SPEED HIGHER)")
+                .defineInRange("HRMaxSpeed", 0.8F, 0.0F, 9999.0F);
         this.playerHPMin = builder.comment("The minimum health of a player.")
                 .defineInRange("playerHPMin", 40, 1, 9999);
         this.hrHPMult = builder.comment("The multiplier to a heavenly restriction player's HP (scales by bars, so will move by 20 hp increments)")
