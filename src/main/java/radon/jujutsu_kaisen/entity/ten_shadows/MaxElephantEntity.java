@@ -6,6 +6,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.SorcererUtil;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,9 +42,10 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideable, IRightClickInputListener {
-    private static final double EXPLOSION_FALL_DISTANCE = 10.0D;
+    private static final double EXPLOSION_FALL_DISTANCE = 7.0D;
     private static final int EXPLOSION_DURATION = 20;
     private static final float EXPLOSION_POWER = 15.0F;
+    private static final float DAMAGE = 5.0F; //low due to absurd direct jujutsu damage scaling
 
     private static final EntityDataAccessor<Boolean> DATA_SHOOTING = SynchedEntityData.defineId(MaxElephantEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -51,6 +56,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     private static final RawAnimation SHOOT = RawAnimation.begin().thenLoop("attack.shoot");
 
     private int riding;
+
+    private float power;
 
     public MaxElephantEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -120,7 +127,13 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, this, this.damageSources().mobAttack(this), false);
+            LivingEntity owner = this.getOwner();
+            if (owner != null) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+                float power = SorcererUtil.getPower(cap.getExperience());
+
+                ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, (power * DAMAGE) * 0.25F, this, JJKDamageSources.jujutsuAttack(this.getOwner(), JJKAbilities.EXPLODE.get()), false);
+            }
         }
         return result;
     }
