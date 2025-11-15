@@ -134,6 +134,11 @@ public class OutputRCT extends Ability {
                 target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount  * 15.0F);
                 return;
             }
+
+            if (targetCap.getType() == JujutsuType.SHIKIGAMI) {
+                target.heal(amount * 0.25F);
+                return;
+            }
         }
         target.heal(amount);
     }
