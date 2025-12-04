@@ -23,7 +23,7 @@ public class Adaptation {
     }
 
     public Adaptation(CompoundTag nbt) {
-        this.key = new ResourceLocation(nbt.getString("name"));
+        this.key = new ResourceLocation(nbt.getString("ability"));
 
         if (nbt.contains("technique")) {
             this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("technique")));

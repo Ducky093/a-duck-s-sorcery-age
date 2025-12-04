@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -97,10 +98,17 @@ public class ForestSpikes extends Ability {
                 BlockPos blockPos = hitResult.getBlockPos();
 
                 BlockPos airCheck = blockPos.relative(dir);
-                if (!owner.level().getBlockState(airCheck).isAir()) {
+                BlockState state = owner.level().getBlockState(airCheck);
+                if (!state.getCollisionShape(owner.level(), airCheck).isEmpty()) {
                     spike.discard();
                     return;
                 }
+
+                // if (!owner.level().getBlockState(airCheck).isAir()) {
+                    
+                //     spike.discard();
+                //     return;
+                // }
 
                 double blockCenterX = blockPos.getX() + 0.5D;
         double blockCenterY = blockPos.getY() + 0.5D;

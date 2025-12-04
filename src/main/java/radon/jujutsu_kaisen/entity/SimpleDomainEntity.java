@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -13,10 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.entity.IBarrier;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -28,7 +34,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class SimpleDomainEntity extends Entity {
+public class SimpleDomainEntity extends Entity  implements IBarrier {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
@@ -37,7 +43,7 @@ public class SimpleDomainEntity extends Entity {
     private static final float STRENGTH = 100.0F;
     private static final double X_STEP = 0.025D;
     public static final float RADIUS = 1.5F;
-    private static final float MAX_RADIUS = 3.5F;
+    public static final float MAX_RADIUS = 3.5F;
     private static final float DAMAGE = 4.0F;
     private boolean invuln = false;
     private boolean domainInvuln = false;
@@ -70,7 +76,7 @@ public class SimpleDomainEntity extends Entity {
         return Math.min(MAX_RADIUS, RADIUS  * cap.getAbilityPower());
     }
     
-     public float getRadius() {
+    public float getRadius() {
         return this.entityData.get(DATA_RADIUS) * (1.0F + this.getEnlargement());
     }
 
@@ -154,7 +160,7 @@ public class SimpleDomainEntity extends Entity {
             this.domainInvuln = true;
             cap.delayTickEvent(() -> {
                 this.domainInvuln = false;
-            }, 10);
+            }, 10); 
         }
         if (!isDomainAttack) {
             this.invuln = true;
@@ -187,8 +193,9 @@ public class SimpleDomainEntity extends Entity {
             if (this.level() instanceof ServerLevel level) {
                 ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
-                    if (domain.checkSureHitEffect()) {
+                for (IDomainBarrier dom : VeilHandler.getDomainBarriers(level, owner.blockPosition())) {
+                    DomainExpansionEntity domain = dom.checkSureHitEffect();
+                    if (domain != null) {
                         LivingEntity target = domain.getOwner();
                         float baseDMG = DAMAGE;
                         if (domain.ability == JJKAbilities.UNLIMITED_VOID.get() || domain.ability == JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) {
@@ -224,6 +231,16 @@ public class SimpleDomainEntity extends Entity {
         }
     }
 
+    @Override
+    public boolean isBarrierOrInside(BlockPos pos) {
+        return this.isBarrier(pos) || this.isInsideBarrier(pos);
+    }
+
+    @Override
+    public AABB getBounds() {
+        return this.getBoundingBox();
+    }
+
     public void setOwner(@Nullable LivingEntity pOwner) {
         if (pOwner != null) {
             this.ownerUUID = pOwner.getUUID();
@@ -246,6 +263,22 @@ public class SimpleDomainEntity extends Entity {
     @Override
     public boolean isInWall() {
         return false;
+    }
+
+    @Override
+    public boolean isBarrier(BlockPos pos) {
+        float radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) >= radius - 1 && Math.sqrt(relative.distSqr(Vec3i.ZERO)) <= radius;
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        float radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < radius - 1;
     }
 
     @Override

@@ -28,8 +28,12 @@ import radon.jujutsu_kaisen.ability.angel.AngelWings;
 import radon.jujutsu_kaisen.ability.angel.BarrierTravel;
 import radon.jujutsu_kaisen.ability.angel.JacobsLadder;
 import radon.jujutsu_kaisen.ability.angel.MaximumOutputJacobsLadder;
+import radon.jujutsu_kaisen.ability.barrier.BarrierSizeConfig;
+import radon.jujutsu_kaisen.ability.barrier.ShellBalanceConfig;
+import radon.jujutsu_kaisen.ability.barrier.SureHitConfig;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.DomainConfiguration;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.body_swap.BodySteal;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
@@ -103,7 +107,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
-    public static RegistryObject<Ability> Blitz = ABILITIES.register("blitz", Blitz::new);
+    public static RegistryObject<Ability> BLITZ = ABILITIES.register("blitz", Blitz::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
@@ -120,6 +124,11 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSED_ENERGY_BOMB = ABILITIES.register("cursed_energy_bomb", CursedEnergyBomb::new);
     public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
 
+    public static RegistryObject<Ability> DOMAIN_CONFIGURATION = ABILITIES.register("domain_configuration", DomainConfiguration::new);
+    public static RegistryObject<Ability> BARRIER_SIZE_CONFIG = ABILITIES.register("barrier_size_config", BarrierSizeConfig::new);
+    public static RegistryObject<Ability> SHELL_BALANCE_CONFIG = ABILITIES.register("shell_balance_config", ShellBalanceConfig::new);
+    public static RegistryObject<Ability> SURE_HIT_CONFIG = ABILITIES.register("sure_hit_config", SureHitConfig::new);
+    //public static RegistryObject<Ability> INSTANT_CONFIGURATION = ABILITIES.register("instant_configuration", InstantConfiguration::new);
     public static RegistryObject<RCT1> RCT1 = ABILITIES.register("rct1", RCT1::new);
     public static RegistryObject<RCT1> RCT2 = ABILITIES.register("rct2", RCT2::new);
     public static RegistryObject<RCT1> RCT3 = ABILITIES.register("rct3", RCT3::new);
@@ -458,7 +467,7 @@ public class JJKAbilities {
         for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
+            if ((!ability.isTechnique() || (ability.isTechnique() && ability.specialObtainment())) && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
                 abilities.add(ability);
             }
         }

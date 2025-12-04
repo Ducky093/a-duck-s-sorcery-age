@@ -11,10 +11,19 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
 public class WipeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkwipe")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        wipe(EntityArgument.getPlayer(ctx, "player")))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+            Commands.literal("jjkwipe")
+                    .requires(src -> src.hasPermission(2))
+                    .then(Commands.argument("players", EntityArgument.players())
+                            .executes(ctx -> {
+                                for (ServerPlayer player :
+                                        EntityArgument.getPlayers(ctx, "players")) {
+                                    wipe(player);
+                                }
+                                return 1;
+                            })
+                    )
+        );
 
         dispatcher.register(Commands.literal("jjkwipe").requires((player) -> player.hasPermission(2)).redirect(node));
     }

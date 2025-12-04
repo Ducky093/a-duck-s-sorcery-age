@@ -5,7 +5,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -42,6 +48,11 @@ public class AoiTodoEntity extends SorcererEntity {
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get());
     }
 
 }

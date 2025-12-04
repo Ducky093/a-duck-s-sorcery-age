@@ -23,7 +23,7 @@ public class NaoyaZeninEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE_1.getRequiredExperience();
+        return (SorcererGrade.GRADE_1.getRequiredExperience() + SorcererGrade.SPECIAL_GRADE.getRequiredExperience())/2.0F ;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

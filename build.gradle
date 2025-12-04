@@ -103,6 +103,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}:api")
+    compileOnly fg.deobf(files("libs/playerrevive.jar"))
+    compileOnly fg.deobf(files("libs/cuffed.jar"))
 }
 
 tasks.named('processResources', ProcessResources).configure {

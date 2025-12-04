@@ -22,7 +22,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
                 return be.getSize();
             }
-            return 0;
+            return ConfigHolder.SERVER.minimumVeilSize.get();
         }).orElse(ConfigHolder.SERVER.minimumVeilSize.get());
     }
 

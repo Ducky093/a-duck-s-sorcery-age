@@ -117,7 +117,12 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isTechnique() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean specialObtainment() {
+        return true;
     }
 
     @Override

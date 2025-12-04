@@ -32,7 +32,7 @@ public class DomainRenderDispatcher {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
         renderers.put(JJKAbilities.TIME_CELL_MOON_PALACE.getId(), new TimeCellMoonPalaceDomainRenderer());
         renderers.put(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.getId(), new SelfEmbodimentOfPerfectionDomainRenderer());
-//        renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
+        renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
 //        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
 //        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
     }

@@ -11,6 +11,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -25,7 +26,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -103,15 +106,25 @@ public class JJKEventHandler {
                 BlockPos to = BlockPos.containing(event.getTargetX(), event.getTargetY(), event.getTargetZ());
         
                 if (!VeilHandler.isTeleportValid(level, from) || !VeilHandler.isTeleportValid(level, to) ) {
+                    System.out.println("invalid tp");
                     event.setCanceled(true);
                 }
                 else {
                     ServerLevel serverLevel = (ServerLevel) level;
-                    if (!VeilHandler.getDomains(serverLevel, from).isEmpty() || !VeilHandler.getDomains(serverLevel, to).isEmpty()) {
+                    if (!VeilHandler.getDomainBarriers(serverLevel, from).isEmpty() || !VeilHandler.getDomainBarriers(serverLevel, to).isEmpty()) {
                         event.setCanceled(true);
                     }
                 }
             }
+
+        @SubscribeEvent
+        public static void onDimensionTravel(EntityTravelToDimensionEvent event) {
+            Entity entity = event.getEntity();
+            System.out.println("no tp");
+            if (!VeilHandler.isTeleportValid(entity.level(), entity.blockPosition())) {
+                event.setCanceled(true);
+            }
+        }
 
         @SubscribeEvent
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
@@ -219,10 +232,10 @@ public class JJKEventHandler {
                 newCap.resetSpeedStacks();
                 newCap.resetDash();
                
-                if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
-                    ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-                    shadowCap.resetAdaptations();
-                }
+                // if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+                //     ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                //     shadowCap.resetAdaptations();
+                // }
                 if (!player.level().isClientSide) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
                 }
@@ -382,6 +395,7 @@ public class JJKEventHandler {
 
                     if (!cursed) {
                         event.setCanceled(true);
+                        return;
                     }
                 }
             }
@@ -395,18 +409,18 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
             
             DamageSource source = event.getSource();
-           
-
+           if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) return;
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                if (!(source.getEntity() instanceof LivingEntity sourceUser)) return;
-                ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                if (source.getEntity() == victim && !capSelf.hasSelfHit() ) {
+                if ((source.getEntity() instanceof LivingEntity sourceUser)) {
+                ISorcererData capSelf = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+                if (capSelf != null && source.getEntity() == victim && !capSelf.hasSelfHit() ) {
                     event.setAmount(event.getAmount() * 0.1F);
                 }
             }
+            }
             else {
-                if (source.getEntity() instanceof LivingEntity sourceUser && HelperMethods.isMelee(source) && sourceUser.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                if (ConfigHolder.SERVER.realisticCurses.get() && source.getEntity() instanceof LivingEntity sourceUser && sourceUser.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         ISorcererData attackerCap = sourceUser.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                         if (attackerCap.getEnergy() <= 0.0F) {  
                             ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : sourceUser.getItemInHand(InteractionHand.MAIN_HAND);
@@ -418,10 +432,23 @@ public class JJKEventHandler {
                                  ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
                             if (victimCap != null && victimCap.getType() == JujutsuType.CURSE && !victimCap.hasTrait(Trait.DEATH_PAINTING)) {
                                 event.setAmount(0.0F);
+                                event.setCanceled(true);
+                                return;
                             }
                             }
                         }
                     }
+                else if (ConfigHolder.SERVER.realisticCurses.get())   { 
+                     ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+                     if (victimCap != null && victimCap.getType() == JujutsuType.CURSE) {
+                            if (!victimCap.hasTrait(Trait.DEATH_PAINTING) || source.is(DamageTypes.MAGIC) ) {
+                                event.setAmount(0.0F);
+                                event.setCanceled(true);
+                                return;
+                                //
+                            }
+                     }
+                }
             }
             Entity attackerEntity = source.getEntity();
 if (attackerEntity instanceof Projectile projectile) {

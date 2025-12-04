@@ -64,12 +64,15 @@ public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private int cursedEnergyColor;
-    
 
     private int points;
     private final Set<Ability> unlocked;
 
     private float domainSize;
+    private boolean toggledSureHit;
+    private boolean alliedSureHit;
+    private boolean shellBalance;
+    //private Set<UUID> sureHitEntityBlacklist;
 
     private @Nullable CursedTechnique technique;
 
@@ -567,7 +570,7 @@ public class SorcererData implements ISorcererData {
 
             EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
-            if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
+            if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty() && this.getOutput() >= 1.0F) {
                 Vec3 motion = owner.getDeltaMovement();
 
                 if (motion.y < 0.0D) {
@@ -1006,7 +1009,7 @@ public class SorcererData implements ISorcererData {
     public boolean addExperience(float amount) {
         SorcererGrade previous = SorcererUtil.getGrade(this.experience);
 
-        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
+        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue() && amount >= 0) {
             return false;
         }
 
@@ -1060,7 +1063,7 @@ public class SorcererData implements ISorcererData {
         this.technique = technique;
         this.sync();
         for (Ability ability : new ArrayList<>(this.unlocked)) {
-            if (!ability.isDisplayed(owner) && ability != JJKAbilities.WORLD_SLASH.get() ) {
+            if (!ability.isDisplayed(owner) && ability.specialObtainment() == false ) {
                 this.lock(ability);
             }
         }
@@ -1210,6 +1213,45 @@ public class SorcererData implements ISorcererData {
     public int getBrainDamage() {
         return this.brainDamage;
     }
+
+    @Override
+    public boolean getToggleSureHit() {
+        return this.toggledSureHit;
+    }
+
+    @Override
+    public void setToggleSureHit(boolean balance) {
+        this.shellBalance = balance;
+    }
+
+    @Override
+    public boolean getAlliedSureHit() {
+        return this.alliedSureHit;
+    }
+
+    @Override
+    public void setAlliedSureHit(boolean toggle) {
+        this.alliedSureHit = toggle;
+    }
+
+    @Override
+    public boolean getShellBalance() {
+        return this.shellBalance;
+    }
+
+    @Override
+    public void setShellBalance(boolean balance) {
+        this.shellBalance = balance;
+    }
+
+
+
+    
+    // @Override
+    // public boolean checkSureHitEntity(UUID entity) {
+    //     return sureHitEntityBlacklist.contains(entity);
+    // }
+
 
     @Override
     public void setBurnout(int duration) {
@@ -1475,9 +1517,20 @@ public float getMaxEnergy() {
     }
 
     @Override
+    public void resetAbsorbed() {
+        this.absorbed.clear();
+    }
+
+    @Override
     public void resetCopy() {
         this.copied = new LinkedHashSet<>();
         this.sync();
+    }
+
+    
+    @Override
+    public void resetCurses() {
+        this.curses.clear();
     }
 
 
@@ -1729,11 +1782,15 @@ public float getMaxEnergy() {
         PlayerUtil.removeAdvancement(owner, "vessel");
         PlayerUtil.removeAdvancement(owner, "perfect_body");
         this.resetCopy();
+        this.resetAbsorbed();
+        this.resetCurses();
         this.setCurrentCopied(null);
         this.clearToggled();
         this.resetSteal();
         this.lockAll();
         this.setPoints(0);
+        this.setFingers(0);
+        this.resetVows();
         this.generate(owner);
     }
 
@@ -2206,7 +2263,8 @@ public float getMaxEnergy() {
         nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
         nbt.putInt("points", this.points);
         nbt.putFloat("domain_size", this.domainSize);
-
+        nbt.putBoolean("toggledSureHit", this.toggledSureHit);
+        nbt.putBoolean("shellBalance", this.shellBalance);
         if (this.technique != null) {
             nbt.putInt("technique", this.technique.ordinal());
         }
@@ -2412,7 +2470,8 @@ public float getMaxEnergy() {
 
         this.points = nbt.getInt("points");
         this.domainSize = nbt.getFloat("domain_size");
-
+        this.toggledSureHit = nbt.getBoolean("toggledSureHit");
+        this.shellBalance = nbt.getBoolean("shellBalance");
         if (nbt.contains("technique")) {
             this.technique = CursedTechnique.values()[nbt.getInt("technique")];
         }

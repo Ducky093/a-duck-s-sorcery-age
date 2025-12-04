@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.idle_transfiguration.base;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,8 +24,11 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -31,6 +36,8 @@ import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -61,15 +68,15 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         this.yHeadRotO = this.yHeadRot;
     }
 
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        LivingEntity owner = this.getOwner();
+    // @Override
+    // public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+    //     LivingEntity owner = this.getOwner();
 
-        if (owner != null && pSource.getEntity() == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            IdleTransfiguration.retrieve(owner, this);
-        }
-        return super.hurt(pSource, pAmount);
-    }
+    //     if (owner != null && pSource.getEntity() == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+    //         IdleTransfiguration.retrieve(owner, this);
+    //     }
+    //     return super.hurt(pSource, pAmount);
+    // }
 
     @Override
     protected void registerGoals() {
@@ -95,6 +102,26 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         navigation.setCanPassDoors(true);
         return navigation;
     }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
+        LivingEntity owner = this.getOwner();
+        if (owner != null &&  pPlayer == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            IdleTransfiguration.retrieve(owner, this);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
+    }
+
+    
+    // @Override
+    // public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+    //     LivingEntity owner = this.getOwner();
+
+       
+    //     return super.hurt(pSource, pAmount);
+    // }
 
     @Override
     protected void customServerAiStep() {

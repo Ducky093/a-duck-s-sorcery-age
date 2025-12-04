@@ -62,6 +62,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")));
     public static RegistryObject<SoundEvent> FLAME_EXPLOSION = SOUNDS.register("flame_explosion", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "flame_explosion")));
+    public static RegistryObject<SoundEvent> THUMP = SOUNDS.register("thump", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "thump")));
     public static RegistryObject<SoundEvent> SHOOT = SOUNDS.register("shoot", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "shoot")));
     public static RegistryObject<SoundEvent> SPARK = SOUNDS.register("spark", () ->

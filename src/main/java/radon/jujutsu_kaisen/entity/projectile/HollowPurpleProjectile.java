@@ -93,7 +93,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                         if (distance <= radius) {
-                            if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                            if (HelperMethods.isDestroyable(this.level(), owner, pos, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
+                        DAMAGE * this.getPower())) {
                                 if (state.getFluidState().isEmpty()) {
                                     //this.level().destroyBlock(pos, false);
                                     owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),

@@ -58,7 +58,6 @@ public class TenShadowsData implements ITenShadowsData {
 
         if (!cap.hasToggled(JJKAbilities.WHEEL.get()) || (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && cap.getExperience() < ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue()) ) {
             this.adapting.clear();
-            this.adapted.clear();
             return;
         } else if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()   ) && cap.getExperience() >= ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue()) {
             return;
@@ -192,7 +191,8 @@ public class TenShadowsData implements ITenShadowsData {
     @Override
     public void revive(boolean full) {
         this.dead.clear();
-
+        this.adapting.clear();
+        this.adapted.clear();
         if (full) {
             this.tamed.clear();
         }

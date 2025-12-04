@@ -13,7 +13,7 @@ public class PaintRenderLayer extends DomainRenderLayer {
 
     @Override
     public boolean shouldRender(int time) {
-        System.out.println(time);
+        //System.out.println(time);
         return time >= DELAY;
     }
 

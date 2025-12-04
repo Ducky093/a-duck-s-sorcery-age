@@ -45,6 +45,7 @@ public class TenShadowsDataHandler {
         newCap.deserializeNBT(oldCap.serializeNBT());
 
         if (event.isWasDeath()) {
+            newCap.resetAdaptations();
             if (!ConfigHolder.SERVER.realisticShikigami.get()) {
                 newCap.revive(false);
             }

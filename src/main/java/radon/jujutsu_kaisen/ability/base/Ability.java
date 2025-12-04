@@ -17,6 +17,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -38,7 +39,10 @@ import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 
+import radon.jujutsu_kaisen.compat.PlayerReviveCompat;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.compat.CuffedCompat;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -109,6 +113,10 @@ public abstract class Ability {
 
     public boolean canDisable() {
         return true;
+    }
+
+    public boolean specialObtainment() {
+        return false;
     }
 
     // Used for skill tree
@@ -291,6 +299,25 @@ public abstract class Ability {
                 if ((this.usesHands() && !this.isDomain()) && (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get()) || cap.hasDisarmed()) && !cap.hasTrait(Trait.PERFECT_BODY)) {
                     return Status.DISARMED;
                 }
+            if (owner instanceof Player player) {
+               // CompoundTag nbt = owner.saveWithoutId();
+               // owner.save(nbt);
+               //|| hasSlot(nbt, "Arm")
+                if (JujutsuKaisen.PlayerReviveInstalled && PlayerReviveCompat.IsBleedingOut(player) ) {
+                    return Status.FAILURE;
+                }
+                if (JujutsuKaisen.CuffedInstalled) {
+                    if (this.usesHands() && (CuffedCompat.armsRestrained(player) )  ) {
+                        return Status.DISARMED;
+                    }
+                    else if (CuffedCompat.legsRestrained(player) && !this.usesHands() && !(this.getClassification() == Classification.CURSED_SPEECH)  ) {
+                        return Status.FAILURE;
+                    } else if (CuffedCompat.headRestrained(player) && this.getClassification() == Classification.CURSED_SPEECH) {
+                        return Status.FAILURE;
+                    }
+                }
+            }
+            
 
 
 

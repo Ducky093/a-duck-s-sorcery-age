@@ -11,6 +11,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -18,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,12 +113,19 @@ public class StatsTab extends JJKTab {
         SorcererGrade next = SorcererGrade.values()[Math.min(SorcererGrade.values().length - 1, grade.ordinal() + 1)];
 
         MutableComponent component = Component.empty();
-        component.append(Component.translatable(String.format("gui.%s.stats.grade", JujutsuKaisen.MOD_ID), grade.getName()));
+     
+
+        CursedTechnique technique = cap.getTechnique();
+        if ( cap.getType() == JujutsuType.SORCERER && CursedTechnique.CLAN_TECHNIQUES.contains(technique) && grade == SorcererGrade.GRADE_1 ) {
+            component.append(Component.translatable(String.format("gui.%s.stats.grade", JujutsuKaisen.MOD_ID), Component.translatable(String.format("grade.%s.%s", JujutsuKaisen.MOD_ID, "special_grade_1"))));
+        }
+        else{
+            component.append(Component.translatable(String.format("gui.%s.stats.grade", JujutsuKaisen.MOD_ID), grade.getName()));
+       }
+
         component.append("\n");
         component.append(Component.translatable(String.format("gui.%s.stats.experience", JujutsuKaisen.MOD_ID), cap.getExperience(), next.getRequiredExperience()));
         component.append("\n");
-
-        CursedTechnique technique = cap.getTechnique();
 
         if (technique != null && technique != CursedTechnique.TECHNIQUELESS) {
             component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()));

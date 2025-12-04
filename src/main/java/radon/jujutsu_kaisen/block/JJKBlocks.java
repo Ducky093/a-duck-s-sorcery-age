@@ -149,7 +149,7 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> TIME_CELL_MOON_PALACE = BLOCKS.register("time_cell_moon_palace", () ->
+    public static RegistryObject<DomainBlock> DOMAIN_FILLER = BLOCKS.register("domain_filler", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
@@ -181,7 +181,7 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noOcclusion()));
     public static RegistryObject<Block> DOMAIN_SKY = BLOCKS.register("domain_sky", () ->
-            new DomainSkyBlock(BlockBehaviour.Properties.of()
+            new DomainSkyBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 12.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)

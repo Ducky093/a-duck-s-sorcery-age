@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
@@ -54,11 +55,18 @@ public class DomainCustomizationTab extends JJKTab {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (cap.isUnlocked(JJKAbilities.SURE_HIT_CONFIG.get())) {
+            
+        }
+        if (cap.isUnlocked(JJKAbilities.BARRIER_SIZE_CONFIG.get() )) {
+            int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
+            int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
+            this.sizeSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
+                    ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue(), cap.getDomainSize(), 0.1D, 0, true);
+            this.addRenderableWidget(this.sizeSlider);
+        }
+        if (cap.isUnlocked(JJKAbilities.SHELL_BALANCE_CONFIG.get() )) {
 
-        int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
-        int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
-        this.sizeSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
-                ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue(), cap.getDomainSize(), 0.1D, 0, true);
-        this.addRenderableWidget(this.sizeSlider);
+        }
     }
 }

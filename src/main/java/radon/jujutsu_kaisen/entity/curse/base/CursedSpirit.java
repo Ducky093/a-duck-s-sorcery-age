@@ -27,6 +27,9 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
@@ -71,6 +74,14 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.setTame(false);
     }
 
+    @Override
+    public boolean startRiding(Entity vehicle, boolean force) {
+        if (vehicle instanceof Boat || vehicle instanceof AbstractMinecart) {
+            return false;
+        }
+        return super.startRiding(vehicle, force);
+    }
+
     private boolean isInVillage() {
         ServerLevel serverLevel = (ServerLevel) this.level();
         BlockPos pos = this.blockPosition();
@@ -93,6 +104,11 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         Structure structure = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
         if (structure == null) return false;
         return ((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), structure).isValid();
+    }
+
+    @Override
+    public boolean canBeLeashed(@Nullable Player player) {
+        return false; 
     }
 
     @Override
@@ -230,7 +246,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
             this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 1.1f);
         }
 
-        if (this.getTarget() != null && HelperMethods.RANDOM.nextInt(5) == 0) {
+        if (this.getTarget() != null && this.random.nextInt(5) == 0) {
             this.moveControl.setWantedPosition(this.getTarget().getX() * -1.5F, this.getTarget().getY() * -1.1F, this.getTarget().getZ() * -1.1F, 1.4f);
         }
 

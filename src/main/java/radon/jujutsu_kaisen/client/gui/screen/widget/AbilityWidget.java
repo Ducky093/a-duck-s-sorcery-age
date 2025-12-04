@@ -202,7 +202,7 @@ public class AbilityWidget {
 
         if (this.unlockable && !this.unlocked) {
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            if (cap != null && cap.getPoints() - ability.getRealPointsCost(this.minecraft.player) >= 0) {
+            if (cap != null && (cap.getPoints() - ability.getRealPointsCost(this.minecraft.player) >= 0 || this.minecraft.player.getAbilities().instabuild) ) {
                 this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
                  PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
                 if (!this.minecraft.player.getAbilities().instabuild) {

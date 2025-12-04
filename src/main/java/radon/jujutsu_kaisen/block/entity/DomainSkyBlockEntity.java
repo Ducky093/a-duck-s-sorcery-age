@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
+import java.util.UUID;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,19 +41,20 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
     //     if (this.domain == null) {
     //         Level level = this.getLevel();
     //         if (level instanceof ServerLevel serverLevel) {
-    //             if (serverLevel.getEntity(this.identifier) instanceof DomainExpansionEntity domain) {
+    //             if (serverLevel.getEntity(this.pidentifier) instanceof DomainExpansionEntity domain) {
     //                 this.setDomain(JJKAbilities.getKey(domain.getAbility()));
     //             }
     //         }
     //     }
     // }
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainSkyBlockEntity pBlockEntity) {
+        public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainSkyBlockEntity pBlockEntity) {
         if (pBlockEntity.domain == null) {
-            if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain))
+            if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.pidentifier) instanceof DomainExpansionEntity domain))
                 return;
             pBlockEntity.setDomain(JJKAbilities.getKey(domain.getAbility()));
         }
     }
+    
 
 
 
@@ -65,11 +68,13 @@ public class DomainSkyBlockEntity extends DomainBlockEntity {
         return this.saveWithoutMetadata();
     }
 
+    
+
     private void markUpdated() {
         this.setChanged();
 
         if (this.level != null) {
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_KNOWN_SHAPE);
         }
     }
 

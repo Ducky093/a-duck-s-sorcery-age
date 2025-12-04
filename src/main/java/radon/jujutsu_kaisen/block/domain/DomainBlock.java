@@ -27,10 +27,11 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.DomainBarrierEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
-
+ 
 
 public class DomainBlock extends Block implements EntityBlock {
     public DomainBlock(Properties pProperties) {
@@ -64,7 +65,7 @@ public class DomainBlock extends Block implements EntityBlock {
         if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
 
-            if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainExpansionEntity domain
+            if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainBarrierEntity domain
                     && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
         }
         return super.getExplosionResistance(state, level, pos, explosion);

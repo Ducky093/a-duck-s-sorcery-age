@@ -15,10 +15,19 @@ import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class UnlockAllCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkunlockall")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        unlockall(EntityArgument.getPlayer(ctx, "player")))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+            Commands.literal("jjkunlockall")
+                    .requires(src -> src.hasPermission(2))
+                    .then(Commands.argument("players", EntityArgument.players())
+                            .executes(ctx -> {
+                                for (ServerPlayer player :
+                                        EntityArgument.getPlayers(ctx, "players")) {
+                                    unlockall(player);
+                                }
+                                return 1;
+                            })
+                    )
+        );
 
         dispatcher.register(Commands.literal("jjkunlockall").requires((player) -> player.hasPermission(2)).redirect(node));
     }

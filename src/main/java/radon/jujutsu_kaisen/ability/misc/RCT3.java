@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -30,7 +31,7 @@ public class RCT3 extends RCT2 {
 
         int burnout = cap.getBurnout();
 
-        if (burnout > 0 && owner.isShiftKeyDown()) {
+        if (burnout > 0 && (owner.isShiftKeyDown() || !(owner instanceof Player)  ) ) {
             cap.setBurnout(Math.max(0, burnout - 5));
 
             if (this.getCharge(owner) % 20 == 0) {

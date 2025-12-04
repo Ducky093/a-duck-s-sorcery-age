@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -19,10 +21,11 @@ public class CursedEnergyVisual implements IVisual {
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player == null) return false;
-
+        if (mc == null || mc.player == null) return false;
+        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (cap == null) return false;
         return ConfigHolder.CLIENT.visibleCursedEnergy.get() && data.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
-                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) && (!mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()) && !CuriosUtil.findSlot(mc.player, "head").is(JJKItems.BLINDFOLD.get()) ) ) );
+                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (cap.hasTrait(Trait.SIX_EYES) && (!mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()) && !CuriosUtil.findSlot(mc.player, "head").is(JJKItems.BLINDFOLD.get()) ) ) );
     }
 
     @Override
@@ -39,7 +42,7 @@ public class CursedEnergyVisual implements IVisual {
             double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - entity.getLookAngle().scale(0.35D).z;
             double speed = (entity.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
             mc.level.addParticle(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(entity), entity.getBbWidth() * 0.5F * scale,
-                    0.2F, 6), x, y, z, 00.0D, speed * scale, 0.0D);
+                    0.2F, 6), x, y, z, 0.0D, speed * scale, 0.0D);
         }
     }
 }

@@ -14,10 +14,25 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetGradeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksetgrade")
-                .requires(player -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("grade", EnumArgument.enumArgument(SorcererGrade.class))
-                        .executes(ctx -> setGrade(EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("grade", SorcererGrade.class))))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+        Commands.literal("jjksetgrade")
+                .requires(src -> src.hasPermission(2))
+                .then(Commands.argument("players", EntityArgument.players())
+                        .then(Commands.argument("grade", EnumArgument.enumArgument(SorcererGrade.class))
+                                .executes(ctx -> {
+                                    SorcererGrade grade = ctx.getArgument("grade", SorcererGrade.class);
+
+                                    for (ServerPlayer player :
+                                            EntityArgument.getPlayers(ctx, "players")) {
+                                        setGrade(player, grade);
+                                    }
+
+                                    return 1;
+                                })
+                        )
+                )
+        );
+
 
         dispatcher.register(Commands.literal("jjksetgrade").requires((player) -> player.hasPermission(2)).redirect(node));
     }

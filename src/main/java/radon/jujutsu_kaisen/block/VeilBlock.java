@@ -24,6 +24,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
@@ -51,23 +53,50 @@ public class VeilBlock extends Block implements EntityBlock {
         return pState.getValue(TRANSPARENT) ? RenderShape.INVISIBLE : super.getRenderShape(pState);
     }
 
+    /*
+     *     @Override
+    public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Explosion explosion) {
+        float resistance = super.getExplosionResistance(state, level, pos, explosion);
+
+        if (!(level instanceof ServerLevel serverLevel)) return resistance;
+
+        if (!(level.getBlockEntity(pos) instanceof VeilBlockEntity veil)) return resistance;
+
+        UUID identifier = veil.getParentUUID();
+
+        if (identifier == null) return resistance;
+
+        if (!(serverLevel.getEntity(identifier) instanceof IBarrier barrier)) return resistance;
+
+        return resistance * barrier.getStrength();
+    }
+     */
+ 
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
+        VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
+
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be))
-                return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity veil)) return shape;
 
             Entity entity = ctx.getEntity();
+            
+            if (entity == null) return shape;
 
-            if (entity != null) {
-                if (entity instanceof LivingEntity living && (JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) || JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()) ) && !pContext.isAbove(Shapes.block(), pPos, true)) {
-                    return Shapes.empty();
+            if (entity instanceof Projectile projectile) {
+                Entity owner = projectile.getOwner();
+
+                if (owner != null) {
+                    entity = projectile.getOwner();
                 }
-                if (entity instanceof Projectile projectile) entity = projectile.getOwner();
-                return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
             }
+            boolean allowed = VeilHandler.isWhitelisted(pPos, entity);
+            if (!allowed) {
+                entity.teleportTo(entity.xOld, entity.yOld, entity.zOld);
+            }
+            return allowed && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
-        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+        return shape;
     }
 
     @Nullable

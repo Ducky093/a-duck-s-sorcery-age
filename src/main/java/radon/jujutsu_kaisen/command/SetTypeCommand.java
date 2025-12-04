@@ -15,11 +15,25 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetTypeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksettype")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("type", EnumArgument.enumArgument(JujutsuType.class)).executes((ctx) ->
-                        setType(EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("type", JujutsuType.class))))));
+    LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+        Commands.literal("jjksettype")
+            .requires(src -> src.hasPermission(2))
+            .then(
+                Commands.argument("players", EntityArgument.players())
+                    .then(
+                        Commands.argument("type", EnumArgument.enumArgument(JujutsuType.class))
+                            .executes(ctx -> {
+                                JujutsuType type = ctx.getArgument("type", JujutsuType.class);
 
+                                for (ServerPlayer player : EntityArgument.getPlayers(ctx, "players")) {
+                                    setType(player, type);
+                                }
+
+                                return 1;
+                            })
+                    )
+            )
+        );
         dispatcher.register(Commands.literal("jjksettype").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 

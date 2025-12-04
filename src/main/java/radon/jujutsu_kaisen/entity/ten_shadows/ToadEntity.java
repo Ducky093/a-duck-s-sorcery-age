@@ -246,7 +246,7 @@ public class ToadEntity extends TenShadowsSummon {
 
         if (target != null && target.isAlive() && !target.isRemoved()) {
             this.lookControl.setLookAt(target, 30.0F, 30.0F);
-            this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5f);
+            //this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5f);
             if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
                 if (this.getTime() % SHOOT_INTERVAL == 0) {
                     this.shoot(target);

@@ -40,7 +40,8 @@ import radon.jujutsu_kaisen.network.packet.s2c.SetFrequencyS2CPacket;
 import javax.annotation.Nullable;
 
 public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+   public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty SPAWN_VEIL_MASTER = BooleanProperty.create("spawn_veil_master");
 
     public VeilRodBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
@@ -95,11 +96,14 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
     @Override
     public void tick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
         this.updateNeighbours(pState, pLevel, pPos);
+         if (pState.getValue(SPAWN_VEIL_MASTER)) {
+            
+         }
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, WATERLOGGED);
+        pBuilder.add(FACING, WATERLOGGED, SPAWN_VEIL_MASTER);
     }
 
     @Nullable
@@ -108,9 +112,9 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
         return JJKBlockEntities.VEIL_ROD.get().create(pPos, pState);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.VEIL_ROD.get(), VeilRodBlockEntity::tick);
-    }
+    // @Nullable
+    // @Override
+    // public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    //     return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.VEIL_ROD.get(), VeilRodBlockEntity::tick);
+    // }
 }

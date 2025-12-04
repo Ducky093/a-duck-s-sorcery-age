@@ -9,6 +9,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -87,8 +89,15 @@ public class Shuffle extends Ability implements Ability.IChannelened {
                     cap.setSelfHit(15);
                     cap.setExtraMeleeTaken(25);
                 });
-            first.teleportTo(second.getX(), second.getY(), second.getZ());
-            second.teleportTo(pos.x, pos.y, pos.z);
+
+
+            if (!VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
+                first.teleportTo(second.getX(), second.getY(), second.getZ());
+            }
+            if (!VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
+                second.teleportTo(pos.x, pos.y, pos.z);
+            }
+
           
             first.setYRot(ownerRot.y);
             first.setXRot(ownerRot.x);

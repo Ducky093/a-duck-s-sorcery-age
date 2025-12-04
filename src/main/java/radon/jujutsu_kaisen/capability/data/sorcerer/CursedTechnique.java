@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -64,6 +67,9 @@ public enum CursedTechnique {
     public Ability[] getAbilities() {
         return this.abilities;
     }
+
+    public static final List<CursedTechnique> CLAN_TECHNIQUES =
+        List.of(PROJECTION_SORCERY, TEN_SHADOWS);
 
     public Component getName() {
         return Component.translatable(String.format("cursed_technique.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));

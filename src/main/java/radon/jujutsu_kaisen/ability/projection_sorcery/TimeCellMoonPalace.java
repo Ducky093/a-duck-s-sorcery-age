@@ -64,43 +64,6 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
 
     }
 
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        boolean enemyDomain = false;
-        DomainExpansionEntity selfDomain = null;
-        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner) {
-                selfDomain = domain;
-            }
-            else if (domain.getOwner() != owner) {
-                enemyDomain = true;
-            }
-        }
-
-        if (enemyDomain == true) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            if (!cap.hasToggled(this)) {
-                return true;
-            }
-
-            if (cap.hasToggled(this)) {
-                return false;
-            }
-        }
-
-        else if (selfDomain != null && enemyDomain != true) {
-            if (target != null) {
-                return (selfDomain.distanceTo(target) >= 60.0D);
-            }
-
-            if (target == null) {
-                return HelperMethods.RANDOM.nextInt(15) == 0;
-            }
-
-        }
-        return target != null && owner.distanceTo(target) <= 25.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F && HelperMethods.RANDOM.nextInt(4) == 0;
-    }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
@@ -125,15 +88,16 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
         entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-
+        if (!owner.level().isClientSide) {
         owner.level().addFreshEntity(entity);
+        }
 
         return domain;
     }
 
     @Override
     public List<Block> getBottomFloorBlocks() {
-        return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
+        return List.of(JJKBlocks.DOMAIN_FILLER.get());
     }
 
     @Override

@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -37,13 +39,15 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner) {
-                return false;
+        for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+            for (DomainExpansionEntity d : domain.getClashers() ) {
+                if (d.getOwner() == owner) {
+                    return false;
+                }
             }
-            if (!domain.hasSureHitEffect())  {
-                 continue;
-            }
+            // if (!domain.hasSureHitEffect())  {
+            //      continue;
+            // }
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             CursedTechnique ct = cap.getTechnique();
@@ -54,6 +58,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             return true;
         }
+
         return false;
     }
 

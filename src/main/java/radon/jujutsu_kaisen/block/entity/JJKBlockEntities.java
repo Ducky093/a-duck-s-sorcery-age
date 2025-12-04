@@ -31,7 +31,7 @@ public class JJKBlockEntities {
 
                             JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get(),
 
-                            JJKBlocks.TIME_CELL_MOON_PALACE.get(),
+                            JJKBlocks.DOMAIN_FILLER.get(),
 
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));

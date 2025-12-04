@@ -10,6 +10,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -77,8 +79,12 @@ public class SwapSelf extends Ability {
                 });
       
 
-            target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
-            owner.teleportTo(pos.x, pos.y, pos.z);
+            if (!VeilHandler.isTeleportValid(target.level(), owner.blockPosition())) {
+                target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
+            }
+            if (!VeilHandler.isTeleportValid(owner.level(), target.blockPosition())) {
+                owner.teleportTo(pos.x, pos.y, pos.z);
+            }
            
             target.setYRot(ownerRot.y);
             target.setXRot(ownerRot.x);

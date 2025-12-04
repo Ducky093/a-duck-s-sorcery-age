@@ -62,150 +62,173 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.storedEnergy = 0.0F;
     }
 
-    public boolean isValid() {
-        if (!(this.level instanceof ServerLevel serverLevel)) return false;
-        if (this.ownerUUID == null) return false;
 
-        //if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-         //   return false;
-       // if ((serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner)) {
-           // if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-         //       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                //float cost = ConfigHolder.SERVER.veilCost.get() * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get());
-
-               // return cap.getEnergy() >= cost;
-      //      }
-    //    }
-        return true;
+       @Nullable
+    public UUID getOwnerUUID() {
+        return this.ownerUUID;
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
+    public void setOwnerUUID(UUID ownerUUID) {
+        this.ownerUUID = ownerUUID;
+        this.setChanged();
+    }
+
+    public List<Modifier> getModifiers() {
+        return this.modifiers;
+    }
+
+    // public boolean isValid() {
+    //     if (!(this.level instanceof ServerLevel serverLevel)) return false;
+    //     if (this.ownerUUID == null) return false;
+
+    //     //if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+    //      //   return false;
+    //    // if ((serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner)) {
+    //        // if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+    //      //       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+    //             //float cost = ConfigHolder.SERVER.veilCost.get() * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get());
+
+    //            // return cap.getEnergy() >= cost;
+    //   //      }
+    // //    }
+    //     return true;
+    // }
+
+//     public static void tick(Level level, BlockPos pos, BlockState state, VeilRodBlockEntity rod) {
 
    
 
 
-    if (++rod.counter < INTERVAL) return;
-    rod.counter = 0;
-     if (VeilHandler.checkIntersect(level, rod.getBlockPos(), rod.getSize())) {
-        return;
-    }
-    VeilHandler.addVeil(rod);
+//     if (++rod.counter < INTERVAL) return;
+//     rod.counter = 0;
+//      if (VeilHandler.checkIntersect(level, rod.getBlockPos(), rod.getSize())) {
+//         return;
+//     }
+//     //if (!VeilHandler.isRegistered(rod)) {
+//        VeilHandler.addVeil(rod);
+//    // }
+ 
 
 
-    if (!rod.isValid()) return;
-    //if (!(level instanceof ServerLevel serverLevel)) return;
-    if (rod.ownerUUID == null) return;
 
-    //if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
-    //ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-   // if (ownerCap == null) return;
+//     //if (!(level instanceof ServerLevel serverLevel)) return;
+//     if (rod.ownerUUID == null) return;
 
-   // if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-       // float cost = 0.1f * (rod.getSize() / (float) ConfigHolder.SERVER.maximumVeilSize.get());
-        //if (ownerCap.hasTrait(Trait.SIX_EYES)) cost *= 0.5f;
-        //if (ownerCap.getEnergy() < cost) return;
+//     //if (!(serverLevel.getEntity(rod.ownerUUID) instanceof LivingEntity owner)) return;
+//     //ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+//    // if (ownerCap == null) return;
 
-        //ownerCap.useEnergy(cost);
+//    // if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+//        // float cost = 0.1f * (rod.getSize() / (float) ConfigHolder.SERVER.maximumVeilSize.get());
+//         //if (ownerCap.hasTrait(Trait.SIX_EYES)) cost *= 0.5f;
+//         //if (ownerCap.getEnergy() < cost) return;
 
-        //if (owner instanceof ServerPlayer serverPlayer) {
-        //    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverPlayer);
-        //}
-    //} replace with system where you seep energy in veils over time while near and they drain that energy passively. 1 hr recharge = 
+//         //ownerCap.useEnergy(cost);
 
-    BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
-    for (Modifier mod : rod.modifiers) {
-        if (mod.getType() == Modifier.Type.COLOR) {
-            replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) mod).getColor());
-        } else if (mod.getType() == Modifier.Type.TRANSPARENT) {
-            replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
-        }
-    }
+//         //if (owner instanceof ServerPlayer serverPlayer) {
+//         //    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), serverPlayer);
+//         //}
+//     //} replace with system where you seep energy in veils over time while near and they drain that energy passively. 1 hr recharge = 
+
+//     BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
+//     for (Modifier mod : rod.modifiers) {
+//         if (mod.getType() == Modifier.Type.COLOR) {
+//             replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) mod).getColor());
+//         } else if (mod.getType() == Modifier.Type.TRANSPARENT) {
+//             replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
+//         }
+//     }
 
 
-    // AABB rodAABB = new AABB(pos.offset(-rod.getSize(), -rod.getSize(), -rod.getSize()),
-    //                         pos.offset(rod.getSize(), rod.getSize(), rod.getSize()));
-    // List<DomainExpansionEntity> nearbyDomains = new ArrayList<>();
-    // for (DomainExpansionEntity domain : VeilHandler.getDomains(serverLevel)) {
-    //     if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
-    // }
+//     // AABB rodAABB = new AABB(pos.offset(-rod.getSize(), -rod.getSize(), -rod.getSize()),
+//     //                         pos.offset(rod.getSize(), rod.getSize(), rod.getSize()));
+//     // List<DomainExpansionEntity> nearbyDomains = new ArrayList<>();
+//     // for (DomainExpansionEntity domain : VeilHandler.getDomains(serverLevel)) {
+//     //     if (domain.getBounds().intersects(rodAABB)) nearbyDomains.add(domain);
+//     // }
 
-    int size = rod.getSize();
-    //int blocksPerTick = 61152 * (1 + 2*(size / ConfigHolder.SERVER.maximumVeilSize.get()) ); 
-    int s = (size * 2 + 1);
-    int totalBlocks = s * s * s;
+//     int size = rod.getSize();
+//     //int blocksPerTick = 61152 * (1 + 2*(size / ConfigHolder.SERVER.maximumVeilSize.get()) ); 
+//     int s = (size * 2 + 1);
+//     int totalBlocks = s * s * s;
 
-    if (rod.blockCursor >= totalBlocks) rod.blockCursor = 0; // reset
-    int yLayer = size - (rod.blockCursor / (s * s ));
-    //for (int i = 0; i < blocksPerTick && rod.blockCursor < totalBlocks; i++, rod.blockCursor++) {
-    for (int xIndex = 0; xIndex < s; xIndex++) {
-    for (int zIndex = 0; zIndex < s; zIndex++) {
+//     if (rod.blockCursor >= totalBlocks) rod.blockCursor = 0; // reset
+//     int yLayer = size - (rod.blockCursor / (s * s ));
+//     //for (int i = 0; i < blocksPerTick && rod.blockCursor < totalBlocks; i++, rod.blockCursor++) {
+//     for (int xIndex = 0; xIndex < s; xIndex++) {
+//     for (int zIndex = 0; zIndex < s; zIndex++) {
 
-        //int cursor = rod.blockCursor;
-        int x = xIndex - size;
-        int z = zIndex - size;
-        int y = yLayer;
-        // int x = cursor % (s) - size;
-        // int z = (cursor / (s)) % (s) - size;
-        // int y = size - (cursor / ((s) * (s)));
+//         //int cursor = rod.blockCursor;
+//         int x = xIndex - size;
+//         int z = zIndex - size;
+//         int y = yLayer;
+//         // int x = cursor % (s) - size;
+//         // int z = (cursor / (s)) % (s) - size;
+//         // int y = size - (cursor / ((s) * (s)));
 
-        double distSqr = x * x + y * y + z * z;
-        double minSqr = (size - 0.5) * (size - 0.5);
-        double maxSqr = (size + 0.5) * (size + 0.5);
-        if (distSqr < minSqr || distSqr > maxSqr) continue;
-      //  double distance = Math.sqrt(x * x + y * y + z * z);
-        //if (distance >= size || distance < size - 1) continue; 
+//         double distSqr = x * x + y * y + z * z;
+//         double minSqr = (size - 0.5) * (size - 0.5);
+//         double maxSqr = (size + 0.5) * (size + 0.5);
+//         if (distSqr < minSqr || distSqr > maxSqr) continue;
+//       //  double distance = Math.sqrt(x * x + y * y + z * z);
+//         //if (distance >= size || distance < size - 1) continue; 
 
-        BlockPos targetPos = pos.offset(x, y, z);
-         if (!level.isInWorldBounds(pos)) continue;
+//         BlockPos targetPos = pos.offset(x, y, z);
+//          if (!level.isInWorldBounds(pos)) continue;
 
-        // boolean blocked = false;
-        // for (DomainExpansionEntity domain : nearbyDomains) {
-        //     LivingEntity domainOwner = domain.getOwner();
-        //     if (domainOwner == null) continue;
+//         // boolean blocked = false;
+//         // for (DomainExpansionEntity domain : nearbyDomains) {
+//         //     LivingEntity domainOwner = domain.getOwner();
+//         //     if (domainOwner == null) continue;
 
-        //     ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-        //     if (domainCap == null) continue;
+//         //     ISorcererData domainCap = domainOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+//         //     if (domainCap == null) continue;
 
-        //     if (domainCap.getExperience() >= rod.experience && domain.isInsideBarrier(targetPos)) {
-        //         if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
-        //         blocked = true;
-        //         break;
-        //     }
-        // }
-        // if (blocked) continue;
-        BlockState targetState = level.getBlockState(targetPos);
-        BlockEntity existingBE = level.getBlockEntity(targetPos);
-        BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : targetState;
-        Block b = targetState.getBlock();
-        if (b instanceof DomainBlock || b instanceof DomainAirBlock || b instanceof VeilBlock ) {
-            continue;  
-        }
-        if (state.is(Blocks.BEDROCK)) continue;
-        CompoundTag saved = null;
-        // if (existingBE == null || (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity))  ) {
-        //    hadBarrier = false;
-            if (existingBE != null) {
-                saved = existingBE.saveWithFullMetadata();
-                if (existingBE instanceof net.minecraft.world.Container container) {
-                    container.clearContent();
-                    level.removeBlockEntity(targetPos);
-                }
-            }
+//         //     if (domainCap.getExperience() >= rod.experience && domain.isInsideBarrier(targetPos)) {
+//         //         if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) be.destroy();
+//         //         blocked = true;
+//         //         break;
+//         //     }
+//         // }
+//         // if (blocked) continue;
+//         BlockState targetState = level.getBlockState(targetPos);
+//         BlockEntity existingBE = level.getBlockEntity(targetPos);
+       
+//         Block b = targetState.getBlock();
+//         if (b instanceof DomainBlock || b instanceof DomainAirBlock || b instanceof VeilBlock ) {
+//             continue;  
+//         }
+ 
+//         if (state.is(Blocks.BEDROCK)) continue;
+//         BlockState currentState = (existingBE instanceof VeilBlockEntity ve) ? ve.getOriginal() : targetState;
+//         CompoundTag saved = null;
+//         // if (existingBE == null || (!(existingBE instanceof VeilBlockEntity) && !(existingBE instanceof DomainBlockEntity))  ) {
+//         //    hadBarrier = false;
+//             if (existingBE != null) {
+//                 // if (existingBE instanceof VeilBlockEntity) {
+//                 //     continue;
+//                 // }
+//                 saved = existingBE.saveWithoutMetadata();
+//                 if (existingBE instanceof net.minecraft.world.Container container) {
+//                     container.clearContent();
+//                     level.removeBlockEntity(targetPos);
+//                 }
+//             }
 
-        level.setBlockAndUpdate(targetPos, replacement);
-            //level.setBlock(targetPos, replacement, Block.UPDATE_ALL);
-       // }
+//         level.setBlockAndUpdate(targetPos, replacement);
+//             //level.setBlock(targetPos, replacement, Block.UPDATE_ALL);
+//        // }
 
-       // if (hadBarrier == false) {
-            if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
-              be.create(pos, size, currentState, saved);
-            }
-       // }
-        }
-    }
-    rod.blockCursor += s * s; 
-}
+//        // if (hadBarrier == false) {
+//         if (level.getBlockEntity(targetPos) instanceof VeilBlockEntity be) {
+//             be.create(pos, size, currentState, saved);
+//         }
+//        // }
+//         }
+//     }
+//     rod.blockCursor += s * s; 
+// }
 
 
 
@@ -214,12 +237,11 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public void setSize(int size) {
-        if (!this.level.isClientSide) {
-            VeilHandler.removeVeil(this);
-        }
+        // if (!this.level.isClientSide) {
+        //     VeilHandler.removeVeil(this);
+        // }
         this.size = size;
         this.setChanged();
-        
     }
 
     public void setExperience(float experience) {
@@ -237,39 +259,45 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     
-    @Override
-    public void setRemoved() {
-        if (!this.level.isClientSide) {
-            BlockState state = this.level.getBlockState(this.getBlockPos());
-            // Only remove veil if the block at this position is no longer a VeilRod
-            if (!state.getBlock().equals(JJKBlocks.VEIL_ROD.get())) {
-                VeilHandler.removeVeil(this);
-            }
-        }
-        super.setRemoved();
-    }
+    // @Override
+    // public void setRemoved() {
+    //     if (!this.removed) {
+    //         this.removed = true; // first call only
+    //     if (!this.level.isClientSide) {
+    //         BlockState state = this.level.getBlockState(this.getBlockPos());
+    //         // Only remove veil if the block at this position is no longer a VeilRod
+    //         if (!state.getBlock().equals(JJKBlocks.VEIL_ROD.get())  && VeilHandler.isRegistered(this)) {
+    //             VeilHandler.removeVeil(this);
+    //         }
+    //                   //System.out.println("storebreakms");
+    //     }
+    //     super.setRemoved();
+    //     }
+    // }
 
     //     @Override
     // public void onLoad() {
     //     super.onLoad();
     //     if (!this.level.isClientSide) {
-    //         if (this.level != null) {
-    //             VeilHandler.addVeil(this);
+    //         if (this.level != null && !this.isRemoved() && this.ownerUUID != null) {
+    //                 if (!VeilHandler.isRegistered(this)) {
+    //                     VeilHandler.addVeil(this);
+    //                 }
     //         }
     //     }
     // }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if (!this.level.isClientSide && this.level instanceof ServerLevel serverLevel) {
-            serverLevel.getServer().execute(() -> {
-                if (!this.isRemoved() && this.ownerUUID != null) {
-                    VeilHandler.addVeil(this);
-                }
-            });
-        }
-    }
+    // @Override
+    // public void onLoad() {
+    //     super.onLoad();
+    //     if (!this.level.isClientSide && this.level instanceof ServerLevel serverLevel) {
+    //         serverLevel.getServer().execute(() -> {
+    //             if (!this.isRemoved() && this.ownerUUID != null) {
+    //                 VeilHandler.addVeil(this);
+    //             }
+    //         });
+    //     }
+    // }
 
 
     @Override
@@ -289,13 +317,16 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (this.ownerUUID != null) {
             pTag.putUUID("owner", this.ownerUUID);
         }
+          //System.out.println("stored1ms");
         pTag.putInt("counter", this.counter);
+                  //System.out.println("stored2ms");
         pTag.putInt("size", this.size);
         pTag.putFloat("experience", this.experience);
         pTag.putFloat("storedEnergy", this.storedEnergy);
         if (this.modifiers != null) {
             pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
         }
+        //System.out.println("serialize took: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @Override
@@ -309,6 +340,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.size = pTag.getInt("size");
         this.experience = pTag.getFloat("experience");
         this.storedEnergy = pTag.getFloat("storedEnergy");
+                //System.out.println("load");
         if (pTag.contains("modifiers")) {
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
         }

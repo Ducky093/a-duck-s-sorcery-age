@@ -120,7 +120,7 @@ public class BlueProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= this.getRadius()) {
-                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                        if (HelperMethods.isDestroyable(this.level(), owner, pos,  JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower())) {
                              if (state.getFluidState().isEmpty()) {
                                     owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                                         Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);

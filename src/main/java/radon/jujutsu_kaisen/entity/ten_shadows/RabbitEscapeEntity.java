@@ -165,7 +165,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
         if (owner == null) return;
 
-        if (this.getLeader() == null) {
+        if (this.getLeader() == null && !this.original) {
             this.original = true;
 
             for (int i = 0; i < COUNT; i++) {

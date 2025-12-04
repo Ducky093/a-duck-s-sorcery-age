@@ -10,6 +10,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -92,9 +94,14 @@ public class SwapOthers extends Ability {
                     cap.setSelfHit(15);
                     cap.setExtraMeleeTaken(25);
                 });
-                second.teleportTo(first.getX(), first.getY(), first.getZ());
-                first.teleportTo(pos.x, pos.y, pos.z);
-               
+
+                
+                if (!VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
+                    second.teleportTo(first.getX(), first.getY(), first.getZ());
+                }
+                if (!VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
+                    first.teleportTo(pos.x, pos.y, pos.z);
+                }
 
                 second.setYRot(firstRot.y);
                 second.setXRot(firstRot.x);

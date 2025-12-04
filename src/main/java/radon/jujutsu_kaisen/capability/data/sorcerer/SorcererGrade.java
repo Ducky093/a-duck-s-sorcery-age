@@ -14,7 +14,7 @@ public enum SorcererGrade {
     GRADE_2(ConfigHolder.SERVER.Grade2Exp.get().floatValue()),
     SEMI_GRADE_1(ConfigHolder.SERVER.SemiGrade1Exp.get().floatValue()),
     GRADE_1(ConfigHolder.SERVER.Grade1Exp.get().floatValue()),
-    SPECIAL_GRADE_1(ConfigHolder.SERVER.SpecialGrade1Exp.get().floatValue()),
+    //SPECIAL_GRADE_1(ConfigHolder.SERVER.SpecialGrade1Exp.get().floatValue()),
     SPECIAL_GRADE(ConfigHolder.SERVER.SpecialGradeExp.get().floatValue());
 
     private final float required;

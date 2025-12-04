@@ -13,10 +13,20 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 
 public class ResetSummonsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkresetsummons")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        reset(EntityArgument.getPlayer(ctx, "player")))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+        Commands.literal("jjkresetsummons")
+                .requires(src -> src.hasPermission(2))
+                .then(Commands.argument("players", EntityArgument.players())
+                        .executes(ctx -> {
+                            for (ServerPlayer player :
+                                    EntityArgument.getPlayers(ctx, "players")) {
+                                reset(player);
+                            }
+                            return 1;
+                        })
+                )
+        );
+
 
         dispatcher.register(Commands.literal("jjkresetsummons").requires((player) -> player.hasPermission(2)).redirect(node));
     }

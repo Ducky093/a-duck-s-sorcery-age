@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEnt
 import radon.jujutsu_kaisen.entity.projectile.*;
 import radon.jujutsu_kaisen.entity.sorcerer.*;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
+import radon.jujutsu_kaisen.entity.VeilEntity;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class JJKEntities {
@@ -44,6 +45,17 @@ public class JJKEntities {
                     .sized(3.0F, 4.0F)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
+                            .toString()));
+
+
+    public static RegistryObject<EntityType<DomainBarrierEntity>> DOMAIN_BARRIER = ENTITIES.register("domain_barrier", () ->
+            EntityType.Builder.<DomainBarrierEntity>of(DomainBarrierEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "domain_barrier")
+                            .toString()));
+
+    public static RegistryObject<EntityType<VeilEntity>> VEIL = ENTITIES.register("veil", () ->
+            EntityType.Builder.<VeilEntity>of(VeilEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "veil")
                             .toString()));
 
     public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->

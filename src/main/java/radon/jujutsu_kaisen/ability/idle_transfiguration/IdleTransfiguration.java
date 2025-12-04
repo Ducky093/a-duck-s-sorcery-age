@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.ability.shrine.Cleave;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -29,6 +30,9 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -52,7 +56,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         if (!targetCap.hasTrait(Trait.VESSEL) || targetCap.getFingers() == 0) return false;
 
-        float experience = targetCap.getFingers() * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
+        float experience = targetCap.getFingers() * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 5.0F) / 20);
         if (experience <= ownerCap.getExperience()) return false;
 
         ((IDomainAttack) JJKAbilities.CLEAVE.get()).performEntity(target, owner, null);
@@ -122,7 +126,6 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
     
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
-      
         float attackerStrength = IdleTransfiguration.calculateStrength(owner);
         float victimStrength = IdleTransfiguration.calculateStrength(target);
 
@@ -163,7 +166,18 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     public static void absorb(LivingEntity owner, LivingEntity target) {
-        ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
+        int stackcount = 1;
+        if (target instanceof TransfiguredSoulNormalEntity) {
+            stackcount = 2;
+        }
+        else if (target instanceof TransfiguredSoulLargeEntity) {
+            stackcount = 3;
+        }
+        else if (target instanceof PolymorphicSoulIsomerEntity) {
+            stackcount = 10;
+        }
+        ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get(), stackcount);
+
         
         if (owner instanceof Player player) {
             player.addItem(stack);
@@ -180,7 +194,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         }
     }
 
+
+    
+
      public static void retrieve(LivingEntity owner, LivingEntity target) {
+        absorb(owner, target);
         if (!(target instanceof Player)) {
             target.discard();
         } else if (!owner.isDeadOrDying()) {

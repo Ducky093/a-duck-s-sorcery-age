@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -19,6 +20,9 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -28,6 +32,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -52,6 +58,19 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         Arrays.fill(this.armorDropChances, 1.0F);
         Arrays.fill(this.handDropChances, 1.0F);
+    }
+
+    @Override
+    public boolean startRiding(Entity vehicle, boolean force) {
+        if (vehicle instanceof Boat || vehicle instanceof AbstractMinecart) {
+            return false;
+        }
+        return super.startRiding(vehicle, force);
+    }
+
+    @Override
+    public boolean canBeLeashed(@Nullable Player player) {
+        return false; 
     }
 
     @Override
@@ -195,7 +214,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
                 this.moveControl.setWantedPosition(this.getTarget().getX(), this.getTarget().getY(), this.getTarget().getZ(), 0.9f);
             }
 
-            if (HelperMethods.RANDOM.nextInt(5) == 0 || cap.hasBurnout() && HelperMethods.RANDOM.nextInt(3) == 0) {
+            if (this.random.nextInt(5) == 0 || cap.hasBurnout() && this.random.nextInt(3) == 0) {
                 this.moveControl.setWantedPosition(this.getTarget().getX() * -1.5F, this.getTarget().getY() * -1.1F, this.getTarget().getZ() * -1.1F, 1.4f);
             }
         }

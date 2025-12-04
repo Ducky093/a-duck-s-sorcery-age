@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -16,6 +18,11 @@ import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.LimboCloneEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.ResurrectionS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -141,6 +148,13 @@ public class OutputRCT extends Ability {
             }
         }
         target.heal(amount);
+        if (target.isDeadOrDying() && target.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
+            target.deathTime = 0;
+            target.setHealth(amount);
+            if (!target.level().isClientSide()) {
+                PacketHandler.sendTrackingAndSelf(new ResurrectionS2CPacket(target.getId(), amount), target);
+            }
+        }
     }
 
     @Override

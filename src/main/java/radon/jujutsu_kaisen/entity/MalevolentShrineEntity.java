@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.shrine.MalevolentShrine;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -39,25 +40,11 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         super(pType, pLevel);
     }
 
-    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
-        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height);
+    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int radius, int height) {
+        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, radius, height);
     }
 
-    @Override
-    public AABB getBounds() {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
-                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
-    }
 
-    @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        int width = this.getWidth();
-        BlockPos center = this.blockPosition();
-        BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < width * width;
-    }
     // @Override
     // public boolean isInsideBarrier(BlockPos pos) {
     //     int width = this.getWidth();
@@ -73,18 +60,22 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
     }
 
+
+
     @Override
-    public boolean checkSureHitEffect() {
-        return this.getTime() >= MalevolentShrine.DELAY && super.checkSureHitEffect();
+    public DomainExpansionEntity checkSureHitEffect() {
+        if (this.getTime() < MalevolentShrine.DELAY) return null;
+        return super.checkSureHitEffect();
     }
 
     @Override
-    protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        super.doSureHitEffect(owner);
+    public void doSureHitEffect() {
+        super.doSureHitEffect();
+        LivingEntity owner = this.getOwner();
 
         BlockPos center = this.blockPosition();
 
-        int width = this.getWidth();
+        int width = this.getRadius();
         int height = this.getHeight();
 
         if (this.first) {
@@ -112,6 +103,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                                     owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
                                             1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
 
+                                    
                                     if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                                         BlockState state = owner.level().getBlockState(pos);
                                         //owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
@@ -164,8 +156,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0) {
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                 if (!(entity instanceof ServerPlayer player)) continue;
-
-                PacketHandler.sendToClient(new CameraShakeS2CPacket(0.1F, 3.0F, 20), player);
+                //PacketDistributor.sendToPlayer(player, new CameraShakeS2CPacket(0.5F, 2.0F, 20));
+                PacketHandler.sendToClient(new CameraShakeS2CPacket(0.2F, 3.0F, 20), player);
             }
         }
     }

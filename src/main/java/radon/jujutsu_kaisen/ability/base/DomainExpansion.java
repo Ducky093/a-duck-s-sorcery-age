@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -27,6 +29,7 @@ import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
@@ -55,51 +58,89 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return true;
     }
 
-    
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.hasToggled(this)) {
-            if (target != null) {
-                DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
-                return domain != null && domain.isInsideBarrier(target.blockPosition());
+        boolean enemyDomain = false;
+        DomainExpansionEntity selfDomain = null;
+        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+            for (DomainExpansionEntity d : domain.getClashers() ) {
+            if (d.getOwner() == owner) {
+                selfDomain = d;
             }
-        } else {
-            if (target == null) return false;
-
-            // if (this instanceof DomainExpansion.IClosedDomain closed) {
-            //      int radius = Math.round(closed.getRadius(owner));
-
-            //     if (target.blockPosition().distSqr(owner.blockPosition()) >= (radius - 1) * (radius - 1)) {
-            //         return false;
-            //     }
-            // }
-
-
-            boolean result = cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
-                    owner.getHealth() / owner.getMaxHealth() < 0.3F || (target.getHealth()/target.getMaxHealth()) > (owner.getHealth()/owner.getMaxHealth()) * 1.5;
-            boolean isInDomain = false;
-            for (DomainExpansionEntity ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-                if (owner.distanceTo(target) < 40.0D) {
-                    isInDomain = true;
-                }
-                break;
+            else if (d.getOwner() != owner) {
+                enemyDomain = true;
             }
-
-            if (result == true && isInDomain == false && (owner.level() != target.level() || owner.distanceTo(target) > 30.0D) ) return false;
-
-            Status status = this.getStatus(owner);
-
-            if (result && (status == Status.SUCCESS)) {
-                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && cap.getExperience() < ConfigHolder.SERVER.requiredExperienceForExperienced.get()) {
-                    cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                }
             }
-            return result;
         }
-        return false;
-    }
+
+        if (enemyDomain == true) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!cap.hasToggled(this)) {
+                return true;
+            }
+
+            if (cap.hasToggled(this)) {
+                return false;
+            }
+        }
+
+        else if (selfDomain != null && enemyDomain != true) {
+            if (target != null) {
+                return (selfDomain.distanceTo(target) >= 60.0D);
+            }
+
+            if (target == null) {
+                return HelperMethods.RANDOM.nextInt(15) == 0;
+            }
+
+        }
+        return target != null && owner.distanceTo(target) <= 25.0D && owner.getHealth() / owner.getMaxHealth() < 0.9F && HelperMethods.RANDOM.nextInt(4) == 0;
+    } 
+    // @Override
+    // public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+    //     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+    //     if (cap.hasToggled(this)) {
+    //         if (target != null) {
+    //             DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+    //             return domain != null && domain.isInsideBarrier(target.blockPosition());
+    //         }
+    //     } else {
+    //         if (target == null) return false;
+
+    //         // if (this instanceof DomainExpansion.IClosedDomain closed) {
+    //         //      int radius = Math.round(closed.getRadius(owner));
+
+    //         //     if (target.blockPosition().distSqr(owner.blockPosition()) >= (radius - 1) * (radius - 1)) {
+    //         //         return false;
+    //         //     }
+    //         // }
+
+
+    //         boolean result = cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
+    //                 owner.getHealth() / owner.getMaxHealth() < 0.3F || (target.getHealth()/target.getMaxHealth()) > (owner.getHealth()/owner.getMaxHealth()) * 1.5;
+    //         boolean isInDomain = false;
+    //         for (IDomain ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+    //             if (owner.distanceTo(target) < 40.0D) {
+    //                 isInDomain = true;
+    //             }
+    //             break;
+    //         }
+
+    //         if (result == true && isInDomain == false && (owner.level() != target.level() || owner.distanceTo(target) > 30.0D) ) return false;
+
+    //         Status status = this.getStatus(owner);
+
+    //         if (result && (status == Status.SUCCESS)) {
+    //             if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && cap.getExperience() < ConfigHolder.SERVER.requiredExperienceForExperienced.get()) {
+    //                 cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    //             }
+    //         }
+    //         return result;
+    //     }
+    //     return false;
+    // }
 
     public static float getStrength(LivingEntity owner, boolean instant) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -107,6 +148,15 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size * (instant ? 0.1F : 1.0F));
     }
 
+    
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
+
+        return super.isTriggerable(owner);
+    }
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -142,7 +192,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             DomainExpansionEntity domain = this.createBarrier(owner);
             cap.addSummon(domain);
-        
     }
 
     
@@ -216,49 +265,57 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return ConfigHolder.SERVER.domainExpansionCost.get();
     }
 
+    public List<Block> getBlocks() { 
+        return List.of();
+    }
+
+        public List<Block> getFillBlocks() {
+            return this.getBlocks();
+        }
+
+        public List<Block> getFloorBlocks() {
+            return List.of();
+        }
+
+        public List<Block> getBottomFloorBlocks() {
+            return List.of();
+        }
+
+        public List<Block> getDecorationBlocks() {
+            return List.of();
+        }
+
+        public boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
+            return true;
+        }
+
+        public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
+            return true;
+        }
+
+        @Nullable
+        public ParticleOptions getEnvironmentParticle() {
+            return null;
+        }
+
     public interface IClosedDomain {
         default int getSize() {
-            return 20;
+            return 26;
         }
 
         default float getRadius(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             return this.getSize() * cap.getDomainSize();
         }
-
-        List<Block> getBlocks();
-
-        default List<Block> getFillBlocks() {
-            return this.getBlocks();
-        }
-
-        default List<Block> getFloorBlocks() {
-            return List.of();
-        }
-
-        default List<Block> getBottomFloorBlocks() {
-            return List.of();
-        }
-
-        default List<Block> getDecorationBlocks() {
-            return List.of();
-        }
-
-        default boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
-            return true;
-        }
-
-        default boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
-            return true;
-        }
-
-        @Nullable
-        default ParticleOptions getEnvironmentParticle() {
-            return null;
-        }
     }
 
     public interface IOpenDomain {
+        int getWidth();
+
+        int getHeight();
+    }
+
+     public interface IIncompleteDomain {
         int getWidth();
 
         int getHeight();

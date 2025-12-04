@@ -25,6 +25,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -231,8 +233,10 @@ public void run(LivingEntity owner) {
 
             if (source.is(JJKDamageSources.SOUL) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.OUTPUT_RCT.get())) return;
 
-            for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) victim.level()), victim.blockPosition())) {
-                if (domain.getOwner() == source.getEntity()) return;
+            for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) victim.level(), victim.blockPosition())) {
+                for (DomainExpansionEntity d : domain.getClashers() ) {   
+                    if (d.getOwner() == source.getEntity()) return;
+                }
             }
 
             float cost = event.getAmount() * 10.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? ConfigHolder.SERVER.sixEyesMult.get().floatValue() : 1.0F);

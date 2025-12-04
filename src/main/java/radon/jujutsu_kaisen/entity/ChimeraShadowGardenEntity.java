@@ -35,5 +35,6 @@ public class ChimeraShadowGardenEntity extends DomainExpansionCenterEntity {
 
     public ChimeraShadowGardenEntity(DomainExpansionEntity domain) {
         super(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), domain);
+        this.setDomain(domain);
     }
 }

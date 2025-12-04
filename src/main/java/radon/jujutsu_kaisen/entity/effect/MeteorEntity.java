@@ -341,7 +341,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance > radius) continue;
-                    if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+                    if (!HelperMethods.isDestroyable(this.level(), owner, pos, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower() )) continue;
 
                     if (state.getFluidState().isEmpty()) {
                         this.level().destroyBlock(pos, false);

@@ -43,7 +43,7 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
 
         DomainExpansionEntity domain = this.getDomain();
 
-        if (!this.level().isClientSide && (domain == null || domain.isRemoved() || !domain.isAlive())) {
+        if (!this.level().isClientSide && (domain == null || domain.isRemoved() || !domain.isAlive() )) {
             this.discard();
         } else {
             super.tick();

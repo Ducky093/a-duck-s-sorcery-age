@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.FastColor;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.Block;
@@ -39,6 +41,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.DomainBarrierEntity;
+import radon.jujutsu_kaisen.entity.LimboCloneEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
@@ -48,7 +52,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import java.util.*;
 
 public class HelperMethods {
-    public static final RandomSource RANDOM = RandomSource.createThreadSafe();
+    public static final ThreadLocal<RandomSource> RANDOM = ThreadLocal.withInitial(RandomSource::createThreadSafe);
+    //public static final RandomSource RANDOM = RandomSource.createThreadSafe();
     //rework w canon chants and original ones for most techniques
     private static final String[] WORDS = {"blossoms", "thorns", "roots", "petals", "embers", "ashes", "seeds", "vines", "branches", "stones", "crystals", "mist", "bloom", "dew", "tide", "drift", "flame", "soil", 
     "omens", "sigils", "wards", "bindings", "seals", "echoes", "spirits", "whispers", "truths", "mirrors", "phantoms", "visions", "relics", "runes", "shadows", "dreams", "grace", "essence", "fate", "threshold", 
@@ -57,6 +62,11 @@ public class HelperMethods {
     "rot", "decay", "curse", "wither", "lament", "sin", "hunger", "feast", "shroud", "wrath", "abyss", "void", "grief", "scar", "torment", "ruin", "dread", "flesh", "night"
     };
     
+    public static boolean expCheck(LivingEntity entity) {
+        //returns true if you can gain exp
+        //returns false if you can't
+        return !(entity instanceof LimboCloneEntity); 
+    }
 
     public static boolean friendsCheck(LivingEntity owner, LivingEntity entity) {
 
@@ -230,21 +240,83 @@ public class HelperMethods {
         return FastColor.ARGB32.color(255, Math.round(rgb.x * 255.0F), Math.round(rgb.y * 255.0F), Math.round(rgb.z * 255.0F));
     }
 
+    public static boolean isInSpawnProtection(ServerLevel level, BlockPos pos) {
+        MinecraftServer server = level.getServer();
+
+        if (level.dimension() != Level.OVERWORLD) return false;
+
+        int protectionRadius = server.getSpawnProtectionRadius();
+        if (protectionRadius <= 0) return false;
+
+        BlockPos spawnPos = level.getSharedSpawnPos();
+
+        int dx = Math.abs(pos.getX() - spawnPos.getX());
+        int dz = Math.abs(pos.getZ() - spawnPos.getZ());
+
+        return Math.max(dx, dz) <= protectionRadius;
+    }
+
+    public static boolean barrierHurt(BlockGetter getter, @Nullable LivingEntity entity, BlockPos pos, DamageSource src,  float damage) {
+        //BlockState state = getter.getBlockState(pos);event.level, explosion.instigator, pos, getDamage(explosion), explosion.source
+
+        if (getter.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null) { 
+            if (entity != null && entity.level() instanceof ServerLevel level && level.getEntity(be.getIdentifier()) instanceof DomainBarrierEntity domain) {
+                UUID identifier = be.getIdentifier();
+                // BlockPos currentPos = pos;
+                // if (src.getDirectEntity() != null ) {
+                //     currentPos = src.getDirectEntity().blockPosition();
+                // }
+                // else if (entity != null) {
+                BlockPos currentPos = entity.blockPosition();
+                //}
+                boolean destroyable = identifier == null ||( (!domain.isInsideBarrier(currentPos ) && !domain.getShellBalance()) || (domain.isInsideBarrier(currentPos) && domain.getShellBalance())  );
+                if (destroyable) {
+                            //System.out.println("checkpoint4");
+                    boolean success = domain.hurt(src, damage, entity, pos);
+                    if (domain.getHealth() <= 0) {
+                               // System.out.println("checkpoint5");
+                        return false;
+                    }
+                            //System.out.println("checkpoint6");
+                    return true;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        //get type here, if its a domain block check if within or outside and deal dmg accordingly. remember to add check to stop attacks from
+        //hurting things within domains
+        return false;
+    }
+    
     public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos) {
         if (!ConfigHolder.SERVER.destruction.get() ) return false;
 
         if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)  ) return false;
         if (source != null && VeilHandler.canDestroy(source, source.level(),(double) pos.getX(),(double) pos.getY(), (double)pos.getZ()) == false) return false;
         BlockState state = getter.getBlockState(pos);
-        boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
-
-        if (!destroyable && source != null && source.level() instanceof ServerLevel level && getter.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-            UUID identifier = be.getIdentifier();
-            destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                    !domain.isInsideBarrier(source.blockPosition());
+        boolean destroyable = !state.isAir() && (!(source.level() instanceof ServerLevel level) || !isInSpawnProtection(level, pos));
+        if (state.getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
+            if (getter.getBlockEntity(pos) instanceof DomainBlockEntity be) { 
+                if (source != null && source.level() instanceof ServerLevel level &&  level.getEntity(be.getIdentifier()) instanceof DomainBarrierEntity domain && domain.getHealth() <= 0) {
+                    destroyable = true;
+                } else {
+                    destroyable = false;
+                }
+                
+            }
+            else {
+                destroyable = false;
+            }
         }
         return destroyable;
     }
+
+        public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos, DamageSource src,  float damage ) {
+            if (barrierHurt(getter, source, pos, src, damage)) return false;
+            return isDestroyable(getter, source, pos);
+        }
 
     public static Set<String> getRandomWordCombo(int count) {
         if (count > WORDS.length)

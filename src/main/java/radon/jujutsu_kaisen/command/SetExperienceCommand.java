@@ -15,10 +15,24 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetExperienceCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksetexperience")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("experience", FloatArgumentType.floatArg())
-                        .executes(ctx -> setExperience(EntityArgument.getPlayer(ctx, "player"), FloatArgumentType.getFloat(ctx, "experience"))))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+        Commands.literal("jjksetexperience")
+                .requires(src -> src.hasPermission(2))
+                .then(Commands.argument("players", EntityArgument.players())
+                        .then(Commands.argument("experience", FloatArgumentType.floatArg())
+                                .executes(ctx -> {
+                                    float experience = FloatArgumentType.getFloat(ctx, "experience");
+
+                                    for (ServerPlayer player :
+                                            EntityArgument.getPlayers(ctx, "players")) {
+                                        setExperience(player, experience);
+                                    }
+
+                                    return 1;
+                                })
+                        )
+                )
+        );
 
         dispatcher.register(Commands.literal("jjksetexperience").requires((player) -> player.hasPermission(2)).redirect(node));
     }

@@ -129,6 +129,11 @@
       "jujutsu_kaisen:flame_explosion"
     ]
   },
+  "thump": {
+    "sounds": [
+      "jujutsu_kaisen:thump"
+    ]
+  },
   "shoot": {
     "sounds": [
       "jujutsu_kaisen:shoot"

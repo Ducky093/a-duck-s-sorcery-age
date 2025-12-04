@@ -5,6 +5,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import net.minecraft.server.level.ServerLevel;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -31,9 +33,12 @@ public class AbilityHandler {
 
             boolean enemyDomain = false;
             if (owner.level().isClientSide) return;
-            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-                if (domain.getOwner() != owner) {
-                    enemyDomain = true;
+              for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+                for (DomainExpansionEntity d : domain.getClashers() ) {      
+                //for (IDomain domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+                    if (d.getOwner() != owner) {
+                        enemyDomain = true;
+                    }
                 }
             }
                     if (cap.hasToggled(ability)) {

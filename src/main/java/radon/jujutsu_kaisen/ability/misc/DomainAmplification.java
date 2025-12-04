@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -29,15 +31,17 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
          if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             boolean hasDomainUp = false;
             boolean opponentDomainUp = false;
-         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner  && domain.hasSureHitEffect()) {
+        for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+            for (DomainExpansionEntity d : domain.getClashers() ) {
+            if (d.getOwner() == owner   ) { //&& !domain instanceof IIncompleteDomain
                 hasDomainUp = true;
                 continue;
             }
-            else if (domain.getOwner() == target)  {
+            else if (d.getOwner() == target)  {
                  opponentDomainUp = true;
                  continue;
             }
+        }
         }
 
 

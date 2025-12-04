@@ -167,7 +167,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public void changeTarget(LivingEntity target) {
-        if (!(target instanceof TenShadowsSummon)) {
+        if ( (!(target instanceof TenShadowsSummon sum) || (sum.isTame() && sum.getTarget() == this.getOwner() ) ) ) {
             this.setTarget(target);
         }
     }
@@ -251,14 +251,16 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
          AABB area = new AABB(center.x - RITUAL_RANGE, center.y - RITUAL_RANGE, center.z - RITUAL_RANGE,
                             center.x + RITUAL_RANGE, center.y + RITUAL_RANGE, center.z + RITUAL_RANGE);
 
-                    for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area, participant -> participant != this)) {
-                        if ((participant.getType() == this.getType() && participant instanceof TenShadowsSummon sum && sum.isClone()))
-                            continue;
-                        if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+                    for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area, participant -> participant != this && !((participant.getType() == this.getType() && participant instanceof TenShadowsSummon sum && sum.isClone())) && participant.getCapability(SorcererDataHandler.INSTANCE).isPresent())) {
+                        // if ((participant.getType() == this.getType() && participant instanceof TenShadowsSummon sum && sum.isClone()))
+                        //     continue;
+                        // if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
                         if (participant != owner && (!(participant instanceof TamableAnimal tamable) || tamable.getOwner() != owner))   {
                             this.ritualNullified = true;
                         }
-                        this.participants.add(participant.getUUID());
+                        if (!this.participants.contains(participant.getUUID())) {
+                            this.participants.add(participant.getUUID());
+                        }
                     }
     }
 

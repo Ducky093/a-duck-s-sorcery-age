@@ -27,6 +27,8 @@ import radon.jujutsu_kaisen.client.render.item.armor.BlindfoldRenderer;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.client.visual.JJKOverlays;
 import radon.jujutsu_kaisen.client.visual.JJKVisuals;
+import radon.jujutsu_kaisen.compat.CuffedCompat;
+import radon.jujutsu_kaisen.compat.PlayerReviveCompat;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -43,11 +45,15 @@ import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
+
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
     public static final String MOD_ID = "jujutsu_kaisen";
     public static final String CURIOS_MOD_ID = "curios";
-
+    public static final String PLAYER_REVIVE = "playerrevive";
+   public static final String CUFFED = "cuffed";
+    public static boolean PlayerReviveInstalled = false;
+    public static boolean CuffedInstalled = false;
     public JujutsuKaisen() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -85,6 +91,16 @@ public class JujutsuKaisen {
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);
+
+        if (ModList.get().isLoaded(PLAYER_REVIVE)) {
+            PlayerReviveInstalled = true;
+            PlayerReviveCompat.load();
+        }
+       if (ModList.get().isLoaded(CUFFED)) {
+            CuffedInstalled = true;
+            CuffedCompat.load();
+         }
+
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {

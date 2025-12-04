@@ -146,7 +146,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableCursedSpiritTechniques;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> sorcererTraitList;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> curseTraitList;
-    public final ForgeConfigSpec.ConfigValue<List<String>> incompatibleTraits;
+public final ForgeConfigSpec.ConfigValue<List<String>> incompatibleTraits;
 
     public final ForgeConfigSpec.IntValue natureTraitModifier;
     public final ForgeConfigSpec.IntValue traitScalingModifier;
@@ -490,7 +490,7 @@ public class ServerConfig {
                                 Trait.DEATH_PAINTING.name()
                         ), ignored -> true);
            this.incompatibleTraits = builder.comment("Incompatible traits, formatted as TRAIT1,TRAIT2. To add more, just add more comma separated traits to the list")
-                .define("incompatibleTraits", List.of("PERFECT_BODY,SIX_EYES", "CURSED_WOMB,DEATH_PAINTING"));
+                .define("incompatibleTraits", List.of("PERFECT_BODY,SIX_EYES", "CURSED_WOMB,DEATH_PAINTING"), ignored -> true);
         builder.pop();
 
         builder.comment("Rarity").push("rarity");

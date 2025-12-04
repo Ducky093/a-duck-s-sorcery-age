@@ -116,7 +116,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
                 DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
 
-                if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get())) {
+                if ((domain == null || domain.checkSureHitEffect() == null) ) {
                     this.discard();
                 }
             }

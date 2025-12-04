@@ -9,9 +9,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -45,11 +49,25 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         super(pType, pLevel);
     }
 
+        @Override
+    public boolean startRiding(Entity vehicle, boolean force) {
+        if (vehicle instanceof Boat || vehicle instanceof AbstractMinecart) {
+            return false;
+        }
+        return super.startRiding(vehicle, force);
+    }
+
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 
         this.entityData.define(DATA_TIME, 0);
+    }
+
+    @Override
+    public boolean canBeLeashed(@Nullable Player player) {
+        return false; 
     }
 
     @Override

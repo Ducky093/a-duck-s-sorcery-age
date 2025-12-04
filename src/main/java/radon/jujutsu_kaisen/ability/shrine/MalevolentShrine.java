@@ -7,7 +7,14 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.IDomain;
+import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.Block;
+
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -24,16 +31,18 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         boolean enemyDomain = false;
-        DomainExpansionEntity selfDomain = null;
+        IDomain selfDomain = null;
        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (domain.getOwner() == owner) {
-                selfDomain = domain;
+        for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+        for (DomainExpansionEntity d : domain.getClashers() ) {   
+            if (d.getOwner() == owner) {
+                selfDomain = d;
             }
-            else if (domain.getOwner() != owner) {
+            else if (d.getOwner() != owner) {
                 enemyDomain = true;
             }
         }
+    }
 
         if (enemyDomain == true) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -51,7 +60,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
         else if (selfDomain != null && enemyDomain != true) {
             if (target != null) {
-                return (selfDomain.distanceTo(target) >= 96.0D);
+                return (selfDomain.getDomain().distanceTo(target) >= 130.0D);
             }
 
             if (target == null) {
@@ -103,11 +112,21 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public int getWidth() {
-        return 100;
+        return 112;
     }
 
     @Override
     public int getHeight() {
         return 85;
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
+    }
+
+    @Override
+    public List<Block> getBottomFloorBlocks() {
+        return List.of(JJKBlocks.DOMAIN_FILLER.get() );
     }
 }

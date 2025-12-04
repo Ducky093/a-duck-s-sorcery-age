@@ -77,6 +77,15 @@ public class ExplosionHandler {
         pDropPositionArray.add(Pair.of(pStack, pPos));
     }
 
+    public static float getDamage(ExplosionData explosion, double d10) {
+        return (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * explosion.radius + 1.0D)) * explosion.damage;
+    }
+
+    public static float getDamage(ExplosionData explosion) {
+        return getDamage(explosion, 1.0F);
+    }
+
+
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
@@ -137,7 +146,7 @@ public class ExplosionHandler {
                                 double d14 = Explosion.getSeenPercent(explosion.position, entity);
                                 double d10 = (1.0D - d12) * d14;
 
-                                entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * explosion.radius + 1.0D)) * explosion.damage);
+                                entity.hurt(explosion.source, getDamage(explosion, d10) );
                                 double d11;
 
                                 if (entity instanceof LivingEntity living) {
@@ -179,12 +188,12 @@ public class ExplosionHandler {
                                 BlockPos pos = new BlockPos(x, y, z);
                                 Vec3 center = pos.getCenter();
 
-                                       
-                                
+                                    
                                 //if (!VeilHandler.canDestroy(explosion.instigator, event.level, center.x, center.y, center.z)) {
-                                if (!HelperMethods.isDestroyable(event.level, explosion.instigator, pos)) { 
+                                if (!HelperMethods.isDestroyable(event.level, explosion.instigator, pos, explosion.source, getDamage(explosion))) { 
                                     continue;
                                 }
+
 
                                 BlockState block = event.level.getBlockState(pos);
                                 FluidState fluid = event.level.getFluidState(pos);

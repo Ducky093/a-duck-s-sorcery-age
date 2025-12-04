@@ -77,7 +77,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         super.init(data);
 
         data.copy(CursedTechnique.CURSED_SPEECH);
-        data.setAdditionalEnergy(data.getMaxEnergy());
+        data.setAdditionalEnergy(data.getMaxEnergy() * 0.5F);
     }
 
     @Override

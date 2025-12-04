@@ -46,9 +46,13 @@ public class MobEventHandler {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
             if (event.getSpawnType() == MobSpawnType.NATURAL || event.getSpawnType() == MobSpawnType.CHUNK_GENERATION || event.getSpawnType() == MobSpawnType.SPAWNER ) {
 
-            if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
-                event.setResult(Result.DENY);
+            Mob mob = event.getEntity();
+            if (!VeilHandler.canSpawn(level, mob, event.getX(), event.getY(), event.getZ())) {
+                event.setResult(MobSpawnEvent.PositionCheck.Result.DENY);
             }
+            // if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
+            //     event.setResult(Result.DENY);
+            // }
             }
         }
 

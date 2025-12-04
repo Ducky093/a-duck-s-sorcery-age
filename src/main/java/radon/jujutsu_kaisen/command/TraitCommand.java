@@ -15,12 +15,47 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class TraitCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjktrait")
-                .requires((player) -> player.hasPermission(2))
-                .then(Commands.literal("add").then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("trait", EnumArgument.enumArgument(Trait.class)).executes((ctx) ->
-                        addTrait(EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("trait", Trait.class))))))
-                .then(Commands.literal("remove").then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("trait", EnumArgument.enumArgument(Trait.class)).executes((ctx) ->
-                        removeTrait(EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("trait", Trait.class)))))));
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
+        Commands.literal("jjktrait")
+                .requires(src -> src.hasPermission(2))
+                
+                // Add trait
+                .then(Commands.literal("add")
+                        .then(Commands.argument("players", EntityArgument.players())
+                                .then(Commands.argument("trait", EnumArgument.enumArgument(Trait.class))
+                                        .executes(ctx -> {
+                                            Trait trait = ctx.getArgument("trait", Trait.class);
+
+                                            for (ServerPlayer player :
+                                                    EntityArgument.getPlayers(ctx, "players")) {
+                                                addTrait(player, trait);
+                                            }
+
+                                            return 1;
+                                        })
+                                )
+                        )
+                )
+
+                // Remove trait
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("players", EntityArgument.players())
+                                .then(Commands.argument("trait", EnumArgument.enumArgument(Trait.class))
+                                        .executes(ctx -> {
+                                            Trait trait = ctx.getArgument("trait", Trait.class);
+
+                                            for (ServerPlayer player :
+                                                    EntityArgument.getPlayers(ctx, "players")) {
+                                                removeTrait(player, trait);
+                                            }
+
+                                            return 1;
+                                        })
+                                )
+                        )
+                )
+        );
+
 
         dispatcher.register(Commands.literal("jjktrait").requires((player) -> player.hasPermission(2)).redirect(node));
     }

@@ -24,11 +24,11 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.LimboCloneEntity;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.*;
@@ -53,7 +53,7 @@ public class ExperienceHandler {
 
         // Tames do not give experience
         if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
-        if (victim instanceof TenShadowsSummon || victim instanceof LimboCloneEntity) return;
+        if (victim instanceof TenShadowsSummon || !HelperMethods.expCheck(victim)) return;
 
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;

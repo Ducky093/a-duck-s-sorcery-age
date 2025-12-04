@@ -157,6 +157,11 @@ public class PacketHandler {
                 .encoder(BlinkS2CPacket::toBytes)
                 .consumerMainThread(BlinkS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ResurrectionS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ResurrectionS2CPacket::new)
+                .encoder(ResurrectionS2CPacket::encode)
+                .consumerMainThread(ResurrectionS2CPacket::handle)
+                .add();
         INSTANCE.messageBuilder(QuestionCreatePactC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(QuestionCreatePactC2SPacket::new)
                 .encoder(QuestionCreatePactC2SPacket::encode)
@@ -266,6 +271,10 @@ public class PacketHandler {
 
     public static <MSG> void sendTracking(MSG message, Entity entity) {
         INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+    }
+
+    public static void sendTrackingAndSelf(Object msg, Entity entity) {
+        INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), msg);
     }
 
     public static <MSG> void sendToServer(MSG message) {

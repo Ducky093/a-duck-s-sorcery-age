@@ -141,6 +141,24 @@ public interface ISorcererData {
 
     void setDomainSize(float domainSize);
 
+    void setShellBalance(boolean shellBalance);
+
+    boolean getShellBalance();
+
+    void setToggleSureHit(boolean toggled);
+
+    boolean getToggleSureHit();
+
+    void setAlliedSureHit(boolean toggled);
+
+    boolean getAlliedSureHit();
+
+    // void blacklistSureHitEntity(UUID entityUUID);
+
+    // Set<UUID> getSureHitEntities();
+
+    //boolean checkSureHitEntity();
+
     boolean hasToggled(Ability ability);
 
     @Nullable CursedTechnique getAdditional();
@@ -308,7 +326,11 @@ public interface ISorcererData {
 
     void setStolen(Set<CursedTechnique> stolenTechs);
     
+    void resetAbsorbed();
+
     void resetCopy();
+
+    void resetCurses();
 
     void setCopies(Set<CursedTechnique> copiedTechs);
 

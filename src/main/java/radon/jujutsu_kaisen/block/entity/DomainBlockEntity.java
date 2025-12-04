@@ -14,15 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
 
-public class DomainBlockEntity extends BlockEntity {
+public class DomainBlockEntity extends TemporaryBlockEntity {
     private boolean initialized;
     protected UUID identifier;
-
-    private int death;
+    protected UUID pidentifier;
+    //private int death;
 
     @Nullable
     private BlockState original;
@@ -167,6 +168,16 @@ public class DomainBlockEntity extends BlockEntity {
         return this.identifier;
     }
 
+        @Nullable
+    public UUID getPidentifier() {
+        return this.pidentifier;
+    }
+
+            @Nullable
+    public void setPidentifier(UUID here) {
+        this.pidentifier = here;
+    }
+
     @Nullable
     public BlockState getOriginal() {
         if (this.level == null) return this.original;
@@ -183,12 +194,13 @@ public class DomainBlockEntity extends BlockEntity {
         return this.saved;
     }
 
-    public void create(UUID identifier, int delay, BlockState state, CompoundTag saved) {
+    public void create(UUID identifier, int delay, BlockState state, CompoundTag saved, UUID pidentifier) {
         this.initialized = true;
         this.identifier = identifier;
-        this.death = delay;
+        //this.death = delay;
         this.original = state;
         this.saved = saved;
+        this.pidentifier = pidentifier;
         this.setChanged();
     }
 
@@ -200,7 +212,7 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             pTag.putUUID("identifier", this.identifier);
-            pTag.putInt("death", this.death);
+            //pTag.putInt("death", this.death);
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
@@ -211,6 +223,7 @@ public class DomainBlockEntity extends BlockEntity {
             if (this.saved != null) {
                 pTag.put("saved", this.saved);
             }
+            pTag.putUUID("pidentifier", this.pidentifier);
         }
     }
 
@@ -223,12 +236,13 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
-            this.death = pTag.getInt("death");
+            //this.death = pTag.getInt("death");
             this.deferred = pTag.getCompound("original");
 
             if (pTag.contains("saved")) {
                 this.saved = pTag.getCompound("saved");
             }
+            this.pidentifier = pTag.getUUID("pidentifier");
         }
     }
 }
