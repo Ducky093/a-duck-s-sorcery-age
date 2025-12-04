@@ -79,10 +79,10 @@ public class SwapSelf extends Ability {
                 });
       
 
-            if (!VeilHandler.isTeleportValid(target.level(), owner.blockPosition())) {
+            if (VeilHandler.isTeleportValid(target.level(), owner.blockPosition())) {
                 target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
             }
-            if (!VeilHandler.isTeleportValid(owner.level(), target.blockPosition())) {
+            if (VeilHandler.isTeleportValid(owner.level(), target.blockPosition())) {
                 owner.teleportTo(pos.x, pos.y, pos.z);
             }
            

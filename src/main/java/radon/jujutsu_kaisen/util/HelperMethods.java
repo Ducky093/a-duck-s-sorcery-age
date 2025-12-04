@@ -52,8 +52,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import java.util.*;
 
 public class HelperMethods {
-    public static final ThreadLocal<RandomSource> RANDOM = ThreadLocal.withInitial(RandomSource::createThreadSafe);
-    //public static final RandomSource RANDOM = RandomSource.createThreadSafe();
+    //public static final ThreadLocal<RandomSource> RANDOM = ThreadLocal.withInitial(RandomSource::createThreadSafe);
+    public static final RandomSource RANDOM = RandomSource.createThreadSafe();
     //rework w canon chants and original ones for most techniques
     private static final String[] WORDS = {"blossoms", "thorns", "roots", "petals", "embers", "ashes", "seeds", "vines", "branches", "stones", "crystals", "mist", "bloom", "dew", "tide", "drift", "flame", "soil", 
     "omens", "sigils", "wards", "bindings", "seals", "echoes", "spirits", "whispers", "truths", "mirrors", "phantoms", "visions", "relics", "runes", "shadows", "dreams", "grace", "essence", "fate", "threshold", 

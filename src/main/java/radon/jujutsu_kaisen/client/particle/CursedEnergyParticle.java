@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class CursedEnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
-
+    
     protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, CursedEnergyParticle.CursedEnergyParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.visual.visual;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -13,6 +14,8 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class TransfiguredSoulVisual implements IVisual {
+    public static final ThreadLocal<RandomSource> RANDOM = ThreadLocal.withInitial(RandomSource::createThreadSafe);
+
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
         Minecraft mc = Minecraft.getInstance();
@@ -43,13 +46,15 @@ public class TransfiguredSoulVisual implements IVisual {
 
         if (amplifier >= required) {
             int count = Math.round(entity.getBbWidth() + entity.getBbHeight());
-
+            RandomSource random = RANDOM.get();
+            mc.execute(() -> {
             for (int i = 0; i < count; i++) {
-                double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
+                double x = entity.getX() + (random.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
+                double y = entity.getY() + random.nextDouble() * entity.getBbHeight();
+                double z = entity.getZ() + (random.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
+                mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, random.nextDouble() * 0.1D, 0.0D);
             }
+            });
         }
     }
 }

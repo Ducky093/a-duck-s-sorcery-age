@@ -96,10 +96,10 @@ public class SwapOthers extends Ability {
                 });
 
                 
-                if (!VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
+                if (VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
                     second.teleportTo(first.getX(), first.getY(), first.getZ());
                 }
-                if (!VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
+                if (VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
                     first.teleportTo(pos.x, pos.y, pos.z);
                 }
 

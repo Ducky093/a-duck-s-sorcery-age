@@ -91,10 +91,10 @@ public class Shuffle extends Ability implements Ability.IChannelened {
                 });
 
 
-            if (!VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
+            if (VeilHandler.isTeleportValid(first.level(), second.blockPosition())) {
                 first.teleportTo(second.getX(), second.getY(), second.getZ());
             }
-            if (!VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
+            if (VeilHandler.isTeleportValid(second.level(), first.blockPosition())) {
                 second.teleportTo(pos.x, pos.y, pos.z);
             }
 
