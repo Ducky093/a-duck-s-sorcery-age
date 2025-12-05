@@ -10,9 +10,11 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
  
@@ -68,8 +70,18 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        if (!checkCost(owner)) {
+            return Ability.Status.ENERGY;
+        }
+        return super.isTriggerable(owner);
+    }
+
+    @Override
     public void onStart(LivingEntity owner) {
-       ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-       cap.useEnergy(50);
+        if (!checkCost(owner)) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.useEnergy(50);
+        }
     }
 }

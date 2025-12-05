@@ -310,9 +310,17 @@ public class VeilEntity extends Entity implements IVeil {
                             if (be.getParentUUID() != null && be.getParentUUID().equals(this.getUUID())) continue;
                         } else {
                             if (!this.charge(owner)) continue;
-
+                            if (existing != null) {
+                                // if (be instanceof net.minecraft.world.Container container ) {
+                                //     container.clearContent();
+                                
+                                // }
+                                ((ServerLevel)this.level()).removeBlockEntity(pos);
+                            }
+                            // if (this.level().setBlock(pos, replacement,
+                                  //  Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS)) this.total++;
                             if (this.level().setBlock(pos, replacement,
-                                    Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS)) this.total++;
+                                    Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS)) this.total++;
                         }
 
                         if (existing instanceof ITemporaryBlockEntity tmp) {

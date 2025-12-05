@@ -592,6 +592,14 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         //else if (JJKBlocks.DOMAIN.get() == block) {
        //     barrierBlocks.add(pos.immutable());
        // } 
+            BlockEntity be = ((ServerLevel)this.level()).getBlockEntity(pos);
+            if (be != null) {
+                // if (be instanceof net.minecraft.world.Container container ) {
+                //     container.clearContent();
+                  
+                // }
+                ((ServerLevel)this.level()).removeBlockEntity(pos);
+            }
              boolean success = this.level().setBlock(pos, block.defaultBlockState(),
                                               Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
             
@@ -600,11 +608,11 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
             saved = tmp.getSaved();
         }
         
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity dbe) {
         // if (this.level().getBlockEntity(pos) instanceof DomainSkyBlockEntity be) {
         //     be.create(this.uuid, delay, state, saved, winner );
         // }
-            be.create(this.uuid, delay, state, saved, winner.getUUID());
+            dbe.create(this.uuid, delay, state, saved, winner.getUUID());
         
         }
 

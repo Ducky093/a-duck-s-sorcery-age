@@ -36,10 +36,10 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
         if (original != null) {
             if (original.isAir()) {
                 this.level.setBlock(this.getBlockPos(), Blocks.AIR.defaultBlockState(),
-                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
+                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
             } else {
                 this.level.setBlock(this.getBlockPos(), original,
-                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
+                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
 
                 if (this.saved != null) {
                     BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
@@ -51,7 +51,7 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
             }
         } else {
             this.level.setBlock(this.getBlockPos(), Blocks.AIR.defaultBlockState(),
-                    Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
+                    Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS );
         }
     }
 
