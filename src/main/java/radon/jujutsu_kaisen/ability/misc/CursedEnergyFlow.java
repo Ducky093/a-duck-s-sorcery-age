@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -110,7 +111,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
             owner.setOnGround(true);
         }
-
+        owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
         if (owner instanceof Player player) {
             float f;
 

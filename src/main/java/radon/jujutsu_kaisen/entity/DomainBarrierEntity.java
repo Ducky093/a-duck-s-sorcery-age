@@ -455,7 +455,7 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         }
 
         if (!this.level().isClientSide) {
-            this.createBarrier(false);
+            this.createBarrier(false, clasher);
         }
         
     }
@@ -466,7 +466,7 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
 
         if (collapse == true) {
         if (!this.level().isClientSide) {
-            this.createBarrier(false);
+            this.createBarrier(false, clasher, true);
         }
         }
     }
@@ -774,6 +774,14 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
 }
 
     private void createBarrier(boolean instant) {
+        createBarrier(instant, null);
+    }
+
+    private void createBarrier(boolean instant, @Nullable DomainExpansionEntity leadClasher) {
+        createBarrier(instant, leadClasher, false);
+    }
+
+    private void createBarrier(boolean instant, @Nullable DomainExpansionEntity leadClasher, boolean lose) {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         Map<DomainExpansionEntity, Double> clasherAngles = getClasherAngles(center);
@@ -785,8 +793,25 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
             }
             return;
         }
-        Vec3 direction = this.getLookAngle();
-        Vec3 behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
+        Vec3 behind;
+        if (leadClasher != null) {
+            if (lose) {
+                Vec3 clasherPos = leadClasher.position();
+                Vec3 centerpos = this.position().add(0.0D, radius, 0.0D);
+                Vec3 dirToClasher = centerpos.subtract(clasherPos).normalize();
+                behind = centerpos.add(dirToClasher.scale(radius - OFFSET));
+            }
+            else {
+                Vec3 clasherPos = leadClasher.position();
+                Vec3 centerPos = this.position().add(0.0D, radius, 0.0D);
+                Vec3 dirToClasher = clasherPos.subtract(centerPos).normalize();
+                behind = centerPos.add(dirToClasher.scale(radius - OFFSET));
+            }
+        } else {
+            Vec3 direction = this.getLookAngle();
+            behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
+        }
+        //Vec3 behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
          for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -798,7 +823,7 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
                 
 
                         
-                        Vec3 blockDir = pos.getCenter().subtract(center.getCenter()).multiply(1,0,1);
+                        //Vec3 blockDir = pos.getCenter().subtract(center.getCenter()).multiply(1,0,1);
                         //double blockAngle = Math.atan2(blockDir.z, blockDir.x);
                         
 

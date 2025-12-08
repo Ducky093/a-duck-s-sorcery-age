@@ -28,6 +28,8 @@ public class DomainCustomizationTab extends JJKTab {
 
     @Override
     public void tick() {
+
+        if (this.sizeSlider != null) {
         float size = (float) this.sizeSlider.getValue();
 
         if (size != this.oldSize) {
@@ -37,6 +39,7 @@ public class DomainCustomizationTab extends JJKTab {
                 cap.setDomainSize(size);
             }
             this.oldSize = size;
+        }
         }
     }
 

@@ -220,7 +220,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
 
     @Override
     public boolean shouldCollapse(float strength) {
-        return (strength / this.getStrength()) > 2.75F;
+        return (strength / this.getStrength()) > 2.5F;
     }
 
     

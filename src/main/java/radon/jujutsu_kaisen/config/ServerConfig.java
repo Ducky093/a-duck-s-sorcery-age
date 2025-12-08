@@ -573,7 +573,7 @@ public class ServerConfig {
 
         this.unlockableCursedSpiritTechniques = builder.comment("Techniques that are unlockable by Curses by default")
                 .translation("config.jujutsu_kaisen.unlockable_cursed_spirit_techniques")
-                .defineList("unlockableTechniques", () -> List.of(
+                .defineList("unlockableCursedSpiritTechniques", () -> List.of(
                                 CursedTechnique.CURSE_MANIPULATION.name(),
                                 CursedTechnique.LIMITLESS.name(),
                                 CursedTechnique.SHRINE.name(),

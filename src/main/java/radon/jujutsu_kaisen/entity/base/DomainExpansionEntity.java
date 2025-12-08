@@ -475,10 +475,10 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     //     return (cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth())) * domainMod ;
     // }
     
-    @Override
-    public float getStrength() {
-        return IDomain.super.getStrength();
-    }
+    // @Override
+    // public float getStrength() {
+    //     return this.getStrength();
+    // }
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {

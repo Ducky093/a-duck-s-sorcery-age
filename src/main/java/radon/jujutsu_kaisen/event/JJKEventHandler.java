@@ -231,6 +231,7 @@ public class JJKEventHandler {
                 newCap.resetExtraEnergy();
                 newCap.resetSpeedStacks();
                 newCap.resetDash();
+                //reset exp locks
                
                 // if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
                 //     ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
@@ -332,9 +333,9 @@ public class JJKEventHandler {
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 2, 1, false, false, false));
+                owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
             }
 
-            owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
 
             if (owner instanceof Player player) {
                 if ( (cap.getType() == JujutsuType.SORCERER && ConfigHolder.SERVER.sorcererSaturation.get()) || (cap.getType() == JujutsuType.CURSE && ConfigHolder.SERVER.curseSaturation.get()) ) {
