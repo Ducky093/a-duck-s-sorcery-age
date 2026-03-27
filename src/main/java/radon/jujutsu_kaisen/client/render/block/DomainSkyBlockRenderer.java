@@ -17,29 +17,48 @@ import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 
 public class DomainSkyBlockRenderer implements BlockEntityRenderer<DomainSkyBlockEntity> {
 
-    public void render(@NotNull DomainSkyBlockEntity pBlockEntity, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        ResourceLocation domain = pBlockEntity.getDomain();
-
+    @Override
+    public void render(
+            @NotNull DomainSkyBlockEntity be,
+            float partialTick,
+            @NotNull PoseStack poseStack,
+            @NotNull MultiBufferSource buffer,
+            int packedLight,
+            int packedOverlay
+    ) {
+        ResourceLocation domain = be.getDomain();
         if (domain == null) return;
 
-        Matrix4f matrix4f = pPoseStack.last().pose();
-        renderCube(matrix4f, pBuffer.getBuffer(renderType(domain)));
+        poseStack.pushPose();
+
+        Matrix4f matrix = poseStack.last().pose();
+        VertexConsumer vc = buffer.getBuffer(renderType(domain));
+
+        renderInsideCube(matrix, vc);
+
+        poseStack.popPose();
     }
 
-    private static void renderCube(Matrix4f pPose, VertexConsumer pConsumer) {
-        renderFace(pPose, pConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
-        renderFace(pPose, pConsumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        renderFace(pPose, pConsumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        renderFace(pPose, pConsumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        renderFace(pPose, pConsumer, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F);
-        renderFace(pPose, pConsumer, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F);
+    private static void renderInsideCube(Matrix4f m, VertexConsumer v) {
+        quad(m, v, 0,0,0, 0,1,0, 0,1,1, 0,0,1);
+        quad(m, v, 1,0,1, 1,1,1, 1,1,0, 1,0,0);
+        quad(m, v, 0,0,1, 1,0,1, 1,0,0, 0,0,0);
+        quad(m, v, 0,1,0, 1,1,0, 1,1,1, 0,1,1);
+        quad(m, v, 1,0,0, 1,1,0, 0,1,0, 0,0,0);
+        quad(m, v, 0,0,1, 0,1,1, 1,1,1, 1,0,1);
     }
 
-    private static void renderFace(Matrix4f pPose, VertexConsumer pConsumer, float pX0, float pX1, float pY0, float pY1, float pZ0, float pZ1, float pZ2, float pZ3) {
-        pConsumer.vertex(pPose, pX0, pY0, pZ0).endVertex();
-        pConsumer.vertex(pPose, pX1, pY0, pZ1).endVertex();
-        pConsumer.vertex(pPose, pX1, pY1, pZ2).endVertex();
-        pConsumer.vertex(pPose, pX0, pY1, pZ3).endVertex();
+    private static void quad(
+            Matrix4f m, VertexConsumer v,
+            float x1, float y1, float z1,
+            float x2, float y2, float z2,
+            float x3, float y3, float z3,
+            float x4, float y4, float z4
+    ) {
+        v.vertex(m, x1, y1, z1).endVertex();
+        v.vertex(m, x2, y2, z2).endVertex();
+        v.vertex(m, x3, y3, z3).endVertex();
+        v.vertex(m, x4, y4, z4).endVertex();
     }
 
     private static RenderType renderType(ResourceLocation domain) {
@@ -47,7 +66,8 @@ public class DomainSkyBlockRenderer implements BlockEntityRenderer<DomainSkyBloc
     }
 
     @Override
-    public boolean shouldRender(@NotNull DomainSkyBlockEntity blockEntity, @NotNull Vec3 cameraPos) {
-              return Vec3.atCenterOf(blockEntity.getBlockPos()).closerThan(cameraPos, (double)this.getViewDistance() * 2);
+    public boolean shouldRender(@NotNull DomainSkyBlockEntity be, @NotNull Vec3 cameraPos) {
+        return Vec3.atCenterOf(be.getBlockPos())
+                .closerThan(cameraPos, this.getViewDistance() * 2);
     }
 }

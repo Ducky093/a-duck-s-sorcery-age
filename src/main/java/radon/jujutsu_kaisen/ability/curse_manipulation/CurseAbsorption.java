@@ -91,7 +91,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         attacker.swing(InteractionHand.MAIN_HAND, true);
-
+        victimCap.setRevivable(false);
         ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
 
         if (victim instanceof Player player) {

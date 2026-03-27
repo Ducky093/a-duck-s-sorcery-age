@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -44,11 +45,11 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity,new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * this.getStrength(owner, instant)),
                 0, false, false, false));
-        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(10 * 20 * this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STUN.get(), Math.round(10 * 20 * this.getStrength(owner, instant)),
                 0, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
                 4, false, false, false));
 
         if (domain.getTime() % 20 == 0) {

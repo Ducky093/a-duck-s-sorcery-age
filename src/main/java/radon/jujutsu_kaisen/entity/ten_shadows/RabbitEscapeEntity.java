@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -12,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -30,6 +34,8 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
+
+    public static EntityDataAccessor<Boolean> DATA_LEADER = SynchedEntityData.defineId(RabbitEscapeEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Nullable
     private UUID leaderUUID;
@@ -120,6 +126,24 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         }
     }
 
+     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_LEADER, false);
+    }
+
+    public void setLeader(boolean leader) {
+        this.entityData.set(DATA_LEADER, leader);
+    }
+
+    public boolean getOriginal() {
+        return this.original;
+    }
+
+    public boolean directLeader() {
+        return this.entityData.get(DATA_LEADER);
+    }
+
     @Nullable
     public RabbitEscapeEntity getLeader() {
         if (this.cachedLeader != null && !this.cachedLeader.isRemoved()) {
@@ -166,6 +190,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         if (owner == null) return;
 
         if (this.getLeader() == null && !this.original) {
+            this.setLeader(true);
             this.original = true;
 
             for (int i = 0; i < COUNT; i++) {

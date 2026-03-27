@@ -23,10 +23,13 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -227,6 +230,10 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         
         
          if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
+        ISorcererData targetCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (targetCap != null) {
+            targetCap.setRevivable(false);
+        }
          Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
             float yaw = this.getYRot();
@@ -250,8 +257,8 @@ public class WorldSlashProjectile extends JujutsuProjectile {
             ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.SliceParticleOptions(living.getId(), plane.toVector3f(), dist),
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
             living.setInvisible(true);
-            living.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
-             living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
+            JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
+            JJKEffectUtil.addEffect(living, new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
 
                 }
             }

@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -98,7 +99,7 @@ public class DontMove extends CursedSpeech {
                                     capHit = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
                                  }  
                                 if (capHit == null || !capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
-                                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
+                                JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.STUN.get(), Mth.clamp(Math.round(DURATION * this.getPower(owner)), 3*20,5*20), 1, false, false, false));                  
                             }
                         }
                 }, 20);

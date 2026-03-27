@@ -23,6 +23,7 @@ public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
     private final boolean glow;
+    private final boolean fade;
     private final float opacity;
 
     protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
@@ -40,9 +41,12 @@ public class TravelParticle extends TextureSheetParticle {
 
         this.opacity = options.opacity();
 
-        this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
+        //this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.glow = options.glow();
+
+        this.fade = options.fade();
+        if (this.fade) this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.sprites = pSprites;
 
@@ -53,10 +57,10 @@ public class TravelParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
-        this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
+        //this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.setSprite(this.sprites.get(this.level.random));
-
+        if (this.fade) this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
         Vec3 pos = new Vec3(this.x, this.y, this.z);
         Vec3 direction = this.target.subtract(pos);
 
@@ -71,18 +75,18 @@ public class TravelParticle extends TextureSheetParticle {
         return this.glow ? JJKParticleRenderTypes.GLOW : JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow, int lifetime) implements ParticleOptions {
+    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow, boolean fade, int lifetime) implements ParticleOptions {
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f target = TravelParticleOptions.readTargetVector3f(reader);
                 reader.expect(' ');
                 Vector3f color = TravelParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new TravelParticleOptions(target, color, reader.readFloat(), reader.readFloat(), reader.readBoolean(), reader.readInt());
+                return new TravelParticleOptions(target, color, reader.readFloat(), reader.readFloat(), reader.readBoolean(), reader.readBoolean(), reader.readInt());
             }
 
             public @NotNull TravelParticleOptions fromNetwork(@NotNull ParticleType<TravelParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new TravelParticleOptions(readTargetFromNetwork(buf), readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readInt());
+                return new TravelParticleOptions(readTargetFromNetwork(buf), readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readBoolean(),  buf.readBoolean(), buf.readInt());
             }
         };
 
@@ -130,13 +134,14 @@ public class TravelParticle extends TextureSheetParticle {
             buf.writeFloat(this.scalar);
             buf.writeFloat(this.opacity);
             buf.writeBoolean(this.glow);
+            buf.writeBoolean(this.fade);
             buf.writeInt(this.lifetime);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.target.x, this.target.y, this.target.z, this.color.x, this.color.y, this.color.z, this.scalar, this.opacity, this.glow, this.lifetime);
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %b %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+                    this.target.x, this.target.y, this.target.z, this.color.x, this.color.y, this.color.z, this.scalar, this.opacity, this.glow, this.fade, this.lifetime);
         }
     }
 

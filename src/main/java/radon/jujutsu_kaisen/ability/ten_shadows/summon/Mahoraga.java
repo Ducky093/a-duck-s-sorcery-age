@@ -11,13 +11,16 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.client.JJKPose;
+import radon.jujutsu_kaisen.client.JJKPoses;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.ability.base.Ability;
 
 import java.util.List;
 
-public class Mahoraga extends Summon<MahoragaEntity> {
+public class Mahoraga extends Summon<MahoragaEntity> implements Ability.IPosedMove {
     public Mahoraga() {
         super(MahoragaEntity.class);
     }
@@ -97,6 +100,16 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     @Override
     protected MahoragaEntity summon(LivingEntity owner) {
         return new MahoragaEntity(owner, this.isTamed(owner));
+    }
+
+    @Override
+    public JJKPose getArmPose(LivingEntity entityLiving) {
+        return JJKPoses.MAHORAGA_WHEEL;
+    }
+
+    @Override 
+    public int poseTimer(LivingEntity owner) {
+        return 20;
     }
 
 

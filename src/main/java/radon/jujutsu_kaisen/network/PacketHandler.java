@@ -167,6 +167,11 @@ public class PacketHandler {
                 .encoder(QuestionCreatePactC2SPacket::encode)
                 .consumerMainThread(QuestionCreatePactC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetDomainConfigurationC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetDomainConfigurationC2SPacket::new)
+                .encoder(SetDomainConfigurationC2SPacket::encode)
+                .consumerMainThread(SetDomainConfigurationC2SPacket::handle)
+                .add();
         INSTANCE.messageBuilder(AddBindingVowC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(AddBindingVowC2SPacket::new)
                 .encoder(AddBindingVowC2SPacket::encode)
@@ -217,10 +222,10 @@ public class PacketHandler {
                 .encoder(SyncMouthS2CPacket::encode)
                 .consumerMainThread(SyncMouthS2CPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(TransformationRightClickC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(TransformationRightClickC2SPacket::new)
-                .encoder(TransformationRightClickC2SPacket::encode)
-                .consumerMainThread(TransformationRightClickC2SPacket::handle)
+        INSTANCE.messageBuilder(AbilityRightClickC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(AbilityRightClickC2SPacket::new)
+                .encoder(AbilityRightClickC2SPacket::encode)
+                .consumerMainThread(AbilityRightClickC2SPacket::handle)
                 .add();
         INSTANCE.messageBuilder(QuestionRemovePactC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(QuestionRemovePactC2SPacket::new)

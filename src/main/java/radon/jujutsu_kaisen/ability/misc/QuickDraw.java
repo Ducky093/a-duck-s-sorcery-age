@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.effect.base.JJKEffect;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -134,7 +135,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
+        JJKEffectUtil.addEffect(owner,new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

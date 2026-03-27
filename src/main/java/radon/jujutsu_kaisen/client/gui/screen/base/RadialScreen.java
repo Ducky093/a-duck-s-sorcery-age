@@ -220,6 +220,12 @@ public abstract class RadialScreen extends Screen {
         RenderSystem.applyModelViewMatrix();
     }
 
+    
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics) {
+
+    }
+    
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 

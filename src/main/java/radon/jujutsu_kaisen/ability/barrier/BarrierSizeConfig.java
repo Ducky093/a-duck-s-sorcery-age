@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.DomainConfiguration;
+import radon.jujutsu_kaisen.ability.base.Configuration;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -24,10 +24,10 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 
-public class BarrierSizeConfig extends DomainConfiguration {
+public class BarrierSizeConfig extends Configuration {
     @Override
     public boolean isDisplayed(LivingEntity owner) {
-        return false;
+        return true;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BarrierSizeConfig extends DomainConfiguration {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(2.0F, 0.0F);
+        return new Vec2(3.0F, -2.0F);
     }
 
     @Override

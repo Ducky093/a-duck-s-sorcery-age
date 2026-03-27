@@ -37,15 +37,15 @@ public class TransfiguredSoulVisual implements IVisual {
 
         if (instance == null) return;
 
-        int amplifier = instance.getAmplifier();
+        int amplifier = Math.min(6, instance.getAmplifier());
 
-        float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
-        float victimStrength = IdleTransfiguration.calculateStrength(entity);
+        // float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
+        // float victimStrength = IdleTransfiguration.calculateStrength(entity);
 
-        int required = Math.round((victimStrength / attackerStrength) * 2);
+        // int required = Math.round((victimStrength / attackerStrength) * 2);
 
-        if (amplifier >= required) {
-            int count = Math.round(entity.getBbWidth() + entity.getBbHeight());
+        if (amplifier > 0) {
+            int count = Math.max(1, Math.round((entity.getBbWidth() + entity.getBbHeight())/2 ) * (1+(amplifier/3))) ;
             RandomSource random = RANDOM.get();
             mc.execute(() -> {
             for (int i = 0; i < count; i++) {

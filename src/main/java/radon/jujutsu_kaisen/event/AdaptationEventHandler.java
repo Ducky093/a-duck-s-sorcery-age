@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.event;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,11 +29,25 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class AdaptationEventHandler {
       private static final int DISRUPTION_DURATION = 20;
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    
+
     public static class AdaptationEventHandlerForgeEvents {
+        public static boolean isAdaptBlacklisted(Ability ability) {
+            if (ability == JJKAbilities.CURSED_ENERGY_FLOW.get() ||
+                ability == JJKAbilities.SIMPLE_DOMAIN.get() ||
+                ability == JJKAbilities.CURSED_ENERGY_SHIELD.get() ||
+                ability == JJKAbilities.FALLING_BLOSSOM_EMOTION.get() ||
+                ability == JJKAbilities.DOMAIN_AMPLIFICATION.get()) {
+                return true;
+            }
+            return false;
+        }
+
         @SubscribeEvent
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
@@ -63,55 +78,60 @@ public class AdaptationEventHandler {
             // Initiate / continue the adaptation process
              if (!victim.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
               ITenShadowsData shadowCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            if (!shadowCap.isAdaptedTo(source)) shadowCap.tryAdapt(source);
+            if (!shadowCap.isAdaptedTo(source) && !HelperMethods.isMelee(source) ) shadowCap.tryAdapt(source);
 
             if (victim instanceof MahoragaEntity) {
                 // if (cap.isAdaptedTo(source)) {
                 //     victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
                 // }
 
-                float process = (1.0F - shadowCap.getAdaptationProgress(source));
+                if (HelperMethods.isMelee(source)) {
+                    event.setAmount(event.getAmount() * 0.1F);
+                }
+                else {
+                    float process = (1.0F - shadowCap.getAdaptationProgress(source));
 
-                switch (shadowCap.getAdaptationType(source)) {
-                    case DAMAGE -> {
-                      if (shadowCap.isAdaptedTo(source)) {
-                        victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-                    }
-                    event.setAmount(event.getAmount() * process);
-                    }
-                    case COUNTER -> {
-                           event.setAmount(event.getAmount() * process);
-                        if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
-                        Entity attacker = source.getEntity();
-
-                        if (attacker != null) {
-                            victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
-                            victim.swing(InteractionHand.MAIN_HAND);
-
+                    switch (shadowCap.getAdaptationType(source)) {
+                        case DAMAGE -> {
+                        if (shadowCap.isAdaptedTo(source)) {
                             victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-                            if (victim.doHurtTarget(attacker)) {
-                                victim.invulnerableTime = 0;
-                            }
-                            //event.setCanceled(true);
-                            /* 
-                             * 
-                             * if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
+                        }
+                        event.setAmount(event.getAmount() * process);
+                        }
+                        case COUNTER -> {
+                            event.setAmount(event.getAmount() * process);
+                            if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
                             Entity attacker = source.getEntity();
 
                             if (attacker != null) {
                                 victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
-
                                 victim.swing(InteractionHand.MAIN_HAND);
 
+                                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
                                 if (victim.doHurtTarget(attacker)) {
                                     victim.invulnerableTime = 0;
                                 }
+                                //event.setCanceled(true);
+                                /* 
+                                * 
+                                * if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
+                                Entity attacker = source.getEntity();
+
+                                if (attacker != null) {
+                                    victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
+
+                                    victim.swing(InteractionHand.MAIN_HAND);
+
+                                    if (victim.doHurtTarget(attacker)) {
+                                        victim.invulnerableTime = 0;
+                                    }
+                                }
+                            }
+                                * 
+                                */
                             }
                         }
-                             * 
-                            */
-                        }
-                    }
+                }
                 }
             }   
         }
@@ -126,7 +146,7 @@ public class AdaptationEventHandler {
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
               DamageSource source = event.getSource();
-                     if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+                     if (!(source.getEntity() instanceof LivingEntity attacker) || HelperMethods.isMelee(source) ) return;
               if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
               ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -169,7 +189,9 @@ public class AdaptationEventHandler {
 
                     for (Ability ability : toggled) {
                         if (ability instanceof IOpenDomain) continue;
-                        if (!shadowCap.isAdaptedTo(ability)) continue;
+                        System.out.println(ability.getName());
+                        System.out.println(isAdaptBlacklisted(ability));
+                        if (!shadowCap.isAdaptedTo(ability) || isAdaptBlacklisted(ability)) continue;
                          victimCap.disrupt(ability, DISRUPTION_DURATION * shadowCap.getAdaptation(ability));
                         victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.BLAZE_SHOOT, SoundSource.MASTER, 1.0F, 1.0F);
                          //victimCap.toggle(ability);

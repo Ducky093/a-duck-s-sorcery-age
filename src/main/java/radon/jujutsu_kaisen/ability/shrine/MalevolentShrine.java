@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -82,9 +83,20 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || domain.getTime() == DELAY || (domain.level().getGameTime() % INTERVAL == 0 && domain.getTime() >= DELAY)) {
-            Ability cleave = JJKAbilities.CLEAVE.get();
-            ((IDomainAttack) cleave).performEntity(owner, entity, domain);
+            if (this.getHitEnvironment() && JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
+                Ability dismantle = JJKAbilities.DISMANTLE.get();
+                ((IDomainAttack) dismantle).performEntity(owner, entity, domain);
+            }
+            else if (!JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
+                Ability cleave = JJKAbilities.CLEAVE.get();
+                ((IDomainAttack) cleave).performEntity(owner, entity, domain);
+            }
         }
+    }
+
+    @Override
+    public boolean getHitEnvironment() {
+        return true;
     }
 
     @Override

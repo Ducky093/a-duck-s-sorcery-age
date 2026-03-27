@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -48,8 +49,8 @@ public class VeilHandler {
 
     // private static final Map<ResourceKey<Level>, Set<VeilRodBlockEntity>> veilsByDimension = new HashMap<>();
     // private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashMap<>();
-    private static final Map<ResourceKey<Level>, Set<UUID>> barriers = new HashMap<>();
-    private static final Map<ResourceKey<Level>, Map<UUID, IBarrier>> cache = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Set<UUID>> barriers = new ConcurrentHashMap<>();
+    private static final Map<ResourceKey<Level>, Map<UUID, IBarrier>> cache = new ConcurrentHashMap<>();
     //private final Map<BlockPos, CompoundTag> placedBlocks = new HashMap<>();
 
     public static void barrier(ResourceKey<Level> dimension, UUID identifier) {
@@ -115,13 +116,13 @@ public class VeilHandler {
         Set<IDomainBarrier> result = new HashSet<>();
 
         if (!barriers.containsKey(level.dimension())) return result;
-                  System.out.println("domain looped -2a");
+                  //System.out.println("domain looped -2a");
         for (UUID identifier : barriers.get(level.dimension())) {
             IBarrier barrier = get(level, identifier);
             //System.out.println(barrier == null);
-              System.out.println("domain looped -1");
+              //System.out.println("domain looped -1");
             if (barrier == null ||  !(barrier instanceof IDomainBarrier barrierEntity) || !barrierEntity.isInsideBarrier(target)) continue;
-              System.out.println("domain looped -0.5");
+            //  System.out.println("domain looped -0.5");
             result.add(barrierEntity);
         }
         return result;
@@ -146,13 +147,13 @@ public class VeilHandler {
         Set<IDomainBarrier> result = new HashSet<>();
 
         if (!barriers.containsKey(level.dimension())) return result;
-                  System.out.println("domain looped -2a");
+                //  System.out.println("domain looped -2a");
         for (UUID identifier : barriers.get(level.dimension())) {
             IBarrier barrier = get(level, identifier);
             //System.out.println(barrier == null);
-              System.out.println("domain looped -1");
+             // System.out.println("domain looped -1");
             if (barrier == null || barrier instanceof IOpenDomainBarrier || !(barrier instanceof IDomainBarrier barrierEntity) || !barrierEntity.isInsideBarrier(target)) continue;
-              System.out.println("domain looped -0.5");
+              //System.out.println("domain looped -0.5");
             result.add(barrierEntity);
         }
         return result;
@@ -176,9 +177,9 @@ public class VeilHandler {
         Set<IDomain> result = new HashSet<>();
         //System.out.println("we getting domains");
         for (IBarrier barrier : getBarriers(level, target)) {
-                  System.out.println("domain looped 0");
+                 // System.out.println("domain looped 0");
             if (!(barrier instanceof IDomain domain)) continue;
-                  System.out.println("domain looped 1");
+                //  System.out.println("domain looped 1");
             result.add(domain);
         }
         return result;
@@ -388,6 +389,7 @@ public class VeilHandler {
             //     continue;
             // }
             int radius = veil.getRadius();
+            //fix here java.lang.NullPointerException: Cannot invoke "net.minecraft.core.Vec3i.getX()" because "pVector" is null
             if (target.distSqr(veil.getVeil().getCenter() ) >= radius * radius) continue;
             boolean ownerFlag = false;
             boolean destroyFlag = true;
@@ -614,7 +616,7 @@ public class VeilHandler {
     public static boolean isTeleportValid(Level level, BlockPos target) {
         
         if ( !(level instanceof ServerLevel servLevel)) return true;
-        System.out.println("made it past first step");
+        //System.out.println("made it past first step");
         Set<IVeil> veils = getVeils(servLevel, target);
         if (veils.isEmpty()) return true;
 

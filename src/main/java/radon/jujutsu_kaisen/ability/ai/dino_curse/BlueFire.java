@@ -133,7 +133,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
                 (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE);
 
         ParticleOptions particle = new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE, SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
-                0.5F, true, (int) spawn.distanceTo(collision));
+                0.5F, true, true, (int) spawn.distanceTo(collision));
 
         for (int i = 0; i < SCALE * 32; i++) {
             ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),

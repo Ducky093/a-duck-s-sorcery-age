@@ -17,37 +17,53 @@ import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.client.FakeSkyHandler;
 
 public class FakeSkyRenderer implements BlockEntityRenderer<FakeSkyBlockEntity> {
-    public FakeSkyRenderer(BlockEntityRendererProvider.Context ignored) {
+
+    public FakeSkyRenderer(BlockEntityRendererProvider.Context ctx) {}
+
+    @Override
+    public void render(
+            @NotNull FakeSkyBlockEntity be,
+            float partialTick,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            int packedOverlay
+    ) {
+        poseStack.pushPose();
+        Matrix4f matrix = poseStack.last().pose();
+        VertexConsumer vc = buffer.getBuffer(JJKRenderTypes.fake_sky());
+        renderInsideCube(matrix, vc);
+        poseStack.popPose();
     }
 
-    public void render(@NotNull FakeSkyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        Matrix4f matrix4f = pPoseStack.last().pose();
-        this.renderCube(matrix4f, pBuffer.getBuffer(this.renderType()));
+    private void renderInsideCube(Matrix4f m, VertexConsumer v) {
+        quad(m, v, 0,0,0, 0,1,0, 0,1,1, 0,0,1);
+        quad(m, v, 1,0,1, 1,1,1, 1,1,0, 1,0,0);
+        quad(m, v, 0,0,1, 1,0,1, 1,0,0, 0,0,0);
+        quad(m, v, 0,1,0, 1,1,0, 1,1,1, 0,1,1);
+        quad(m, v, 1,0,0, 1,1,0, 0,1,0, 0,0,0);
+        quad(m, v, 0,0,1, 0,1,1, 1,1,1, 1,0,1);
     }
 
-    private void renderCube(Matrix4f pPose, VertexConsumer pConsumer) {
-        this.renderFace(pPose, pConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderFace(pPose, pConsumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        this.renderFace(pPose, pConsumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        this.renderFace(pPose, pConsumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        this.renderFace(pPose, pConsumer, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F);
-        this.renderFace(pPose, pConsumer, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F);
+    private void quad(Matrix4f m, VertexConsumer v,
+                      float x1, float y1, float z1,
+                      float x2, float y2, float z2,
+                      float x3, float y3, float z3,
+                      float x4, float y4, float z4) {
+
+        v.vertex(m, x1, y1, z1).endVertex();
+        v.vertex(m, x2, y2, z2).endVertex();
+        v.vertex(m, x3, y3, z3).endVertex();
+        v.vertex(m, x4, y4, z4).endVertex();
     }
 
-    private void renderFace(Matrix4f pPose, VertexConsumer pConsumer, float pX0, float pX1, float pY0, float pY1, float pZ0, float pZ1, float pZ2, float pZ3) {
-        pConsumer.vertex(pPose, pX0, pY0, pZ0).endVertex();
-        pConsumer.vertex(pPose, pX1, pY0, pZ1).endVertex();
-        pConsumer.vertex(pPose, pX1, pY1, pZ2).endVertex();
-        pConsumer.vertex(pPose, pX0, pY1, pZ3).endVertex();
+    @Override
+    public boolean shouldRender(@NotNull FakeSkyBlockEntity be, @NotNull Vec3 cameraPos) {
+        return Vec3.atCenterOf(be.getBlockPos())
+                .closerThan(cameraPos, this.getViewDistance() * 2);
     }
 
     protected RenderType renderType() {
         return JJKRenderTypes.fake_sky();
-    }
-
-    
-    @Override
-    public boolean shouldRender(@NotNull FakeSkyBlockEntity blockEntity, @NotNull Vec3 cameraPos) {
-              return Vec3.atCenterOf(blockEntity.getBlockPos()).closerThan(cameraPos, (double)this.getViewDistance() * 2);
     }
 }

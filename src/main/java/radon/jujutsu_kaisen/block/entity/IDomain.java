@@ -16,6 +16,8 @@ public interface IDomain {
 
     LivingEntity getOwner();
 
+    
+
     // default float getStrength() {
     //     return IBarrier.super.getStrength();
     // }

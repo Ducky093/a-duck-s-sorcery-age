@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.function.Supplier;
@@ -45,7 +46,7 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
             if (entity instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == domain.getOwner())
                 return Shapes.block();
             if (domain.getOwner() == entity) return super.getCollisionShape(pState, pLevel, pPos, pContext);
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 0, false, false, false));
+            JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 0, false, false, false));
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
     }

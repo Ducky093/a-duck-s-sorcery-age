@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 public class ThrownChainProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
-
+    private static final EntityDataAccessor<Boolean> DATA_BYPASS = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final int DURATION = 10;
     private int flightTime = 0;
 
@@ -56,6 +57,9 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.setPos(spawn.x, spawn.y, spawn.z);
 
         this.entityData.set(DATA_ITEM, stack);
+        if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+            this.setBypassInfinity(true);
+        }
     }
 
     @Override
@@ -64,6 +68,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
+        this.entityData.define(DATA_BYPASS,false);
     }
 
     public int getTime() {
@@ -81,6 +86,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         pCompound.putInt("time", this.getTime());
         pCompound.putBoolean("released", this.released);
         pCompound.putBoolean("dealt_damage", this.dealtDamage);
+        pCompound.putBoolean("bypass_infinity", this.getBypassInfinity());
     }
 
     @Override
@@ -90,6 +96,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.setTime(pCompound.getInt("time"));
         this.released = pCompound.getBoolean("released");
         this.dealtDamage = pCompound.getBoolean("dealt_damage");
+        setBypassInfinity(pCompound.getBoolean("bypass_infinity"));
     }
 
     @Override
@@ -276,4 +283,13 @@ public class ThrownChainProjectile extends AbstractArrow {
     public ItemStack getStack() {
         return this.entityData.get(DATA_ITEM);
     }
+
+    public boolean getBypassInfinity() {
+        return this.entityData.get(DATA_BYPASS);
+    }
+
+    public void setBypassInfinity(boolean value) {
+        this.entityData.set(DATA_BYPASS, value);
+    }
+
 }

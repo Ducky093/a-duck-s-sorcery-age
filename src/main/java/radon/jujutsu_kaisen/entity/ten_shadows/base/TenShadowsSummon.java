@@ -49,8 +49,10 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -60,8 +62,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     private static final EntityDataAccessor<Boolean> DATA_CLONE = SynchedEntityData.defineId(TenShadowsSummon.class, EntityDataSerializers.BOOLEAN);
 
-    protected final List<UUID> participants = new ArrayList<>();
-
+    protected final Set<UUID> participants = new HashSet<>();
+    
     protected boolean ritualNullified = false;
 
     private int participantCheckCooldown = 0;   
@@ -302,10 +304,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     @Override
     public void tick() {
         LivingEntity owner = this.getOwner();
-        if (!this.isTame() && (owner != null && !owner.isRemoved() && owner.isAlive() && !this.shouldDespawn())) {
-            Vec3 center = this.position();
-            addParticipants(center, owner);
-        }
+        // if (!this.isTame() && (owner != null && !owner.isRemoved() && owner.isAlive() && !this.shouldDespawn())) {
+        //     Vec3 center = this.position();
+        //     addParticipants(center, owner);
+        // }
         if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.shouldDespawn())) {
             this.discard();
         } else {
@@ -319,14 +321,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     this.checkParticipants();
 
 
-                    boolean disappear = this.participants.isEmpty();
-
-                    if (disappear) {
+                    if (!participants.isEmpty()) {
+                        addParticipants(this.position(), owner);
+                    } else {
                         this.discard();
-                    }
-                    else {
-                         Vec3 center = this.position();
-                         addParticipants(center, owner);
                     }
                     }
                 
@@ -358,7 +356,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-
+        this.participants.clear();
         for (Tag key : pCompound.getList("participants", Tag.TAG_INT_ARRAY)) {
             this.participants.add(NbtUtils.loadUUID(key));
         }

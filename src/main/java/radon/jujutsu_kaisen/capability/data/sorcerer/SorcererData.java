@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -34,8 +35,13 @@ import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ActivePose;
+import radon.jujutsu_kaisen.ability.base.IRMBAble;
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Slam;
+import radon.jujutsu_kaisen.client.JJKPose;
+import radon.jujutsu_kaisen.client.JJKPoses;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -68,10 +74,12 @@ public class SorcererData implements ISorcererData {
     private int points;
     private final Set<Ability> unlocked;
 
-    private float domainSize;
-    private boolean toggledSureHit;
-    private boolean alliedSureHit;
-    private boolean shellBalance;
+    // private float domainSize;
+    // private boolean toggledSureHit;
+    // private boolean alliedSureHit;
+    // private boolean shellBalance;
+    private final Map<DomainConfiguration, Object> domainSettings = new HashMap<>();
+    
     //private Set<UUID> sureHitEntityBlacklist;
 
     private @Nullable CursedTechnique technique;
@@ -103,6 +111,7 @@ public class SorcererData implements ISorcererData {
     private int lives;
     private int dashes = 0;
     private int shieldTicks = 0;
+    private float storedHealth = -1f;
     private float maxEnergy;
     private float extraEnergy;
     private float additionalEnergy;
@@ -121,7 +130,9 @@ public class SorcererData implements ISorcererData {
     
     private long lastBlackFlashTime;
     private boolean addBlackFlash;
+    private boolean healthRestored;
     private boolean hasWombAwakened;
+    private boolean revivable;
 
     private @Nullable Ability channeled;
     private int charge;
@@ -129,6 +140,7 @@ public class SorcererData implements ISorcererData {
     private final Set<Ability> toggled;
 
     private final Set<Trait> traits;
+    private final Map<ResourceLocation, ActivePose> activePoses;
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
@@ -140,7 +152,9 @@ public class SorcererData implements ISorcererData {
     private final Map<UUID, Set<Pact>> requestedPactsRemovals;
     private final Set<BindingVow> bindingVows;
     private final Map<BindingVow, Integer> bindingVowCooldowns;
+    //private final Map<DomainConfiguration, Integer> domainConfigCooldowns;
     private final Map<Ability, Set<String>> chants;
+    
 
     // Curse Manipulation
     private final List<AbsorbedCurse> curses;
@@ -163,7 +177,6 @@ public class SorcererData implements ISorcererData {
     private LivingEntity owner;
 
     public SorcererData() {
-        this.domainSize = 1.0F;
 
         this.unlocked = new HashSet<>();
 
@@ -179,13 +192,15 @@ public class SorcererData implements ISorcererData {
 
         this.output = 1.0F;
 
+        this.revivable = true;
         this.lives = ConfigHolder.SERVER.livesconfig.get();
         this.charge = 0;
         this.lastBlackFlashTime = -1;
         this.addBlackFlash = false;
-        
+
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
+        this.activePoses = new HashMap<>();
         this.delayedTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
         this.disrupted = new HashMap<>();
@@ -207,7 +222,7 @@ public class SorcererData implements ISorcererData {
     private void sync() {
         if (!this.owner.level().isClientSide) {
             ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(this.getToggled(), this.channeled, this.getTraits(), this.getTechniques(), this.getTechnique(), this.getType(),
-                    this.getExperience(), this.getCursedEnergyColor());
+                    this.getExperience(), this.getCursedEnergyColor(), this.getActivePoses());
             PacketHandler.broadcast(new SyncVisualDataS2CPacket(this.owner.getUUID(), data.serializeNBT()));
         }
     }
@@ -260,6 +275,16 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    public void setRevivable(boolean revivable) {
+        this.revivable = revivable;
+    }
+
+    
+    public boolean getRevivable() {
+        return this.revivable;
+    }
+
+    
     private void updateTickEvents() {
         this.delayedTickEvents.removeIf(DelayedTickEvent::finished);
 
@@ -426,6 +451,30 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    @Override
+    public void onRightClick(LivingEntity owner) {
+        if (this.channeled instanceof IRMBAble attack) {
+            if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.onRightClick(this.owner) ) {
+                this.channeled.charge(this.owner);
+                this.charge = 0;
+            }
+        }
+
+        for (Ability ability : this.toggled) {
+            if (owner.isDeadOrDying()) break;
+
+            if (!(ability instanceof IRMBAble attack)) continue;
+            if (ability.getStatus(this.owner) != Ability.Status.SUCCESS) continue;
+            if (!attack.onRightClick(this.owner)) continue;
+
+            ability.charge(this.owner);
+        }
+
+        if (this.owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+        }
+    }
+
     private void updateDisrupted() {
         Iterator<Map.Entry<Ability, Integer>> iter = this.disrupted.entrySet().iterator();
 
@@ -443,6 +492,44 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void updateMaxHealth() {
+            double health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.npcHPMin.get();
+            if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+
+            if (this.owner instanceof Player player) {
+                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.hrHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.hrHPMin.get();
+            }
+            } else {
+                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.npcHPMin.get();
+                double damage = this.getRealPower() * 1.0D;
+                if (this.owner instanceof Player player) {
+                    health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.playerHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.playerHPMin.get();
+                
+                    damage = this.getRealPower() * ConfigHolder.SERVER.playerM1Mult.get().floatValue();
+                }
+            }
+            EntityUtil.applyModifier(
+                this.owner,
+                Attributes.MAX_HEALTH,
+                MAX_HEALTH_UUID,
+                "Max health",
+                health,
+                AttributeModifier.Operation.ADDITION
+            );
+             if (!this.healthRestored && this.storedHealth > 0) {
+                this.healthRestored = true;
+
+                float max = this.owner.getMaxHealth();
+                float restored = Mth.clamp(this.storedHealth, 1.0F, max);
+
+                this.owner.setHealth(restored);
+            } else if (!this.healthRestored && this.storedHealth == -1) {
+                this.healthRestored = true;
+                this.owner.setHealth(this.owner.getMaxHealth());
+            }
+    }
+
+    @Override
     public void tick(LivingEntity owner) {
         if (this.owner == null) {
             this.owner = owner;
@@ -457,6 +544,16 @@ public class SorcererData implements ISorcererData {
         this.updateChanneled();
         this.updateDisrupted();
 
+        Iterator<Map.Entry<ResourceLocation, ActivePose>> it =
+        this.getActivePoses().entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<ResourceLocation, ActivePose> entry = it.next();
+
+            if (!entry.getValue().tick()) {
+                it.remove();
+            }
+        }
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
 
@@ -517,15 +614,12 @@ public class SorcererData implements ISorcererData {
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * ((this.owner instanceof Player player && ConfigHolder.SERVER.foodCERegen.get()) ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.npcHPMin.get();
 
-            if (this.owner instanceof Player player) {
-                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.hrHPMult.get().floatValue() ) / 20) * 20) + ConfigHolder.SERVER.hrHPMin.get();
-            }
-            if (this.owner.getMaxHealth() < health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                this.owner.setHealth(this.owner.getMaxHealth());
-            }
-
+            // if (this.owner.getMaxHealth() < health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            //     this.owner.setHealth(this.owner.getMaxHealth());
+            // }
+            this.updateMaxHealth();
+ 
             double damage = this.getRealPower() * 3.9D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
@@ -595,19 +689,17 @@ public class SorcererData implements ISorcererData {
             }
 
         } else {
-            double health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.npcHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.npcHPMin.get();
-            
             double damage = this.getRealPower() * 1.0D;
             if (this.owner instanceof Player player) {
-                health = (Math.ceil(((this.getRealPower() - 1.0F) * ConfigHolder.SERVER.playerHPMult.get().floatValue()) / 20) * 20) +  ConfigHolder.SERVER.playerHPMin.get();
-            
                 damage = this.getRealPower() * ConfigHolder.SERVER.playerM1Mult.get().floatValue();
             }
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            if (this.owner.getMaxHealth() != health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                this.owner.setHealth(this.owner.getMaxHealth());
-            }
+            // if (this.owner.getMaxHealth() != health && EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            //     this.owner.setHealth(this.owner.getMaxHealth());
+            // }
+            this.updateMaxHealth();
+           
         }
     }
 
@@ -882,6 +974,33 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Map<ResourceLocation, ActivePose> getActivePoses() {
+        return activePoses;
+    }
+
+    @Override
+    public void removeAbilityPose(LivingEntity owner, IPosedMove move) {
+        ActivePose pose = this.activePoses.get(move.getArmPose(owner).id());
+        if (pose == null) return;
+
+        if (pose.ticksLeft <= 0 && pose.ghostTicks > 0) return;
+            this.activePoses.get(move.getArmPose(owner).id() ).ticksLeft = 0;
+            if (pose.ghostTicks < 0) {
+                this.activePoses.get(move.getArmPose(owner).id()).ghostTicks = JJKPoses.get(move.getArmPose(owner).id()).defaultDuration();
+            }
+            this.sync();
+    }
+
+    @Override
+    public void addAbilityPose(LivingEntity owner, IPosedMove move, InteractionHand hand, int duration) {
+        this.getActivePoses().put(
+                move.getArmPose(owner).id(),
+                new ActivePose(move.getArmPose(owner), hand, duration)
+        );
+        this.sync();
+    }
+
+    @Override
     public void addChant(Ability ability, String chant) {
         if (!this.chants.containsKey(ability)) {
             this.chants.put(ability, new LinkedHashSet<>());
@@ -1026,18 +1145,62 @@ public class SorcererData implements ISorcererData {
         return true;
     }
 
-    @Override
-    public float getDomainSize() {
-        return this.domainSize;
+    public <T> T getDomainConfig(DomainConfiguration config) {
+        Object value = domainSettings.get(config);
+
+        if (value == null) {
+                 //System.out.println("domain size: " + config.getDefault());
+            return config.getDefault();
+        }
+        //System.out.println("domain size: " + value);
+
+        return (T) value;
     }
 
-    @Override
-    public void setDomainSize(float domainSize) {
-        this.domainSize = domainSize;
+    public void setDomainConfig(DomainConfiguration config, Object value) {
+        domainSettings.put(config, value);
     }
 
     public @Nullable CursedTechnique getTechnique() {
         return this.technique;
+    }
+
+     public float getDomainSize() {
+        return this.getDomainConfig(DomainConfiguration.SIZE);
+     }
+
+    public void setDomainSize(float domainSize) {
+        this.setDomainConfig(DomainConfiguration.SIZE, domainSize);
+    }
+
+    @Override
+    public boolean getToggleSureHit() {
+        return this.getDomainConfig(DomainConfiguration.SURE_HIT_TOGGLE);
+    }
+
+    @Override
+    public void setToggleSureHit(boolean balance) {
+        this.setDomainConfig(DomainConfiguration.SURE_HIT_TOGGLE, balance);
+    }
+
+    @Override
+    public boolean getAlliedSureHit() {
+        return this.getDomainConfig(DomainConfiguration.SURE_HIT_ALLIES);
+    }
+
+    @Override
+    public void setAlliedSureHit(boolean toggle) {
+            this.setDomainConfig(DomainConfiguration.SURE_HIT_ALLIES, toggle);
+    }
+
+    @Override
+    public boolean getShellBalance() {
+        return this.getDomainConfig(DomainConfiguration.SHELL_BALANCE);
+    }
+
+    @Override
+    public void setShellBalance(boolean balance) {
+        this.setDomainConfig(DomainConfiguration.SHELL_BALANCE, balance);
     }
 
     @Override
@@ -1055,7 +1218,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique || this.getCurrentStolen() == technique;
+        return this.technique == technique || this.additional == technique || this.copied.contains(technique) || this.currentAbsorbed == technique || this.currentStolen == technique;
     }
 
     @Override
@@ -1214,35 +1377,9 @@ public class SorcererData implements ISorcererData {
         return this.brainDamage;
     }
 
-    @Override
-    public boolean getToggleSureHit() {
-        return this.toggledSureHit;
-    }
 
-    @Override
-    public void setToggleSureHit(boolean balance) {
-        this.shellBalance = balance;
-    }
 
-    @Override
-    public boolean getAlliedSureHit() {
-        return this.alliedSureHit;
-    }
 
-    @Override
-    public void setAlliedSureHit(boolean toggle) {
-        this.alliedSureHit = toggle;
-    }
-
-    @Override
-    public boolean getShellBalance() {
-        return this.shellBalance;
-    }
-
-    @Override
-    public void setShellBalance(boolean balance) {
-        this.shellBalance = balance;
-    }
 
 
 
@@ -1375,6 +1512,12 @@ public class SorcererData implements ISorcererData {
     @Override
     public void resetSelfHit() {
         this.selfHit = 0;
+    }
+
+    @Override
+    public void setStoredHealth(float storedHealth) {
+        this.healthRestored = false;
+        this.storedHealth = storedHealth; //make it update
     }
 
     @Override
@@ -1555,11 +1698,15 @@ public float getMaxEnergy() {
         this.stolen.add(technique);
     }
 
-
+    private boolean hasMimicryRaw() {
+        return this.technique == CursedTechnique.MIMICRY
+            || this.additional == CursedTechnique.MIMICRY
+            || this.currentAbsorbed == CursedTechnique.MIMICRY;
+    }
 
     @Override
     public Set<CursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.MIMICRY)) {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !hasMimicryRaw()) {
             return Set.of();
         }
         return this.copied;
@@ -1646,7 +1793,7 @@ public float getMaxEnergy() {
 
     @Override
     public @Nullable CursedTechnique getCurrentStolen() {
-         if (this.getTechnique() != CursedTechnique.BRAIN_TRANSPLANT && !this.getCopied().contains(CursedTechnique.BRAIN_TRANSPLANT) ) {
+        if (this.technique != CursedTechnique.BRAIN_TRANSPLANT && !this.copied.contains(CursedTechnique.BRAIN_TRANSPLANT)) {
             return null;
         }
         return this.currentStolen;
@@ -2050,14 +2197,37 @@ public float getMaxEnergy() {
                 if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
                 ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                taken.addAll(cap.getTechniques());
                 traits.addAll(cap.getTraits());
+            }
+        }
+        if (ConfigHolder.SERVER.uniqueTechniques.get()) {
+            GameProfileCache cache = owner.server.getProfileCache();
+
+            if (cache == null) throw new NullPointerException();
+
+            for (GameProfileCache.GameProfileInfo info : cache.load()) {
+                GameProfile profile = info.getProfile();
+
+                if (profile.getId() == owner.getUUID()) continue;
+
+                ServerPlayer player;
+
+                if ((player = owner.server.getPlayerList().getPlayerByName(profile.getName())) == null) {
+                    player = owner.server.getPlayerList().getPlayerForLogin(profile);
+                    owner.server.getPlayerList().load(player);
+                }
+
+                if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+
+                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                taken.addAll(cap.getTechniques());
             }
         }
 
         if ( (isUniqueTraitAllowed(Trait.HEAVENLY_RESTRICTION)  || !traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
             HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
+            this.type = JujutsuType.SORCERER;
         } else {
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
            
@@ -2066,7 +2236,11 @@ public float getMaxEnergy() {
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
                 unlockable.removeAll(taken);
             }
-            this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
+            if (unlockable.isEmpty()) {
+                this.technique = CursedTechnique.TECHNIQUELESS;
+            } else {
+                this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
+            }
             int rollCount = 0;
             int weightMult = 1;
             
@@ -2262,9 +2436,6 @@ public float getMaxEnergy() {
         nbt.putBoolean("initialized", this.initialized);
         nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
         nbt.putInt("points", this.points);
-        nbt.putFloat("domain_size", this.domainSize);
-        nbt.putBoolean("toggledSureHit", this.toggledSureHit);
-        nbt.putBoolean("shellBalance", this.shellBalance);
         if (this.technique != null) {
             nbt.putInt("technique", this.technique.ordinal());
         }
@@ -2288,6 +2459,7 @@ public float getMaxEnergy() {
         nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("extra_energy", this.extraEnergy);
         nbt.putFloat("additional_energy", this.additionalEnergy);
+        nbt.putFloat("stored_health", this.owner.getHealth());
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("disable", this.disable);
@@ -2308,6 +2480,27 @@ public float getMaxEnergy() {
         //     NbtUtils.writeGameProfile(prof, this.stolenSkinProfile);
         //     nbt.put("stolen_profile", prof);
         // }
+
+        ListTag domainTag = new ListTag();
+
+        for (Map.Entry<DomainConfiguration, Object> entry : this.domainSettings.entrySet()) {
+            DomainConfiguration config = entry.getKey();
+            Object value = entry.getValue();
+
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("id", config.ordinal());
+
+            switch (config.getType()) {
+                case BOOLEAN -> tag.putBoolean("value", (Boolean) value);
+                case INTEGER -> tag.putInt("value", (Integer) value);
+                case FLOAT   -> tag.putFloat("value", (Float) value);
+            }
+
+            domainTag.add(tag);
+        }
+
+        nbt.put("domainConfig", domainTag);
+
 
         ListTag unlockedTag = new ListTag();
 
@@ -2417,6 +2610,15 @@ public float getMaxEnergy() {
         }
         nbt.put("binding_vow_cooldowns", bindingVowCooldownsTag);
 
+        //  ListTag domainConfigCooldownsTag = new ListTag();
+
+        // for (Map.Entry<DomainConfiguration, Integer> entry : this.domainConfigCooldowns.entrySet()) {
+        //     CompoundTag data = new CompoundTag();
+        //     data.putInt("domainconfig", entry.getKey().ordinal());
+        //     data.putInt("cooldown", entry.getValue());
+        // }
+        // nbt.put("domain_config_cooldowns", domainConfigCooldownsTag);
+
         ListTag chantsTag = new ListTag();
 
         for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
@@ -2469,9 +2671,6 @@ public float getMaxEnergy() {
         this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
 
         this.points = nbt.getInt("points");
-        this.domainSize = nbt.getFloat("domain_size");
-        this.toggledSureHit = nbt.getBoolean("toggledSureHit");
-        this.shellBalance = nbt.getBoolean("shellBalance");
         if (nbt.contains("technique")) {
             this.technique = CursedTechnique.values()[nbt.getInt("technique")];
         }
@@ -2500,6 +2699,7 @@ public float getMaxEnergy() {
         this.maxEnergy = nbt.getFloat("max_energy");
         this.extraEnergy = nbt.getFloat("extra_energy");
         this.additionalEnergy = nbt.getFloat("additional_energy");
+        this.storedHealth = nbt.getFloat("stored_health");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.disable = nbt.getInt("disable");
@@ -2515,6 +2715,26 @@ public float getMaxEnergy() {
             this.lives = ConfigHolder.SERVER.livesconfig.get();
         }
         this.hasWombAwakened = nbt.getBoolean("hasWombAwakened");
+
+        this.domainSettings.clear();
+
+        for (Tag tg : nbt.getList("domainConfig", Tag.TAG_COMPOUND)) {
+            CompoundTag tag = (CompoundTag) tg;
+            int id = tag.getInt("id");
+
+            DomainConfiguration config = DomainConfiguration.values()[id];
+            ValueType type = config.getType();
+
+            Object value = switch (type) {
+                case BOOLEAN -> tag.getBoolean("value");
+                case INTEGER -> tag.getInt("value");
+                case FLOAT   -> tag.getFloat("value");
+            };
+
+            this.domainSettings.put(config, value);
+        }
+
+        
 
         this.unlocked.clear();
 
@@ -2599,6 +2819,13 @@ public float getMaxEnergy() {
             CompoundTag data = (CompoundTag) key;
             this.bindingVowCooldowns.put(BindingVow.values()[data.getInt("vow")], data.getInt("cooldown"));
         }
+
+         //this.domainConfigCooldowns.clear();
+
+        // for (Tag key : nbt.getList("domain_config_cooldowns", Tag.TAG_COMPOUND)) {
+        //     CompoundTag data = (CompoundTag) key;
+        //     this.domainConfigCooldowns.put(DomainConfiguration.values()[data.getInt("domainconfig")], data.getInt("cooldown"));
+        // }
 
         this.chants.clear();
 

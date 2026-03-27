@@ -9,6 +9,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -26,6 +27,7 @@ import org.lwjgl.glfw.GLFW;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
@@ -69,57 +71,81 @@ public class ClientAbilityHandler {
     private static boolean isRightDown;
     private static final Map<KeyMapping, Ability> activeChannels = new HashMap<>();
     private static final Map<KeyMapping, Boolean> isChannelingMap = new HashMap<>();
-
+    //pose time
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class ClientAbilityHandlerForgeEvents {
         @SubscribeEvent
         public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
+            
             LivingEntity entity = event.getEntity();
 
             ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
 
             if (data == null) return;
 
-            if (!(event.getRenderer().getModel() instanceof PlayerModel<?> player)) return;
+            if (!(event.getRenderer().getModel() instanceof HumanoidModel<?> humanoid))
+                return;
+
+            PlayerModel<?> player = null;
+            if (humanoid instanceof PlayerModel<?> pm) {
+                player = pm;
+            }
 
             for (Ability ability : data.toggled) {
                 if (!(ability instanceof ITransformation transformation)) continue;
-
-                if (transformation.isReplacement()) {
+                if (!transformation.isReplacement()) continue;
                     switch (transformation.getBodyPart()) {
                         case HEAD -> {
-                            player.head.visible = false;
-                            player.hat.visible = false;
+                            humanoid.head.visible = false;
+                            if (player != null) {
+                                player.hat.visible = false;
+                            }
                         }
-                        case BODY -> player.setAllVisible(false);
+                        case BODY -> {
+                            humanoid.body.visible = false;
+                            if (player != null) {
+                                player.jacket.visible = false;
+                            }
+                        }
                         case RIGHT_ARM -> {
-                            player.rightArm.visible = false;
-                            player.rightSleeve.visible = false;
+                            humanoid.rightArm.visible = false;
+                            if (player != null) {
+                                player.rightSleeve.visible = false;
+                            }
                         }
                         case LEFT_ARM -> {
-                            player.leftArm.visible = false;
-                            player.rightSleeve.visible = false;
+                            humanoid.leftArm.visible = false;
+                            if (player != null) {
+                                player.leftSleeve.visible = false;
+                            }
                         }
                         case LEGS -> {
-                            player.rightLeg.visible = false;
-                            player.rightPants.visible = false;
-                            player.leftLeg.visible = false;
-                            player.leftPants.visible = false;
+                            humanoid.rightLeg.visible = false;
+                            humanoid.leftLeg.visible = false;
+                            if (player != null) {
+                                player.rightPants.visible = false;
+                                player.leftPants.visible = false;
+                            }
                         }
                     }
-                }
 
                 HumanoidModel.ArmPose pose = IClientItemExtensions.of(transformation.getItem()).getArmPose(event.getEntity(), InteractionHand.MAIN_HAND, transformation.getItem().getDefaultInstance());
 
                 if (pose != null) {
                     if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM) {
-                        player.rightArmPose = pose;
+                        humanoid.rightArmPose = pose;
                     } else if (transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
-                        player.leftArmPose = pose;
+                        humanoid.leftArmPose = pose;
                     }
                 }
             }
+            // HumanoidModel.ArmPose right = PoseHandler.resolve(entity, HumanoidArm.RIGHT);
+            // HumanoidModel.ArmPose left = PoseHandler.resolve(entity, HumanoidArm.LEFT);
+
+            // if (right != null) humanoid.rightArmPose = right;
+            // if (left  != null) humanoid.leftArmPose  = left;
         }
+            
 
 
     private static void channel(@Nullable Ability ability, @Nullable KeyMapping key) {
@@ -165,6 +191,23 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
             isRightDown = false;
         }
     }
+
+    // if (JJKKeys.OPEN_JUJUTSU_MENU.consumeClick()) {
+    //     mc.setScreen(new JujutsuScreen());
+    // }
+    // if (JJKKeys.SHOW_ABILITY_MENU.consumeClick()) {
+    //     mc.setScreen(new AbilityScreen());
+    // }
+    // if (JJKKeys.SHOW_DOMAIN_MENU.consumeClick()) {
+    //     mc.setScreen(new DomainScreen());
+    // }
+    // if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.consumeClick()) {
+    //     mc.setScreen(new MeleeScreen());
+    // }
+    // if (JJKKeys.ACTIVATE_J2TSU_MENU.consumeClick()) {
+    //     mc.setScreen(new JutwotsuScreen());
+    // }
+    
 }
       
           private static void handleInput(int inputObj, int action) {
@@ -232,7 +275,7 @@ public static void onClientTick(TickEvent.ClientTickEvent event) {
                 if (JJKKeys.SHOW_DOMAIN_MENU.consumeClick()) {
                     mc.setScreen(new DomainScreen());
                 }
-                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.consumeClick()) {
+                  if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.consumeClick()) {
                     mc.setScreen(new MeleeScreen());
                 }
                 if (JJKKeys.ACTIVATE_J2TSU_MENU.consumeClick()) {

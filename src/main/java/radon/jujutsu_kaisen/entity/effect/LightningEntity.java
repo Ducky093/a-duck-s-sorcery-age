@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -104,8 +105,8 @@ public class LightningEntity extends JujutsuProjectile {
                 if (!this.level().isClientSide) {
                     for (Entity entity : entities) {
                         this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
-                        if (entity instanceof LivingEntity) {
-                            ((LivingEntity) entity).addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
+                        if (entity instanceof LivingEntity living) {
+                            JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
                         }
                             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()),
                                 this.getDamage() * this.getPower());

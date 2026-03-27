@@ -58,6 +58,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue blackFlashDmgCap;
     public final ForgeConfigSpec.BooleanValue newShadowStyleForAll;
     public final ForgeConfigSpec.BooleanValue incarnatedSimpleDomain;
+    public final ForgeConfigSpec.BooleanValue hwbForAll;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
     public final ForgeConfigSpec.BooleanValue sorcererSaturation;
@@ -300,6 +301,9 @@ public class ServerConfig {
         this.incarnatedSimpleDomain = builder.comment("When enabled Incarnated Sorcerers may use Simple Domain")
                 .translation("config.jujutsu_kaisen.incarnated_simple_domain")
                 .define("incarnatedSimpleDomain", true);
+        this.hwbForAll = builder.comment("When enabled all Sorcerers may learn Hollow Wicker Basket (for earlier age playthroughs)")
+                .translation("config.jujutsu_kaisen.incarnated_simple_domain")
+                .define("hwbForAll", false);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .translation("config.jujutsu_kaisen.realistic_shikigami")
                 .define("realisticShikigami", false);

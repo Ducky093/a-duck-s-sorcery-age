@@ -84,11 +84,6 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     }
 
     @Override
-    public void onRightClick(LivingEntity owner) {
-
-    }
-
-    @Override
     public void applyModifiers(LivingEntity owner) {
         EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.25D, AttributeModifier.Operation.MULTIPLY_TOTAL);

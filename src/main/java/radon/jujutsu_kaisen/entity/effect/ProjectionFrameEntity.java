@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 import java.util.UUID;
@@ -139,7 +140,7 @@ public class ProjectionFrameEntity extends Entity {
             if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
+                JJKEffectUtil.addEffect(victim, new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);

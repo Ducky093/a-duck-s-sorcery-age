@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -100,7 +101,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
         if (!HelperMethods.isMelee(source)) return false;
 
         if (target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), owner))) {
-            target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
+            JJKEffectUtil.addEffect(target, new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
                     SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);

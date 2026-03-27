@@ -27,8 +27,6 @@ public interface ITransformation {
 
     Part getBodyPart();
 
-    void onRightClick(LivingEntity owner);
-
     default float getSlimTranslation() {
         return 0.0F;
     }

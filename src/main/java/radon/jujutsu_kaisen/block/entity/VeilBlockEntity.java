@@ -2,12 +2,14 @@ package radon.jujutsu_kaisen.block.entity;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,6 +55,8 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     //         pBlockEntity.destroy();
     //     }
     // }
+
+    
 
     @Nullable
     public UUID getParentUUID() {

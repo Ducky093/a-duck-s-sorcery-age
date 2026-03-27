@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -130,7 +131,7 @@ public class QuickDash extends Dash {
 
         if (cap.getSpeedStacks() > 0 || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 0.2F, 1.5F);
-            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
+            JJKEffectUtil.addEffect(owner, new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
@@ -161,10 +162,10 @@ public class QuickDash extends Dash {
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             velocity = velocity.multiply(new Vec3(1.2D, 1.0D, 1.2D));
             if (owner.isShiftKeyDown()) {
-                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
+                JJKEffectUtil.addEffect(owner, new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 8, 0, false, false, false));
 
             } else {
-                owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
+                JJKEffectUtil.addEffect(owner, new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 4, 0, false, false, false));
                 velocity = velocity.multiply(new Vec3(1.1D, 1, 1.1D));
             }
            

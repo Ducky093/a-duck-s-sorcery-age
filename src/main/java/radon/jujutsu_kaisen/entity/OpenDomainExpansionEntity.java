@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -93,14 +94,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
     
     @Override
     public boolean isBarrier(BlockPos pos) {
-        double dx = pos.getX() - this.getX();
-        double dz = pos.getZ() - this.getZ();
-        double dy = Math.abs(pos.getY() - this.getY());
-
-        double radius = (double) this.getRadius() / 2;
-        double height = (double) this.getHeight() / 2;
-
-        return dx * dx + dz * dz <= radius * radius && dy <= height;
+        return this.isInsideBarrier(pos);
     }
 
     @Override
@@ -115,18 +109,42 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
         //
             if (domain == this || !domain.isInsideBarrier(this.blockPosition())) continue;
            for (DomainExpansionEntity d : domain.getClashers() ) {   
-            if (d != this && this.shouldCollapse(d.getStrength())) {
-                 this.discard();
-            }
-            else if (d != this) {
-                 return null;
-            }
+                if (d != this && this.shouldCollapse(d.getStrength())) {
+                    this.discard();
+                }
+                else if (d != this) {
+                    return null;
+                }
             }
             
             
            // }
         }
         return this;
+    }
+
+    @Override
+    public boolean isAffected(BlockPos pos) {
+        //if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity veilBe && this.checkVeil(pos, this.getOwner())) return false;
+        if ( VeilHandler.isProtected(this.level(), pos)) return false;
+
+        Set<IDomainBarrier> domains = VeilHandler.getDomainBarriers((ServerLevel) this.level(), pos);
+        for (IDomainBarrier domain : domains) {
+            if (domain == this) continue;
+            return false;
+        }
+        return super.isAffected(pos);
+    }
+
+    @Override
+    public DomainExpansionEntity sureHitTarget(LivingEntity target) {
+        DomainExpansionEntity surehit = this.checkSureHitEffect();
+        if (surehit != null) {
+            if (surehit.isAffected(target, false)) {
+                return surehit;
+            }
+        }
+        return null;
     }
 
 
@@ -152,7 +170,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
     }
 
     public int getHeight() {
-        return this.entityData.get(DATA_HEIGHT);
+       return this.entityData.get(DATA_HEIGHT);
     }
 
     @Override
@@ -188,9 +206,19 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
         }
     }
 
+    // @Override
+    // public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    //     int radius = this.getRadius() * 2;
+    //     return EntityDimensions.fixed(radius, radius);
+    // }
+
+    //     @Override
+    // public AABB getBounds() {
+    //     return this.getBoundingBox();
+    // }
     @Override
     public AABB getBounds() {
-        int radius = this.getRadius() / 2;
+        int radius = this.getRadius();
         int height = this.getHeight() / 2;
         return new AABB(
                 this.getX() - radius, this.getY() - height, this.getZ() - radius,
@@ -255,26 +283,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity im
      @Override
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
-        if (!this.level().isClientSide) {
-                int burnout = Math.max(15 * 20, this.getTime());
-                if (burnout > 45 * 20) {
-                    burnout = 45 * 20;
-                }
-
-                int realburnout = burnout;
-                LivingEntity owner = this.getOwner();
-
-                if (owner != null) {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.setBurnout(realburnout);
-                        cap.resetSpeedStacks();
-
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                        }
-                    });
-                }
-            }
         for (IDomainBarrier domain : VeilHandler.getDomainBarriers((ServerLevel) this.level(), this.blockPosition())) {
             if (domain instanceof DomainBarrierEntity barrier) {
                 barrier.unregisterClasher(this, true);

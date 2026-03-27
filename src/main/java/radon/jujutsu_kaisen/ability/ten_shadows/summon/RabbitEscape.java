@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 
@@ -100,7 +101,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 public void onEnabled(LivingEntity owner) {
     if (!this.triggered) {
         this.triggered = true;
-        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 10 * 20,
+        JJKEffectUtil.addEffect(owner, new MobEffectInstance(MobEffects.INVISIBILITY, 10 * 20,
                 0, false, false, false));
         // MobEffectInstance instance = new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 6 * 20, 0, false, false, false);
 

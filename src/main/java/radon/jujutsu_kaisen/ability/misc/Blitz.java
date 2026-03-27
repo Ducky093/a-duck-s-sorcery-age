@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -73,7 +74,7 @@ public class Blitz extends Ability {
         owner.setDeltaMovement(oldV);
 
         if (!(owner.level() instanceof ServerLevel level)) return;
-        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
+        JJKEffectUtil.addEffect(owner, new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), ogPos.x, ogPos.y, ogPos.z,
                 0, 0.0D, 0.0D, 0.0D, 1.0D);
         double dist = ogPos.distanceTo(target);

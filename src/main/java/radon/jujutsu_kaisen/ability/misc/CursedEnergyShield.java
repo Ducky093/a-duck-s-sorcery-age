@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
@@ -36,7 +37,7 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     @Override
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel)) return;
-        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
+         JJKEffectUtil.addEffect(owner,new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
     }
 
 

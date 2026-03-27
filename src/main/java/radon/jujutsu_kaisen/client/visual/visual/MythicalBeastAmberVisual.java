@@ -80,7 +80,7 @@ public class MythicalBeastAmberVisual implements IVisual {
             double y = pos.y+.2 + yOffset * (RADIUS * 0.2F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.PURPLE_LIGHTNING, PARTICLE_SIZE, 0.15F, true, 20),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.PURPLE_LIGHTNING, PARTICLE_SIZE, 0.15F, true, true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -117,7 +117,7 @@ public class MythicalBeastAmberVisual implements IVisual {
             double y = pos.y+.6 + yOffset * (rad2 * 0.2F);
             double z = pos.z + zOffset * (rad2 * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.PURPLE_LIGHTNING, PARTICLE_SIZE, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.PURPLE_LIGHTNING, PARTICLE_SIZE, 0.2F, true, true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 

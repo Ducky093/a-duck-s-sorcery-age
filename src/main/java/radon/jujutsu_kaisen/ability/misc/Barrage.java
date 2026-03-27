@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import net.minecraft.world.effect.MobEffectInstance;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -110,7 +111,7 @@ public class Barrage extends Ability {
                         Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
 
                         Item item = owner.getItemInHand(InteractionHand.MAIN_HAND).getItem();
-                        ((ServerLevel) level).sendParticles(JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) || (item instanceof SwordItem && !(item instanceof SteelGauntletItem))? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                        ((ServerLevel) level).sendParticles(JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.ARM_BLADE.get()) || (item instanceof SwordItem && !(item instanceof SteelGauntletItem))? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                                 pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -142,7 +143,7 @@ public class Barrage extends Ability {
                         entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 1.5F, 0.8F);
                     }
 
-                    entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
+                    JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
 
                     if (owner instanceof Player player) {
                         player.attack(entity);

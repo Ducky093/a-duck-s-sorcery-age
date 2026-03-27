@@ -62,6 +62,7 @@ public class BindingVowTab extends JJKTab {
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.binding_vow.binding_vows", JujutsuKaisen.MOD_ID)),
                 xOffset, yOffset, 16777215, true);
 
+        
         if (this.minecraft.player == null) return;
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

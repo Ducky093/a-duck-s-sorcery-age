@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -102,8 +103,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         if ( entity == owner && !cap.hasSelfHit() ) return;
 
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * this.getPower());
-        if (entity instanceof LivingEntity aliveentity) {
-            aliveentity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+        if (entity instanceof LivingEntity living) {
+            JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
         }
     }
 

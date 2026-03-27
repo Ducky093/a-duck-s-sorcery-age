@@ -22,10 +22,16 @@ import net.minecraftforge.common.util.LazyOptional;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ActivePose;
+
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.PoseApplier;
+import radon.jujutsu_kaisen.client.PoseLimb;
+import radon.jujutsu_kaisen.client.PoseResolver;
+import radon.jujutsu_kaisen.client.PoseTarget;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
@@ -34,6 +40,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class PerfectBodyOverlay implements IOverlay {
@@ -165,17 +172,27 @@ public class PerfectBodyOverlay implements IOverlay {
                 f8 = 1.0F;
             }
         }
-        humanoid.setupAnim(entity, f5, f8, f7, f2, f6);
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (cap.hasToggled(JJKAbilities.HOLLOW_WICKER_BASKET.get())) {
-            humanoid.rightArm.xRot = (float) Math.toRadians(-75.0F);
-            humanoid.leftArm.xRot  = (float) Math.toRadians(-75.0F);
+            humanoid.setupAnim(entity, f5, f8, f7, f2, f6);
+        boolean poseHappened = false;
 
-            humanoid.rightArm.yRot = (float) Math.toRadians(-40.0F);
-            humanoid.leftArm.yRot  = (float) Math.toRadians(40.0F);
 
-            humanoid.rightArm.zRot = (float) Math.toRadians(15.0F);
-            humanoid.leftArm.zRot  = (float) Math.toRadians(-15.0F);
+        for (PoseLimb limb : PoseLimb.values()) {
+            ActivePose target =
+                PoseResolver.resolveForLimb(data.activePoses, limb
+                );
+            if (target != null) {
+                PoseApplier.applyTransform(humanoid, limb, target);
+                poseHappened = true;
+            }
+        }
+
+
+    
+        //ActivePose pose = PoseResolver.resolve(entity, data);
+        if (poseHappened == true) {
+            // this.leftArmPose  = HumanoidModel.ArmPose.EMPTY;
+            // this.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+            //pose.pose.apply(humanoid, data, pose);
         } else {
             if (model.attackTime <= 0) {
                 humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);

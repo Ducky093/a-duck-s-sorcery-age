@@ -57,6 +57,7 @@ import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -85,10 +86,14 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(DomainBarrierEntity.class, EntityDataSerializers.FLOAT);
     private static final float STRENGTH = 120.0F;
 
-    
+    private static final int MAX_BLOCKS_PER_TICK = 4096;
+    private boolean instant;
     public static final int OFFSET = 5;
+    private int lastRadius = -1;
     private final List<DomainExpansionEntity> clashers = new ArrayList<>();
     private final Map<UUID, Vec3> positions = new HashMap<>();
+    private static final Map<Integer, List<Vec3i>> sphereCache = new HashMap<>();
+    private List<BlockPos> toRun = new ArrayList<>();
     //private final List<BlockPos> barrierBlocks = new ArrayList<>();
     private int invulnTick;
     //private int healthMarker;
@@ -123,7 +128,6 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         }
         this.setMaxHealth(STRENGTH * mult);
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
-
         //this.modifiers = modifiers;
     }
 
@@ -137,6 +141,22 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
 
     public float getHealth() {
         return this.entityData.get(DATA_HEALTH);
+    }
+
+    private static List<Vec3i> getSphereOffsets(int radius) {
+        return sphereCache.computeIfAbsent(radius, r -> {
+            List<Vec3i> list = new ArrayList<>();
+            for (int x = -r; x <= r; x++) {
+                for (int y = -r; y <= r; y++) {
+                    for (int z = -r; z <= r; z++) {
+                        if (x*x + y*y + z*z <= r*r) {
+                            list.add(new Vec3i(x, y, z));
+                        }
+                    }
+                }
+            }
+            return list;
+        });
     }
 
     private void setHealth(float health) {
@@ -333,50 +353,47 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
             totals.put(direction, 0);
         }
 
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
+        for (Vec3i off : getSphereOffsets(radius)) {
+                    double distance = off.getX()*off.getX() + off.getY()*off.getY() + off.getZ()*off.getZ();
 
-                    if (distance < radius - 2 || distance > radius) continue;
+                    if (distance < (radius - 2)*(radius - 2) || distance > (radius * radius) ) continue;
 
-                    BlockPos pos = center.offset(x, y, z);
-
+                    BlockPos pos = center.offset(off);
                     boolean intact = this.level().getBlockEntity(pos) instanceof DomainBlockEntity;
 
-                    if (y > 0) {
+                    if (off.getY() > 0) {
                         totals.merge(Direction.UP, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.UP, 1, Integer::sum);
                     }
-                    if (y < 0) {
+                    if (off.getY() < 0) {
                         totals.merge(Direction.DOWN, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.DOWN, 1, Integer::sum);
                     }
-                    if (z > 0) {
+                    if (off.getZ() > 0) {
                         totals.merge(Direction.SOUTH, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.SOUTH, 1, Integer::sum);
                     }
-                    if (z < 0) {
+                    if (off.getZ() < 0) {
                         totals.merge(Direction.NORTH, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.NORTH, 1, Integer::sum);
                     }
-                    if (x > 0) {
+                    if (off.getX() > 0) {
                         totals.merge(Direction.EAST, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.EAST, 1, Integer::sum);
                     }
-                    if (x < 0) {
+                    if (off.getX() < 0) {
                         totals.merge(Direction.WEST, 1, Integer::sum);
 
                         if (intact) counts.merge(Direction.WEST, 1, Integer::sum);
                     }
                 }
-            }
-        }
+          //  }
+        //}
 
         for (Direction direction : Direction.values()) {
             int total = totals.get(direction);
@@ -486,12 +503,10 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         int radius = this.getRadius();
         ServerLevel serverLevel = (ServerLevel) this.level();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    if (distance > radius) continue;
-                    BlockPos pos = center.offset(x, y, z);
+        for (Vec3i off : getSphereOffsets(radius)) {
+                    double distance = off.getX() * off.getX() + off.getY() * off.getY() + off.getZ() * off.getZ();
+                    if (distance > (radius*radius) ) continue;
+                    BlockPos pos = center.offset(off);
                     BlockEntity be = serverLevel.getBlockEntity(pos);
                     if (be instanceof DomainBlockEntity domainBe) {
                         UUID id = domainBe.getIdentifier();
@@ -499,8 +514,8 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
                             domainBe.destroy();
                         }
                     }
-                }
-            }
+              //  }
+            //}
         }
 
         Set<IBarrier> domains = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
@@ -534,9 +549,14 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
     }
 
     private void createBlock(int delay, BlockPos pos, int radius, double distance, BlockEntity existing, DomainExpansionEntity winner) {
-        if (distance > radius) return;
+        if (distance > (radius*radius) ) return;
         if (!this.level().isInWorldBounds(pos)) return;
-       
+        if (existing instanceof DomainBlockEntity dbe  && !(dbe instanceof DomainSkyBlockEntity) ) {
+        UUID owner = dbe.getPidentifier();
+        if (owner != null && owner.equals(winner.getUUID())) {
+            return;
+        }
+        }
 
         BlockState state = this.level().getBlockState(pos);
         if (state != null && (state.is(Blocks.BEDROCK)|| (this.isCompleted() && ((state.isAir() &&  !state.is(JJKBlocks.DOMAIN_AIR.get())) || state.is(JJKBlocks.DOMAIN.get()))  )) ) return;
@@ -556,7 +576,7 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         Block block = JJKBlocks.DOMAIN_AIR.get();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
              
-        if (distance >= radius - 1) {
+        if (distance >= (radius - 1)*(radius - 1) ) {
                 block = JJKBlocks.DOMAIN.get();
         } else {
             if (pos.getY() < center.getY() - 1) {
@@ -571,7 +591,7 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
                 block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
             } else if (pos.getY() < center.getY()) {
                 block = bottomfloor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
-            } else if (distance >= radius - 2) {
+            } else if (distance >= (radius - 2)*(radius - 2)) {
                 block = blocks.get(this.random.nextInt(blocks.size()));
             } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
                 block = decoration.get(this.random.nextInt(decoration.size()));
@@ -585,11 +605,12 @@ public class DomainBarrierEntity extends Entity implements IDomainBarrier {
         // }
         //
         
+        
         if (JJKBlocks.DOMAIN_SKY.get() == block && this.level().getBlockEntity(pos) instanceof DomainSkyBlockEntity skybe) {
             skybe.setDomain(JJKAbilities.getKey(winner.getAbility()) );
             return;
         }
-        //else if (JJKBlocks.DOMAIN.get() == block) {
+       // else if (JJKBlocks.DOMAIN.get() == block) {
        //     barrierBlocks.add(pos.immutable());
        // } 
             BlockEntity be = ((ServerLevel)this.level()).getBlockEntity(pos);
@@ -812,12 +833,15 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
             behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
         }
         //Vec3 behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
-         for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    if (distance > radius) continue;
-                    BlockPos pos = center.offset(x, y, z);
+        //  for (int x = -radius; x <= radius; x++) {
+        //     for (int y = -radius; y <= radius; y++) {
+        //         for (int z = -radius; z <= radius; z++) {
+        //             double distance = Math.sqrt(x * x + y * y + z * z);
+        //             if (distance > radius) continue;
+        for (Vec3i off : getSphereOffsets(radius)) {
+                    BlockPos pos = center.offset(off);
+                    double distance = off.getX()*off.getX() + off.getY()*off.getY() + off.getZ()*off.getZ();
+
                     if (!this.level().isInWorldBounds(pos)) continue;
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2 + 1;
                 
@@ -886,9 +910,9 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
                                 this.createBlock(radius - delay, pos, radius, distance, existing, winner);
                         });
                     }
-                }
-            }
-        }
+                 }
+        //     }
+        // }
 
 
     }
@@ -913,7 +937,7 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
       
 
         for (LivingEntity entity : entities ) {
-            entity.addEffect(new MobEffectInstance(
+            JJKEffectUtil.addEffect(entity, new MobEffectInstance(
                 JJKEffects.DOMAINSTUN.get(),
                 30,
                 1,
@@ -921,7 +945,7 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
                 false,
                 false
             ));
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30,
+            JJKEffectUtil.addEffect(entity,new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30,
                 6, false, false, false));
         }
     }
@@ -978,9 +1002,6 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
         return i;
     }
 
-
-
-
     public DomainExpansionEntity checkSureHitEffect() {
         if (!this.isCompleted()) return null;
         DomainExpansionEntity remainingEntity = null;
@@ -1021,8 +1042,6 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
     public void tick() {
         super.tick();
 
-        this.refreshDimensions();
-
         this.setTime(this.getTime() + 1);
 
         if (this.level().isClientSide) return;
@@ -1041,6 +1060,12 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
                 }
                 if (entity.getY() < center.getY()) {
                     entity.teleportTo(entity.getX(), center.getY(), entity.getZ());
+                    Vec3 motion = entity.getDeltaMovement();
+                    if (motion.y < 0) {
+                        entity.setDeltaMovement(motion.x, 0.0D, motion.z);
+                    }
+
+                    entity.fallDistance = 0;
                 }
             }
         }
@@ -1092,24 +1117,38 @@ private DomainExpansionEntity getWinnerForBlock(BlockPos blockPos, BlockPos cent
         } else {
             if (this.getTime() == 1) {
                 this.applyPreStun();
+                this.refreshDimensions();
             }
             //this.createBarrier(false);
         }
         if (!blockTasks.isEmpty()) {
-            List<BlockPos> toRun = new ArrayList<>();
-            for (Map.Entry<BlockPos, BlockPlacementTask> entry : blockTasks.entrySet()) {
-                BlockPlacementTask task = entry.getValue();
-                task.ticks--;
-                if (task.ticks <= 0) {
-                    toRun.add(entry.getKey());
-                }
-            }
+    int placedThisTick = 0;
 
-            for (BlockPos pos : toRun) {
-                BlockPlacementTask task = blockTasks.remove(pos);
-                task.action.run();
-            }
+   
+
+    for (Map.Entry<BlockPos, BlockPlacementTask> entry : blockTasks.entrySet()) {
+        BlockPlacementTask task = entry.getValue();
+        task.ticks--;
+
+        if (task.ticks <= 0) {
+            toRun.add(entry.getKey());
         }
+    }
+
+    for (BlockPos pos : toRun) {
+        if (placedThisTick >= MAX_BLOCKS_PER_TICK) {
+            break;
+        }
+
+        BlockPlacementTask task = blockTasks.remove(pos);
+        //if (task != null) {
+            task.action.run();
+
+            placedThisTick++;
+        //}
+    }
+    toRun.clear();
+}
         if (getClasherSize() == 0 && !this.isRemoved() ) {
             this.discard();
         }

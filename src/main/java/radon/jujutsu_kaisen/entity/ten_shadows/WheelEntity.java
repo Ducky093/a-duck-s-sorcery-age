@@ -40,7 +40,8 @@ public class WheelEntity extends Entity implements GeoEntity {
     private static final int SPIN_DURATION = 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+    
+    private int ownerPID;
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -82,6 +83,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         if (pOwner != null) {
             this.ownerUUID = pOwner.getUUID();
             this.cachedOwner = pOwner;
+            this.ownerPID = pOwner.getId();
         }
     }
 
@@ -89,13 +91,19 @@ public class WheelEntity extends Entity implements GeoEntity {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
-            return this.cachedOwner;
-        } else {
-            return null;
         }
+
+        if (this.ownerUUID != null) {
+            Entity e = ((Level) this.level()).getEntity(this.ownerPID);
+            if (e instanceof LivingEntity living) {
+                this.cachedOwner = living;
+                return living;
+            }
+        }
+
+        return null;
     }
+
 
     @Override
     public void tick() {

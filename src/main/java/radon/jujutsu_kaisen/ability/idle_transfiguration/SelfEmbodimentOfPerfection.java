@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -54,14 +55,21 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         if (IdleTransfiguration.checkSukuna(owner, entity)) return;
         
-        float attackerStrength = IdleTransfiguration.calculateStrength(owner);
-        float victimStrength = IdleTransfiguration.calculateStrength(entity);
+       // float attackerStrength = IdleTransfiguration.calculateStrength(owner);
+        //float victimStrength = IdleTransfiguration.calculateStrength(entity);
 
-        int required = Math.round((victimStrength / Math.round(attackerStrength*2/7)) * 2);
-
+        //int required = Math.round((victimStrength / Math.round(attackerStrength*2/7)) * 2);
+        int amplifier = 2;
+        MobEffectInstance existing = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+        if (existing != null) {
+            amplifier = existing.getAmplifier() + 1;
+        }
+        if (amplifier > 6) {
+            amplifier = 6;
+        }
         MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(20 * 20 * getStrength(owner, instant)),
-                required, false, true, true);
-        entity.addEffect(instance);
+                amplifier, false, true, true);
+        JJKEffectUtil.addEffect(entity, instance);
 
         if (!owner.level().isClientSide) {
             PacketDistributor.TRACKING_ENTITY.with(() -> entity).send(new ClientboundUpdateMobEffectPacket(entity.getId(), instance));

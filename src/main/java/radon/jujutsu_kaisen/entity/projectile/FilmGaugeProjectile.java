@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -131,7 +132,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
             if (domain == null) return;
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower())) {
-                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 1, false, false, false));
+                JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STUN.get(), 20, 1, false, false, false));
             }
             this.discard();
         }

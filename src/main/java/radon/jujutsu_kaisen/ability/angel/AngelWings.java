@@ -92,11 +92,6 @@ public class AngelWings extends Transformation {
     }
 
     @Override
-    public void onRightClick(LivingEntity owner) {
-
-    }
-
-    @Override
     public void onEnabled(LivingEntity owner) {
         
     }

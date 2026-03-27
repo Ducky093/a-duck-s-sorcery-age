@@ -63,9 +63,9 @@ public class SlashParticle extends TextureSheetParticle {
 
             if (this.entity != null) {
                 Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2.0F, 0.0D);
-                this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth());
+                this.offset = center.add((this.random.nextDouble() - 0.5D) * this.entity.getBbWidth(),
+                        (this.random.nextDouble() - 0.5D) * this.entity.getBbHeight(),
+                        (this.random.nextDouble() - 0.5D) * this.entity.getBbWidth());
             }
         } else {
             this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 10.0F;
@@ -93,7 +93,7 @@ public class SlashParticle extends TextureSheetParticle {
 
         stack.scale(1.0F, 1.0F, 0.2F);
 
-        RenderType type = RenderType.entityTranslucent(TEXTURE);
+        RenderType type = RenderType.entityTranslucentEmissive(TEXTURE);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = stack.last().pose();

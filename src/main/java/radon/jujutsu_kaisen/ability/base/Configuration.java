@@ -1,28 +1,15 @@
 package radon.jujutsu_kaisen.ability.base;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import net.minecraft.world.entity.player.Player;
-import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
-import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 
-public class DomainConfiguration extends Ability {
+public abstract class Configuration extends Ability {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -48,10 +35,10 @@ public class DomainConfiguration extends Ability {
         return ActivationType.CHANNELED;
     }
 
-    @Override
-    public boolean isUnlockable() {
-        return this == JJKAbilities.DOMAIN_CONFIGURATION.get() || super.isUnlockable();
-    }
+    // @Override
+    // public boolean isUnlockable() {
+    //     return this == JJKAbilities.DOMAIN_CONFIGURATION.get() || super.isUnlockable();
+    // }
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {

@@ -64,8 +64,8 @@ public class YujiItadoriEntity extends SorcererEntity {
         return YujiItadoriEntity.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 140.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
-                .add(Attributes.ARMOR, 16.0D);
+                .add(Attributes.ARMOR_TOUGHNESS, 16.0D)
+                .add(Attributes.ARMOR, 24.0D);
     }
 
     @Override

@@ -31,7 +31,7 @@
   "gui.jujutsu_kaisen.stats.traits": "Traits: %1$s",
 
   "gui.jujutsu_kaisen.domain_customization": "Domain Customization",
-  "gui.jujutsu_kaisen.domain_customization.size": "Size",
+  "gui.jujutsu_kaisen.domain_customization.configurations": "Configurations",
 
   "gui.jujutsu_kaisen.pact": "Pacts",
   "gui.jujutsu_kaisen.pact.players": "Players",
@@ -308,7 +308,7 @@
   "ability.jujutsu_kaisen.cleave.enable": "Activated Cleave",
   "ability.jujutsu_kaisen.cleave.disable": "Deactivated Cleave",
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
-  "ability.jujutsu_kaisen.fire_arrow": "Open ■",
+  "ability.jujutsu_kaisen.fire_arrow": "■ Open",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
   "ability.jujutsu_kaisen.rika": "Rika",
@@ -535,6 +535,31 @@
   "trait.jujutsu_kaisen.prodigy": "Prodigy",
   "trait.jujutsu_kaisen.death_painting": "Cursed Womb: Death Painting",
 
+  
+  "domain_configuration.jujutsu_kaisen.size": "Size",
+  "domain_configuration.jujutsu_kaisen.size.description": "The radius of your Domain Expansion. Influences shell durability and formation time.",
+
+  "domain_configuration.jujutsu_kaisen.shell_balance": "Shell Balance",
+  "domain_configuration.jujutsu_kaisen.shell_balance.description": "The balance of your Domain Expansion's shell. Determines which side is resistant and which is vulnerable.",
+  "domain_configuration.jujutsu_kaisen.shell_balance.add": "Outer",
+  "domain_configuration.jujutsu_kaisen.shell_balance.remove": "Inner",
+
+  "domain_configuration.jujutsu_kaisen.sure_hit_toggle": "Sure-Hit Toggle",
+  "domain_configuration.jujutsu_kaisen.sure_hit_toggle.description": "Toggles on the sure-hit effect of your Domain Expansion.",
+  "domain_configuration.jujutsu_kaisen.sure_hit_toggle.add": "Enable",
+  "domain_configuration.jujutsu_kaisen.sure_hit_toggle.remove": "Disable",
+
+  "domain_configuration.jujutsu_kaisen.sure_hit_allies": "Ally Sure-Hit",
+  "domain_configuration.jujutsu_kaisen.sure_hit_allies.description": "When toggled, allies who are in your Domain Expansion will not be targeted by your sure-hit effect.",
+  "domain_configuration.jujutsu_kaisen.sure_hit_allies.add": "Enable",
+  "domain_configuration.jujutsu_kaisen.sure_hit_allies.remove": "Disable",
+
+
+  "domain_configuration.jujutsu_kaisen.open_barrier": "Open Barrier",
+  "domain_configuration.jujutsu_kaisen.open_barrier.description": "Determines whether your Domain Expansion's barrier is open or enclosed. Open Barriers reach further and cannot be destroyed.",
+  "domain_configuration.jujutsu_kaisen.open_barrier.add": "Enable",
+  "domain_configuration.jujutsu_kaisen.open_barrier.remove": "Disable",
+
   "pact.jujutsu_kaisen.friends": "Friends",
   "pact.jujutsu_kaisen.friends.description": "An inviolable pact in which both parties mutually agree to not target each other with blows.",
 
@@ -701,7 +726,7 @@
   "entity.jujutsu_kaisen.hollow_purple_explosion": "Hollow Purple Explosion",
   "entity.jujutsu_kaisen.dismantle": "Dismantle",
   "entity.jujutsu_kaisen.world_slash": "World-Cutting Slash",
-  "entity.jujutsu_kaisen.fire_arrow": "Fire Arrow",
+  "entity.jujutsu_kaisen.fire_arrow": "Divine Flame",
   "entity.jujutsu_kaisen.pure_love": "Pure Love Beam",
   "entity.jujutsu_kaisen.ember_insect": "Ember Insect",
   "entity.jujutsu_kaisen.ember_insect_flight": "Ember Insect",

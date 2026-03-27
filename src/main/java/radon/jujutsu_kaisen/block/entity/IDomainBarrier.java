@@ -16,4 +16,14 @@ public interface IDomainBarrier extends IBarrier {
     List<DomainExpansionEntity> getClashers();
 
     DomainExpansionEntity checkSureHitEffect();
+
+    default DomainExpansionEntity sureHitTarget(LivingEntity target) {
+        DomainExpansionEntity surehit = this.checkSureHitEffect();
+        if (surehit != null) {
+            if (surehit.isAffected(target, false)) {
+                return surehit;
+            }
+        }
+        return null;
+    }
 }   

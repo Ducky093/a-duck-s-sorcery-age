@@ -1,15 +1,19 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -50,17 +54,31 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
     }
 
     @Override
-    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {
+    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
         float power = this.getPower(owner) * Math.min(0.6F,DomainExpansion.getStrength(owner, false));
 
         DismantleProjectile dismantle = new DismantleProjectile(owner, power,
-                (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, false);
+                 (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, target.position(), HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, false);
         dismantle.setDomain(true);
         owner.level().addFreshEntity(dismantle);
+        if (!(owner.level() instanceof ServerLevel level)) return;
+        //level.sendParticles(JJKParticles.DISMANTLE.get(), pos.getX(), pos.getY(),pos.getZ(), 1, 0,
+        //                  0.0D, 0.0D, 0.0D);
+        //level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+    }
 
-        if (!owner.level().isClientSide) {
-            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        }
+    @Override
+    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {
+        // float power = this.getPower(owner) * Math.min(0.6F,DomainExpansion.getStrength(owner, false));
+
+        // DismantleProjectile dismantle = new DismantleProjectile(owner, power,
+        //         (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, false);
+        // dismantle.setDomain(true);
+        // owner.level().addFreshEntity(dismantle);
+        if (!(owner.level() instanceof ServerLevel level)) return;
+        level.sendParticles(JJKParticles.DISMANTLE.get(), pos.getX(), pos.getY(),pos.getZ(), 1, 0,
+                          0.0D, 0.0D, 0.0D);
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override

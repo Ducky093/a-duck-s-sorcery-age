@@ -61,12 +61,12 @@ public class OutputRCT extends Ability {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return JJKAbilities.RCT3.get();
+        return JJKAbilities.RCT1.get();
     }
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(5.0F, 2.0F);
+        return new Vec2(2.5F, 3.0F);
     }
 
     @Override
@@ -179,7 +179,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();  
-        return (cap.hasTrait(Trait.RCT_OUTPUT) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);  
+        return cap != null && (cap.hasTrait(Trait.RCT_OUTPUT) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 }

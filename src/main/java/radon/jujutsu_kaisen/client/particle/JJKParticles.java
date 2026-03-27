@@ -97,4 +97,8 @@ public class JJKParticles {
             });
     public static RegistryObject<SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
             new SimpleParticleType(true));
+    public static RegistryObject<SimpleParticleType> DISMANTLE = PARTICLES.register("dismantle", () ->
+            new SimpleParticleType(true));
+    public static RegistryObject<SimpleParticleType> SPIDERWEB = PARTICLES.register("spiderweb", () ->
+            new SimpleParticleType(true));
 }

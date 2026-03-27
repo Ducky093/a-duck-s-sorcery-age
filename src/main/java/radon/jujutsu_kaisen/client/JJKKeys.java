@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client;
 
+import com.ibm.icu.impl.StaticUnicodeSets.Key;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -9,9 +10,9 @@ public class JJKKeys {
     public static KeyMapping ACTIVATE_MELEE_MENU = createKeyMapping("activate_melee_menu",
             InputConstants.KEY_LALT);
         public static KeyMapping ACTIVATE_J2TSU_MENU = createKeyMapping("activate_j2tsu_menu",
-            InputConstants.KEY_B);
+            InputConstants.KEY_V);
     public static KeyMapping ACTIVATE_J2TSU = createKeyMapping("activate_j2tsu",
-            InputConstants.KEY_T);
+            InputConstants.KEY_Y);
     public static KeyMapping ACTIVATE_ABILITY = createKeyMapping("activate_ability",
             InputConstants.KEY_R);
     public static KeyMapping ACTIVATE_RCT_OR_HEAL = createKeyMapping("activate_rct_or_heal",
@@ -23,11 +24,13 @@ public class JJKKeys {
     public static KeyMapping SHOW_ABILITY_MENU = createKeyMapping("show_ability_menu",
             InputConstants.KEY_C);
     public static KeyMapping SHOW_DOMAIN_MENU = createKeyMapping("show_domain_menu",
-            InputConstants.KEY_V);
+            InputConstants.KEY_B);
     public static KeyMapping DASH = createKeyMapping("dash",
             InputConstants.KEY_G);
     public static KeyMapping QUICKDASH = createKeyMapping("quickdash",
-            InputConstants.KEY_H);
+            InputConstants.UNKNOWN.getValue());
+    public static KeyMapping WATERWALK = createKeyMapping("waterwalk",
+            InputConstants.KEY_L);
     public static KeyMapping OPEN_JUJUTSU_MENU = createKeyMapping("open_jujutsu_menu",
             InputConstants.KEY_P);
     public static KeyMapping INCREASE_OUTPUT = createKeyMapping("increase_output",

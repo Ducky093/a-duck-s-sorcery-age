@@ -287,6 +287,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
+    public DomainExpansionEntity sureHitTarget(LivingEntity target) {
+        if (this.domainBarrier == null) return null;
+        return this.domainBarrier.sureHitTarget(target);
+    }
+
+
+    @Override
     public AABB getBounds() {
         if (this.domainBarrier == null) return null;
         return this.domainBarrier.getBounds();
@@ -398,29 +405,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     //     }
     // }
 
+    public boolean isCompleted() {
+        if (this.domainBarrier == null) return false;
+        return this.domainBarrier.isCompleted();
+    }
+
     @Override
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
-        if (!this.level().isClientSide) {
-                int burnout = Math.max(15 * 20, this.getTime());
-                if (burnout > 45 * 20) {
-                    burnout = 45 * 20;
-                }
-
-                int realburnout = burnout;
-                LivingEntity owner = this.getOwner();
-
-                if (owner != null) {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.setBurnout(realburnout);
-                        cap.resetSpeedStacks();
-
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                        }
-                    });
-                }
-            }
         if (this.domainBarrier != null) {
             this.domainBarrier.unregisterClasher(this, true);
         }

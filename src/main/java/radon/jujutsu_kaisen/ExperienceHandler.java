@@ -39,12 +39,24 @@ import org.joml.Math;
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExperienceHandler {
     private static final Map<UUID, CopyOnWriteArraySet<BattleData>> battles = new HashMap<>();
+    private static final Map<UUID, CopyOnWriteArraySet<BattleData>> battlesBlacklist = new HashMap<>();
 
     private static void addBattle(UUID ownerUUID, BattleData data) {
         if (!battles.containsKey(ownerUUID)) {
             battles.put(ownerUUID, new CopyOnWriteArraySet<>());
         }
         battles.get(ownerUUID).add(data);
+    }
+
+    private static void addBlacklist(UUID ownerUUID, BattleData data) {
+        if (!battlesBlacklist.containsKey(ownerUUID)) {
+            battlesBlacklist.put(ownerUUID, new CopyOnWriteArraySet<>());
+        }
+        battlesBlacklist.get(ownerUUID).add(data);
+    }
+
+    public static void clearBlacklist(UUID ownerUUID) {
+        battlesBlacklist.remove(ownerUUID);
     }
 
     @SubscribeEvent
@@ -77,8 +89,20 @@ public class ExperienceHandler {
 
                     if (attacker == null) return;
                 }
+                Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> blIter = battlesBlacklist.entrySet().iterator();
 
-                if (!existing) {
+                boolean blExisting = false;
+
+                while (blIter.hasNext()) {
+                    for (BattleData battle : blIter.next().getValue()) {
+                        if (battle.getOwnerUUID().equals(attacker.getUUID()) && battle.getTargetUUID().equals(victim.getUUID())) {
+                            blExisting = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!existing && (blExisting == false) ) {
                     BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
                     addBattle(attacker.getUUID(), battle);
                     battle.attack(attacker.getUUID(), event.getAmount());
@@ -91,21 +115,30 @@ public class ExperienceHandler {
     public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
         Entity owner = event.getEntity();
         battles.remove(owner.getUUID());
+        battlesBlacklist.remove(owner.getUUID());
     }
 
-    @SubscribeEvent
-    public static void onLivingDeath(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void killExperience(LivingEntity entity, LivingEntity attacker, ServerLevel level) {
+        boolean blacklistMatch = false;
 
-        if (!(entity.level() instanceof ServerLevel level)) return;
-
-        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-       // source = event.getSource(); override logic here when body steal is enabled?
+        if (attacker != null) {
+            Set<BattleData> blSet = battlesBlacklist.get(entity.getUUID());
+            if (blSet != null) {
+                for (BattleData bl : blSet) {
+                    if (bl.getOwnerUUID().equals(attacker.getUUID()) &&
+                        bl.getTargetUUID().equals(entity.getUUID())) 
+                    {
+                        blacklistMatch = true;
+                        break;
+                    }
+                }
+            }
+}
 
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getExperience() > 0.0F) {
+        if (cap.getExperience() > 0.0F && !blacklistMatch) {
+            
             float penalty = (cap.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
             cap.setExperience(Math.max(0.0F, cap.getExperience() - penalty));
 
@@ -138,6 +171,7 @@ public class ExperienceHandler {
                 if (battle.getOwnerUUID().equals(entity.getUUID()) || battle.getTargetUUID().equals(entity.getUUID())) {
                     battle.end(level);
                     battlesToRemove.add(battle);
+                    addBlacklist(entity.getUUID(), battle);
                 }
             }
 
@@ -148,6 +182,22 @@ public class ExperienceHandler {
             }
         }
         cap.removeLife();
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if (!(entity.level() instanceof ServerLevel level)) return;
+
+        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        LivingEntity attacker = null;
+
+        if (event.getSource().getEntity() instanceof LivingEntity living) {
+            attacker = living;
+        }
+        killExperience(entity, attacker, level);
     }
 
     private static class BattleData {
@@ -251,8 +301,6 @@ public class ExperienceHandler {
                     }
                     experience = Math.min(ConfigHolder.SERVER.maxEXP.get().floatValue(),experience);
                 }
-        
-
             if (ConfigHolder.SERVER.playerRequiredForGradeUp.get() && target instanceof Player targetplayer   ) {
                 SorcererGrade previous = SorcererUtil.getGrade(cap.getExperience());
                 SorcererGrade current = SorcererUtil.getGrade(experience);

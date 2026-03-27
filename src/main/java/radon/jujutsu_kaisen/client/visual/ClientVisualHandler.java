@@ -6,6 +6,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,12 +18,19 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ActivePose;
+
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.JJKPose;
+
+import radon.jujutsu_kaisen.client.JJKPoses;
+import radon.jujutsu_kaisen.client.PoseState;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -69,7 +77,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentStolen() != null) techniques.add(cap.getCurrentStolen());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
+                return new ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor(), cap.getActivePoses());
             }
         }
         return null;
@@ -86,6 +94,16 @@ public class ClientVisualHandler {
         for (IVisual visual : JJKVisuals.VISUALS) {
             if (!visual.isValid(entity, data)) continue;
             visual.tick(entity, data);
+        }
+        Iterator<Map.Entry<ResourceLocation, ActivePose>> it =
+        data.activePoses.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<ResourceLocation, ActivePose> entry = it.next();
+
+            if (!entry.getValue().tick()) {
+                it.remove();
+            }
         }
     }
 
@@ -129,10 +147,11 @@ public class ClientVisualHandler {
         public JujutsuType type;
         public float experience;
         public int cursedEnergyColor;
+        public Map<ResourceLocation, ActivePose> activePoses;
 
         public int mouth;
 
-        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor, Map<ResourceLocation,ActivePose> activePoses) {
             this.toggled = toggled;
             this.channeled = channeled;
             this.traits = traits;
@@ -141,8 +160,19 @@ public class ClientVisualHandler {
             this.type = type;
             this.experience = experience;
             this.cursedEnergyColor = cursedEnergyColor;
+            this.activePoses = activePoses;
+        
+            /* 
+            new HashMap<>();
+            Iterator<Map.Entry<ResourceLocation, ActivePose>> it = activePoses.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<ResourceLocation, ActivePose> entry = it.next();
+                this.activePoses.put(entry.getKey(), entry.getValue());
+            }
+                 */
         }
 
+        //next up, do capturing of existing poses so you can smooth between them and out
         public ClientData(CompoundTag nbt) {
             this.deserializeNBT(nbt);
         }
@@ -174,6 +204,29 @@ public class ClientVisualHandler {
             this.type = JujutsuType.values()[nbt.getInt("type")];
             this.experience = nbt.getFloat("experience");
             this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
+
+            
+            this.activePoses = new HashMap<>();
+
+           ListTag posesTag = nbt.getList("active_poses", Tag.TAG_COMPOUND);
+
+            for (Tag t : posesTag) {
+                CompoundTag tag = (CompoundTag) t;
+
+                JJKPose pose = JJKPoses.get(
+                    new ResourceLocation(tag.getString("pose"))
+                );
+
+                if (pose == null) continue;
+                InteractionHand hand = InteractionHand.values()[tag.getInt("hand")];
+                int time = tag.getInt("time");
+                int ghostTicks = tag.getInt("ghost");
+                this.activePoses.put(
+                    pose.id(),
+                    new ActivePose(pose, hand, time, ghostTicks)
+                );
+            }
+
         }
 
         public CompoundTag serializeNBT() {
@@ -210,7 +263,23 @@ public class ClientVisualHandler {
             nbt.putInt("type", this.type.ordinal());
             nbt.putFloat("experience", this.experience);
             nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
+            ListTag posesTag = new ListTag();
+            for (Map.Entry<ResourceLocation, ActivePose> entry : this.activePoses.entrySet()) {
+                ResourceLocation ability = entry.getKey();
+                ActivePose pose = entry.getValue();
+                JJKPose poseKey = JJKPoses.get(ability);
 
+                if (poseKey == null) continue;
+
+                CompoundTag tag = new CompoundTag();
+                tag.putString("pose", ability.toString());
+                tag.putInt("hand", pose.hand.ordinal());
+                tag.putInt("time", pose.getTicksLeft());
+                tag.putInt("ghost", pose.ghostTicks);
+                posesTag.add(tag);
+            }
+
+            nbt.put("active_poses", posesTag);
             return nbt;
         }
     }

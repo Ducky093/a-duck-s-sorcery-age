@@ -32,6 +32,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.DragonBoneItem;
@@ -117,7 +118,7 @@ public class WeaponEventHandler {
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 cap.setDisable(5);
                                 if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT)  ) {
-                                    victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
+                                    JJKEffectUtil.addEffect(victim, new MobEffectInstance(JJKEffects.STUN.get(), 4, 0, false, false, false));
                                 }
                                 if (victim instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
@@ -143,7 +144,7 @@ public class WeaponEventHandler {
                         //         return;
                         //     }
 
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
+                            JJKEffectUtil.addEffect(victim, new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
 
                             attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
                                     SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
@@ -199,13 +200,17 @@ public class WeaponEventHandler {
                     if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) ) {
                         if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 1.0f )) {
                             //if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker),event.getAmount() * 0.05f )) {
-                                 event.setAmount(event.getAmount()*0.1f);
+                                 event.setAmount(event.getAmount()*0.1f); //rework to use unique soul dmg
                             //}
                         }
                     }
                 }
                 if (stacks.contains(JJKItems.STEEL_GAUNTLET.get())) {
-                    event.setAmount(event.getAmount()*1.1f);
+                    if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION)) {
+                        event.setAmount(event.getAmount()*1.1f);
+                    } else {
+                        event.setAmount(event.getAmount()*1.03f);
+                    }
                 }
 
                 // if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {

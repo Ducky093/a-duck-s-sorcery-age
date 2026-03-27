@@ -68,46 +68,27 @@ public class HelperMethods {
         return !(entity instanceof LimboCloneEntity); 
     }
 
-    public static boolean friendsCheck(LivingEntity owner, LivingEntity entity) {
-
-        ISorcererData attackerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-        ISorcererData victimCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-
-        if (attackerCap != null && victimCap != null) {
-            if (victimCap.hasPact(owner.getUUID(), Pact.FRIENDS)
-                    && attackerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
-                return true;
-            }
+    @Nullable
+    public static LivingEntity getRootOwner(LivingEntity entity) {
+        while (entity instanceof TamableAnimal tamable && tamable.isTame()) {
+            entity = tamable.getOwner();
+            if (entity == null) return null;
         }
-
-        LivingEntity ownerOfOwner = (owner instanceof TamableAnimal t1 && t1.isTame()) ? t1.getOwner() : null;
-        LivingEntity ownerOfEntity = (entity instanceof TamableAnimal t2 && t2.isTame()) ? t2.getOwner() : null;
-
-        if (ownerOfOwner != null) {
-            ISorcererData ownerOwnerCap = ownerOfOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            if (ownerOwnerCap != null && ownerOwnerCap.hasPact(entity.getUUID(), Pact.FRIENDS)) {
-                return true;
-            }
-        }
-
-        if (ownerOfEntity != null) {
-            ISorcererData ownerEntityCap = ownerOfEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            if (ownerEntityCap != null && ownerEntityCap.hasPact(owner.getUUID(), Pact.FRIENDS)) {
-                return true;
-            }
-        }
-
-        if (ownerOfOwner != null && ownerOfEntity != null) {
-            ISorcererData cap1 = ownerOfOwner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            ISorcererData cap2 = ownerOfEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
-            if (cap1 != null && cap2 != null
-                    && cap1.hasPact(ownerOfEntity.getUUID(), Pact.FRIENDS)
-                    && cap2.hasPact(ownerOfOwner.getUUID(), Pact.FRIENDS)) {
-                return true;
-            }
-        }
-        return false;
+        return entity;
     }
+
+   public static boolean friendsCheck(LivingEntity a, LivingEntity b) {
+        LivingEntity ownerA = getRootOwner(a);
+        LivingEntity ownerB = getRootOwner(b);
+        if (ownerA == null || ownerB == null) return false;
+        if (ownerA == ownerB) return true;
+        ISorcererData capA = ownerA.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        ISorcererData capB = ownerB.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (capA == null || capB == null) return false;
+        return capA.hasPact(ownerB.getUUID(), Pact.FRIENDS)
+            && capB.hasPact(ownerA.getUUID(), Pact.FRIENDS);
+    }
+
 
     public static boolean wouldBeFilled(LivingEntity owner, Vec3 target) {
         AABB newBox = owner.getBoundingBox().move(target.subtract(owner.position()));
@@ -141,7 +122,7 @@ public class HelperMethods {
         if (projectile.getOwner() == target) return false;
 
         if (projectile instanceof ThrownChainProjectile chain) {
-            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
+            if (chain.getBypassInfinity()) return false;
         }
       
             
@@ -166,7 +147,7 @@ public class HelperMethods {
             stacks.add(stack.getItem());
             stacks.addAll(CuriosUtil.findSlots(living, living.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
                     .stream().map(ItemStack::getItem).toList());
-            if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+            if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()) || (source.getDirectEntity() instanceof ThrownChainProjectile chain && chain.getBypassInfinity())) {
                 return false;
             }
         }

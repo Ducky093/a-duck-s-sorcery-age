@@ -81,7 +81,7 @@ public class BlueFistsVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE, PARTICLE_SIZE, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE, PARTICLE_SIZE, 0.2F, true,true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -97,7 +97,7 @@ public class BlueFistsVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.5F * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.5F * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE, PARTICLE_SIZE / 2.0F, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE, PARTICLE_SIZE / 2.0F, 0.2F, true, true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

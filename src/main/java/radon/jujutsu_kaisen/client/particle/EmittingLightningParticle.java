@@ -32,14 +32,20 @@ public class EmittingLightningParticle extends TextureSheetParticle {
     private final Vector3f color;
 
     private final BoltRenderer renderer;
+    private final float scale;
+    private final Vec3 direction;
+    private final boolean multi;
 
     protected EmittingLightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, EmittingLightningParticleOptions options) {
         super(pLevel, pX, pY, pZ);
 
         this.color = options.color();
-
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.direction = options.direction();
+        this.scale = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.setSize(this.scale, this.scale);
+        //this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
+        this.multi = options.multi();
 
         this.renderer = new BoltRenderer();
     }
@@ -54,8 +60,10 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         PoseStack pose = new PoseStack();
 
         Vec3 offset = this.getPos()
-                .add(RotationUtil.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
-                .scale(this.random.nextFloat() * this.quadSize));
+            .add(this.direction.scale(this.random.nextFloat() * this.scale));
+        // Vec3 offset = this.getPos()
+        //         .add(RotationUtil.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
+        //         .scale(this.random.nextFloat() * this.quadSize));
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
@@ -70,11 +78,22 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         Vec3 end = new Vec3(offset.x, offset.y, offset.z);
         BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(0.0F, 0.075F, 0.0F, 0.0F,
                 new Vector4f(this.color.x, this.color.y, this.color.z, 0.8F), 1.8F);
+                BoltEffect.SpawnFunction spawnFunction = null;
+                if (this.multi) { 
+                    spawnFunction = BoltEffect.SpawnFunction.NO_DELAY;
+                }
+                else {
+                    spawnFunction = BoltEffect.SpawnFunction.CONSECUTIVE;
+                }
         BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 100)))
                 .size(0.05F)
                 .lifespan(1)
-                .fade(BoltEffect.FadeFunction.NONE)
-                .spawn(BoltEffect.SpawnFunction.NO_DELAY);
+                .fade(BoltEffect.FadeFunction.fade(0.5F))
+                .spawn(spawnFunction);
+                //
+                //.fade(BoltEffect.FadeFunction.NONE)
+                
+                
         this.renderer.update(null, bolt, pPartialTicks);
         pose.translate(-this.x, -this.y, -this.z);
         this.renderer.render(pPartialTicks, pose, Minecraft.getInstance().renderBuffers().bufferSource());
@@ -88,18 +107,25 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         return ParticleRenderType.CUSTOM;
     }
 
-    public record EmittingLightningParticleOptions(Vector3f color, float scalar, int lifetime) implements ParticleOptions {
+    public record EmittingLightningParticleOptions(Vector3f color,  Vec3 direction, float scalar, int lifetime, boolean multi) implements ParticleOptions {
         public static Deserializer<EmittingLightningParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull EmittingLightningParticleOptions fromCommand(@NotNull ParticleType<EmittingLightningParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f color = EmittingLightningParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new EmittingLightningParticleOptions(color, reader.readFloat(), reader.readInt());
+                Vec3 direction = EmittingLightningParticleOptions.readVec3(reader);
+                reader.expect(' ');
+                float scalar = reader.readFloat();
+                reader.expect(' ');
+                int lifetime = reader.readInt();
+                reader.expect(' ');
+                boolean multi = reader.readBoolean();
+                return new EmittingLightningParticleOptions(color, direction, scalar, lifetime, multi);
             }
 
             public @NotNull EmittingLightningParticleOptions fromNetwork(@NotNull ParticleType<EmittingLightningParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new EmittingLightningParticleOptions(EmittingLightningParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readInt());
+                return new EmittingLightningParticleOptions(EmittingLightningParticleOptions.readColorFromNetwork(buf), readVec3FromNetwork(buf), buf.readFloat(), buf.readInt(), buf.readBoolean());
             }
-        };
+        };  
 
         @Override
         public @NotNull ParticleType<?> getType() {
@@ -116,6 +142,21 @@ public class EmittingLightningParticle extends TextureSheetParticle {
             return new Vector3f(f0, f1, f2);
         }
 
+        public static Vec3 readVec3(StringReader reader) throws CommandSyntaxException {
+            reader.expect(' ');
+            double x = reader.readDouble();
+            reader.expect(' ');
+            double y = reader.readDouble();
+            reader.expect(' ');
+            double z = reader.readDouble();
+            return new Vec3(x, y, z);
+        }
+
+        public static Vec3 readVec3FromNetwork(FriendlyByteBuf buf) {
+            return new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        }
+
+
         public static Vector3f readColorFromNetwork(FriendlyByteBuf buf) {
             return new Vector3f(buf.readFloat(), buf.readFloat(), buf.readFloat());
         }
@@ -125,9 +166,16 @@ public class EmittingLightningParticle extends TextureSheetParticle {
             buf.writeFloat(this.color.x);
             buf.writeFloat(this.color.y);
             buf.writeFloat(this.color.z);
+
+            buf.writeDouble(this.direction.x);
+            buf.writeDouble(this.direction.y);
+            buf.writeDouble(this.direction.z);
+
             buf.writeFloat(this.scalar);
             buf.writeInt(this.lifetime);
+            buf.writeBoolean(this.multi);
         }
+
 
         @Override
         public @NotNull String writeToString() {

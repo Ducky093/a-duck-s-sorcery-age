@@ -10,7 +10,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 
 import java.util.function.Predicate;
@@ -111,7 +113,24 @@ public class RotationUtil {
         return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable());
     }
 
-    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter) {
+    // public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter) {
+    //     Level level = entity.level();
+
+    //     HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+
+    //     if (blockHit.getType() != HitResult.Type.MISS) {
+    //         end = blockHit.getLocation();
+    //     }
+    //     AABB bounds = AABB.ofSize(start,40.0D,40.0D,40.0D);
+    //     HitResult entityHit = ProjectileUtil.getEntityHitResult(level, null, start, end, bounds
+    //             .expandTowards(end.subtract(start)).inflate(20.0D), filter);
+
+    //     if (entityHit != null) {
+    //         return entityHit;
+    //     }
+    //     return blockHit;
+    // }
+     private static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter) {
         Level level = entity.level();
 
         HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
@@ -119,9 +138,9 @@ public class RotationUtil {
         if (blockHit.getType() != HitResult.Type.MISS) {
             end = blockHit.getLocation();
         }
-        AABB bounds = AABB.ofSize(start,40.0D,40.0D,40.0D);
-        HitResult entityHit = ProjectileUtil.getEntityHitResult(level, null, start, end, bounds
-                .expandTowards(end.subtract(start)).inflate(20.0D), filter);
+
+        HitResult entityHit = ProjectileUtil.getEntityHitResult(level, entity, start, end, entity.getBoundingBox()
+                .expandTowards(end.subtract(start)).inflate(2.0D), filter);
 
         if (entityHit != null) {
             return entityHit;
@@ -152,25 +171,54 @@ public class RotationUtil {
         if (blockHit.getType() != HitResult.Type.MISS) {
             end = blockHit.getLocation();
         }
-        AABB bounds = AABB.ofSize(start,3.0D,3.0D,3.0D).expandTowards(end.subtract(start)).inflate(0.25D);
-        LivingEntity targeted = null;
-        for (LivingEntity select : level.getEntitiesOfClass(LivingEntity.class, bounds,
-            select -> select != entity )) {
-            if (targeted == null) {
-                targeted = select;
-            } else {
-                Float dist1 = entity.distanceTo(select);
-                Float dist2 = entity.distanceTo(targeted);
-                if (dist2 > dist1) {
-                    targeted = select;
-                }
+        Vec3 direction = end.subtract(start);
+        AABB rayBox = entity.getBoundingBox()
+            .expandTowards(direction)
+            .inflate(1.0D);
+
+        EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
+                level,
+                entity,
+                start,
+                end,
+                rayBox,
+                e -> e instanceof LivingEntity
+                        && e != entity
+                        && (filter == null || filter.test(e))
+        );
+
+        if (entityHit != null && entityHit.getEntity() instanceof LivingEntity living) {
+            return living;
+        }
+
+        AABB bounds = AABB.ofSize(start,2.0D,2.0D,2.0D).expandTowards(end.subtract(start)).inflate(0.25D);
+        LivingEntity best = null;
+        double bestScore = Double.MAX_VALUE;
+
+        Vec3 lookDir = end.subtract(start).normalize();
+
+        for (LivingEntity select : level.getEntitiesOfClass(
+                LivingEntity.class,
+                bounds,
+                e -> e != entity && (filter == null || filter.test(e))
+        )) {
+            Vec3 toTarget = select.getBoundingBox().getCenter().subtract(start);
+            double distance = toTarget.length();
+            Vec3 dirToTarget = toTarget.normalize();
+            double angleScore = 1.0D - lookDir.dot(dirToTarget);
+            double distanceScore = distance / start.distanceTo(end);
+            double score = angleScore * 0.25D + distanceScore * 0.75D;
+            if (score < bestScore) {
+                bestScore = score;
+                best = select;
             }
         }
 
-        return targeted;
+        return best;
     }
 
     public static LivingEntity getExpandedLookAt(Entity entity, double range, Predicate<Entity> filter) {
+        if (entity == null) return null;
         Vec3 start = entity.getEyePosition();
         Vec3 look = getTargetAdjustedLookAngle(entity);
         Vec3 end = start.add(look.scale(range));

@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.CombatRules;
@@ -163,7 +164,8 @@ public class EMFBlast extends Ability {
             //                      }  
            // if (capHit == null || !capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()  )) {
                // entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
-                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 30, 0, false, false, false));
+     
+               JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.STUN.get(), 30, 0, false, false, false));
             //}
            
             }

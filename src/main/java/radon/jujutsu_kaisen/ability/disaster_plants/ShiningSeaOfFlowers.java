@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -38,14 +39,14 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * this.getStrength(owner, instant)),
                 4, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* this.getStrength(owner, instant)),
                 4, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
+        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
                 4, false, false, false));
         if (JJKAbilities.hasToggled(entity, JJKAbilities.CURSED_ENERGY_FLOW.get()) && !JJKAbilities.hasToggled(entity, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
-             entity.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), Math.round(10 * 20 * this.getStrength(owner, instant)), 0));
+            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.CURSED_BUD.get(), Math.round(10 * 20 * this.getStrength(owner, instant)), 0));
         }
     }
 

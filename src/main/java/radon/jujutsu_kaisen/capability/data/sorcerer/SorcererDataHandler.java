@@ -19,6 +19,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import radon.jujutsu_kaisen.ExperienceHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -28,35 +30,49 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 public class SorcererDataHandler {
     public static Capability<ISorcererData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
 
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
-        Player player = event.getEntity();
+   @SubscribeEvent
+        public static void onPlayerClone(PlayerEvent.Clone event) {
+            Player original = event.getOriginal();
+            Player player = event.getEntity();
 
-        original.reviveCaps();
+            original.reviveCaps();
 
-        ISorcererData oldCap = original.getCapability(INSTANCE).resolve().orElseThrow();
-        ISorcererData newCap = player.getCapability(INSTANCE).resolve().orElseThrow();
+            ISorcererData oldCap = original.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData newCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        newCap.deserializeNBT(oldCap.serializeNBT());
+            newCap.deserializeNBT(oldCap.serializeNBT());
 
-        if (event.isWasDeath()) {
-            newCap.setEnergy(newCap.getMaxEnergy());
-            newCap.resetCooldowns();
-            newCap.resetBurnout();
-            newCap.resetDisable();
-            newCap.clearToggled();
-            
-            newCap.resetBlackFlash();
-            newCap.resetExtraEnergy();
-            newCap.resetSpeedStacks();
+            if (event.isWasDeath()) {
+                newCap.setEnergy(newCap.getMaxEnergy());
+                newCap.resetCooldowns();
+                newCap.resetBurnout();
+                newCap.resetDisable();
+                newCap.clearToggled();
+                newCap.setCurrentCopied(null);
+                newCap.setCurrentStolen(null);
+                newCap.resetCopy();
+                
+                newCap.resetBlackFlash();
+                newCap.resetExtraEnergy();
+                newCap.resetSpeedStacks();
+                newCap.resetDash();
+                newCap.setStoredHealth(-1);
+                newCap.updateMaxHealth();
+                //newCap.setMaxHealth(0); work on updating health tmrw
 
-            if (!player.level().isClientSide) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
+                ExperienceHandler.clearBlacklist(player.getUUID());
+                //reset exp locks
+               
+                // if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+                //     ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                //     shadowCap.resetAdaptations();
+                // }
+                if (!player.level().isClientSide) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
+                }
             }
+            original.invalidateCaps();
         }
-        original.invalidateCaps();
-    }
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {

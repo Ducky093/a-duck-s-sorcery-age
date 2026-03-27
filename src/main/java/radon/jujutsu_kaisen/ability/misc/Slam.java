@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
@@ -165,8 +166,8 @@ public class Slam extends Ability implements Ability.ICharged {
                     staggerDuration = 20;
                 }
 
-                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
-                entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(),staggerDuration, 0, false, false, false));
+                JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STUN.get(),stunDuration, 0, false, false, false));
+                JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STAGGER.get(),staggerDuration, 0, false, false, false));
             }
              ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * dmgMult, owner,
                     owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false, true );

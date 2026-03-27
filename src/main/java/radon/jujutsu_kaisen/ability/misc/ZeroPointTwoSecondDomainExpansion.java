@@ -65,7 +65,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         if (domain == null || cap.hasToggled(domain) ) return false;
 
         //DomainExpansionEntity domainEntity = cap.getSummonByClass(DomainExpansionEntity.class);
-//domainEntity == null
+        //domainEntity == null
         return domain.isValid(owner) && super.isValid(owner);
     }
 

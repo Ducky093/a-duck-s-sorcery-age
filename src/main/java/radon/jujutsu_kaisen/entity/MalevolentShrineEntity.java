@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.shrine.MalevolentShrine;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
@@ -57,10 +58,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-
     }
-
-
 
     @Override
     public DomainExpansionEntity checkSureHitEffect() {
@@ -71,6 +69,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     @Override
     public void doSureHitEffect() {
         super.doSureHitEffect();
+
         LivingEntity owner = this.getOwner();
 
         BlockPos center = this.blockPosition();
@@ -108,10 +107,12 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                                         BlockState state = owner.level().getBlockState(pos);
                                         //owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                                          //     Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
-                                          if (state.getFluidState().isEmpty()) {
+                                          
+                                         if (state.getFluidState().isEmpty()) {
                                     //this.level().destroyBlock(pos, false);
                                             owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                                Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE);
+                                                Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
+                                            
                                         } else {
                                             this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                                         }
@@ -141,6 +142,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         }
     }
 
+    
     @Override
     public void tick() {
         super.tick();
@@ -148,7 +150,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         if (this.getTime() == 1) {
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                 if (!(entity instanceof ServerPlayer player)) continue;
-                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
+                JJKEffectUtil.addEffect(player, new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
                 player.level().playSound(null,  player.getX(), player.getY(), player.getZ(), JJKSounds.MALEVOLENT_SHRINE.get(), SoundSource.MASTER, 1.0F, 1.0F);
             }
         }

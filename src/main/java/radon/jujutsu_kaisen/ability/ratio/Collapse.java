@@ -131,9 +131,21 @@ public class Collapse extends Ability implements Ability.IChannelened, Ability.I
             int index = this.getCharge(owner);
             owner.swing(InteractionHand.MAIN_HAND);
 
+            // for (int i = 0; i < 12; i++) {
+            //     level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), RADIUS * 2.0F, 1),
+            //             owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            // }
+            Vec3 center = owner.position().add(0.0D, owner.getBbHeight() / 2, 0.0D);
             for (int i = 0; i < 12; i++) {
-                level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), RADIUS * 2.0F, 1),
-                        owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;
+                double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+
+                Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
+                Vec3 offset = center.add(direction.multiply(owner.getBbWidth() / 2.0F, owner.getBbHeight() / 2, owner.getBbWidth() / 2.0F));
+
+                level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner),
+                                direction, RADIUS * 2.0F, 1, true), offset.x, offset.y, offset.z, 0,
+                        0.0D, 0.0D, 0.0D, 0.0D);
             }
 
             Vec3 realpos = result.getLocation();

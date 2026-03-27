@@ -8,6 +8,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IRMBAble;
+import radon.jujutsu_kaisen.ability.base.IRMBAttack;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.ability.shrine.Cleave;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
@@ -29,6 +32,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
@@ -37,8 +41,9 @@ import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class IdleTransfiguration extends Ability implements Ability.IToggled, Ability.IAttack {
+public class IdleTransfiguration extends Ability implements Ability.IToggled, Ability.IAttack, IRMBAttack {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -177,8 +182,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
             stackcount = 10;
         }
         ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get(), stackcount);
-
         
+        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (targetCap != null) {
+            targetCap.setRevivable(false);
+        }
         if (owner instanceof Player player) {
             player.addItem(stack);
         } else {
@@ -220,11 +228,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     @Override
-    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
-        //if (!owner.getMainHandItem().isEmpty()) return false;
-
+    public void perform(LivingEntity owner, LivingEntity target) {
         MobEffectInstance existing = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
 
         int amplifier = 0;
@@ -234,12 +238,20 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         }
 
         MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 12 * 20, amplifier, false, true, true);
-        target.addEffect(instance);
+        JJKEffectUtil.addEffect(target, instance);
 
         if (!owner.level().isClientSide) {
             PacketDistributor.TRACKING_ENTITY.with(() -> target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
         }
+    }
 
+    @Override
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
+        if (!HelperMethods.isMelee(source)) return false;
+        //if (!owner.getMainHandItem().isEmpty()) return false;
+
+        perform(owner, target);
         // float attackerStrength = IdleTransfiguration.calculateStrength(owner);
         // float victimStrength = IdleTransfiguration.calculateStrength(target);
 

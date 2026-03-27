@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -173,7 +174,7 @@ public class JacobsLadderEntity extends JujutsuProjectile {
                                 }
                                 cap.setDisable((int)(60F * this.chant * mult[0]));
                                 if (cap.hasTechnique(CursedTechnique.BRAIN_TRANSPLANT) && entity instanceof LivingEntity living  ) { 
-                                    living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 10, 0, false, false, false));
+                                    JJKEffectUtil.addEffect(living, new MobEffectInstance(JJKEffects.STUN.get(), 10, 0, false, false, false));
                                 }
                                 if (entity instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

@@ -6,6 +6,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -65,9 +67,24 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
         float radius = this.getRadius(owner);
 
-        for (int i = 0; i < 4; i++) {
-            level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), radius, 1),
-                    owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+        // for (int i = 0; i < 4; i++) {
+        //     level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), radius, 1),
+        //             owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+        // }
+        int count = (int) (radius/8 * 0.1F * Math.PI * 2);
+
+        Vec3 center = owner.position().add(0.0D, owner.getBbHeight() / 2, 0.0D);
+
+        for (int i = 0; i < count; i++) {
+            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+
+            Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
+            Vec3 offset = center.add(direction.multiply(owner.getBbWidth() / 2.0F, owner.getBbHeight() / 2, owner.getBbWidth() / 2.0F));
+
+            level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner),
+                            direction, radius, 4, false), offset.x, offset.y, offset.z, 0,
+                    0.0D, 0.0D, 0.0D, 0.0D);
         }
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
@@ -92,7 +109,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 15.0F;
     }
 
     @Override

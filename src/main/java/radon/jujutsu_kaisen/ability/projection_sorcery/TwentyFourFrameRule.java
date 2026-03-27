@@ -5,12 +5,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,13 +21,16 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IRMBAble;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
+public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack, IRMBAble {
     private static final float DAMAGE = 11.0F;
 
     @Override
@@ -68,11 +73,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
 
     }
 
-    @Override
-    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
-
+    public boolean frameTrap(LivingEntity owner, LivingEntity target) {
         for (ProjectionFrameEntity frame : owner.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(target.position(),
                 8.0D, 8.0D, 8.0D))) {
             if (frame.getVictim() == target) return false;
@@ -83,6 +84,31 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
         if (target instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
         }
+        return true;
+    }
+
+    public static final double RANGE = 5.0D;
+    @Override
+    public boolean onRightClick(LivingEntity owner) {
+        
+        owner.swing(InteractionHand.OFF_HAND);
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target && !owner.hasEffect(JJKEffects.STAGGER.get())) {
+            if (!owner.canAttack(target)) return false;
+                owner.swing(InteractionHand.OFF_HAND);
+                if (!owner.level().isClientSide) {
+                    frameTrap(owner, target);
+                }
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
+        if (!HelperMethods.isMelee(source)) return false;
+
+        frameTrap(owner,target);
         return true;
     }
 

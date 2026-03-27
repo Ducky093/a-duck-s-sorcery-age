@@ -1,11 +1,15 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -14,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -21,12 +26,15 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import radon.jujutsu_kaisen.block.entity.IDomain;
 import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.JJKPose;
+import radon.jujutsu_kaisen.client.JJKPoses;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -38,7 +46,7 @@ import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
+public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> implements Ability.IPosedMove {
     public HollowWickerBasket() {
         super(HollowWickerBasketEntity.class);
     }
@@ -77,7 +85,7 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(Trait.INCARNATED) && super.isValid(owner);
+        return (cap.hasTrait(Trait.INCARNATED) || ConfigHolder.SERVER.hwbForAll.get()) && super.isValid(owner);
     }
 
     @Override
@@ -96,15 +104,20 @@ public class HollowWickerBasket extends Summon<HollowWickerBasketEntity> {
     }
 
     @Override
+    public JJKPose getArmPose(LivingEntity entityLiving) {
+        return JJKPoses.HOLLOW_WICKER_BASKET;
+    }
+
+    @Override
     public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(Trait.INCARNATED) && super.canUnlock(owner);
+        return (cap.hasTrait(Trait.INCARNATED) || ConfigHolder.SERVER.hwbForAll.get() ) && super.canUnlock(owner);
     }
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {
        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(Trait.INCARNATED) && super.isDisplayed(owner);
+        return (cap.hasTrait(Trait.INCARNATED) || ConfigHolder.SERVER.hwbForAll.get()) && super.isDisplayed(owner);
     }
 
     @Override

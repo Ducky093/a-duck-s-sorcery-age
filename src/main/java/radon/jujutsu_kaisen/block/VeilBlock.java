@@ -72,31 +72,45 @@ public class VeilBlock extends Block implements EntityBlock {
     }
      */
  
-    @Override
+        @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
-        VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
-
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity veil)) return shape;
-
-            Entity entity = ctx.getEntity();
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be))
+                return super.getCollisionShape(pState, pLevel, pPos, pContext);
             
-            if (entity == null) return shape;
-
-            if (entity instanceof Projectile projectile) {
-                Entity owner = projectile.getOwner();
-
-                if (owner != null) {
-                    entity = projectile.getOwner();
+            Entity entity = ctx.getEntity();
+             if (entity != null) {
+                if (entity instanceof LivingEntity living && (JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) || JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()) ) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                    return Shapes.empty();
                 }
+                if (entity instanceof Projectile projectile) 
+                    entity = projectile.getOwner();
+                return VeilHandler.isWhitelisted(pPos, entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
             }
-            boolean allowed = VeilHandler.isWhitelisted(pPos, entity);
-            if (!allowed) {
-                entity.teleportTo(entity.xOld, entity.yOld, entity.zOld);
-            }
-            return allowed && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
-        return shape;
+        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (level.isClientSide) return;
+
+        if (!(level.getBlockEntity(pos) instanceof VeilBlockEntity veil)) return;
+
+        Entity check = entity;
+        
+        if (entity instanceof Projectile projectile && projectile.getOwner() != null) {
+            check = projectile.getOwner();
+        }
+        if (check instanceof LivingEntity living && (JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) || JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()) ) ) {
+            return;
+        }
+
+        boolean allowed = VeilHandler.isWhitelisted(pos, check);
+        
+        if (!allowed) {
+            entity.teleportTo(entity.xOld, entity.yOld, entity.zOld);
+        }
     }
 
     @Nullable

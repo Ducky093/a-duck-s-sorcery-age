@@ -13,7 +13,7 @@ public class JJKFluidTypes {
     public static DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, JujutsuKaisen.MOD_ID);
 
     public static final RegistryObject<FluidType> CHIMERA_SHADOW_GARDEN = FLUID_TYPES.register("chimera_shadow_garden",
-            () -> new JJKFluidType(0x141414, FluidType.Properties.create()
+            () -> new JJKFluidType(0xE0000000, FluidType.Properties.create()
                     .canSwim(false)));
     public static final RegistryObject<FluidType> FAKE_WATER = FLUID_TYPES.register("fake_water",
             () -> new JJKFluidType(0xFF3F76E4, FluidType.Properties.create()

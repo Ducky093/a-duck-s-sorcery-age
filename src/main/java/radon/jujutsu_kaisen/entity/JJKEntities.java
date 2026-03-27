@@ -335,6 +335,11 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dismantle")
                             .toString()));
 
+    public static RegistryObject<EntityType<SpiderwebEntity>> SPIDERWEB = ENTITIES.register("spiderweb", () ->
+            EntityType.Builder.<SpiderwebEntity>of(SpiderwebEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "spiderweb")
+                            .toString()));
+
     public static RegistryObject<EntityType<WorldSlashProjectile>> WORLD_SLASH = ENTITIES.register("world_slash", () ->
             EntityType.Builder.<WorldSlashProjectile>of(WorldSlashProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)

@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import net.minecraft.core.particles.ParticleTypes;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
@@ -91,7 +92,7 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
             Vec3 pos = owner.position();
             int index = this.getCharge(owner);
 
-            owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
+            JJKEffectUtil.addEffect(owner, new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
             float scale = 1.5F;
 
@@ -142,13 +143,13 @@ public class Bisection extends Ability implements Ability.IChannelened, Ability.
                   if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                       ISorcererData capHit = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                       if (!capHit.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                        target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
-                        target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                        JJKEffectUtil.addEffect(target, new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                        JJKEffectUtil.addEffect(target, new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
                       }
                     }
                 else {
-                         target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
-                        target.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
+                        JJKEffectUtil.addEffect(target, new MobEffectInstance(JJKEffects.STUN.get(), STUN, 1, false, false, false));
+                        JJKEffectUtil.addEffect(target, new MobEffectInstance(JJKEffects.STAGGER.get(), STUN, 1, false, false, false));
                 }
                     
 

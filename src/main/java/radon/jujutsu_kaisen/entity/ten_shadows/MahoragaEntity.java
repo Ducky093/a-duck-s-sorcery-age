@@ -1,8 +1,12 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -222,17 +226,30 @@ public class MahoragaEntity extends TenShadowsSummon {
         } else {
             if (target != null) {
                 this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.8f);
-                if (this.onGround() && this.distanceTo(target) < 5.0D) {
-                    this.entityData.set(DATA_SLASH, SLASH_DURATION);
+                if (this.onGround() && this.distanceTo(target) < 3.0D) {
 
-                    target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
-                    target.hurtMarked = true;
+                    if (this.doHurtTarget(target)) {
+                        this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(RotationUtil.getTargetAdjustedLookAngle(this));
-                    ExplosionHandler.spawn(this.level().dimension(), explosionPos, SLASH_EXPLOSION,
-                            20, SLASH_DAMAGE * 0.25f, this,  JJKDamageSources.indirectJujutsuAttack(this, this, JJKAbilities.DISMANTLE.get()), false);
+                        target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
+                        target.hurtMarked = true;
 
+                        Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
+                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                        this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+                    }
                 }
+                // if (this.onGround() && this.distanceTo(target) < 5.0D) {
+                //     this.entityData.set(DATA_SLASH, SLASH_DURATION);
+
+                //     target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
+                //     target.hurtMarked = true;
+
+                //     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(RotationUtil.getTargetAdjustedLookAngle(this));
+                //     ExplosionHandler.spawn(this.level().dimension(), explosionPos, SLASH_EXPLOSION,
+                //             20, SLASH_DAMAGE * 0.25f, this,  JJKDamageSources.indirectJujutsuAttack(this, this, JJKAbilities.DISMANTLE.get()), false);
+                    
+                // }
             }
         }
      }

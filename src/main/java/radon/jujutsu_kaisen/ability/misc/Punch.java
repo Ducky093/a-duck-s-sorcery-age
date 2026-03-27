@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +15,12 @@ import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +35,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.cursed_tool.HitenStaffItem;
 import radon.jujutsu_kaisen.item.cursed_tool.PlayfulCloudItem;
@@ -61,9 +67,22 @@ public class Punch extends Ability implements Ability.ICharged{
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+         if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            if (owner.isInWall()) return true;
+        }
         if (target == null || target.isDeadOrDying()) return false;
         if (owner.hasEffect(JJKEffects.STAGGER.get())) {
             return false;
+        }
+        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            if (owner.getNavigation().isStuck() && !owner.isInFluidType()) return true;
+            HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
+
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                if (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                    return true;
+                }
+            }
         }
         if (owner.distanceTo(target) > RANGE) return false;
         return HelperMethods.RANDOM.nextInt(1) == 0;
@@ -137,15 +156,21 @@ public class Punch extends Ability implements Ability.ICharged{
 
         List<String> targets = new ArrayList<String>();
         Level level1 = owner.level();
+          final boolean[] broke = {false};
+
         for (int i = 0; i < num; i++) {
             double finalNewRange = newRange;
             int finalStagger = newStagger;
+            final int copyIndex = i;
+          //final float copyNum = num;
             cap.delayTickEvent(() -> {
-
+           
                 Vec3 offset = owner.getEyePosition().add(look.scale(finalNewRange / 2-2));
-
+      
                 for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, finalNewRange, finalNewRange+2, finalNewRange),
                         entity -> entity != owner )) {
+                                broke[0] = true;
+                                 System.out.println("hurt pig");
                     //&& owner.hasLineOfSight(entity)
                     boolean found = false;
                     for (String target: targets) {
@@ -173,7 +198,7 @@ public class Punch extends Ability implements Ability.ICharged{
 
                         int tim = 8;
 
-                        if (power == 1) {
+                        if (power == 1.0F) {
                             if (!cap.hasToggled(JJKAbilities.RATIO_RULE.get()) && (!JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION))) {
                                 cap.moreBlackFlash(true);
                             }
@@ -219,18 +244,18 @@ public class Punch extends Ability implements Ability.ICharged{
 
                     float newPower = (float) (LAUNCH_POWER*(0.8+0.4*power));
                     newDMG *= (float) (1+0.75 *power);
-                    
+                    float totalDmg = (newDMG * this.getPower(owner));
                     if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
-                        if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), (newDMG * 1.25F) * this.getPower(owner))) {
+                        if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), 1.25F*totalDmg)) {
                             entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F) * 1.5F)
                                     .multiply(1.0D, 0.25D, 1.0D));
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
+                            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
+                            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
                         }
                     }
 
                     else {
-                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), (newDMG) * this.getPower(owner))) {
+                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), totalDmg)) {
                             if (owner instanceof Player player) {
                                 entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                         .multiply(1.0D, 0.25D, 1.0D));
@@ -239,14 +264,42 @@ public class Punch extends Ability implements Ability.ICharged{
                                 entity.setDeltaMovement(look.scale(newPower * (1.0F + this.getPower(owner) * 0.1F))
                                         .multiply(2.0D, 0.5D, 2.0D));
                             }
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
-                            entity.addEffect(new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
+                            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STUN.get(), tim, 0, false, false, false));
+                            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.STAGGER.get(), finalStagger, 0, false, false, false));
+                        }
+                    }
 
                     }
-                    }
+                
+                if (power == 1.0F && copyIndex == 1 && broke[0] == false) {
+                    broke[0] = true;
+                    float newDMG;//maybe remove the check for hit
+                    newDMG = DAMAGE;
+                    if (!(owner instanceof Player player)) {
+                        newDMG/=1.65F;
+                    }// make all this reusable
+                    newDMG *= (float) (1+0.75 *power);
+                    float totalDMG = (newDMG * this.getPower(owner));
+                    Vec3 end = owner.getEyePosition().add(look.scale(RANGE / 2));
+                    AABB bounds = AABB.ofSize(end, 3.0D, 3.0D, 3.0D).inflate(1.0D);
+                    BlockPos.betweenClosedStream(bounds).forEach(posSelf -> {
+                        if (posSelf.getCenter().distanceTo(bounds.getCenter()) > RANGE) return;
 
+                        BlockHitResult blockHit = owner.level().clip(new ClipContext(owner.getEyePosition(), posSelf.getCenter(),
+                                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
+
+                    if (blockHit.getType() == HitResult.Type.BLOCK && !blockHit.getBlockPos().equals(posSelf)) return;
+                    if (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION)) {
+                        if (!HelperMethods.isDestroyable(level, owner, posSelf, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), 1.25F*totalDMG)) return;
                     }
+                    else {
+                        if (!HelperMethods.isDestroyable(level, owner, posSelf, JJKDamageSources.jujutsuAttack(owner, this), totalDMG)) return;
+                    }
+                        owner.level().destroyBlock(posSelf, true, owner);
+                    });
+                }
                 }, i*1);
+                
             }
 
 
@@ -258,7 +311,7 @@ public class Punch extends Ability implements Ability.ICharged{
             for (int i = 0; i < 4; i++) {
                 Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
                 Item item = owner.getItemInHand(InteractionHand.MAIN_HAND).getItem();
-                level.sendParticles(JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) || item instanceof SwordItem && !(item instanceof SteelGauntletItem) ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                level.sendParticles(JJKAbilities.hasToggled(owner, JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.ARM_BLADE.get()) || item instanceof SwordItem && !(item instanceof SteelGauntletItem) ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                         pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                         pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                         pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -276,7 +329,7 @@ public class Punch extends Ability implements Ability.ICharged{
             Vec3 pos = owner.getEyePosition().add(look);
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.MASTER, 1.0F, 1F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .2f);
             owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.MASTER, 1.0F, 1.6F+(HelperMethods.RANDOM.nextFloat() - 0.5f) * .4f);
-
+            
        // }
 
 

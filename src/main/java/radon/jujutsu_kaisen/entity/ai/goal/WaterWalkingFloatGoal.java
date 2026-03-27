@@ -35,6 +35,17 @@ public class WaterWalkingFloatGoal extends Goal {
 
         boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
 
+        
+        var target = this.mob.getTarget();
+
+        if (target != null && target.isAlive() && target.isInWater()) {
+            if (target.getY() < this.mob.getY() - 0.5D) {
+                this.mob.getNavigation().setCanFloat(false);
+                return;
+            }
+        }
+        this.mob.getNavigation().setCanFloat(true);
+
         if (this.mob.isInWater() && this.mob.getFluidHeight(FluidTags.WATER) > this.mob.getFluidJumpThreshold() || this.mob.isInLava() || this.mob.isInFluidType((fluidType, height) -> this.mob.canSwimInFluidType(fluidType) && height > this.mob.getFluidJumpThreshold())) {
             if (this.mob.getRandom().nextFloat() < 0.8F) {
                 this.mob.getJumpControl().jump();

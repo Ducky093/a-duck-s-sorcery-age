@@ -59,10 +59,10 @@ public abstract class JJKTab {
         if (!this.scrollable) return;
 
         if (this.maxX - this.minX > JujutsuScreen.WINDOW_INSIDE_WIDTH) {
-            this.scrollX = Mth.clamp(this.scrollX + pDragX, -(this.maxX - JujutsuScreen.WINDOW_INSIDE_WIDTH), 0.0D);
+            this.scrollX = Mth.clamp(this.scrollX + pDragX, -(this.maxX - JujutsuScreen.WINDOW_INSIDE_WIDTH), -Math.min(0.0D, this.minX));
         }
         if (this.maxY - this.minY > JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
-            this.scrollY = Mth.clamp(this.scrollY + pDragY, -(this.maxY - JujutsuScreen.WINDOW_INSIDE_HEIGHT), 0.0D);
+            this.scrollY = Mth.clamp(this.scrollY + pDragY, -(this.maxY - JujutsuScreen.WINDOW_INSIDE_HEIGHT), -Math.min(0.0D, this.minY));
         }
     }
 

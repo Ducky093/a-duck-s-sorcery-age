@@ -84,15 +84,20 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
+    }
+
+    // @Override
+    // public List<Block> getFillBlocks() {
+    //     return List.of(JJKBlocks.DOMAIN_FILLER.get());
+    // }
+    @Override
+    public List<Block> getFloorBlocks() {
         return List.of(JJKBlocks.DOMAIN_FILLER.get());
     }
 
-    @Override
+        @Override
     public List<Block> getFillBlocks() {
-        return List.of(JJKBlocks.DOMAIN_FILLER.get());
-    }
-    @Override
-    public List<Block> getFloorBlocks() {
         return List.of(JJKBlocks.DOMAIN_FILLER.get());
     }
 

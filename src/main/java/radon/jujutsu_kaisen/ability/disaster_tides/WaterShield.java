@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
@@ -77,8 +78,10 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
                 AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
 
                 for (Entity entity : owner.level().getEntities(owner, bounds)) {
-                    entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
-                    entity.hurtMarked = true;
+                    if (!(entity instanceof JujutsuProjectile proj) || proj.canDeflect() == false) {
+                        entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
+                        entity.hurtMarked = true;
+                    }
                 }
             }
         });

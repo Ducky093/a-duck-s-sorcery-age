@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.block.entity.IDomain;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
@@ -77,14 +78,14 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         this.setOwner(owner);
         this.instant = false;
-        this.first = false;
+        this.first = true;
         this.ability = ability;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
 
         if (cap == null) return;
-        this.shellBalance = cap.getShellBalance();
-        this.sureHitToggled = cap.getToggleSureHit();
-        this.sureHitAllies = cap.getAlliedSureHit();
+        // this.shellBalance = cap.getDomainConfig();
+        // this.sureHitToggled = cap.getToggleSureHit();
+        // this.sureHitAllies = cap.getAlliedSureHit();
         //     this.scale = cap.getDomainSize();
     }
 
@@ -219,9 +220,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     public void doSureHitEffect() {
         LivingEntity owner = this.getOwner();
         for (LivingEntity entity : this.getAffected()) {
-            if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
-                this.ability.onHitBlock(this, owner, entity.blockPosition());
-            } else {
+            if (!JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION) || this.ability.getHitEnvironment() ) {
                 this.ability.onHitEntity(this, owner, entity, false);
             }
         }
@@ -294,6 +293,8 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     }
 
     public abstract DomainExpansionEntity checkSureHitEffect();
+
+    public abstract DomainExpansionEntity sureHitTarget(LivingEntity target);
 
     public Ability getAbility() {
         return this.ability;
@@ -405,7 +406,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return this.isInsideBarrier(pos);
     }
 
-    public boolean isAffected(LivingEntity victim) {
+    public boolean isAffected(LivingEntity victim, boolean hurtSimple) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null || victim == owner) {
@@ -430,6 +431,9 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
                 SimpleDomainEntity simple = victimSorcererCap.getSummonByClass(SimpleDomainEntity.class);
 
                 if (simple != null) {
+                    if (hurtSimple == false) {
+                        return false;
+                    }
                     ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererCap.getAbilityPower() * 10.0F);
                     return false;
@@ -442,6 +446,10 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
             }
         }
         return this.isAffected(victim.blockPosition());
+    }
+
+    public boolean isAffected(LivingEntity victim) {
+        return this.isAffected(victim, true);
     }
 
     
@@ -463,6 +471,38 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         }
         d0 *= 64.0D * getViewScale();
         return pDistance < d0 * d0;
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        super.remove(pReason);
+        if (!this.level().isClientSide) {
+            int burnout = Math.max(15 * 20, this.getTime());
+            if (burnout > 45 * 20) {
+                burnout = 45 * 20;
+            }
+
+            int realburnout = burnout;
+            LivingEntity owner = this.getOwner();
+
+            if (owner != null) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    if (cap.getType() == JujutsuType.CURSE && !cap.hasTrait(Trait.DEATH_PAINTING)) {
+                        cap.setBurnout( (int) Math.ceil(realburnout - 3.9 * Math.log(realburnout + 1)) );
+
+                    }
+                    else {
+                        cap.setBurnout(realburnout);
+                    }
+                    
+                    cap.resetSpeedStacks();
+
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    }
+                });
+            }
+        }
     }
     // public float getStrength() {
     //     LivingEntity owner = this.getOwner();

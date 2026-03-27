@@ -176,6 +176,10 @@ public class DismantleProjectile extends JujutsuProjectile {
         
         
       if (!ConfigHolder.SERVER.entitySlicing.get() || !living.isDeadOrDying() ) return;
+        ISorcererData targetCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);
+        if (targetCap != null) {
+            targetCap.setRevivable(false);
+        }
          Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
             float yaw = this.getYRot();
@@ -200,7 +204,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                     true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
             living.setInvisible(true);
             living.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 60, 0, false, false, false));
-             living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
+            living.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false, false));
 
            
                     }

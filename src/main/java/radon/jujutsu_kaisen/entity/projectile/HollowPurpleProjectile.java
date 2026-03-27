@@ -136,7 +136,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * (radius * 0.1F);
             double z = center.z + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_BLUE, radius * 0.2F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_BLUE, radius * 0.2F, 1.0F, true, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -152,7 +152,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * 0.1F;
             double z = center.z + zOffset * 0.1F;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.1F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.1F, 1.0F, true, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -173,7 +173,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * (radius * 0.1F);
             double z = center.z + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_RED, radius * 0.2F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_RED, radius * 0.2F, 1.0F, true, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -189,7 +189,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * 0.1F;
             double z = center.z + zOffset * 0.1F;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_RED, radius * 0.1F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_RED, radius * 0.1F, 1.0F, true, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -220,12 +220,11 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             this.animate();
             return;
         }
-
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         float radius = (float) Math.max(Math.PI, this.getRadius());
         int count = (int) (radius * Math.PI * 2);
-
+       
         for (int i = 0; i < count; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
             double phi = this.random.nextDouble() * Math.PI;
@@ -238,7 +237,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * (radius * 0.1F);
             double z = center.z + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_PURPLE, radius * 0.2F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_PURPLE, radius * 0.2F, 1.0F, true, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -254,14 +253,27 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * 0.1F;
             double z = center.z + zOffset * 0.1F;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_PURPLE, radius * 0.2F, 1.0F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_PURPLE, radius * 0.2F, 1.0F, true, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
+         if (this.getTime() < DELAY) {
 
         for (int i = 0; i < 4; i++) {
-            this.level().addParticle(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.LIGHT_PURPLE, this.getRadius() * 1.25F, 1),
+            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+
+            Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
+            this.level().addParticle(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.LIGHT_PURPLE, direction, this.getRadius() * 1.25F, 1, false),
                     true, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
+        } else {
+        ParticleAnimator.lightning(this.level(), center, radius * 1.25F, () -> radius,
+                count / 16, 2, ParticleColors.LIGHT_PURPLE);
+        }
+        // for (int i = 0; i < 4; i++) {
+        //     this.level().addParticle(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.LIGHT_PURPLE, this.getRadius() * 1.25F, 1),
+        //             true, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
+        // }
     }
 
     @Override

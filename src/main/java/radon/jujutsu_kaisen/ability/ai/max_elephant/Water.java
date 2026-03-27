@@ -125,7 +125,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 collision = this.getCollision(owner, spawn, end);
 
         ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
-                0.5F, false, (int) spawn.distanceTo(collision) / 2);
+                0.5F, false, true, (int) spawn.distanceTo(collision) / 2);
 
         for (int i = 0; i < 32; i++) {
             ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),

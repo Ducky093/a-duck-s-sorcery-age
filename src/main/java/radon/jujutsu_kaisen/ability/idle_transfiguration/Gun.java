@@ -7,6 +7,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.IRMBAble;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -15,10 +16,15 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class Gun extends Transformation {
+public class Gun extends Transformation implements IRMBAble {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
+    }
+
+    @Override
+    public boolean usesHands() {
+        return true;
     }
 
     @Override
@@ -61,10 +67,10 @@ public class Gun extends Transformation {
     }
 
     @Override
-    public void onRightClick(LivingEntity owner) {
+    public boolean onRightClick(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getTransfiguredSouls() == 0) return;
+        if (cap.getTransfiguredSouls() == 0) return false;
 
         cap.decreaseTransfiguredSouls();
 
@@ -74,6 +80,7 @@ public class Gun extends Transformation {
 
         TransfiguredSoulProjectile soul = new TransfiguredSoulProjectile(owner);
         owner.level().addFreshEntity(soul);
+        return true;
     }
 
     @Override

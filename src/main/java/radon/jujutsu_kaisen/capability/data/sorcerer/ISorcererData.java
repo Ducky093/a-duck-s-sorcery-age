@@ -4,6 +4,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,13 +18,15 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.authlib.GameProfile;
 
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.*;
-
+import radon.jujutsu_kaisen.ability.base.ActivePose;
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import java.util.*;
 
 @AutoRegisterCapability
 public interface ISorcererData {
     void attack(DamageSource source, LivingEntity target);
+
+    void onRightClick(LivingEntity owner);
 
     void tick(LivingEntity owner);
 
@@ -103,6 +106,12 @@ public interface ISorcererData {
 
     boolean isCooldownDone(BindingVow vow);
 
+    void addAbilityPose(LivingEntity owner, IPosedMove move, InteractionHand hand, int duration);
+
+    void removeAbilityPose(LivingEntity owner, IPosedMove move);
+
+    Map<ResourceLocation, ActivePose> getActivePoses();
+
     void addChant(Ability ability, String chant);
 
     void addChants(Ability ability, Set<String> chants);
@@ -137,6 +146,10 @@ public interface ISorcererData {
 
     boolean addExperience(float amount);
 
+    void setDomainConfig(DomainConfiguration config, Object value);
+
+    <T> T getDomainConfig(DomainConfiguration config);
+
     float getDomainSize();
 
     void setDomainSize(float domainSize);
@@ -152,7 +165,6 @@ public interface ISorcererData {
     void setAlliedSureHit(boolean toggled);
 
     boolean getAlliedSureHit();
-
     // void blacklistSureHitEntity(UUID entityUUID);
 
     // Set<UUID> getSureHitEntities();
@@ -271,6 +283,10 @@ public interface ISorcererData {
 
     void resetSelfHit();
 
+    void setStoredHealth(float energy);
+
+    void updateMaxHealth();
+
     float getMaxEnergy();
 
     void setMaxEnergy(float maxEnergy);
@@ -300,6 +316,10 @@ public interface ISorcererData {
     void setLives(int count);
 
     int getLives();
+    
+    void setRevivable(boolean revivable);
+
+    boolean getRevivable();
 
     boolean checkWombAwakened();
 

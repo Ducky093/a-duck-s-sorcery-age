@@ -342,12 +342,12 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     private void check() {
-        if (this.center != null) {
-            if (!this.level().getBlockState(this.center).is(JJKBlocks.VEIL_ROD.get())) {
-                this.discard();
-                return;
-            }
-        }
+        // if (this.center != null) {
+        //     if (!this.level().getBlockState(this.center).is(JJKBlocks.VEIL_ROD.get())) {
+        //         this.discard();
+        //         return;
+        //     }
+        // }
 
         int count = 0;
 

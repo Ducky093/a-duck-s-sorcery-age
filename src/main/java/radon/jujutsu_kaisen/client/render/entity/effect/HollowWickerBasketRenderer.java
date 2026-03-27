@@ -90,40 +90,12 @@ public class HollowWickerBasketRenderer extends EntityRenderer<HollowWickerBaske
 addQuadDualSided(consumer, posMat, normalMat,
     v1, uv1, v2, uv2, v3, uv3, v4, uv4,
     alpha, packedLight, radius);
-                // two triangles per quad
-                //addTriangleDualSided(consumer, posMat, normalMat,
-                //        v1, uv1, v2, uv2, v3, uv3, alpha, packedLight, radius);
-                //addTriangleDualSided(consumer, posMat, normalMat,
-                //        v1, uv1, v3, uv3      , v4, uv4, alpha, packedLight, radius);
             }
         }
 
         poseStack.popPose();
         super.render(entity, yaw, partialTicks, poseStack, buffer, packedLight);
     }
-
-    private static void addTriangleDualSided(VertexConsumer consumer,
-                                             Matrix4f mat, Matrix3f normalMat,
-                                             float[] aPos, float[] aUV,
-                                             float[] bPos, float[] bUV,
-                                             float[] cPos, float[] cUV,
-                                             float alpha, int light, float radius) {
-        float[] an = normalize(aPos, radius);
-        float[] bn = normalize(bPos, radius);
-        float[] cn = normalize(cPos, radius);
-
-        // forward (outside)
-        putVertex(consumer, mat, normalMat, aPos, aUV, an, alpha, light);
-        putVertex(consumer, mat, normalMat, bPos, bUV, bn, alpha, light);
-        putVertex(consumer, mat, normalMat, cPos, cUV, cn, alpha, light);
-
-        // reverse (inside)
-        putVertex(consumer, mat, normalMat, cPos, cUV, negate(cn), alpha, light);
-        putVertex(consumer, mat, normalMat, bPos, bUV, negate(bn), alpha, light);
-        putVertex(consumer, mat, normalMat, aPos, aUV, negate(an), alpha, light);
-    }
-
-    
     private static void putVertex(VertexConsumer consumer, Matrix4f mat, Matrix3f normalMat,
                                   float[] pos, float[] uv, float[] normal,
                                   float alpha, int light) {
@@ -147,13 +119,13 @@ addQuadDualSided(consumer, posMat, normalMat,
     float[] n3 = normalize(v3, radius);
     float[] n4 = normalize(v4, radius);
 
-    // --- outside (original radius) ---
+    // outside (original radius)
     putVertex(consumer, mat, normalMat, v1, uv1, n1, alpha, light);
     putVertex(consumer, mat, normalMat, v2, uv2, n2, alpha, light);
     putVertex(consumer, mat, normalMat, v3, uv3, n3, alpha, light);
     putVertex(consumer, mat, normalMat, v4, uv4, n4, alpha, light);
 
-    // --- inside (slightly smaller radius, reversed winding) ---
+    // inside (slightly smaller radius, reversed winding)
     final float shrink = 0.999f;
     float[] v1i = { v1[0] * shrink, v1[1] * shrink, v1[2] * shrink };
     float[] v2i = { v2[0] * shrink, v2[1] * shrink, v2[2] * shrink };

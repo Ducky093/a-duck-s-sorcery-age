@@ -1,12 +1,16 @@
 package radon.jujutsu_kaisen.ability.base;
 
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.HumanoidModel.ArmPose;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +21,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.client.JJKPose;
+import radon.jujutsu_kaisen.client.JJKPoses;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability.IAttack;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -38,6 +45,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import radon.jujutsu_kaisen.compat.PlayerReviveCompat;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -526,6 +535,21 @@ public abstract class Ability {
         default void applyModifiers(LivingEntity owner) {}
 
         default void removeModifiers(LivingEntity owner) {}
+    }
+
+    public interface IPosedMove {
+        @NotNull
+        default JJKPose getArmPose(LivingEntity entity) {
+            return null;
+        }
+
+        default int poseTimer(LivingEntity owner) {
+            return this.getArmPose(owner).defaultDuration();
+        }
+
+        default InteractionHand getHand(LivingEntity owner) {
+            return InteractionHand.MAIN_HAND;
+        }
     }
 
     public interface IAttack {

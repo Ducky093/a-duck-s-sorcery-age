@@ -39,15 +39,14 @@ import net.minecraftforge.event.level.NoteBlockEvent.Play;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.ExperienceHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.misc.Slam;
+import radon.jujutsu_kaisen.ability.base.Ability.IPosedMove;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
-import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -55,8 +54,10 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.client.JJKPoses;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -97,6 +98,23 @@ public class JJKEventHandler {
                 }
             }
         }
+
+        @SubscribeEvent
+        public static void onLivingDrops(LivingDropsEvent event) {
+            if (event.getEntity().getPersistentData().getBoolean("no_exp")) {
+                event.setCanceled(true);
+                System.out.println("no exp1");
+            }
+        }
+        @SubscribeEvent
+        public static void onLivingXpDrop(LivingExperienceDropEvent event) {
+            LivingEntity entity = event.getEntity();
+            if (entity.getPersistentData().getBoolean("no_exp")) {
+                event.setDroppedExperience(0);
+                System.out.println("no exp2");
+            }
+        }
+
 
             @SubscribeEvent
             public static void onEntityTeleport(EntityTeleportEvent event) {
@@ -149,8 +167,6 @@ public class JJKEventHandler {
             Vec3 center = pos.getCenter();
             if (!VeilHandler.canDestroy(player, level, center.x, center.y, center.z, true)) {
                 event.setCanceled(true);
-
-                // Optional: re-sync block state to client so it doesn’t look broken
                 if (level instanceof ServerLevel serverLevel) {
                     serverLevel.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
                 }
@@ -173,7 +189,7 @@ public class JJKEventHandler {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
 
             for (ServerPlayer player : level.players()) {
-                if (player.isSleepingLongEnough()) {
+                if (player.isSleeping()) {
                     if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
                     ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -205,44 +221,46 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent
-        public static void onPlayerClone(PlayerEvent.Clone event) {
-            Player original = event.getOriginal();
-            Player player = event.getEntity();
+        // @SubscribeEvent
+        // public static void onPlayerClone(PlayerEvent.Clone event) {
+        //     Player original = event.getOriginal();
+        //     Player player = event.getEntity();
 
-            original.reviveCaps();
+        //     original.reviveCaps();
 
-            ISorcererData oldCap = original.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData newCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //     ISorcererData oldCap = original.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        //     ISorcererData newCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            newCap.deserializeNBT(oldCap.serializeNBT());
+        //     newCap.deserializeNBT(oldCap.serializeNBT());
 
-            if (event.isWasDeath()) {
-                newCap.setEnergy(newCap.getMaxEnergy());
-                newCap.resetCooldowns();
-                newCap.resetBurnout();
-                newCap.resetDisable();
-                newCap.clearToggled();
-                newCap.setCurrentCopied(null);
-                newCap.setCurrentStolen(null);
-                newCap.resetCopy();
+        //     if (event.isWasDeath()) {
+        //         newCap.setEnergy(newCap.getMaxEnergy());
+        //         newCap.resetCooldowns();
+        //         newCap.resetBurnout();
+        //         newCap.resetDisable();
+        //         newCap.clearToggled();
+        //         newCap.setCurrentCopied(null);
+        //         newCap.setCurrentStolen(null);
+        //         newCap.resetCopy();
                 
-                newCap.resetBlackFlash();
-                newCap.resetExtraEnergy();
-                newCap.resetSpeedStacks();
-                newCap.resetDash();
-                //reset exp locks
+        //         newCap.resetBlackFlash();
+        //         newCap.resetExtraEnergy();
+        //         newCap.resetSpeedStacks();
+        //         newCap.resetDash();
+        //         ExperienceHandler.clearBlacklist(player.getUUID());
+                
+        //         //reset exp locks
                
-                // if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
-                //     ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-                //     shadowCap.resetAdaptations();
-                // }
-                if (!player.level().isClientSide) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
-                }
-            }
-            original.invalidateCaps();
-        }
+        //         // if ( player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) {
+        //         //     ITenShadowsData shadowCap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        //         //     shadowCap.resetAdaptations();
+        //         // }
+        //         if (!player.level().isClientSide) {
+        //             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
+        //         }
+        //     }
+        //     original.invalidateCaps();
+        // }
 
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
@@ -253,8 +271,8 @@ public class JJKEventHandler {
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             if (cap.hasTrait(Trait.DEATH_PAINTING) && owner.getHealth() < owner.getMaxHealth() * 0.3F && HelperMethods.isMelee(event.getSource())  ) {
-                victim.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 4));
-                victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * 20, 0));
+                JJKEffectUtil.addEffect(victim, new MobEffectInstance(MobEffects.POISON, 10 * 20, 4));
+                JJKEffectUtil.addEffect(victim, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10 * 20, 0));
             }
             // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0.0F) return;
@@ -277,7 +295,7 @@ public class JJKEventHandler {
             cap.tick(owner);
 
             if ((cap.hasTrait(Trait.SIX_EYES) && (!owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()) && !CuriosUtil.findSlot(owner, "head").is(JJKItems.BLINDFOLD.get()) ) ) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+                JJKEffectUtil.addEffect(owner, new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
             if((cap.hasTrait(Trait.DEATH_PAINTING)) && owner.getHealth() / owner.getMaxHealth() < 0.3F ) {
@@ -332,8 +350,8 @@ public class JJKEventHandler {
             
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                owner.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 2, 1, false, false, false));
-                owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
+                JJKEffectUtil.addEffect(owner, new MobEffectInstance(MobEffects.DIG_SPEED, 2, 1, false, false, false));
+                JJKEffectUtil.addEffect(owner, new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
             }
 
 
@@ -584,6 +602,9 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
             LivingEntity owner = event.getEntity();
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (event.getAbility() instanceof IPosedMove posed && !posed.getArmPose(owner).autocancel()) {
+                cap.removeAbilityPose(owner, posed);
+            }
 
             // Handling removal of absorbed techniques from curse manipulation
             if (technique != null && cap.getAbsorbed().contains(technique)) {
@@ -600,6 +621,9 @@ if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
             LivingEntity owner = event.getEntity();
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (event.getAbility() instanceof IPosedMove posed) {
+                cap.addAbilityPose(owner, posed, posed.getHand(owner), posed.poseTimer(owner) );
+            }
 
             if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
                 // Handling removal of absorbed techniques from curse manipulation

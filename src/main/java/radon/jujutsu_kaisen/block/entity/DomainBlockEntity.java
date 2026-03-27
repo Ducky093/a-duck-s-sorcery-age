@@ -4,8 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -126,7 +128,9 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
         // if (this.level.getBlockEntity(pos) == this) {
         //     this.level.removeBlockEntity(pos);
         // }
-        this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        this.level.setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
+        //this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         
         return;
     }
@@ -141,8 +145,9 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
     //     }
     // }
 
-    
-    this.level.setBlockAndUpdate(pos, original);
+    this.level.setBlock(pos, original,
+                                              Block.UPDATE_CLIENTS |  Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
+    //this.level.setBlockAndUpdate(pos, original);
     
 
     if (this.saved != null) {
@@ -162,6 +167,22 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
 }
 
 
+// @Override
+// public CompoundTag getUpdateTag() {
+//     CompoundTag tag = new CompoundTag();
+//     this.saveAdditional(tag);
+//     return tag;
+// }
+
+// @Override
+// public void handleUpdateTag(CompoundTag tag) {
+//     this.load(tag);
+// }
+
+// @Override
+// public ClientboundBlockEntityDataPacket getUpdatePacket() {
+//     return ClientboundBlockEntityDataPacket.create(this);
+// }
 
     @Nullable
     public UUID getIdentifier() {

@@ -32,6 +32,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IRMBAble;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.*;
@@ -206,12 +207,12 @@ public class JJKClientEventHandler {
                         PacketHandler.sendToServer(new NyoiStaffSummonLightningC2SPacket(target.getUUID()));
                     } else {
                         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                        for (Ability ability : cap.getToggled()) {
-                            if (!(ability instanceof ITransformation transformation)) continue;
-                            transformation.onRightClick(mc.player);
-                            PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
-                        }
+                        cap.onRightClick(mc.player);
+                        // for (Ability ability : cap.getToggled()) {
+                        //     if (!(ability instanceof IRMBable rmbability)) continue;
+                        //     rmbability.onRightClick(mc.player);
+                        PacketHandler.sendToServer(new AbilityRightClickC2SPacket());
+                        // }
                     }
                 }
             }
@@ -516,6 +517,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
             event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SPIDERWEB.get(), SpiderwebRenderer::new);
         }
 
         @SubscribeEvent
@@ -529,6 +531,8 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SLASH.get(), SlashParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.DISMANTLE.get(), DismantleParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SPIDERWEB.get(), SpiderwebParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);

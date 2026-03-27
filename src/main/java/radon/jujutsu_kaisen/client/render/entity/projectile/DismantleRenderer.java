@@ -45,7 +45,7 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
         float factor = (float) pEntity.getLength() / DismantleProjectile.MAX_LENGTH;
         pPoseStack.scale(1.0F, 1.0F, 0.1F + (0.1F * factor));
 
-        RenderType type = RenderType.entityTranslucent(TEXTURE);
+        RenderType type = RenderType.entityTranslucentEmissive(TEXTURE);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = pPoseStack.last().pose();

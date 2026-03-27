@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.client.particle.CursedSpeechParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffectUtil;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -91,9 +92,9 @@ public class RunAway extends CursedSpeech {
         //boolean hitTarget = false;
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living)) continue;
-                living.addEffect(new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 1, false, false, false));
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 5, false, false, false));
-                living.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 0, false, false, false));
+                JJKEffectUtil.addEffect(living, new MobEffectInstance(MobEffects.JUMP, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 1, false, false, false));
+                JJKEffectUtil.addEffect(living, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 5, false, false, false));
+                JJKEffectUtil.addEffect(living, new MobEffectInstance(MobEffects.DIG_SPEED, Mth.clamp(Math.round(DURATION * this.getPower(owner)), 10*20,20*20), 0, false, false, false));
                 if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     cap.setDisarmed(Math.round(DURATION * this.getPower(owner)));

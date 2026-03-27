@@ -86,7 +86,7 @@ public class IdleTransfigurationVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), color, RADIUS * 0.15F, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), color, RADIUS * 0.15F, 0.2F, true, true, 20),
                     x, y, z, 0.0D, 1.0D, 0.0D);
         }
     }

@@ -23,6 +23,11 @@ public class ArmBlade extends Transformation {
     }
 
     @Override
+    public boolean usesHands() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
@@ -59,12 +64,7 @@ public class ArmBlade extends Transformation {
     public Part getBodyPart() {
         return Part.RIGHT_ARM;
     }
-
-    @Override
-    public void onRightClick(LivingEntity owner) {
-
-    }
-
+    
     @Override
     public void applyModifiers(LivingEntity owner) {
         EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 1.0D, AttributeModifier.Operation.ADDITION);

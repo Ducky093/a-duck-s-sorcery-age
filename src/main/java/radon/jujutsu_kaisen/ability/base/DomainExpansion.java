@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.block.entity.IDomainBarrier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.DomainConfiguration;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
@@ -53,11 +54,16 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
 
-     @Override
+
+    @Override
     public boolean isDomain() {
         return true;
     }
 
+    public boolean getHitEnvironment() {
+        return false;
+    }
+    
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         boolean enemyDomain = false;
@@ -144,7 +150,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     public static float getStrength(LivingEntity owner, boolean instant) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float size = (cap.getDomainSize() * 0.5F) - 0.15F;
+        float size = ((float) cap.getDomainConfig(DomainConfiguration.SIZE) * 0.5F) - 0.15F;
         return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size * (instant ? 0.1F : 1.0F));
     }
 
@@ -257,7 +263,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(2.0F, 0.0F);
+        return new Vec2(3.0F, 0.0F);
     }
 
     @Override
