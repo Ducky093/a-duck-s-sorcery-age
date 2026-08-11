@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
-public class miracle extends Ability implements Ability.IToggled {
+public class MIRACLE extends Ability implements Ability.IToggled {
     
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
@@ -33,7 +33,7 @@ public class miracle extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isTechnique(miracles) {
+    public boolean isTechnique(MIRACLES) {
         return false;
     }
 
