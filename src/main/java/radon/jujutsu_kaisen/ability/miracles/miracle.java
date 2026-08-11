@@ -58,11 +58,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
 }           
 
   
-    @Override
-    public int getCooldown() {
-        return 80;
-    }
-
+  
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);  
