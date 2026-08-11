@@ -38,24 +38,14 @@ public class MIRACLE extends Ability implements Ability.IToggled {
         return cap.getTechnique() == CursedTechnique.MIRACLES && super.isValid(owner);
     }
 
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && this.getTarget(owner) == target;
-    }
 
 
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
-    }
 
   
 @Override
-    
-         (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
+    public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+        if (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
             owner.deathTime = 0;
             owner.setHealth(30);  
     public float getCost(LivingEntity owner) {
@@ -65,7 +55,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
             }
         }
 }
-           
+}           
 
   
     @Override
