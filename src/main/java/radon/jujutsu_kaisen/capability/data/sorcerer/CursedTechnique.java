@@ -50,7 +50,7 @@ public enum CursedTechnique {
     BOOGIE_WOOGIE(null, JJKAbilities.SWAP_SELF.get(), JJKAbilities.SWAP_OTHERS.get(), JJKAbilities.FEINT.get(), JJKAbilities.CE_THROW.get(), JJKAbilities.ITEM_SWAP.get(), JJKAbilities.SHUFFLE.get()),
     MYTHICAL_BEAST_AMBER(null,JJKAbilities.MYTHICAL_BEAST_AMBER.get(), JJKAbilities.EMF_BLAST.get(), JJKAbilities.ELECTRIC_BEAM.get() ),
     TECHNIQUELESS(null),
-    miracles(JJKAbilities.miracle.get()),
+    MIRACLES(JJKAbilities.MIRACLE.get()),
     STAR_RAGE(JJKAbilities.OVERDRIVE.get()),
     PROJECTION_SORCERY(JJKAbilities.TIME_CELL_MOON_PALACE.get(), JJKAbilities.PROJECTION_SORCERY.get(), JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), JJKAbilities.AIR_FRAME.get());
     
