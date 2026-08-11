@@ -276,7 +276,7 @@ public class JJKAbilities {
    
     public static RegistryObject<Ability> miracle = ABILITIES.register("miracle", Miracle::new);
 
-    public static RegistryObject<Ability> OVERDRIVE = ABILITES.register("overdrive", Overdrive
+    public static RegistryObject<Ability> OVERDRIVE = ABILITES.register("overdrive", Overdrive::new);
     public static String getName(Ability ability) {
         return getKey(ability).getPath();
     }
