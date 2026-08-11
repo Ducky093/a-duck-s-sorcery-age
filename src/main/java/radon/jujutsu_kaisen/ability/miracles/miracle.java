@@ -33,10 +33,10 @@ public class MIRACLE extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isTechnique(MIRACLES) {
-        return false;
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getTechnique() == CursedTechnique.MIRACLES && super.isValid(owner);
     }
-
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
