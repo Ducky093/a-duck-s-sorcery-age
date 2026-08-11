@@ -106,6 +106,7 @@ public class SorcererData implements ISorcererData {
 
     private float experience;
     private float output;
+    private float star_rage_output;
 
     private float energy;
     private int lives;
