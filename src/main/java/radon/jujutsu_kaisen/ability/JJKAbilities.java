@@ -80,7 +80,7 @@ import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import radon.jujutsu_kaisen.ability.Star_rage.Overdrive;
+import radon.jujutsu_kaisen.ability.Star_rage.OVERDRIVE;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -275,9 +275,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
     public static RegistryObject<Ability> BISECTION = ABILITIES.register("bisection", Bisection::new);
    
-    public static RegistryObject<Ability> MIRACLE = ABILITIES.register("miracle", Miracle::new);
+    public static RegistryObject<Ability> MIRACLE = ABILITIES.register("Miracle", MIRACLE::new);
 
-    public static RegistryObject<Ability> OVERDRIVE = ABILITIES.register("overdrive", Overdrive::new);
+    public static RegistryObject<Ability> OVERDRIVE = ABILITIES.register("Overdrive", OVERDRIVE::new);
     public static String getName(Ability ability) {
         return getKey(ability).getPath();
     }
