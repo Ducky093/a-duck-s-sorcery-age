@@ -47,7 +47,7 @@ import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.shrine.*;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
-import radon.jujutsu_kaisen.ability.miracles.miracle;
+import radon.jujutsu_kaisen.ability.miracles.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
 import radon.jujutsu_kaisen.ability.projection_sorcery.AirFrame;
