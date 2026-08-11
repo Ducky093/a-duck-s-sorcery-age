@@ -80,6 +80,7 @@ import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.ability.Star_rage.Overdrive;
 
 import javax.annotation.Nullable;
 import java.util.*;
