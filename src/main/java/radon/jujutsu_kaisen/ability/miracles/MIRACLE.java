@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ResurrectionS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 
 public class MIRACLE extends Ability implements Ability.IToggled {
     
@@ -53,7 +53,10 @@ public class MIRACLE extends Ability implements Ability.IToggled {
             }
         }
 }     
-
+@Override
+        public float getCost(LivingEntity owner) {
+        return 0.0F;
+    }
   
   
     @Override
