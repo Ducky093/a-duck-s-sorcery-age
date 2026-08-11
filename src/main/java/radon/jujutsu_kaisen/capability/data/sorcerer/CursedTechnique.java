@@ -51,7 +51,7 @@ public enum CursedTechnique {
     MYTHICAL_BEAST_AMBER(null,JJKAbilities.MYTHICAL_BEAST_AMBER.get(), JJKAbilities.EMF_BLAST.get(), JJKAbilities.ELECTRIC_BEAM.get() ),
     TECHNIQUELESS(null),
     miracles(JJKAbilities.miracle.get()),
-    STAR_RAGE(JJKAbilities.overdrive.get()),
+    STAR_RAGE(JJKAbilities.OVERDRIVE.get()),
     PROJECTION_SORCERY(JJKAbilities.TIME_CELL_MOON_PALACE.get(), JJKAbilities.PROJECTION_SORCERY.get(), JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), JJKAbilities.AIR_FRAME.get());
     
     private final @Nullable Ability domain;
