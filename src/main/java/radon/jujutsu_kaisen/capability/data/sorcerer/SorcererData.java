@@ -192,7 +192,7 @@ public class SorcererData implements ISorcererData {
 
 
         this.output = 1.0F;
-        this.star_rage_output = 1.0F;
+        this.star_rage_output = 0.0F;
 
         this.revivable = true;
         this.lives = ConfigHolder.SERVER.livesconfig.get();
