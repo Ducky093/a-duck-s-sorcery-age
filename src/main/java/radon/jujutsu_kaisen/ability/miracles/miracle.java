@@ -55,7 +55,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
   
 @Override
     
-        if (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
+         (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
             owner.deathTime = 0;
             owner.setHealth(30);  
     public float getCost(LivingEntity owner) {
@@ -68,11 +68,6 @@ public class MIRACLE extends Ability implements Ability.IToggled {
            
 
   
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 0.0F;
-    }
-
     @Override
     public int getCooldown() {
         return 80;
