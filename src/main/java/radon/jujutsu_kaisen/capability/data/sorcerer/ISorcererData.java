@@ -134,6 +134,8 @@ public interface ISorcererData {
 
     float getOutput();
 
+    float getStar_Rage_Output();
+
     float getAbilityPower();
 
     float getRealPower();
