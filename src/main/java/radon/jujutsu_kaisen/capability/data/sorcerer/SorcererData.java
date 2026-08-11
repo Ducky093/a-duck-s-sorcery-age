@@ -740,7 +740,13 @@ public class SorcererData implements ISorcererData {
     public boolean isThroatDamaged() {
         return this.throatDamage > 0;
     }
-
+    @Override
+    public float getmaximumstar_rage_output() {
+        float star_rage_output 1.0F
+        if (this.toggled.contains(JJKAbilities.Overdrive.get() )) { 
+            star_rage_output = 5.0F
+                }
+        )
     @Override
     public float getMaximumOutput() {
         float output = 1.0F;
