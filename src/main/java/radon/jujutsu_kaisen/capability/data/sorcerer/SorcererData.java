@@ -192,7 +192,7 @@ public class SorcererData implements ISorcererData {
 
 
         this.output = 1.0F;
-        this.star_rage_output = 0.0F;
+        this.star_rage_output = 1.0F;
 
         this.revivable = true;
         this.lives = ConfigHolder.SERVER.livesconfig.get();
@@ -413,6 +413,7 @@ public class SorcererData implements ISorcererData {
             this.brainDamage--;
 
             this.output = this.getMaximumOutput();
+            this.output =this.getmaximumstar_rage_output();
         }
     }
 
