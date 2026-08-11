@@ -273,7 +273,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
     public static RegistryObject<Ability> BISECTION = ABILITIES.register("bisection", Bisection::new);
    
-    public static RegistryObject<Ability> miracle = ABILITIES.register("miracle", miracle ::new);
+    public static RegistryObject<Ability> miracle = ABILITIES.register("miracle", Miracle::new);
+
+    public static RegistryObject<Ability> OVERDRIVE = ABILITES.register("overdrive", Overdrive
     public static String getName(Ability ability) {
         return getKey(ability).getPath();
     }
