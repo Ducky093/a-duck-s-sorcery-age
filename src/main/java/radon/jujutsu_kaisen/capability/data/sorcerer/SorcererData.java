@@ -744,7 +744,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getmaximumstar_rage_output() {
         float star_rage_output = 1.0F;
-        if (this.toggled.contains(JJKAbilities.Overdrive.get() )) { 
+        if (this.toggled.contains(JJKAbilities.OVERDRIVE.get() )) { 
             star_rage_output = 5.0F;
                 }
     }
