@@ -53,7 +53,7 @@ public class OVERDRIVE extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 3.0;
+        return 3.0F;
     }
 
     @Override
