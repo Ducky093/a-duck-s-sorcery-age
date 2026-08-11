@@ -59,9 +59,13 @@ public class MIRACLE extends Ability implements Ability.IToggled {
     }
   
   
+   @Override
+    public void onEnabled(LivingEntity owner) {
+        
+    }
+
     @Override
-    public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElse(null);  
-        return cap != null && (cap.hasTrait(Trait.RCT_OUTPUT) || cap.getType() == JujutsuType.SHIKIGAMI ) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
+    public void onDisabled(LivingEntity owner) {
+
     }
 }
