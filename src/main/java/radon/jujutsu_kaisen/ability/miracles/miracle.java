@@ -53,25 +53,18 @@ public class MIRACLE extends Ability implements Ability.IToggled {
     }
 
   
-@override
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity target = (RotationUtil.getExpandedLookAt(owner, RANGE));
-        LivingEntity result = null;
-        if (target != null) {
-            result = target;
-        }
-        return result;
-    }
 @Override
-        target.heal(amount);
+    
         if (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
             owner.deathTime = 0;
-            owner.setHealth(30);
+            owner.setHealth(30);  
+    public float getCost(LivingEntity owner) {
+        return 500.0F;
             if (!owner.level().isClientSide()) {
                 PacketHandler.sendTrackingAndSelf(new ResurrectionS2CPacket(target.getId(), amount), target);
             }
         }
-
+}
            
 
   
