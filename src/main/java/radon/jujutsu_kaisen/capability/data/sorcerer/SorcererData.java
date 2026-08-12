@@ -613,6 +613,7 @@ public class SorcererData implements ISorcererData {
         if (this.silenced > 0) {
             this.silenced--;
         }
+        
 
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * ((this.owner instanceof Player player && ConfigHolder.SERVER.foodCERegen.get()) ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
@@ -642,7 +643,9 @@ public class SorcererData implements ISorcererData {
                 realmovement *= (0.5 * this.getOutput());
                 damage *= this.getOutput();
             }
-
+            if (this.getstar_rage_utput() < 1) {
+                damage *= this.getstar_rage_output();
+            }
             if (ratio <= 0.5 && ratio > 0.35) {
                 movement *= 0.4;
                 realmovement *= 0.4;
