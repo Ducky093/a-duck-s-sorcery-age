@@ -45,7 +45,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
 @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
-        if (owner.isDeadOrDying() && owner.deathTime < 15 && (!(target instanceof TransfiguredSoulEntity) && HelperMethods.expCheck(target) )  ) {
+        if (owner.isDeadOrDying() && owner.deathTime < 15 ) {
             owner.deathTime = 0;
             owner.setHealth(30);  
             if (!owner.level().isClientSide()) {
