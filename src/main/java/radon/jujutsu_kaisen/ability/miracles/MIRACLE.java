@@ -89,20 +89,12 @@ public class MIRACLE extends Ability implements Ability.IToggled {
         return target != null;
     }
 
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
-    }
-
+ 
     @Override
     public void run(LivingEntity owner) {
 
     }
 
-    @Override
-    public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique() == CursedTechnique.MIRACLES && super.isValid(owner);
-    }
+ 
 
 }
