@@ -90,10 +90,6 @@ public class MIRACLE extends Ability implements Ability.IToggled {
     }
 
  
-    @Override
-    public void run(LivingEntity owner) {
-
-    }
 
  
 
