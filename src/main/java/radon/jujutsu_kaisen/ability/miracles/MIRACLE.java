@@ -60,7 +60,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
             owner.deathTime = 0;
             owner.setHealth(30);  
             if (!owner.level().isClientSide()) {
-                PacketHandler.sendTrackingAndSelf(new ResurrectionS2CPacket(owner.getId(), amount), owner);
+                PacketHandler.sendTrackingAndSelf(new ResurrectionS2CPacket(owner.getId()), owner);
             }
         }
 }     
