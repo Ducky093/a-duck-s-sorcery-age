@@ -755,7 +755,7 @@ public class SorcererData implements ISorcererData {
     }
         @Override
     public void decreasestar_rage_output() {
-        this.star_rage_output = math.min(this.getmaximumstar_rage_output(), this.star_rage_output - 0.1f);
+        this.star_rage_output = math.max(0.1F, this.star_rage_output - 0.1f);
     }
     @Override
         public void maximumstar_rage_output() {
