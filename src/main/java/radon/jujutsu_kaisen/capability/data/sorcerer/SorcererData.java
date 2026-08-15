@@ -744,22 +744,22 @@ public class SorcererData implements ISorcererData {
     }
     @Override
     public float getmaximumstar_rage_output() {
-        float star_rage_output = 1.0F;
+        float star_rage_output = 0.0F;
         if (this.toggled.contains(JJKAbilities.OVERDRIVE.get() )) { 
             star_rage_output = 5.0F;
                 }
     }
     @Override
     public void increasestar_rage_output() {
-        this.star_rage_output = math.min(this.getmaximumstar_rage_output(), this.star_rage_output + 0.1f);
+        this.star_rage_output = math.min(this.getmaximumstar_rage_output(), this.star_rage_output + 0.1F);
     }
         @Override
     public void decreasestar_rage_output() {
-        this.star_rage_output = math.max(0.1F, this.star_rage_output - 0.1f);
+        this.star_rage_output = math.max(0.1F, this.star_rage_output - 0.1F);
     }
     @Override
         public void maximumstar_rage_output() {
-        this.star_rage_output = this.getmaximumstar_rage_output();
+        math(,this.star_rage_output + 1.0F) = this.getmaximumstar_rage_output();
     }
     @Override
     public float getMaximumOutput() {
