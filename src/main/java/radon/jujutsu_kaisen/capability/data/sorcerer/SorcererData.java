@@ -1107,6 +1107,10 @@ public class SorcererData implements ISorcererData {
     public float getOutput() {
         return Math.min(this.getMaximumOutput(), this.output);
     }
+        @Override
+    public float getstar_rage_output() {
+        return Math.min(this.getmaximumstar_rage_output(), this.star_rage_output);
+    }
 
     @Override
     public float getAbilityPower() {
