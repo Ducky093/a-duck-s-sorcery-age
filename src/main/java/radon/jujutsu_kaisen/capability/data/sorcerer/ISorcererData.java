@@ -41,6 +41,8 @@ public interface ISorcererData {
     void increasestar_rage_output();
 
     void decreasestar_rage_output();
+    
+    void maximumstar_rage_output();
 
     float getMaximumOutput();
 
