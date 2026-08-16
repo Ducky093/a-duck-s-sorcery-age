@@ -54,7 +54,7 @@ public class STARRAGE extends Ability implements Ability.IToggled {
     @Override
     public float getCost(LivingEntity owner) {
         float star_rage_output = 0.0F;
-        return Math(this.getstar_rage_output + 0.0F);
+        return Math(star_rage_output + 0.0F);
     }
 
     @Override
