@@ -748,6 +748,7 @@ public class SorcererData implements ISorcererData {
         if (this.toggled.contains(JJKAbilities.OVERDRIVE.get() )) { 
             star_rage_output = 5.0F;
                 }
+        return star_rage_output
     }
     @Override
     public void increasestar_rage_output() {
