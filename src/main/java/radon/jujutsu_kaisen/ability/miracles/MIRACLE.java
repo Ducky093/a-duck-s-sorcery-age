@@ -59,8 +59,7 @@ public class MIRACLE extends Ability implements Ability.IToggled {
         
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
         
-        owner.swing(InteractionHand.MAIN_HAND);
-        if (owner.isDeadOrDying() && owner.deathTime < 15 ) {
+        if (owner.isDeadOrDying() && owner.deathTime < 30 ) {
             owner.deathTime = 0;
             owner.setHealth(30);  
             if (!owner.level().isClientSide()) {
