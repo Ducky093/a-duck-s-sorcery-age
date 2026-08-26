@@ -103,6 +103,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> JACOBS_LADDER = ABILITIES.register("jacobs_ladder", JacobsLadder::new);
     public static RegistryObject<Ability> ANGEL_WINGS = ABILITIES.register("angel_wings",  AngelWings::new);
     public static RegistryObject<Ability> BARRIER_TRAVEL = ABILITIES.register("barrier_travel", BarrierTravel::new);
+    public static RegistryObject<Ability> GODS_WILL = ABILITIES.register("gods_will", GodsWill::new);
     
     public static RegistryObject<Ability> QUICKDASH = ABILITIES.register("quickdash", QuickDash::new);
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
