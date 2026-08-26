@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.disaster_plants;
+package radon.jujutsu_kaisen.ability.angel;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -34,19 +34,12 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
 
-public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class GodsWill extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * this.getStrength(owner, instant)),
-                4, false, false, false));
-        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* this.getStrength(owner, instant)),
-                4, false, false, false));
-        JJKEffectUtil.addEffect(entity, new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
-                4, false, false, false));
-        if (JJKAbilities.hasToggled(entity, JJKAbilities.CURSED_ENERGY_FLOW.get()) && !JJKAbilities.hasToggled(entity, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
-            JJKEffectUtil.addEffect(entity, new MobEffectInstance(JJKEffects.CURSED_BUD.get(), Math.round(10 * 20 * this.getStrength(owner, instant)), 0));
+cap.setburnout(1)
         }
     }
 
