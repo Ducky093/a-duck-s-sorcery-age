@@ -55,15 +55,15 @@ public class MIRACLE extends Ability implements Ability.IToggled {
   
 @Override
     public void run(LivingEntity owner) {
-        float healMult = 1.0F;
+   //     float healMult = 1.0F;
         
-        float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
+       // float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 1.5F * healMult;
         
-        if (owner.isDeadOrDying() && owner.deathTime < 30 ) {
-            owner.deathTime = 0;
-            owner.setHealth(30);  
-            PacketHandler.sendToClient(new ResurrectionS2CPacket(owner.getId(), amount), owner);
-        }
+      //  if (owner.isDeadOrDying() && owner.deathTime < 30 ) {
+        //    owner.deathTime = 0;
+         //   owner.setHealth(30);  
+         //   PacketHandler.sendToClient(new ResurrectionS2CPacket(owner.getId(), amount), owner);
+       // }
 }     
 @Override
         public float getCost(LivingEntity owner) {
