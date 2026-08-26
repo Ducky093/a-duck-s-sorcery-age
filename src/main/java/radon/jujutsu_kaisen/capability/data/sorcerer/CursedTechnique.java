@@ -13,7 +13,7 @@ public enum CursedTechnique {
     SHOCKWAVE(null, JJKAbilities.SHOCKWAVE.get()),
     SKY_STRIKE(null, JJKAbilities.SKY_STRIKE.get()),
     BRAIN_TRANSPLANT(null, JJKAbilities.BODY_STEAL.get()),
-    ANGEL(null, JJKAbilities.ANGEL_WINGS.get(), JJKAbilities.JACOBS_LADDER.get(), JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get(), JJKAbilities.BARRIER_TRAVEL.get(), JJKAbilities.GODSWILL.get()),
+    ANGEL( JJKAbilities.GODSWILL.get(), JJKAbilities.ANGEL_WINGS.get(), JJKAbilities.JACOBS_LADDER.get(), JJKAbilities.MAXIMUM_OUTPUT_JACOBS_LADDER.get(), JJKAbilities.BARRIER_TRAVEL.get()),
     CURSE_MANIPULATION(null, JJKAbilities.CURSE_ABSORPTION.get(), JJKAbilities.RELEASE_CURSE.get(), JJKAbilities.RELEASE_CURSES.get(), JJKAbilities.SUMMON_ALL.get(), JJKAbilities.ENHANCE_CURSE.get(),
             JJKAbilities.MAXIMUM_UZUMAKI.get(), JJKAbilities.MINI_UZUMAKI.get(), JJKAbilities.WORM_CURSE_GRAB.get(),JJKAbilities.FISH_SWARM.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE_STILL.get(),
