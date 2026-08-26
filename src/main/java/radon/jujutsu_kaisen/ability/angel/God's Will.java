@@ -41,7 +41,6 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
 
 cap.setburnout(1)
         }
-    }
 
     
 
