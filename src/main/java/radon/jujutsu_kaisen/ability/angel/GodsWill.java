@@ -43,7 +43,7 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
         super.onHitEntity(domain, owner, entity, instant);
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         int burnout = cap.getBurnout();
-         cap.setburnout(1);
+         cap.setBurnout(1);
         }
 
     
