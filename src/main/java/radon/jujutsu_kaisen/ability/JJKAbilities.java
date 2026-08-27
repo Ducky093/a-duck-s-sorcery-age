@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.ability.angel.AngelWings;
 import radon.jujutsu_kaisen.ability.angel.BarrierTravel;
 import radon.jujutsu_kaisen.ability.angel.JacobsLadder;
 import radon.jujutsu_kaisen.ability.angel.MaximumOutputJacobsLadder;
+import radon.jujutsu_kaisen.ability.angel.GodsWill;
 import radon.jujutsu_kaisen.ability.barrier.BarrierSizeConfig;
 import radon.jujutsu_kaisen.ability.barrier.ShellBalanceConfig;
 import radon.jujutsu_kaisen.ability.barrier.SureHitConfig;
