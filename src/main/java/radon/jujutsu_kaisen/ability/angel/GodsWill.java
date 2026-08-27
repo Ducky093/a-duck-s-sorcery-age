@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.ability.angel;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +41,7 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
-         setburnout(1);
+         setburnout((1)1);
         }
 
     
