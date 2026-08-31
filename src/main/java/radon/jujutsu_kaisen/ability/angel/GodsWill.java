@@ -47,7 +47,7 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
                                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                                     }
                                                 
-                            });
+                            })
 
     
 
