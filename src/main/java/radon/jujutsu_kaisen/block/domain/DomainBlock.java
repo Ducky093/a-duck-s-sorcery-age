@@ -47,7 +47,7 @@ public class DomainBlock extends Block implements EntityBlock {
                 if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || (entity instanceof LivingEntity living && (JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get()))) ) {
+                    if (entity instanceof LivingEntity living && (JJKAbilities.hasToggled(living, JJKAbilities.BARRIER_TRAVEL.get())) ) {
                         if (!pContext.isAbove(Shapes.block(), pPos, true)) {
                             return Shapes.empty();
                         }
