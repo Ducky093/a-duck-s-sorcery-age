@@ -69,11 +69,6 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
     }
         @Override
     public boolean isTechnique(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            return false;
-            
-        }
         return true;
     }
 
