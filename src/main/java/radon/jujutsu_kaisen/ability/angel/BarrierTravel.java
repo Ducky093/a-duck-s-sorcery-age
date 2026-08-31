@@ -69,9 +69,12 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
     }
         @Override
     public boolean isTechnique() {
-        return false;
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+            return false;
+            
+        }
+        return true
     }
-
 
     @Override
     public boolean usesHands() {
