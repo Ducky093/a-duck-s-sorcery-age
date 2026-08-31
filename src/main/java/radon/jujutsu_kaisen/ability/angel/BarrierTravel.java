@@ -69,7 +69,7 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
     }
         @Override
     public boolean isTechnique() {
-        return true;
+        return false;
     }
 
     @Override
