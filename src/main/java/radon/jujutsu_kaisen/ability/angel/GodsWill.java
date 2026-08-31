@@ -41,8 +41,13 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
-                victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap.setDisable(5));
-        }
+                                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                    cap.setDisable(1)
+                                    if (entity instanceof ServerPlayer player) {
+                                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                    }
+                                                
+                            });
 
     
 
