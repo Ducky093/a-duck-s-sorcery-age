@@ -73,7 +73,7 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
             return false;
             
         }
-        return true
+        return true;
     }
 
     @Override
