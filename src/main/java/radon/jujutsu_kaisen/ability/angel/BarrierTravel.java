@@ -50,7 +50,7 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique() == CursedTechnique.ANGEL && super.isValid(owner);
+        return cap.getTechnique() == CursedTechnique.ANGEL || cap.hasTrait(Trait.HEAVENLY_RESTRICTION) && super.isValid(owner);
     }
 
     @Override
