@@ -16,6 +16,7 @@ public enum Trait {
     CURSED_WOMB,
     DEATH_PAINTING,
     PRODIGY,
+    INNER_PEACE,
     SIMURIAN;
 
     public Component getName() {
