@@ -68,7 +68,7 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
 
     }
         @Override
-    public boolean isTechnique(LivingEntity owner) {
+    public boolean isTechnique() {
         return true;
     }
 
