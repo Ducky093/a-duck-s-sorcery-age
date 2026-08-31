@@ -67,6 +67,11 @@ public class BarrierTravel extends Ability implements Ability.IToggled {
     public void onDisabled(LivingEntity owner) {
 
     }
+        @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
 
     @Override
     public boolean usesHands() {
