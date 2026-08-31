@@ -49,17 +49,17 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
                                                 
                             });
 
-    
+    }
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
 
-    };
+    }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.DOMAIN;
-    };
+    }
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
@@ -69,22 +69,22 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
         owner.level().addFreshEntity(domain);
 
         return domain;
-    };
+    }
 
     @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.FAKE_SKY.get());
-    };
+    }
 
     @Override
     public List<Block> getFillBlocks() {
         return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get());
-    };
+    }
 
     @Override
     public List<Block> getFloorBlocks() {
         return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
-    };
+    }
 
     @Override
     public List<Block> getDecorationBlocks() {
@@ -92,15 +92,15 @@ public class GodsWill extends DomainExpansion implements DomainExpansion.IClosed
                 JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(),
                 JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
                 JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get());
-    };
+    }
 
     @Override
     public boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
         return !domain.level().getBlockState(pos).isAir() && domain.level().getBlockState(pos.above()).isAir();
-    };
+    }
 
     @Override
     public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
         return domain.level().getBlockState(pos.below()).is(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
-    };
+    }
 }
