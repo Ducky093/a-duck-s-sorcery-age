@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -1561,7 +1563,7 @@ public class SorcererData implements ISorcererData {
         double xSpeed = movement.x();
         double ySpeed = movement.y();
         double zSpeed = movement.z();
-        double horizontalSpeed = Math.sqrt(xSpeed * xSpeed + zSpeed * zSpeed + ySpeed * ySpeed);
+        float horizontalSpeed = Math.sqrt(xSpeed * xSpeed + zSpeed * zSpeed + ySpeed * ySpeed);
         if (this.traits.contains(Trait.INNER_PEACE) && horizontalSpeed = 0) {
             this.energy = Math.min(this.getMaxEnergy(), this.energy + amount * 1.3);
         this.sync();
