@@ -1557,6 +1557,15 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addEnergy(float amount) {
+        Vec3 velocity = entity.getDeltaMovement();
+        double xSpeed = movement.x();
+        double ySpeed = movement.y();
+        double zSpeed = movement.z();
+        double horizontalSpeed = Math.sqrt(xSpeed * xSpeed + zSpeed * zSpeed + ySpeed * ySpeed);
+        if (this.traits.contains(Trait.INNER_PEACE) && horizontalSpeed = 0) {
+            this.energy = Math.min(this.getMaxEnergy(), this.energy + amount * 1.3);
+        this.sync();
+        }
         this.energy = Math.min(this.getMaxEnergy(), this.energy + amount);
         this.sync();
     }
