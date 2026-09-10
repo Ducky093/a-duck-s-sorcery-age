@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.blood_manipulation.PiercingBlood;
 import radon.jujutsu_kaisen.ability.angel.AngelWings;
 import radon.jujutsu_kaisen.ability.angel.BarrierTravel;
 import radon.jujutsu_kaisen.ability.angel.JacobsLadder;
@@ -83,6 +84,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.ability.Star_rage.OVERDRIVE;
 import radon.jujutsu_kaisen.ability.Star_rage.STARRAGE;
+import radon.jujutsu_kaisen.ability.blood_manipulation.PiercingBlood;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -277,6 +279,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> COLLAPSE = ABILITIES.register("collapse", Collapse::new);
     public static RegistryObject<Ability> RATIO_RULE = ABILITIES.register("ratio_rule", RatioRule::new);
     public static RegistryObject<Ability> BISECTION = ABILITIES.register("bisection", Bisection::new);
+    
+    public static RegistryObject<Ability> PIERCING_BLOOD = ABILITIES.register("piercing_blood", PiercingBlood::new);
    
     public static RegistryObject<Ability> MIRACLE = ABILITIES.register("miracle", MIRACLE::new);
 

@@ -34,6 +34,7 @@ public enum CursedTechnique {
             JJKAbilities.TRANSFIGURED_SOUL_NORMAL.get(), JJKAbilities.TRANSFIGURED_SOUL_LARGE.get(), JJKAbilities.POLYMORPHIC_SOUl_ISOMER.get(), JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()),
 
     RATIO(null, JJKAbilities.COLLAPSE.get(), JJKAbilities.RATIO_RULE.get(), JJKAbilities.BISECTION.get()),
+    BLOOD_MANIPULATION(JJKAbilities.PIERCING_BLOOD.get()),
 
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),

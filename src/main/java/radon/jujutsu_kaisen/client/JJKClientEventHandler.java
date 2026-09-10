@@ -474,6 +474,7 @@ public class JJKClientEventHandler {
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PIERCING_BLOOD.get(), PiercingBloodRenderer::new);
             event.registerEntityRenderer(JJKEntities.JUJUTSU_LIGHTNING.get(), LightningBoltRenderer::new);
             event.registerEntityRenderer(JJKEntities.JACOBS_LADDER.get(), JacobsLadderRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_OUTPUT_JACOBS_LADDER.get(), MaximumOutputJacobsLadderRenderer::new);

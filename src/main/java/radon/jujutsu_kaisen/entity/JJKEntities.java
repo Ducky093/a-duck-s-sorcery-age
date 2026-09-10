@@ -394,6 +394,11 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_water")
                             .toString()));
+        public static RegistryObject<EntityType<PiercingBloodEntity>> PIERCING_BLOOD = ENTITIES.register("piercing_blood", () ->
+            EntityType.Builder.<PiercingBloodEntity>of(PiercingBloodEntity::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_blood")
+                            .toString()));
     public static RegistryObject<EntityType<JujutsuLightningEntity>> JUJUTSU_LIGHTNING = ENTITIES.register("jujutsu_lightning", () ->
             EntityType.Builder.<JujutsuLightningEntity>of(JujutsuLightningEntity::new, MobCategory.MISC)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu_lightning")
