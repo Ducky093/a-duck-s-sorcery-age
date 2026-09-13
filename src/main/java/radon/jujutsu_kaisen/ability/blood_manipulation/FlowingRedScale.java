@@ -79,6 +79,7 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getTechnique() == CursedTechnique.BLOOD_MANIPULATION && super.isValid(owner);
     }
+    
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
