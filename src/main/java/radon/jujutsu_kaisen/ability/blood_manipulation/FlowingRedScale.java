@@ -79,7 +79,7 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
       @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique() == CursedTechnique.BLOOD_MANIPULATION);
+        return cap.getTechnique() == CursedTechnique.BLOOD_MANIPULATION;
     }
 
     @Override
@@ -262,9 +262,4 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
         return cap.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
     }
 
-}
-                }
-            }
-        }
-    }
 }
