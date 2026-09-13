@@ -79,7 +79,7 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
       @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique() == CursedTechnique.BLOOD_MANIPULATION;
+        return cap.getTechnique() == CursedTechnique.BLOOD_MANIPULATION && super.isValid(owner);
     }
 
     @Override
@@ -109,116 +109,10 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
             }
             owner.setOnGround(true);
         }
-        JJKEffectUtil.addEffect(owner, new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
-        if (owner instanceof Player player) {
-            float f;
 
-            if (owner.onGround() && !owner.isDeadOrDying() && !owner.isSwimming()) {
-                f = Math.min(0.1F, (float) owner.getDeltaMovement().horizontalDistance());
-            } else {
-                f = 0.0F;
-            }
-            player.bob += (f - player.bob) * 0.4F;
-        }
-
-
-        // ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        // boolean isShielding = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
-        // if (isShielding) {
-        //     if (!this.hasShieldDrained) {
-        //         this.hasShieldDrained = true;
-        //         cap.useEnergy(30);
-        //     }
-        // } else {
-        //     this.hasShieldDrained = false;
-        // }
-
-        if (!(owner.level() instanceof ServerLevel level)) return;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-       
-        //float scale = isShielding ? 1.4F : 1.0F;
-        float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.4F : 1.0F;
-        if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
-            for (int i = 0; i < 4; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2 * scale);
-                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F * scale);
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2 * scale);
-                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
-                        x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-            }
-
-            if (owner.isInWater()) {
-                for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
-                    if (!entity.isInWater()) continue;
-
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
-                        for (int i = 0; i < 16; i++) {
-                            double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                            double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * (entity.getBbHeight() * 1.25F);
-                            double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                            level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
-                                    x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                        }
-                        owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
-                    }
-                }
-            }
-        }
     }
 
-    @Override
-    public void applyModifiers(LivingEntity owner) {
-        double newSpeed = SPEED;
-        double maxSpeed = ConfigHolder.SERVER.playerMaxSpeed.get().floatValue();
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getNature() == CursedEnergyNature.DIVERGENT) {
-            newSpeed*=1.15;
-        }
-
-        float ratio = cap.getEnergy()/cap.getMaxEnergy();
-
-       
-
-
-        EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-        EntityUtil.applyArmorBoost(owner);
-        // if (!(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))) {
-            //cap.setShieldTicks(0);
-       // } else {
-           // cap.setShieldTicks(cap.getShieldTicks() + 1);
-        //}
-        
-
-         if ( !(cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) && owner instanceof Player player ) ) {
-            // if (ratio <= 0.5) {
-            //     newSpeed *= Math.min(0.85, (0.3 + (ratio * 2)));
-            // }
-             if (ratio <= 0.5 && ratio > 0.3) {
-            newSpeed *= 0.85;
-            maxSpeed *= 0.85;
-        }
-            if (ratio <= 0.3 && ratio > 0.15) {
-                newSpeed *=0.75;
-                maxSpeed *= 0.75;
-            }
-
-            if (ratio <= 0.15) {
-                newSpeed *= 0.65;
-                maxSpeed *= 0.65;
-            }
-
-            if (cap.getBurnout() > 0) {
-                newSpeed *= 0.8;
-                maxSpeed *= 0.8;
-            }
-
-                EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                Math.min(maxSpeed, newSpeed * this.getPower(owner)), AttributeModifier.Operation.ADDITION);
-            
-            }
-    }
 
     @Override
     public void removeModifiers(LivingEntity owner) {
@@ -229,8 +123,7 @@ public class FlowingRedScale extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return 0.1F;
+        return 0.0F;
     }
 
     @Override
